@@ -12,6 +12,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AboutUs from "./pages/AboutUs";
 import Contact from "./pages/Contact";
+import Advertising from "./pages/Advertising";
+import Properties from "./pages/Properties";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminOverview from "./pages/AdminDashboard/pages/Overview";
@@ -43,8 +45,10 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/listings" element={<Listings />} />
+          <Route path="/properties" element={<Properties />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/advertise" element={<Advertising />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />}>
