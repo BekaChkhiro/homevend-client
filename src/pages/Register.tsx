@@ -1,14 +1,17 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth, type AuthContextType } from "@/contexts/AuthContext";
 
 const Register = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { register } = useAuth() as AuthContextType;
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -24,7 +27,7 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -39,19 +42,41 @@ const Register = () => {
       return;
     }
 
-    // Simulate API call
-    setTimeout(() => {
-      // Here you would normally make an API call to register the user
-      console.log("Registration data:", formData);
-      
+    // Password length validation
+    if (formData.password.length < 6) {
       toast({
-        title: "წარმატება!",
-        description: "რეგისტრაცია წარმატებით დასრულდა",
+        title: "შეცდომა",
+        description: "პაროლი უნდა შედგებოდეს მინიმუმ 6 სიმბოლოსგან",
+        variant: "destructive",
       });
-      
       setIsLoading(false);
-      // Redirect to login page would happen here
-    }, 1500);
+      return;
+    }
+
+    try {
+      const success = await register({
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (success) {
+        toast({
+          title: "რეგისტრაცია წარმატებით დასრულდა!",
+          description: "მოგესალმებით HOMEVEND.ge-ზე!",
+        });
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "შეცდომა",
+        description: "რეგისტრაცია ვერ მოხერხდა. გთხოვთ სცადოთ ხელახლა.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

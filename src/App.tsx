@@ -10,6 +10,8 @@ import Listings from "./pages/Listings";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AboutUs from "./pages/AboutUs";
+import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminOverview from "./pages/AdminDashboard/pages/Overview";
@@ -18,6 +20,7 @@ import AdminListings from "./pages/AdminDashboard/pages/Listings";
 import AdminAdvertisements from "./pages/AdminDashboard/pages/Advertisements";
 import AdminSettings from "./pages/AdminDashboard/pages/Settings";
 import { AddProperty } from "./pages/Dashboard/pages/AddProperty";
+import { EditProperty } from "./pages/Dashboard/pages/EditProperty";
 import { MyProperties } from "./pages/Dashboard/components/MyProperties";
 import { Favorites } from "./pages/Dashboard/components/Favorites";
 import { ProfilePage } from "./pages/Dashboard/components/ProfilePage";
@@ -40,12 +43,15 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/listings" element={<Listings />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<MyProperties />} />
             <Route path="test" element={<TestComponent />} />
             <Route path="add-property" element={<AddProperty />} />
+            <Route path="edit-property/:id" element={<EditProperty />} />
             <Route path="my-properties" element={<MyProperties />} />
             <Route path="favorites" element={<Favorites />} />
             <Route path="profile" element={<ProfilePage />} />

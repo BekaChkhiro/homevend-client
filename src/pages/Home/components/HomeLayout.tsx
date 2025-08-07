@@ -13,18 +13,20 @@ interface HomeLayoutProps {
   filteredProperties: Property[];
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
+  isLoading?: boolean;
 }
 
 export const HomeLayout = ({ 
   properties, 
   filteredProperties, 
   filters, 
-  onFilterChange 
+  onFilterChange,
+  isLoading = false
 }: HomeLayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-16">
+      <div className="pt-32">
       <HeroSection onSearch={(heroFilters) => onFilterChange({
         ...filters, 
         search: heroFilters.search,
@@ -37,7 +39,7 @@ export const HomeLayout = ({
         <AdBanner type="horizontal" />
       </div>
       
-      <FeaturedPropertiesCarousel properties={properties} />
+      <FeaturedPropertiesCarousel properties={properties} isLoading={isLoading} />
       
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -50,7 +52,7 @@ export const HomeLayout = ({
             </div>
           </div>
           <div className="lg:col-span-3">
-            <PropertyGrid properties={filteredProperties} />
+            <PropertyGrid properties={filteredProperties} isLoading={isLoading} />
             
             {/* Bottom Ad Banner */}
             <div className="mt-8">

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const propertyFormSchema = z.object({
   // Basic Info
+  title: z.string().min(1, "განცხადების სათაური აუცილებელია"),
   propertyType: z.string().min(1, "უძრავი ქონების ტიპი აუცილებელია"),
   dealType: z.string().min(1, "გარიგების ტიპი აუცილებელია"),
   city: z.string().min(1, "ქალაქი აუცილებელია"),

@@ -190,7 +190,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-16">
+      <div className="pt-32">
       <HeroSection onSearch={(heroFilters) => handleFilterChange({
         ...filters, 
         search: heroFilters.search,

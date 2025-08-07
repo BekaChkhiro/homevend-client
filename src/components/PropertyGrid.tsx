@@ -1,12 +1,25 @@
 
 import { PropertyCard } from "@/components/PropertyCard";
 import type { Property } from "@/pages/Index";
+import { Loader2 } from "lucide-react";
 
 interface PropertyGridProps {
   properties: Property[];
+  isLoading?: boolean;
 }
 
-export const PropertyGrid = ({ properties }: PropertyGridProps) => {
+export const PropertyGrid = ({ properties, isLoading = false }: PropertyGridProps) => {
+  if (isLoading) {
+    return (
+      <div className="text-center py-12">
+        <div className="flex items-center justify-center space-x-2">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>ქონების ჩატვირთვა...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (properties.length === 0) {
     return (
       <div className="text-center py-12">

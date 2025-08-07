@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MapPin, Bed, Bath, Square } from "lucide-react";
+import { Heart, MapPin, Bed, Bath, Square, Loader2 } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -15,9 +15,10 @@ import { Link } from "react-router-dom";
 
 interface FeaturedPropertiesCarouselProps {
   properties: Property[];
+  isLoading?: boolean;
 }
 
-export const FeaturedPropertiesCarousel = ({ properties }: FeaturedPropertiesCarouselProps) => {
+export const FeaturedPropertiesCarousel = ({ properties, isLoading = false }: FeaturedPropertiesCarouselProps) => {
   const featuredProperties = properties.filter(property => property.featured);
 
   const formatPrice = (price: number) => {
@@ -27,6 +28,27 @@ export const FeaturedPropertiesCarousel = ({ properties }: FeaturedPropertiesCar
       minimumFractionDigits: 0,
     }).format(price);
   };
+
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">რჩეული ქონება</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              ჩვენი ყველაზე პოპულარული და ხარისხიანი ქონების შეთავაზებები
+            </p>
+          </div>
+          <div className="flex items-center justify-center py-12">
+            <div className="flex items-center space-x-2">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span>რჩეული ქონების ჩატვირთვა...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (featuredProperties.length === 0) {
     return null;

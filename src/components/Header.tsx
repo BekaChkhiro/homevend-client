@@ -16,7 +16,7 @@ export const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
+    logout({ redirectToLogin: false });
     navigate('/');
   };
 
@@ -46,7 +46,7 @@ export const Header = () => {
             </Button>
             
             <Button variant="outline" size="sm" className="border-primary/20 hover:bg-primary/5 hover:text-primary" asChild>
-              <Link to="/add-property" className="flex items-center gap-1.5">
+              <Link to="/dashboard/add-property" className="flex items-center gap-1.5">
                 <PlusCircle className="h-4 w-4" />
                 <span>განცხადების დამატება</span>
               </Link>

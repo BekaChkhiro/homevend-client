@@ -23,6 +23,44 @@ export const BasicInfoSection = () => {
         </div>
       </div>
       
+      {/* Title */}
+      <div className="bg-card rounded-xl border border-border/50 p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="mb-6">
+          <Label htmlFor="title" className="text-base font-semibold text-foreground flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
+              <BookOpen className="h-4 w-4 text-primary" />
+            </div>
+            <span>განცხადების სათაური</span>
+            <span className="text-destructive">*</span>
+          </Label>
+          <p className="text-sm text-muted-foreground mt-1 ml-11">შეიყვანეთ მიმზიდველი სათაური თქვენი ქონებისთვის</p>
+        </div>
+        <div>
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input 
+                    id="title" 
+                    placeholder="მაგ: 2 საძინებლიანი ბინა ვაკეში, შესანიშნავი ხედით" 
+                    className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="mt-3 p-3 bg-muted/50 rounded-lg">
+            <p className="text-xs text-muted-foreground">
+              💡 კარგი სათაური უნდა იყოს ინფორმაციული და მიმზიდველი. მიუთითეთ ძირითადი დეტალები როგორიცაა ოთახების რაოდენობა და მდებარეობა
+            </p>
+          </div>
+        </div>
+      </div>
+      
       {/* Property Type */}
       <div className="bg-card rounded-xl border border-border/50 p-6 shadow-sm hover:shadow-md transition-shadow">
         <div className="mb-6">

@@ -3,8 +3,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FileText, Languages } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useFormContext } from "react-hook-form";
 
 export const DescriptionSection = () => {
+  const { register, formState: { errors } } = useFormContext();
   return (
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
@@ -27,37 +29,49 @@ export const DescriptionSection = () => {
           
           <TabsContent value="georgian" className="space-y-4">
             <div>
-              <Label htmlFor="description-georgian" className="text-sm mb-2 block">აღწერა ქართულად</Label>
+              <Label htmlFor="descriptionGeorgian" className="text-sm mb-2 block">აღწერა ქართულად</Label>
               <Textarea 
-                id="description-georgian"
+                {...register("descriptionGeorgian")}
+                id="descriptionGeorgian"
                 placeholder="დაწერეთ უძრავი ქონების დეტალური აღწერა ქართულად..."
                 className="min-h-[120px] border-input focus:ring-ring focus:ring-1"
                 rows={6}
               />
+              {errors.descriptionGeorgian && (
+                <p className="text-sm text-red-600 mt-1">{errors.descriptionGeorgian.message as string}</p>
+              )}
             </div>
           </TabsContent>
           
           <TabsContent value="english" className="space-y-4">
             <div>
-              <Label htmlFor="description-english" className="text-sm mb-2 block">Description in English</Label>
+              <Label htmlFor="descriptionEnglish" className="text-sm mb-2 block">Description in English</Label>
               <Textarea 
-                id="description-english"
+                {...register("descriptionEnglish")}
+                id="descriptionEnglish"
                 placeholder="Write a detailed description of the property in English..."
                 className="min-h-[120px] border-input focus:ring-ring focus:ring-1"
                 rows={6}
               />
+              {errors.descriptionEnglish && (
+                <p className="text-sm text-red-600 mt-1">{errors.descriptionEnglish.message as string}</p>
+              )}
             </div>
           </TabsContent>
           
           <TabsContent value="russian" className="space-y-4">
             <div>
-              <Label htmlFor="description-russian" className="text-sm mb-2 block">Описание на русском</Label>
+              <Label htmlFor="descriptionRussian" className="text-sm mb-2 block">Описание на русском</Label>
               <Textarea 
-                id="description-russian"
+                {...register("descriptionRussian")}
+                id="descriptionRussian"
                 placeholder="Напишите подробное описание недвижимости на русском языке..."
                 className="min-h-[120px] border-input focus:ring-ring focus:ring-1"
                 rows={6}
               />
+              {errors.descriptionRussian && (
+                <p className="text-sm text-red-600 mt-1">{errors.descriptionRussian.message as string}</p>
+              )}
             </div>
           </TabsContent>
         </Tabs>

@@ -7,6 +7,7 @@ interface FormActionsProps {
   onSubmit: () => void;
   isLoading?: boolean;
   isDraftSaving?: boolean;
+  isEdit?: boolean;
 }
 
 export const FormActions: React.FC<FormActionsProps> = ({
@@ -14,6 +15,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
   onSubmit,
   isLoading = false,
   isDraftSaving = false,
+  isEdit = false,
 }) => {
   return (
     <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border/50 shadow-lg z-50">
@@ -76,7 +78,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
               ) : (
                 <>
                   <Send className="h-4 w-4" />
-                  <span>განცხადების დამატება</span>
+                  <span>{isEdit ? "განცხადების განახლება" : "განცხადების დამატება"}</span>
                 </>
               )}
             </Button>

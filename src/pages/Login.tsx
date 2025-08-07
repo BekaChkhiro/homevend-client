@@ -73,8 +73,8 @@ const Login = () => {
               
               <div className="mb-4 p-3 bg-muted/50 rounded-lg">
                 <p className="text-sm font-medium mb-1">სატესტო მონაცემები:</p>
-                <p className="text-xs">მომხმარებელი: <span className="font-mono">test@example.com</span> / <span className="font-mono">password</span></p>
-                <p className="text-xs">ადმინი: <span className="font-mono">admin@example.com</span> / <span className="font-mono">adminpass</span></p>
+                <p className="text-xs">მომხმარებელი: <span className="font-mono">user1@example.com</span> / <span className="font-mono">password123</span></p>
+                <p className="text-xs">ადმინი: <span className="font-mono">admin@test.com</span> / <span className="font-mono">admin123456</span></p>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-4">

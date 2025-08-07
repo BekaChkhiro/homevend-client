@@ -1,88 +1,142 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { authApi } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
-// განვსაზღვროთ მომხმარებლის ტიპი
 export interface User {
-  id: string;
+  id: number;
   fullName: string;
   email: string;
   role: 'user' | 'admin';
 }
 
-// კონტექსტის ტიპი
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  register: (userData: { fullName: string; email: string; password: string }) => Promise<boolean>;
+  logout: (options: { redirectToLogin?: boolean }) => void;
 }
 
-// ვქმნით კონტექსტს
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// სატესტო მომხმარებელი
-const TEST_USER: User = {
-  id: '1',
-  fullName: 'ტესტ მომხმარებელი',
-  email: 'test@example.com',
-  role: 'user'
-};
-
-// ადმინის მომხმარებელი
-const ADMIN_USER: User = {
-  id: '2',
-  fullName: 'ადმინისტრატორი',
-  email: 'admin@example.com',
-  role: 'admin'
-};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  // სესიის აღდგენა გვერდის განახლების შემთხვევაში
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    
-    setIsLoading(false);
+  // Clear auth data from storage and state
+  const clearAuthData = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
   }, []);
 
-  // შესვლის ფუნქცია
+  // Set auth data in storage and state
+  const setAuthData = useCallback((userData: User, token: string) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, []);
+
+  // Check if user is logged in on initial load
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        
+        if (token && storedUser) {
+          try {
+            // Try to get fresh user data
+            const userData = await authApi.getMe();
+            setUser(userData);
+          } catch (error) {
+            console.error('Failed to refresh session:', error);
+            // If refresh fails but we have stored user, use it
+            if (storedUser) {
+              setUser(JSON.parse(storedUser));
+            } else {
+              clearAuthData();
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        clearAuthData();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [clearAuthData]);
+
   const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    
-    // ვემულაციებთ სერვერის პასუხს
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // შევამოწმოთ სატესტო მომხმარებლები
-    let authenticatedUser: User | null = null;
-    
-    if (email === 'test@example.com' && password === 'password') {
-      authenticatedUser = TEST_USER;
-    } else if (email === 'admin@example.com' && password === 'adminpass') {
-      authenticatedUser = ADMIN_USER;
-    }
-    
-    if (authenticatedUser) {
-      setUser(authenticatedUser);
-      localStorage.setItem('user', JSON.stringify(authenticatedUser));
-      setIsLoading(false);
+    try {
+      setLoading(true);
+      const { user, token } = await authApi.login(email, password);
+      setAuthData(user, token);
+      
+      toast({
+        title: "წარმატებული შესვლა",
+        description: `მოგესალმებით, ${user.fullName}!`,
+      });
+      
       return true;
+    } catch (error: any) {
+      console.error('Login failed:', error);
+      const errorMessage = error.response?.data?.message || 'შესვლა ვერ მოხერხდა. გთხოვთ სცადოთ ხელახლა.';
+      toast({
+        title: "შეცდომა",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setLoading(false);
     }
-    
-    setIsLoading(false);
-    return false;
   };
 
-  // გამოსვლის ფუნქცია
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const register = async (userData: { fullName: string; email: string; password: string }): Promise<boolean> => {
+    try {
+      setLoading(true);
+      const { user, token } = await authApi.register(userData);
+      setAuthData(user, token);
+      
+      toast({
+        title: "რეგისტრაცია წარმატებით დასრულდა",
+        description: `მოგესალმებით, ${user.fullName}!`,
+      });
+      
+      return true;
+    } catch (error: any) {
+      console.error('Registration failed:', error);
+      const errorMessage = error.response?.data?.message || 'რეგისტრაცია ვერ მოხერხდა. გთხოვთ სცადოთ ხელახლა.';
+      toast({
+        title: "შეცდომა",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const logout = useCallback((options: { redirectToLogin?: boolean } = {}) => {
+    const { redirectToLogin = true } = options;
+    clearAuthData();
+    
+    toast({
+      title: "თქვენ გამოხვედით სისტემიდან",
+      description: "დაგვიკავშირდით ნებისმიერ დროს!",
+    });
+    
+    if (redirectToLogin) {
+      window.location.href = '/login';
+    }
+  }, [clearAuthData, toast]);
 
   return (
     <AuthContext.Provider
@@ -91,7 +145,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         isLoading,
         login,
-        logout
+        register,
+        logout,
       }}
     >
       {children}
@@ -99,13 +154,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-// კონტექსტის გამოსაყენებელი ჰუკი
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  
   return context;
 };

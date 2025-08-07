@@ -1,142 +1,105 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ApartmentCard } from './components/ApartmentCard';
 import { Button } from '@/components/ui/button';
-import { Plus, Filter } from 'lucide-react';
+import { Plus, Filter, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { propertyApi } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 
-// Test apartment data for admin panel
-const testApartments = [
-  {
-    id: 1001,
-    title: "ლუქსუსური ბინა ვაკეში",
-    price: 250000,
-    address: "ვაკე, თბილისი",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 95,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop",
-    featured: true,
-    status: "active" as const,
-    createdBy: {
-      id: 2001,
-      name: "გიორგი მელაძე",
-      email: "giorgi.meladze@example.com",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-    },
-    createdDate: "2024-01-15"
-  },
-  {
-    id: 1002,
-    title: "კომფორტული სახლი საბურთალოში",
-    price: 180000,
-    address: "საბურთალო, თბილისი",
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 200,
-    type: "სახლები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1527576539890-dfa815648363?w=500&h=300&fit=crop",
-    featured: false,
-    status: "pending" as const,
-    createdBy: {
-      id: 2003,
-      name: "დავით ლომიძე",
-      email: "davit.lomidze@example.com",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-    },
-    createdDate: "2024-01-20"
-  },
-  {
-    id: 1003,
-    title: "ახალი ბინა ისანში",
-    price: 95000,
-    address: "ისანი, თბილისი",
-    bedrooms: 2,
-    bathrooms: 1,
-    area: 75,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=500&h=300&fit=crop",
-    featured: false,
-    status: "active" as const,
-    createdBy: {
-      id: 2004,
-      name: "მარიამ წიწკიშვილი",
-      email: "mariam.tsitskishvili@example.com"
-    },
-    createdDate: "2024-01-18"
-  },
-  {
-    id: 1004,
-    title: "პენტჰაუსი ვაკეში",
-    price: 380000,
-    address: "ვაკე, თბილისი",
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 180,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=500&h=300&fit=crop",
-    featured: true,
-    status: "sold" as const,
-    createdBy: {
-      id: 2008,
-      name: "ეკატერინე ნოდია",
-      email: "ekaterine.nodia@example.com",
-      avatar: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=100&h=100&fit=crop&crop=face"
-    },
-    createdDate: "2023-12-28"
-  },
-  {
-    id: 1005,
-    title: "კოტეჯი დიდ დიღომში",
-    price: 220000,
-    address: "დიდი დიღომი, თბილისი",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 160,
-    type: "სახლები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop",
-    featured: false,
-    status: "inactive" as const,
-    createdBy: {
-      id: 2005,
-      name: "ლევან გელაშვილი",
-      email: "levan.gelashvili@example.com",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face"
-    },
-    createdDate: "2024-01-10"
-  },
-  {
-    id: 1006,
-    title: "სტუდია თბილისის ცენტრში",
-    price: 85000,
-    address: "ლიბერტი ბანკის მახლობლად",
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 38,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop",
-    featured: false,
-    status: "active" as const,
-    createdBy: {
-      id: 2007,
-      name: "გრიგოლ ბერიძე",
-      email: "grigol.beridze@example.com"
-    },
-    createdDate: "2024-01-22"
-  }
-];
+interface Property {
+  id: number;
+  propertyType: string;
+  dealType: string;
+  city: string;
+  street: string;
+  area: string;
+  totalPrice: string;
+  bedrooms?: string;
+  bathrooms?: string;
+  photos: string[];
+  status: string;
+  createdAt: string;
+  user: {
+    id: number;
+    fullName: string;
+    email: string;
+  };
+}
 
 const Listings = () => {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchAllProperties();
+  }, []);
+
+  const fetchAllProperties = async () => {
+    try {
+      setIsLoading(true);
+      // Fetch all properties regardless of status for admin view
+      const response = await propertyApi.getProperties({ status: '' });
+      const data = response?.properties || [];
+      setProperties(data);
+    } catch (error: any) {
+      console.error('Error fetching properties:', error);
+      toast({
+        title: "შეცდომა",
+        description: "განცხადებების ჩატვირთვისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Transform property data for the ApartmentCard component
+  const transformedProperties = properties.map((prop) => ({
+    id: prop.id,
+    title: `${prop.propertyType} ${prop.dealType} ${prop.city}`,
+    price: parseInt(prop.totalPrice) || 0,
+    address: `${prop.street}, ${prop.city}`,
+    bedrooms: parseInt(prop.bedrooms || '1'),
+    bathrooms: parseInt(prop.bathrooms || '1'),
+    area: parseInt(prop.area) || 0,
+    type: prop.propertyType,
+    transactionType: prop.dealType,
+    image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
+    featured: Math.random() > 0.5, // Random for now, could be based on viewCount or other criteria
+    status: prop.status as "active" | "pending" | "inactive" | "sold",
+    createdBy: {
+      id: prop.user.id,
+      name: prop.user.fullName,
+      email: prop.user.email,
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(prop.user.fullName)}&background=random`
+    },
+    createdDate: new Date(prop.createdAt).toLocaleDateString('ka-GE')
+  }));
+  if (isLoading) {
+    return (
+      <div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">განცხადებების მართვა</h1>
+          <p className="text-gray-600">ყველა განცხადების ნახვა და მართვა</p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center py-12">
+            <div className="flex items-center space-x-2">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span>განცხადებების ჩატვირთვა...</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">განცხადებების მართვა</h1>
-        <p className="text-gray-600">ყველა განცხადების ნახვა და მართვა</p>
+        <p className="text-gray-600">ყველა განცხადების ნახვა და მართვა ({transformedProperties.length} განცხადება)</p>
       </div>
 
       <Card>
@@ -151,16 +114,16 @@ const Listings = () => {
                 <Filter className="h-4 w-4 mr-2" />
                 ფილტრი
               </Button>
-              <Button size="sm">
+              <Button size="sm" onClick={fetchAllProperties}>
                 <Plus className="h-4 w-4 mr-2" />
-                ახალი განცხადება
+                განახლება
               </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {testApartments.map((apartment) => (
+            {transformedProperties.map((apartment) => (
               <ApartmentCard
                 key={apartment.id}
                 {...apartment}
@@ -168,12 +131,12 @@ const Listings = () => {
             ))}
           </div>
           
-          {testApartments.length === 0 && (
+          {transformedProperties.length === 0 && !isLoading && (
             <div className="text-center py-12">
               <p className="text-gray-500 mb-4">განცხადებები ვერ მოიძებნა</p>
-              <Button>
+              <Button onClick={fetchAllProperties}>
                 <Plus className="h-4 w-4 mr-2" />
-                პირველი განცხადების დამატება
+                განახლება
               </Button>
             </div>
           )}

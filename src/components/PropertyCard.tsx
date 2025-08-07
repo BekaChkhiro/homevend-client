@@ -11,6 +11,9 @@ interface PropertyCardProps {
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
+  // Debug logging
+  console.log('PropertyCard received property:', property);
+  
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('ka-GE', {
       style: 'currency',
@@ -44,7 +47,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       <CardContent className="p-4">
         <div className="mb-3">
           <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
-            {property.title}
+            {property.title || 'სათაური არ არის მითითებული'}
           </h3>
           <div className="flex items-center text-muted-foreground text-sm mt-1">
             <MapPin className="h-4 w-4 mr-1" />

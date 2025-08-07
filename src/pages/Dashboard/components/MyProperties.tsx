@@ -1,117 +1,102 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 import { UserPropertyCard } from "./UserPropertyCard";
+import { propertyApi } from "@/lib/api";
 
-// Test user properties data
-const testUserProperties = [
-  {
-    id: 3001,
-    title: "ლუქსუსური ბინა ვაკეში",
-    price: 250000,
-    address: "ვაკე, თბილისი",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 95,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop",
-    status: "active" as const,
-    views: 245,
-    favorites: 12,
-    publishDate: "2024-01-15",
-    featured: true
-  },
-  {
-    id: 3002,
-    title: "კომფორტული ბინა საბურთალოში",
-    price: 180000,
-    address: "საბურთალო, თბილისი",
-    bedrooms: 2,
-    bathrooms: 1,
-    area: 75,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1527576539890-dfa815648363?w=500&h=300&fit=crop",
-    status: "active" as const,
-    views: 189,
-    favorites: 8,
-    publishDate: "2024-01-20",
-    featured: false
-  },
-  {
-    id: 3003,
-    title: "ახალი ბინა ისანში",
-    price: 95000,
-    address: "ისანი, თბილისი",
-    bedrooms: 2,
-    bathrooms: 1,
-    area: 65,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=500&h=300&fit=crop",
-    status: "pending" as const,
-    views: 67,
-    favorites: 3,
-    publishDate: "2024-01-25",
-    featured: false
-  },
-  {
-    id: 3004,
-    title: "პენტჰაუსი ვაკეში",
-    price: 380000,
-    address: "ვაკე, თბილისი",
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 180,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=500&h=300&fit=crop",
-    status: "sold" as const,
-    views: 412,
-    favorites: 28,
-    publishDate: "2023-12-10",
-    featured: true
-  },
-  {
-    id: 3005,
-    title: "სტუდია ცენტრში",
-    price: 85000,
-    address: "ძველი თბილისი",
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 35,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop",
-    status: "inactive" as const,
-    views: 123,
-    favorites: 5,
-    publishDate: "2023-11-28",
-    featured: false
-  }
-];
+interface Property {
+  id: string;
+  title: string;
+  propertyType: string;
+  dealType: string;
+  city: string;
+  street: string;
+  area: string;
+  totalPrice: string;
+  bedrooms?: string;
+  bathrooms?: string;
+  status: 'active' | 'inactive' | 'pending' | 'sold';
+  viewCount: number;
+  createdAt: string;
+  photos: string[];
+  contactName: string;
+  contactPhone: string;
+}
 
 type FilterType = "all" | "active" | "pending" | "sold" | "inactive";
 
 export const MyProperties: React.FC = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUserProperties();
+  }, []);
+
+  const fetchUserProperties = async () => {
+    try {
+      setIsLoading(true);
+      const data = await propertyApi.getUserProperties();
+      setProperties(data || []);
+    } catch (error: any) {
+      console.error('Error fetching properties:', error);
+      toast({
+        title: "შეცდომა",
+        description: "განცხადებების ჩატვირთვისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteProperty = async (propertyId: string) => {
+    try {
+      await propertyApi.deleteProperty(propertyId);
+      setProperties(properties.filter(p => p.id !== propertyId));
+      toast({
+        title: "წარმატება",
+        description: "განცხადება წარმატებით წაიშალა",
+      });
+    } catch (error: any) {
+      console.error('Error deleting property:', error);
+      toast({
+        title: "შეცდომა",
+        description: "განცხადების წაშლისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    }
+  };
   
   const getFilteredProperties = () => {
-    if (activeFilter === "all") return testUserProperties;
-    return testUserProperties.filter(property => property.status === activeFilter);
+    if (activeFilter === "all") return properties;
+    return properties.filter(property => property.status === activeFilter);
   };
 
   const getCountByStatus = (status: FilterType) => {
-    if (status === "all") return testUserProperties.length;
-    return testUserProperties.filter(property => property.status === status).length;
+    if (status === "all") return properties.length;
+    return properties.filter(property => property.status === status).length;
   };
 
   const filteredProperties = getFilteredProperties();
-  const hasProperties = testUserProperties.length > 0;
+  const hasProperties = properties.length > 0;
   
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>განცხადებების ჩატვირთვა...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <h2 className="text-xl font-medium mb-4">ჩემი განცხადებები</h2>
@@ -169,7 +154,8 @@ export const MyProperties: React.FC = () => {
             filteredProperties.map((property) => (
               <UserPropertyCard
                 key={property.id}
-                {...property}
+                property={property}
+                onDelete={handleDeleteProperty}
               />
             ))
           ) : (

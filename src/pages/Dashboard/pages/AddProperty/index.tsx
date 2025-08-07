@@ -3,6 +3,8 @@ import { Card } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 import { BasicInfoSection } from "./components/BasicInfoSection";
 import { PropertyDetailsSection } from "./components/PropertyDetailsSection";
 import { FeaturesSection } from "./components/FeaturesSection";
@@ -15,10 +17,13 @@ import { DescriptionSection } from "./components/DescriptionSection";
 import { PhotoGallerySection } from "./components/PhotoGallerySection";
 import { FormActions } from "./components/FormActions";
 import { propertyFormSchema, type PropertyFormData } from "./types/propertyForm";
+import { propertyApi } from "@/lib/api";
 
 export const AddProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDraftSaving, setIsDraftSaving] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
@@ -41,13 +46,76 @@ export const AddProperty = () => {
   const onSubmit = async (data: PropertyFormData) => {
     setIsLoading(true);
     try {
-      console.log("Form submitted:", data);
-      // TODO: Implement actual submission logic
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      alert("განცხადება წარმატებით დაემატა!");
-    } catch (error) {
+      // Convert form data to API format
+      const propertyData = {
+        title: data.title,
+        propertyType: data.propertyType,
+        dealType: data.dealType,
+        city: data.city,
+        street: data.street,
+        streetNumber: data.streetNumber,
+        cadastralCode: data.cadastralCode,
+        rooms: data.rooms,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        totalFloors: data.totalFloors,
+        buildingStatus: data.buildingStatus,
+        constructionYear: data.constructionYear,
+        condition: data.condition,
+        projectType: data.projectType,
+        ceilingHeight: data.ceilingHeight,
+        heating: data.heating,
+        parking: data.parking,
+        hotWater: data.hotWater,
+        buildingMaterial: data.buildingMaterial,
+        hasBalcony: data.hasBalcony,
+        balconyCount: data.balconyCount,
+        balconyArea: data.balconyArea,
+        hasPool: data.hasPool,
+        poolType: data.poolType,
+        hasLivingRoom: data.hasLivingRoom,
+        livingRoomArea: data.livingRoomArea,
+        livingRoomType: data.livingRoomType,
+        hasLoggia: data.hasLoggia,
+        loggiaArea: data.loggiaArea,
+        hasVeranda: data.hasVeranda,
+        verandaArea: data.verandaArea,
+        hasYard: data.hasYard,
+        yardArea: data.yardArea,
+        hasStorage: data.hasStorage,
+        storageArea: data.storageArea,
+        storageType: data.storageType,
+        features: data.features,
+        advantages: data.advantages,
+        furnitureAppliances: data.furnitureAppliances,
+        tags: data.tags,
+        area: data.area,
+        totalPrice: data.totalPrice,
+        pricePerSqm: data.pricePerSqm,
+        contactName: data.contactName,
+        contactPhone: data.contactPhone,
+        descriptionGeorgian: data.descriptionGeorgian,
+        descriptionEnglish: data.descriptionEnglish,
+        descriptionRussian: data.descriptionRussian,
+        // TODO: Handle photo uploads
+        photos: []
+      };
+
+      await propertyApi.createProperty(propertyData);
+      
+      toast({
+        title: "წარმატება!",
+        description: "განცხადება წარმატებით დაემატა და ადმინისტრაციის მიერ განხილვაშია",
+      });
+      
+      navigate('/dashboard/my-properties');
+    } catch (error: any) {
       console.error("Submission error:", error);
-      alert("შეცდომა მოხდა განცხადების დამატებისას");
+      toast({
+        title: "შეცდომა",
+        description: error.response?.data?.message || "შეცდომა მოხდა განცხადების დამატებისას",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -57,13 +125,20 @@ export const AddProperty = () => {
     setIsDraftSaving(true);
     try {
       const formData = form.getValues();
-      console.log("Draft saved:", formData);
-      // TODO: Implement draft saving logic
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      alert("დრაფთი შენახულია!");
+      // Save to localStorage as draft
+      localStorage.setItem('property_draft', JSON.stringify(formData));
+      
+      toast({
+        title: "დრაფთი შენახულია",
+        description: "შეგიძლიათ მოგვიანებით განაგრძოთ განცხადების შევსება",
+      });
     } catch (error) {
       console.error("Draft save error:", error);
-      alert("შეცდომა მოხდა დრაფთის შენახვისას");
+      toast({
+        title: "შეცდომა",
+        description: "შეცდომა მოხდა დრაფთის შენახვისას",
+        variant: "destructive",
+      });
     } finally {
       setIsDraftSaving(false);
     }
