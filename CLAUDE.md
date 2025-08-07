@@ -10,7 +10,7 @@ npm run dev        # Start development server on port 8080
 npm run build      # Production build to ./build directory
 npm run build:dev  # Development build
 npm run preview    # Preview production build
-npm run lint       # Run ESLint
+npm run lint       # Run ESLint (no fix flag available)
 ```
 
 ### Installation
@@ -57,7 +57,16 @@ This is a React-based real estate platform built with Vite, TypeScript, and shad
 
 5. **Build Output**: Production builds output to `./build` directory (not default `dist`)
 
+6. **Dashboard Architecture**: 
+   - User Dashboard (`/dashboard`) with nested routes for properties, favorites, profile
+   - Admin Dashboard (`/admin`) with role-based access control
+   - Both dashboards use outlet-based routing with sidebar navigation
+
+7. **Mock Data Layer**: No backend integration - all data is mocked in components and contexts
+
 ### Development Notes
-- Georgian language content present in some components (AuthContext comments)
-- Lovable platform integration via lovable-tagger plugin
-- TypeScript configured with relaxed settings (no implicit any, no unused parameters warnings)
+- Georgian language content present in AuthContext comments and user data
+- Lovable platform integration via lovable-tagger plugin (development mode only)
+- TypeScript configured with relaxed settings for rapid prototyping
+- Server runs on port 8080 (not default 5173)
+- No test framework configured
