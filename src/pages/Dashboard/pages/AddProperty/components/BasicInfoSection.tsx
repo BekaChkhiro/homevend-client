@@ -145,7 +145,7 @@ export const BasicInfoSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
                 >
                   {[
                     { value: "sale", label: "იყიდება", desc: "სრული გაყიდვა" },
