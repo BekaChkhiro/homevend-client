@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Home, Users, Award, TrendingUp, Phone, Mail, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const AboutUs = () => {
   return (
@@ -15,7 +16,7 @@ const AboutUs = () => {
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">ჩვენს შესახებ</h1>
             <p className="text-xl text-muted-foreground mb-8">
-              HomeVend არის საქართველოს წამყვანი უძრავი ქონების პლატფორმა, 
+              HomeVend არის საქართველოს წამყვანი უძრავი ქონების პლატფორმა,
               რომელიც აერთიანებს მყიდველებს და გამყიდველებს ერთ ადგილას.
             </p>
             <div className="flex justify-center gap-4 mb-8">
@@ -47,8 +48,8 @@ const AboutUs = () => {
                   <h3 className="text-2xl font-bold mb-4">ჩვენი მისია</h3>
                 </div>
                 <p className="text-muted-foreground leading-relaxed text-center">
-                  ჩვენი მისიაა გავხადოთ უძრავი ქონების ყიდვა-გაყიდვის პროცესი 
-                  მარტივი, უსაფრთხო და ეფექტური. ვეხმარებით ადამიანებს იპოვონ 
+                  ჩვენი მისიაა გავხადოთ უძრავი ქონების ყიდვა-გაყიდვის პროცესი
+                  მარტივი, უსაფრთხო და ეფექტური. ვეხმარებით ადამიანებს იპოვონ
                   მათი ოცნების სახლი ან გაყიდონ ქონება სწრაფად და გამჭვირვალედ.
                 </p>
               </CardContent>
@@ -63,8 +64,8 @@ const AboutUs = () => {
                   <h3 className="text-2xl font-bold mb-4">ჩვენი ხედვა</h3>
                 </div>
                 <p className="text-muted-foreground leading-relaxed text-center">
-                  ჩვენი ხედვაა ვიყოთ საქართველოში უძრავი ქონების ბაზრის 
-                  ლიდერი და შევქმნათ ციფრული ეკოსისტემა, სადაც თითოეული 
+                  ჩვენი ხედვაა ვიყოთ საქართველოში უძრავი ქონების ბაზრის
+                  ლიდერი და შევქმნათ ციფრული ეკოსისტემა, სადაც თითოეული
                   მომხმარებელი მიიღებს საუკეთესო მომსახურებას.
                 </p>
               </CardContent>
@@ -77,7 +78,7 @@ const AboutUs = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">რატომ HomeVend?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              ჩვენ გთავაზობთ უნიკალურ სერვისებს, რომლებიც გხდის უძრავი ქონების 
+              ჩვენ გთავაზობთ უნიკალურ სერვისებს, რომლებიც გხდის უძრავი ქონების
               ძებნის და გაყიდვის პროცესს მაქსიმალურად კომფორტულს.
             </p>
           </div>
@@ -195,10 +196,14 @@ const AboutUs = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="px-8">
+                <Link to="/dashboard/add-property" className="flex items-center gap-1.5">
                 განცხადების დამატება
+                </Link>
               </Button>
               <Button size="lg" variant="outline" className="px-8">
+                <Link to="/properties" className="flex items-center gap-1.5">
                 ქონების ძებნა
+                </Link>
               </Button>
             </div>
           </div>

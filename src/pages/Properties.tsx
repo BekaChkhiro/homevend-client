@@ -4,12 +4,12 @@ import { PropertyGrid } from "@/components/PropertyGrid";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdBanner } from "@/components/AdBanner";
+import { HeroSection } from "@/components/HeroSection";
 import type { Property, FilterState } from "@/pages/Index";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Loader2, SlidersHorizontal, MapPin, Home, TrendingUp, Filter } from "lucide-react";
+import { Loader2, SlidersHorizontal, MapPin, Home } from "lucide-react";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -38,7 +38,6 @@ const Properties = () => {
     areaMin: "",
     areaMax: ""
   });
-  const [searchInput, setSearchInput] = useState("");
   const [sortBy, setSortBy] = useState<string>("newest");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -157,10 +156,6 @@ const Properties = () => {
     setFilteredProperties(filtered);
   };
 
-  const handleSearch = () => {
-    handleFilterChange({ ...filters, search: searchInput });
-  };
-
   const handleSortChange = (value: string) => {
     setSortBy(value);
     applyFiltersAndSort(filters, value);
@@ -191,56 +186,13 @@ const Properties = () => {
       <Header />
       <div className="pt-32">
 
-        {/* Hero Section with Enhanced Search */}
-        <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-background py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">უძრავი ქონების განცხადებები</h1>
-              <p className="text-xl text-muted-foreground mb-8">
-                იპოვეთ თქვენი იდეალური ქონება {totalProperties.toLocaleString()}+ განცხადებიდან
-              </p>
-            </div>
-
-            {/* Enhanced Search Bar */}
-            <div className="max-w-4xl mx-auto">
-              <div className="flex flex-col md:flex-row gap-4 mb-6">
-                <div className="flex-1">
-                  <Input
-                    placeholder="ძებნა სათაურით ან მისამართით..."
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                    className="bg-white h-12 text-lg"
-                  />
-                </div>
-                <Button onClick={handleSearch} size="lg" className="h-12 px-8">
-                  <Search className="h-5 w-5 mr-2" />
-                  ძებნა
-                </Button>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-primary">{totalProperties}</div>
-                  <div className="text-sm text-muted-foreground">სულ განცხადება</div>
-                </div>
-                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-primary">{featuredProperties}</div>
-                  <div className="text-sm text-muted-foreground">რჩეული განცხადება</div>
-                </div>
-                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-primary">₾{averagePrice.toLocaleString()}</div>
-                  <div className="text-sm text-muted-foreground">საშუალო ფასი</div>
-                </div>
-                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-primary">{Object.keys(stats).length}</div>
-                  <div className="text-sm text-muted-foreground">ქონების ტიპი</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Hero Section with Search */}
+        <HeroSection onSearch={(heroFilters) => handleFilterChange({
+          ...filters, 
+          search: heroFilters.search,
+          transactionType: heroFilters.transactionType,
+          propertyType: heroFilters.propertyType
+        })} />
 
         {/* Top Ad Banner */}
         <div className="container mx-auto px-4 py-6">
@@ -332,7 +284,6 @@ const Properties = () => {
                       areaMin: "",
                       areaMax: ""
                     });
-                    setSearchInput("");
                     setFilteredProperties(properties);
                   }}>
                     ფილტრების გასუფთავება
