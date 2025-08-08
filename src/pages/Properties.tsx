@@ -366,11 +366,30 @@ const Properties = () => {
                 </div>
               ) : (
                 <>
-                  {/* 4 Column Property Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-                    {paginatedProperties.map((property) => (
-                      <PropertyCard key={property.id} property={property} />
-                    ))}
+                  {/* 4 Column Property Grid with Middle Ad */}
+                  <div className="mb-8">
+                    {/* First 8 properties */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                      {paginatedProperties.slice(0, 8).map((property) => (
+                        <PropertyCard key={property.id} property={property} />
+                      ))}
+                    </div>          
+                              
+                    {/* Middle Ad Banner - Show only if there are more than 8 properties */}
+                    {paginatedProperties.length > 8 && (
+                      <div className="mb-8">
+                        <AdBanner type="horizontal" />
+                      </div>
+                    )}
+                    
+                    {/* Remaining properties */}
+                    {paginatedProperties.length > 8 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {paginatedProperties.slice(8).map((property) => (
+                          <PropertyCard key={property.id} property={property} />
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Pagination */}
