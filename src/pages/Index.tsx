@@ -138,8 +138,33 @@ export interface FilterState {
   propertyType: string;
   transactionType: string;
   bedrooms: string;
+  bathrooms?: string;
   areaMin: string;
   areaMax: string;
+  // Extended fields for comprehensive filtering
+  rooms?: string;
+  totalFloors?: string;
+  buildingStatus?: string;
+  constructionYearMin?: string;
+  constructionYearMax?: string;
+  condition?: string;
+  projectType?: string;
+  ceilingHeightMin?: string;
+  ceilingHeightMax?: string;
+  heating?: string;
+  parking?: string;
+  hotWater?: string;
+  buildingMaterial?: string;
+  hasBalcony?: boolean;
+  hasPool?: boolean;
+  hasLivingRoom?: boolean;
+  hasLoggia?: boolean;
+  hasVeranda?: boolean;
+  hasYard?: boolean;
+  hasStorage?: boolean;
+  selectedFeatures?: string[];
+  selectedAdvantages?: string[];
+  selectedFurnitureAppliances?: string[];
 }
 
 const Index = () => {

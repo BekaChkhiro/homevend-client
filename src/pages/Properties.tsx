@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { FilterPanel } from "@/components/FilterPanel";
 import { PropertyGrid } from "@/components/PropertyGrid";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdBanner } from "@/components/AdBanner";
-import { HeroSection } from "@/components/HeroSection";
+import { PropertySearchHero } from "@/components/PropertySearchHero";
 import type { Property, FilterState } from "@/pages/Index";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,8 +34,33 @@ const Properties = () => {
     propertyType: "",
     transactionType: "",
     bedrooms: "",
+    bathrooms: "all",
     areaMin: "",
-    areaMax: ""
+    areaMax: "",
+    // Extended fields
+    rooms: "all",
+    totalFloors: "all",
+    buildingStatus: "all",
+    constructionYearMin: "",
+    constructionYearMax: "",
+    condition: "all",
+    projectType: "all",
+    ceilingHeightMin: "",
+    ceilingHeightMax: "",
+    heating: "all",
+    parking: "all",
+    hotWater: "all",
+    buildingMaterial: "all",
+    hasBalcony: false,
+    hasPool: false,
+    hasLivingRoom: false,
+    hasLoggia: false,
+    hasVeranda: false,
+    hasYard: false,
+    hasStorage: false,
+    selectedFeatures: [],
+    selectedAdvantages: [],
+    selectedFurnitureAppliances: []
   });
   const [sortBy, setSortBy] = useState<string>("newest");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -113,7 +137,8 @@ const Properties = () => {
   const applyFiltersAndSort = (currentFilters: FilterState, currentSort: string) => {
     // Apply filters
     let filtered = properties.filter(property => {
-      const matchesSearch = property.title.toLowerCase().includes(currentFilters.search.toLowerCase()) ||
+      const matchesSearch = !currentFilters.search || currentFilters.search === "" ||
+        property.title.toLowerCase().includes(currentFilters.search.toLowerCase()) ||
         property.address.toLowerCase().includes(currentFilters.search.toLowerCase());
 
       const matchesPriceMin = !currentFilters.priceMin || property.price >= parseInt(currentFilters.priceMin);
@@ -122,15 +147,16 @@ const Properties = () => {
       const matchesLocation = !currentFilters.location ||
         property.address.toLowerCase().includes(currentFilters.location.toLowerCase());
 
-      const matchesType = !currentFilters.propertyType || property.type === currentFilters.propertyType;
-      const matchesTransaction = !currentFilters.transactionType || property.transactionType === currentFilters.transactionType;
-      const matchesBedrooms = !currentFilters.bedrooms || property.bedrooms === parseInt(currentFilters.bedrooms);
+      const matchesType = !currentFilters.propertyType || currentFilters.propertyType === "all" || property.type === currentFilters.propertyType;
+      const matchesTransaction = !currentFilters.transactionType || currentFilters.transactionType === "all" || property.transactionType === currentFilters.transactionType;
+      const matchesBedrooms = !currentFilters.bedrooms || currentFilters.bedrooms === "all" || property.bedrooms === parseInt(currentFilters.bedrooms);
+      const matchesBathrooms = !currentFilters.bathrooms || currentFilters.bathrooms === "all" || property.bathrooms === parseInt(currentFilters.bathrooms);
 
       const matchesAreaMin = !currentFilters.areaMin || property.area >= parseInt(currentFilters.areaMin);
       const matchesAreaMax = !currentFilters.areaMax || property.area <= parseInt(currentFilters.areaMax);
 
       return matchesSearch && matchesPriceMin && matchesPriceMax && matchesLocation &&
-        matchesType && matchesTransaction && matchesBedrooms && matchesAreaMin && matchesAreaMax;
+        matchesType && matchesTransaction && matchesBedrooms && matchesBathrooms && matchesAreaMin && matchesAreaMax;
     });
 
     // Apply sorting
@@ -186,12 +212,43 @@ const Properties = () => {
       <Header />
       <div className="pt-32">
 
-        {/* Hero Section with Search */}
-        <HeroSection onSearch={(heroFilters) => handleFilterChange({
-          ...filters, 
-          search: heroFilters.search,
-          transactionType: heroFilters.transactionType,
-          propertyType: heroFilters.propertyType
+        {/* Property Search Section */}
+        <PropertySearchHero onSearch={(searchFilters) => handleFilterChange({
+          ...filters,
+          search: searchFilters.search,
+          transactionType: searchFilters.transactionType,
+          propertyType: searchFilters.propertyType,
+          priceMin: searchFilters.priceMin,
+          priceMax: searchFilters.priceMax,
+          location: searchFilters.location,
+          bedrooms: searchFilters.bedrooms,
+          bathrooms: searchFilters.bathrooms,
+          areaMin: searchFilters.areaMin,
+          areaMax: searchFilters.areaMax,
+          // Extended filter fields
+          rooms: searchFilters.rooms,
+          totalFloors: searchFilters.totalFloors,
+          buildingStatus: searchFilters.buildingStatus,
+          constructionYearMin: searchFilters.constructionYearMin,
+          constructionYearMax: searchFilters.constructionYearMax,
+          condition: searchFilters.condition,
+          projectType: searchFilters.projectType,
+          ceilingHeightMin: searchFilters.ceilingHeightMin,
+          ceilingHeightMax: searchFilters.ceilingHeightMax,
+          heating: searchFilters.heating,
+          parking: searchFilters.parking,
+          hotWater: searchFilters.hotWater,
+          buildingMaterial: searchFilters.buildingMaterial,
+          hasBalcony: searchFilters.hasBalcony,
+          hasPool: searchFilters.hasPool,
+          hasLivingRoom: searchFilters.hasLivingRoom,
+          hasLoggia: searchFilters.hasLoggia,
+          hasVeranda: searchFilters.hasVeranda,
+          hasYard: searchFilters.hasYard,
+          hasStorage: searchFilters.hasStorage,
+          selectedFeatures: searchFilters.selectedFeatures,
+          selectedAdvantages: searchFilters.selectedAdvantages,
+          selectedFurnitureAppliances: searchFilters.selectedFurnitureAppliances
         })} />
 
         {/* Top Ad Banner */}
@@ -226,38 +283,8 @@ const Properties = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              {/* Property Type Stats */}
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Home className="h-5 w-5" />
-                    ქონების ტიპები
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {Object.entries(stats).map(([type, count]) => (
-                    <div key={type} className="flex justify-between items-center">
-                      <span className="text-sm">{type}</span>
-                      <Badge variant="secondary">{count}</Badge>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Filter Panel */}
-              <FilterPanel filters={filters} onFilterChange={handleFilterChange} />
-
-              {/* Sidebar Ad Banner */}
-              <div className="mt-6">
-                <AdBanner type="vertical" />
-              </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="lg:col-span-3">
+          {/* Main Content */}
+          <div>
               {isLoading ? (
                 <div className="text-center py-12">
                   <div className="flex items-center justify-center space-x-2">
@@ -281,8 +308,33 @@ const Properties = () => {
                       propertyType: "",
                       transactionType: "",
                       bedrooms: "",
+                      bathrooms: "all",
                       areaMin: "",
-                      areaMax: ""
+                      areaMax: "",
+                      // Extended fields
+                      rooms: "all",
+                      totalFloors: "all",
+                      buildingStatus: "all",
+                      constructionYearMin: "",
+                      constructionYearMax: "",
+                      condition: "all",
+                      projectType: "all",
+                      ceilingHeightMin: "",
+                      ceilingHeightMax: "",
+                      heating: "all",
+                      parking: "all",
+                      hotWater: "all",
+                      buildingMaterial: "all",
+                      hasBalcony: false,
+                      hasPool: false,
+                      hasLivingRoom: false,
+                      hasLoggia: false,
+                      hasVeranda: false,
+                      hasYard: false,
+                      hasStorage: false,
+                      selectedFeatures: [],
+                      selectedAdvantages: [],
+                      selectedFurnitureAppliances: []
                     });
                     setFilteredProperties(properties);
                   }}>
@@ -305,13 +357,12 @@ const Properties = () => {
                 </>
               )}
 
-              {/* Bottom Ad Banner */}
-              {!isLoading && filteredProperties.length > 0 && (
-                <div className="mt-8">
-                  <AdBanner type="horizontal" />
-                </div>
-              )}
-            </div>
+            {/* Bottom Ad Banner */}
+            {!isLoading && filteredProperties.length > 0 && (
+              <div className="mt-8 max-w-4xl mx-auto">
+                <AdBanner type="horizontal" />
+              </div>
+            )}
           </div>
         </div>
         <Footer />

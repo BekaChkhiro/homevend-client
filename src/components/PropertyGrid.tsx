@@ -36,9 +36,6 @@ export const PropertyGrid = ({ properties, isLoading = false }: PropertyGridProp
         <h2 className="text-2xl font-bold">
           ნაპოვნია {properties.length} ქონება
         </h2>
-        <div className="text-sm text-muted-foreground">
-          დალაგება: ფასის მიხედვით
-        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
