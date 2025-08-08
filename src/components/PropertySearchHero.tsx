@@ -344,6 +344,7 @@ export const PropertySearchHero = ({ onSearch }: PropertySearchHeroProps) => {
                         case 'გირავდება': return <CreditCard className="h-4 w-4 text-primary" />;
                         case 'გაიცემა იჯარით': return <Building2 className="h-4 w-4 text-primary" />;
                         case 'ქირავდება დღიურად': return <Hotel className="h-4 w-4 text-primary" />;
+                        case 'ნასყიდობა გამოსყიდობის უფლებით': return <CreditCard className="h-4 w-4 text-primary" />;
                         default: return <CreditCard className="h-4 w-4 text-primary" />;
                       }
                     };

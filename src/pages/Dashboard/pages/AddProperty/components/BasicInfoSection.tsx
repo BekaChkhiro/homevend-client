@@ -152,7 +152,8 @@ export const BasicInfoSection = () => {
                     { value: "rent", label: "ქირავდება", desc: "გრძელვადიანი ქირა" },
                     { value: "mortgage", label: "გირავდება", desc: "გირავით გადაცემა" },
                     { value: "lease", label: "გაიცემა იჯარით", desc: "კომერციული იჯარა" },
-                    { value: "daily", label: "ქირავდება დღიურად", desc: "მოკლევადიანი ქირა" }
+                    { value: "daily", label: "ქირავდება დღიურად", desc: "მოკლევადიანი ქირა" },
+                    { value: "redemption", label: "ნასყიდობა გამოსყიდობის უფლებით", desc: "გამოსყიდობის უფლებით" }
                   ].map((option) => (
                     <label
                       key={option.value}
