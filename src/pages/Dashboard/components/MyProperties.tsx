@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { UserPropertyCard } from "./UserPropertyCard";
 import { propertyApi } from "@/lib/api";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface Property {
   id: string;
@@ -30,6 +39,8 @@ export const MyProperties: React.FC = () => {
   const { toast } = useToast();
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const propertiesPerPage = 10;
 
   useEffect(() => {
     fetchUserProperties();
@@ -55,7 +66,15 @@ export const MyProperties: React.FC = () => {
   const handleDeleteProperty = async (propertyId: string) => {
     try {
       await propertyApi.deleteProperty(propertyId);
-      setProperties(properties.filter(p => p.id !== propertyId));
+      const updatedProperties = properties.filter(p => p.id !== propertyId);
+      setProperties(updatedProperties);
+      
+      // Reset to first page if current page is empty after deletion
+      const newTotalPages = Math.ceil(updatedProperties.length / propertiesPerPage);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
+      
       toast({
         title: "წარმატება",
         description: "განცხადება წარმატებით წაიშალა",
@@ -70,7 +89,12 @@ export const MyProperties: React.FC = () => {
     }
   };
   
-  const filteredProperties = properties;
+  // Pagination calculations
+  const totalPages = Math.ceil(properties.length / propertiesPerPage);
+  const startIndex = (currentPage - 1) * propertiesPerPage;
+  const endIndex = startIndex + propertiesPerPage;
+  const paginatedProperties = properties.slice(startIndex, endIndex);
+  
   const hasProperties = properties.length > 0;
   
   if (isLoading) {
@@ -89,38 +113,97 @@ export const MyProperties: React.FC = () => {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-medium">ჩემი განცხადებები</h2>
         {hasProperties && (
-          <span className="text-sm text-gray-500">სულ: {properties.length} განცხადება</span>
+          <div className="text-sm text-gray-500 space-x-4">
+            <span>სულ: {properties.length} განცხადება</span>
+            {totalPages > 1 && (
+              <span>გვერდი: {currentPage} / {totalPages}</span>
+            )}
+          </div>
         )}
       </div>
 
       {hasProperties ? (
-        <div className="space-y-4">
-          {filteredProperties.length > 0 ? (
-            filteredProperties.map((property) => (
-              <UserPropertyCard
-                key={property.id}
-                property={property}
-                onDelete={handleDeleteProperty}
-              />
-            ))
-          ) : (
-            <div className="bg-white p-8 rounded-lg border text-center">
-              <div className="max-w-xs mx-auto">
-                <h3 className="text-lg font-medium mb-2">განცხადებები არ მოიძებნა</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  დაამატეთ ახალი განცხადება
-                </p>
-                <Button 
-                  className="flex items-center mx-auto"
-                  onClick={() => navigate('/dashboard/add-property')}
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  განცხადების დამატება
-                </Button>
+        <>
+          <div className="space-y-4">
+            {paginatedProperties.length > 0 ? (
+              paginatedProperties.map((property) => (
+                <UserPropertyCard
+                  key={property.id}
+                  property={property}
+                  onDelete={handleDeleteProperty}
+                />
+              ))
+            ) : (
+              <div className="bg-white p-8 rounded-lg border text-center">
+                <div className="max-w-xs mx-auto">
+                  <h3 className="text-lg font-medium mb-2">განცხადებები არ მოიძებნა</h3>
+                  <p className="text-sm text-gray-500 mb-4">
+                    დაამატეთ ახალი განცხადება
+                  </p>
+                  <Button 
+                    className="flex items-center mx-auto"
+                    onClick={() => navigate('/dashboard/add-property')}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    განცხადების დამატება
+                  </Button>
+                </div>
               </div>
+            )}
+          </div>
+          
+          {totalPages > 1 && (
+            <div className="mt-8 flex justify-center">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            onClick={() => setCurrentPage(page)}
+                            isActive={currentPage === page}
+                            className="cursor-pointer"
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    } else if (
+                      page === currentPage - 2 ||
+                      page === currentPage + 2
+                    ) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+                    return null;
+                  })}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           )}
-        </div>
+        </>
       ) : (
         <div className="bg-white p-8 rounded-lg border text-center">
           <div className="max-w-xs mx-auto">
