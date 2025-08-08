@@ -1,5 +1,5 @@
 
-import { Home, Phone, Mail, LogIn, LogOut, User, Shield, ChevronDown, Building, Home as HomeIcon, Building2, Construction, Info, Contact, LayoutGrid, PlusCircle, Heart, Settings } from "lucide-react";
+import { Home, Phone, Mail, LogIn, LogOut, User, Shield, ChevronDown, Building, Home as HomeIcon, Building2, Construction, Info, Contact, LayoutGrid, PlusCircle, Heart, Settings, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -100,7 +100,7 @@ export const Header = () => {
       {/* Bottom row: Navigation */}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14">
-          <nav className="hidden lg:flex items-center space-x-5">
+          <nav className="hidden lg:flex items-center space-x-5 text-sm">
             <Link to="/" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">
               <HomeIcon className="h-4 w-4" />
               <span>მთავარი</span>
@@ -154,10 +154,15 @@ export const Header = () => {
               <span>სერვისები</span>
             </Link>
             
+            <Link to="/price-statistics" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">
+              <TrendingUp className="h-4 w-4" />
+              <span>ფასების სტატისტიკა</span>
+            </Link>
+            
             {/* რეკლამა and კონტაქტი moved to the right side */}
           </nav>
           
-          <div className="ml-auto flex items-center space-x-5">
+          <div className="ml-auto flex items-center space-x-5 text-sm">
             <Link to="/advertise" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">
               <LayoutGrid className="h-4 w-4" />
               <span>რეკლამა</span>

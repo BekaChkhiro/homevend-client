@@ -1,8 +1,5 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Search, TrendingUp, TrendingDown, DollarSign, Home, Building2 } from "lucide-react";
@@ -40,19 +37,11 @@ interface DistrictPriceOverview {
 
 const PriceStatistics = () => {
   const [overviewData, setOverviewData] = useState<DistrictPriceOverview[]>([]);
-  const [filteredData, setFilteredData] = useState<DistrictPriceOverview[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedPropertyType, setSelectedPropertyType] = useState('all');
-  const [selectedDealType, setSelectedDealType] = useState('all');
 
   useEffect(() => {
     fetchPriceOverview();
   }, []);
-
-  useEffect(() => {
-    filterData();
-  }, [overviewData, searchTerm, selectedPropertyType, selectedDealType]);
 
   const fetchPriceOverview = async () => {
     try {
@@ -68,35 +57,6 @@ const PriceStatistics = () => {
     }
   };
 
-  const filterData = () => {
-    let filtered = overviewData;
-
-    // Search filter
-    if (searchTerm) {
-      filtered = filtered.filter(item =>
-        item.district.nameKa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.district.nameEn.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Property type filter
-    if (selectedPropertyType !== 'all') {
-      filtered = filtered.map(item => ({
-        ...item,
-        statistics: item.statistics.filter(stat => stat.propertyType === selectedPropertyType)
-      })).filter(item => item.statistics.length > 0);
-    }
-
-    // Deal type filter
-    if (selectedDealType !== 'all') {
-      filtered = filtered.map(item => ({
-        ...item,
-        statistics: item.statistics.filter(stat => stat.dealType === selectedDealType)
-      })).filter(item => item.statistics.length > 0);
-    }
-
-    setFilteredData(filtered);
-  };
 
   const formatPrice = (price: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('ka-GE', {
@@ -163,57 +123,11 @@ const PriceStatistics = () => {
             თბილისის სხვადასხვა რაიონებში უძრავი ქონების კვადრატული მეტრის საშუალო ფასები
           </p>
 
-          {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="ძებნა რაიონის მიხედვით..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            <Select value={selectedPropertyType} onValueChange={setSelectedPropertyType}>
-              <SelectTrigger>
-                <SelectValue placeholder="ქონების ტიპი" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">ყველა ტიპი</SelectItem>
-                <SelectItem value="apartment">ბინა</SelectItem>
-                <SelectItem value="house">სახლი</SelectItem>
-                <SelectItem value="commercial">კომერციული</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedDealType} onValueChange={setSelectedDealType}>
-              <SelectTrigger>
-                <SelectValue placeholder="გარიგების ტიპი" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">ყველა</SelectItem>
-                <SelectItem value="sale">ყიდვა</SelectItem>
-                <SelectItem value="rent">ქირავდება</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button
-              variant="outline"
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedPropertyType('all');
-                setSelectedDealType('all');
-              }}
-            >
-              გასუფთავება
-            </Button>
-          </div>
         </div>
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredData.map((districtData) => (
+          {overviewData.map((districtData) => (
             <Card key={districtData.district.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
@@ -309,23 +223,13 @@ const PriceStatistics = () => {
           ))}
         </div>
 
-        {filteredData.length === 0 && !loading && (
+        {overviewData.length === 0 && !loading && (
           <div className="text-center py-12">
             <Search className="h-12 w-12 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">მონაცემები არ მოიძებნა</h3>
-            <p className="text-gray-500 mb-4">
-              შეეცადეთ შეცვალოთ ძებნის პარამეტრები ან ფილტრები
+            <p className="text-gray-500">
+              ამჟამად არ არის ხელმისაწვდომი ფასების სტატისტიკა
             </p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedPropertyType('all');
-                setSelectedDealType('all');
-              }}
-            >
-              ფილტრების გასუფთავება
-            </Button>
           </div>
         )}
         </div>
