@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PropertyGrid } from "@/components/PropertyGrid";
+import { PropertyCard } from "@/components/PropertyCard";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdBanner } from "@/components/AdBanner";
@@ -8,7 +8,7 @@ import type { Property, FilterState } from "@/pages/Index";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, SlidersHorizontal, MapPin, Home } from "lucide-react";
+import { Loader2, SlidersHorizontal, MapPin, Home, ChevronLeft, ChevronRight } from "lucide-react";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -18,7 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 
 const Properties = () => {
@@ -64,6 +72,8 @@ const Properties = () => {
   });
   const [sortBy, setSortBy] = useState<string>("newest");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [currentPage, setCurrentPage] = useState(1);
+  const PROPERTIES_PER_PAGE = 16;
 
   // Fetch properties from API
   useEffect(() => {
@@ -131,6 +141,7 @@ const Properties = () => {
 
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
+    setCurrentPage(1); // Reset to first page when filters change
     applyFiltersAndSort(newFilters, sortBy);
   };
 
@@ -184,6 +195,7 @@ const Properties = () => {
 
   const handleSortChange = (value: string) => {
     setSortBy(value);
+    setCurrentPage(1); // Reset to first page when sort changes
     applyFiltersAndSort(filters, value);
   };
 
@@ -201,6 +213,17 @@ const Properties = () => {
   const averagePrice = properties.length > 0 
     ? Math.round(properties.reduce((sum, p) => sum + p.price, 0) / properties.length)
     : 0;
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredProperties.length / PROPERTIES_PER_PAGE);
+  const startIndex = (currentPage - 1) * PROPERTIES_PER_PAGE;
+  const endIndex = startIndex + PROPERTIES_PER_PAGE;
+  const paginatedProperties = filteredProperties.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   console.log('Render - properties:', properties);
   console.log('Render - filteredProperties:', filteredProperties);
@@ -262,7 +285,7 @@ const Properties = () => {
             <div>
               <h2 className="text-2xl font-bold mb-2">განცხადებები</h2>
               <p className="text-muted-foreground">
-                ნაჩვენებია {filteredProperties.length} განცხადება {totalProperties} საერთოდან
+                ნაჩვენებია {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} საერთოდან {totalProperties} განცხადებიდან)
               </p>
             </div>
 
@@ -343,15 +366,84 @@ const Properties = () => {
                 </div>
               ) : (
                 <>
-                  {console.log('About to render PropertyGrid with:', filteredProperties)}
-                  <PropertyGrid properties={filteredProperties} />
+                  {/* 4 Column Property Grid with Middle Ad */}
+                  <div className="mb-8">
+                    {/* First 8 properties */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                      {paginatedProperties.slice(0, 8).map((property) => (
+                        <PropertyCard key={property.id} property={property} />
+                      ))}
+                    </div>          
+                              
+                    {/* Middle Ad Banner - Show only if there are more than 8 properties */}
+                    {paginatedProperties.length > 8 && (
+                      <div className="mb-8">
+                        <AdBanner type="horizontal" />
+                      </div>
+                    )}
+                    
+                    {/* Remaining properties */}
+                    {paginatedProperties.length > 8 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {paginatedProperties.slice(8).map((property) => (
+                          <PropertyCard key={property.id} property={property} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-                  {/* Load More Button */}
-                  {filteredProperties.length >= 12 && (
-                    <div className="text-center mt-8">
-                      <Button variant="outline" size="lg">
-                        მეტის ნახვა
-                      </Button>
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex justify-center mt-8">
+                      <Pagination>
+                        <PaginationContent>
+                          <PaginationItem>
+                            <PaginationPrevious 
+                              onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                              className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                            />
+                          </PaginationItem>
+                          
+                          {/* Page Numbers */}
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                            // Show first page, last page, current page, and pages around current page
+                            if (
+                              page === 1 || 
+                              page === totalPages || 
+                              (page >= currentPage - 1 && page <= currentPage + 1)
+                            ) {
+                              return (
+                                <PaginationItem key={page}>
+                                  <PaginationLink
+                                    onClick={() => handlePageChange(page)}
+                                    isActive={currentPage === page}
+                                    className="cursor-pointer"
+                                  >
+                                    {page}
+                                  </PaginationLink>
+                                </PaginationItem>
+                              );
+                            } else if (
+                              page === currentPage - 2 || 
+                              page === currentPage + 2
+                            ) {
+                              return (
+                                <PaginationItem key={page}>
+                                  <PaginationEllipsis />
+                                </PaginationItem>
+                              );
+                            }
+                            return null;
+                          })}
+
+                          <PaginationItem>
+                            <PaginationNext 
+                              onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                              className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
                     </div>
                   )}
                 </>
