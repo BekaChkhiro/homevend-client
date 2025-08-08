@@ -82,41 +82,37 @@ export const BasicInfoSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+                  className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
                 >
                   {[
-                    { value: "apartment", label: "ბინები", icon: <Building2 className="h-5 w-5" />, desc: "მრავალსართულიან შენობაში" },
-                    { value: "house", label: "კერძო სახლები", icon: <Home className="h-5 w-5" />, desc: "ცალკე მდგომი სახლი" },
-                    { value: "cottage", label: "აგრაკები", icon: <Tent className="h-5 w-5" />, desc: "დასასვენებლად განკუთვნილი" },
-                    { value: "land", label: "მიწის ნაკვეთები", icon: <MapPin className="h-5 w-5" />, desc: "სამშენებლო ან სასოფლო-სამეურნეო" },
-                    { value: "commercial", label: "კომერციული ფართები", icon: <Briefcase className="h-5 w-5" />, desc: "მაღაზია, საწყობი" },
-                    { value: "office", label: "საოფისე ფართები", icon: <Briefcase className="h-5 w-5" />, desc: "საოფისე სივრცე" },
-                    { value: "hotel", label: "სასტუმროები", icon: <Hotel className="h-5 w-5" />, desc: "სასტუმრო ან გესტჰაუსი" }
+                    { value: "apartment", label: "ბინები", icon: <Building2 className="h-5 w-5" />, desc: "მრავალსართულიანი" },
+                    { value: "house", label: "კერძო სახლები", icon: <Home className="h-5 w-5" />, desc: "ცალკე მდგომი" },
+                    { value: "cottage", label: "აგრაკები", icon: <Tent className="h-5 w-5" />, desc: "დასასვენებელი" },
+                    { value: "land", label: "მიწის ნაკვეთები", icon: <MapPin className="h-5 w-5" />, desc: "სამშენებლო" },
+                    { value: "commercial", label: "კომერციული", icon: <Briefcase className="h-5 w-5" />, desc: "მაღაზია, საწყობი" },
+                    { value: "office", label: "საოფისე", icon: <Briefcase className="h-5 w-5" />, desc: "ოფისის ფართი" },
+                    { value: "hotel", label: "სასტუმროები", icon: <Hotel className="h-5 w-5" />, desc: "სასტუმრო" }
                   ].map((option) => (
                     <label
                       key={option.value}
                       htmlFor={`property-type-${option.value}`}
-                      className="group relative flex flex-col items-start gap-3 border-2 border-border bg-background rounded-xl p-4 cursor-pointer hover:border-primary/30 hover:bg-accent/50 transition-all duration-200 data-[state=checked]:border-primary data-[state=checked]:bg-primary/5 data-[state=checked]:shadow-md"
+                      className="group relative flex items-center gap-4 border-2 border-border bg-gradient-to-r from-background to-background hover:from-accent/30 hover:to-accent/10 rounded-xl p-5 cursor-pointer hover:border-primary/40 hover:shadow-lg transition-all duration-300 data-[state=checked]:border-primary data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-primary/10 data-[state=checked]:to-primary/5 data-[state=checked]:shadow-xl min-h-[100px]"
                     >
-                      <div className="flex items-center gap-3 w-full">
-                        <RadioGroupItem 
-                          value={option.value} 
-                          id={`property-type-${option.value}`} 
-                          className="data-[state=checked]:border-primary data-[state=checked]:text-primary" 
-                        />
-                        <div className="flex items-center gap-3 flex-1">
-                          <div className="flex items-center justify-center w-10 h-10 bg-muted rounded-lg group-hover:bg-primary/10 group-data-[state=checked]:bg-primary/10 transition-colors">
-                            <span className="text-muted-foreground group-hover:text-primary group-data-[state=checked]:text-primary transition-colors">
-                              {option.icon}
-                            </span>
-                          </div>
-                          <div className="flex-1">
-                            <span className="font-medium text-foreground group-data-[state=checked]:text-primary group-data-[state=checked]:font-semibold transition-all">
-                              {option.label}
-                            </span>
-                            <p className="text-xs text-muted-foreground mt-0.5">{option.desc}</p>
-                          </div>
-                        </div>
+                      <RadioGroupItem 
+                        value={option.value} 
+                        id={`property-type-${option.value}`} 
+                        className="w-5 h-5 border-2 hover:border-primary/50 data-[state=checked]:border-primary data-[state=checked]:text-white data-[state=checked]:bg-primary data-[state=checked]:shadow-[0_0_15px_rgba(59,130,246,0.6)] data-[state=checked]:radio-checked-animation shrink-0 transition-all duration-300" 
+                      />
+                      <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-muted to-muted/50 rounded-xl group-hover:from-primary/20 group-hover:to-primary/10 group-data-[state=checked]:from-primary/20 group-data-[state=checked]:to-primary/10 transition-all duration-300 shrink-0">
+                        <span className="text-muted-foreground group-hover:text-primary group-data-[state=checked]:text-primary transition-colors">
+                          {option.icon}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-semibold text-sm lg:text-base text-foreground group-data-[state=checked]:text-primary transition-all block truncate">
+                          {option.label}
+                        </span>
+                        <p className="text-xs lg:text-sm text-muted-foreground mt-1 truncate">{option.desc}</p>
                       </div>
                     </label>
                   ))}
@@ -166,7 +162,7 @@ export const BasicInfoSection = () => {
                       <RadioGroupItem 
                         value={option.value} 
                         id={`deal-type-${option.value}`} 
-                        className="data-[state=checked]:border-primary data-[state=checked]:text-primary flex-shrink-0" 
+                        className="w-5 h-5 border-2 hover:border-primary/50 data-[state=checked]:border-primary data-[state=checked]:text-white data-[state=checked]:bg-primary data-[state=checked]:shadow-[0_0_15px_rgba(59,130,246,0.6)] data-[state=checked]:radio-checked-animation flex-shrink-0 transition-all duration-300" 
                       />
                       <div className="flex-1">
                         <span className="font-medium text-foreground group-data-[state=checked]:text-primary group-data-[state=checked]:font-semibold transition-all block">
