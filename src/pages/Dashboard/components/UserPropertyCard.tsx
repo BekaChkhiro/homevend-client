@@ -1,8 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -106,7 +105,7 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
               </span>
             </div>
             
-            <div className="flex items-center gap-6 text-base text-gray-600 mb-3">
+            <div className="flex items-center gap-6 text-base text-gray-600 mb-2">
               {property.bedrooms && (
                 <div className="flex items-center">
                   <Bed className="h-5 w-5 mr-2" />
@@ -131,7 +130,7 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
               </Badge>
             </div>
 
-            {/* Statistics */}
+            {/* Statistics and Contact Info */}
             <div className="flex items-center gap-6 text-sm text-gray-600">
               <div className="flex items-center">
                 <Eye className="h-4 w-4 mr-1" />
@@ -139,59 +138,68 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
               </div>
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-1" />
-                <span>{formatDate(property.createdAt)}</span>
+                <span>შექმნილია: {formatDate(property.createdAt)}</span>
               </div>
             </div>
           </div>
 
-          {/* Status and Actions */}
+          {/* Actions */}
           <div className="flex flex-col items-end gap-3 flex-shrink-0">
-            <Badge className={`${getStatusColor(property.status)} px-3 py-1`}>
-              {getStatusText(property.status)}
-            </Badge>
+            {property.status !== "pending" && (
+              <Badge className={`${getStatusColor(property.status)} px-3 py-1`}>
+                {getStatusText(property.status)}
+              </Badge>
+            )}
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8">
-                  <MoreHorizontal className="h-5 w-5" />
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="flex items-center"
+              >
+                <Eye className="h-4 w-4 mr-1" />
+                ნახვა
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
+                className="flex items-center"
+              >
+                <Edit className="h-4 w-4 mr-1" />
+                რედაქტირება
+              </Button>
+            </div>
+            
+            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  წაშლა
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Eye className="mr-2 h-4 w-4" />
-                  ნახვა
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}>
-                  <Edit className="mr-2 h-4 w-4" />
-                  რედაქტირება
-                </DropdownMenuItem>
-                <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem onSelect={(e) => {
-                      e.preventDefault();
-                      setDeleteDialogOpen(true);
-                    }} className="text-red-600 focus:text-red-600">
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      წაშლა
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>გაუქმება</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                        წაშლა
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                    წაშლა
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            
+            <span className="text-sm text-gray-500">ID: {property.id}</span>
           </div>
         </div>
       </CardContent>
