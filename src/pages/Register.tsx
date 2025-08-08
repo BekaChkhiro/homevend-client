@@ -83,7 +83,7 @@ const Register = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="container mx-auto py-10 px-4 pt-24">
+      <div className="container mx-auto py-10 px-4 pt-48">
         <div className="max-w-md mx-auto">
           <Card>
             <CardHeader>

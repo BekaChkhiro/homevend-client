@@ -9,6 +9,14 @@ const apiClient = axios.create({
   },
 });
 
+// Public API client without authentication
+const publicApiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
@@ -125,12 +133,12 @@ export const propertyApi = {
     maxPrice?: number;
     status?: string;
   }) => {
-    const response = await apiClient.get('/properties', { params });
+    const response = await publicApiClient.get('/properties', { params });
     return response.data.data;
   },
   
   getPropertyById: async (id: string) => {
-    const response = await apiClient.get(`/properties/${id}`);
+    const response = await publicApiClient.get(`/properties/${id}`);
     return response.data.data;
   },
   
