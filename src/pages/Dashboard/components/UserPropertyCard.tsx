@@ -18,7 +18,6 @@ interface Property {
   totalPrice: string;
   bedrooms?: string;
   bathrooms?: string;
-  status: 'active' | 'inactive' | 'pending' | 'sold';
   viewCount: number;
   createdAt: string;
   photos: string[];
@@ -35,25 +34,6 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const navigate = useNavigate();
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active": return "bg-green-100 text-green-800";
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      case "sold": return "bg-blue-100 text-blue-800";
-      case "inactive": return "bg-gray-100 text-gray-800";
-      default: return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "active": return "აქტიური";
-      case "pending": return "მოლოდინში";
-      case "sold": return "გაყიდული";
-      case "inactive": return "არააქტიური";
-      default: return status;
-    }
-  };
 
   const formatPrice = (price: string) => {
     return parseInt(price).toLocaleString();
@@ -78,82 +58,79 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
       <CardContent className="p-0">
-        <div className="flex items-center gap-6 p-6">
-          {/* Image */}
+        <div className="flex items-center gap-4 p-4">
+          {/* Image - Reduced size */}
           <div className="relative flex-shrink-0">
             <img 
               src={getMainImage()} 
               alt={property.title || `${property.propertyType} ${property.city}-ში`}
-              className="w-32 h-32 object-cover rounded-lg"
+              className="w-20 h-20 object-cover rounded-lg"
             />
           </div>
 
-          {/* Content */}
+          {/* Content - Reduced spacing */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="font-semibold text-xl truncate pr-4">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-semibold text-lg truncate pr-4">
                 {property.title || `${property.propertyType} ${property.city}-ში`}
               </h3>
-              <span className="text-xl font-bold text-primary whitespace-nowrap">
+              <span className="text-lg font-bold text-primary whitespace-nowrap">
                 {formatPrice(property.totalPrice)} ₾
               </span>
             </div>
             
-            <div className="flex items-center text-gray-600 mb-3">
-              <MapPin className="h-5 w-5 mr-2 flex-shrink-0" />
-              <span className="text-base truncate">
+            <div className="flex items-center text-gray-600 mb-2">
+              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span className="text-sm truncate">
                 {property.street}, {property.city}
               </span>
             </div>
             
-            <div className="flex items-center gap-6 text-base text-gray-600 mb-3">
+            <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
               {property.bedrooms && (
                 <div className="flex items-center">
-                  <Bed className="h-5 w-5 mr-2" />
+                  <Bed className="h-4 w-4 mr-1" />
                   <span>{property.bedrooms}</span>
                 </div>
               )}
               {property.bathrooms && (
                 <div className="flex items-center">
-                  <Bath className="h-5 w-5 mr-2" />
+                  <Bath className="h-4 w-4 mr-1" />
                   <span>{property.bathrooms}</span>
                 </div>
               )}
               <div className="flex items-center">
-                <Square className="h-5 w-5 mr-2" />
+                <Square className="h-4 w-4 mr-1" />
                 <span>{property.area} მ²</span>
               </div>
-              <Badge variant="outline" className="text-sm px-3 py-1">
+              <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {property.propertyType}
               </Badge>
-              <Badge variant="outline" className="text-sm px-3 py-1">
+              <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {property.dealType}
               </Badge>
             </div>
 
-            {/* Statistics */}
-            <div className="flex items-center gap-6 text-sm text-gray-600">
+            {/* Statistics - Simplified */}
+            <div className="flex items-center gap-4 text-xs text-gray-500">
               <div className="flex items-center">
-                <Eye className="h-4 w-4 mr-1" />
+                <Eye className="h-3 w-3 mr-1" />
                 <span>{property.viewCount} ნახვა</span>
               </div>
               <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1" />
+                <Calendar className="h-3 w-3 mr-1" />
                 <span>{formatDate(property.createdAt)}</span>
               </div>
             </div>
           </div>
 
-          {/* Status and Actions */}
-          <div className="flex flex-col items-end gap-3 flex-shrink-0">
-            <Badge className={`${getStatusColor(property.status)} px-3 py-1`}>
-              {getStatusText(property.status)}
-            </Badge>
+          {/* Actions - Reduced size */}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8">
-                  <MoreHorizontal className="h-5 w-5" />
+                <Button variant="ghost" size="sm" className="h-6 w-6">
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
