@@ -16,6 +16,7 @@ import Advertising from "./pages/Advertising";
 import Properties from "./pages/Properties";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import { Services } from "./pages/Services";
 import AdminOverview from "./pages/AdminDashboard/pages/Overview";
 import AdminUsers from "./pages/AdminDashboard/pages/Users";
 import AdminListings from "./pages/AdminDashboard/pages/Listings";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/properties" element={<Properties />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/advertise" element={<Advertising />} />

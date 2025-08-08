@@ -183,7 +183,7 @@ const Advertising = () => {
       <Header />
       <div className="pt-32 pb-16">
         {/* Hero Section */}
-        <div className="container mx-auto px-4 mb-16">
+        <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">რეკლამის განთავსება</h1>
             <p className="text-xl text-muted-foreground mb-8">
@@ -208,7 +208,7 @@ const Advertising = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="container mx-auto px-4 mb-16">
+        <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -257,7 +257,7 @@ const Advertising = () => {
         </div>
 
         {/* Advertising Placements */}
-        <div className="container mx-auto px-4 mb-16">
+        <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">რეკლამის ადგილები და ფასები</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">

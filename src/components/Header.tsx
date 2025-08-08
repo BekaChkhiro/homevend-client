@@ -1,5 +1,5 @@
 
-import { Home, Phone, Mail, LogIn, LogOut, User, Shield, ChevronDown, Building, Home as HomeIcon, Building2, Construction, Info, Contact, LayoutGrid, PlusCircle, Heart } from "lucide-react";
+import { Home, Phone, Mail, LogIn, LogOut, User, Shield, ChevronDown, Building, Home as HomeIcon, Building2, Construction, Info, Contact, LayoutGrid, PlusCircle, Heart, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -148,6 +148,11 @@ export const Header = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
+            <Link to="/services" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">
+              <Settings className="h-4 w-4" />
+              <span>სერვისები</span>
+            </Link>
             
             {/* რეკლამა and კონტაქტი moved to the right side */}
           </nav>

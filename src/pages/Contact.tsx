@@ -52,7 +52,7 @@ const Contact = () => {
       <Header />
       <div className="pt-32 pb-16">
         {/* Hero Section */}
-        <div className="container mx-auto px-4 mb-16">
+        <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">დაგვიკავშირდით</h1>
             <p className="text-xl text-muted-foreground mb-8">
