@@ -25,12 +25,9 @@ interface Property {
   contactPhone: string;
 }
 
-type FilterType = "all" | "active" | "pending" | "sold" | "inactive";
-
 export const MyProperties: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -73,17 +70,7 @@ export const MyProperties: React.FC = () => {
     }
   };
   
-  const getFilteredProperties = () => {
-    if (activeFilter === "all") return properties;
-    return properties.filter(property => property.status === activeFilter);
-  };
-
-  const getCountByStatus = (status: FilterType) => {
-    if (status === "all") return properties.length;
-    return properties.filter(property => property.status === status).length;
-  };
-
-  const filteredProperties = getFilteredProperties();
+  const filteredProperties = properties;
   const hasProperties = properties.length > 0;
   
   if (isLoading) {
@@ -99,54 +86,12 @@ export const MyProperties: React.FC = () => {
 
   return (
     <>
-      <h2 className="text-xl font-medium mb-4">ჩემი განცხადებები</h2>
-      
-      {hasProperties && (
-        <div className="bg-white mb-4 p-4 rounded-lg border">
-          <div className="flex gap-2 overflow-auto pb-2">
-            <Button 
-              variant={activeFilter === "all" ? "default" : "outline"} 
-              size="sm" 
-              className="text-xs rounded-full"
-              onClick={() => setActiveFilter("all")}
-            >
-              ყველა <span className="ml-1 text-gray-500">{getCountByStatus("all")}</span>
-            </Button>
-            <Button 
-              variant={activeFilter === "active" ? "default" : "outline"} 
-              size="sm" 
-              className="text-xs rounded-full"
-              onClick={() => setActiveFilter("active")}
-            >
-              აქტიური <span className="ml-1 text-gray-500">{getCountByStatus("active")}</span>
-            </Button>
-            <Button 
-              variant={activeFilter === "pending" ? "default" : "outline"} 
-              size="sm" 
-              className="text-xs rounded-full"
-              onClick={() => setActiveFilter("pending")}
-            >
-              მოლოდინში <span className="ml-1 text-gray-500">{getCountByStatus("pending")}</span>
-            </Button>
-            <Button 
-              variant={activeFilter === "sold" ? "default" : "outline"} 
-              size="sm" 
-              className="text-xs rounded-full"
-              onClick={() => setActiveFilter("sold")}
-            >
-              გაყიდული <span className="ml-1 text-gray-500">{getCountByStatus("sold")}</span>
-            </Button>
-            <Button 
-              variant={activeFilter === "inactive" ? "default" : "outline"} 
-              size="sm" 
-              className="text-xs rounded-full"
-              onClick={() => setActiveFilter("inactive")}
-            >
-              არააქტიური <span className="ml-1 text-gray-500">{getCountByStatus("inactive")}</span>
-            </Button>
-          </div>
-        </div>
-      )}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-medium">ჩემი განცხადებები</h2>
+        {hasProperties && (
+          <span className="text-sm text-gray-500">სულ: {properties.length} განცხადება</span>
+        )}
+      </div>
 
       {hasProperties ? (
         <div className="space-y-4">
@@ -161,9 +106,9 @@ export const MyProperties: React.FC = () => {
           ) : (
             <div className="bg-white p-8 rounded-lg border text-center">
               <div className="max-w-xs mx-auto">
-                <h3 className="text-lg font-medium mb-2">ამ კატეგორიაში განცხადებები არ მოიძებნა</h3>
+                <h3 className="text-lg font-medium mb-2">განცხადებები არ მოიძებნა</h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  სცადეთ სხვა ფილტრი ან დაამატეთ ახალი განცხადება
+                  დაამატეთ ახალი განცხადება
                 </p>
                 <Button 
                   className="flex items-center mx-auto"
