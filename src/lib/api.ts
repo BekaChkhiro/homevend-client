@@ -161,11 +161,6 @@ export const propertyApi = {
     const response = await apiClient.delete(`/properties/${id}`);
     return response.data;
   },
-  
-  approveProperty: async (id: string, status: 'active' | 'inactive' | 'pending' | 'sold') => {
-    const response = await apiClient.patch(`/properties/${id}/status`, { status });
-    return response.data.data;
-  }
 };
 
 // Admin API

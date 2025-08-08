@@ -17,7 +17,6 @@ interface Property {
   totalPrice: string;
   bedrooms?: string;
   bathrooms?: string;
-  status: 'active' | 'inactive' | 'pending' | 'sold';
   viewCount: number;
   createdAt: string;
   photos: string[];
@@ -34,25 +33,6 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const navigate = useNavigate();
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active": return "bg-green-100 text-green-800";
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      case "sold": return "bg-blue-100 text-blue-800";
-      case "inactive": return "bg-gray-100 text-gray-800";
-      default: return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "active": return "აქტიური";
-      case "pending": return "მოლოდინში";
-      case "sold": return "გაყიდული";
-      case "inactive": return "არააქტიური";
-      default: return status;
-    }
-  };
 
   const formatPrice = (price: string) => {
     return parseInt(price).toLocaleString();
@@ -130,13 +110,13 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
 
           {/* Actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {property.status !== "pending" && (
-              <Badge className={`${getStatusColor(property.status)} px-2 py-1 text-xs`}>
-                {getStatusText(property.status)}
-              </Badge>
-            )}
             
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0"
+              onClick={() => navigate(`/property/${property.id}`)}
+            >
               <Eye className="h-4 w-4" />
             </Button>
             

@@ -26,7 +26,6 @@ interface Property {
   totalPrice: string;
   bedrooms?: string;
   bathrooms?: string;
-  status: 'active' | 'inactive' | 'pending' | 'sold';
   viewCount: number;
   createdAt: string;
   photos: string[];

@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, Eye, Phone, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
+import { Heart, Eye, Phone, MapPin, Bed, Bath, Square } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface FavoritePropertyCardProps {
   id: number;
@@ -18,7 +19,6 @@ interface FavoritePropertyCardProps {
   addedDate: string;
   ownerName: string;
   ownerPhone: string;
-  status: "available" | "sold" | "reserved";
 }
 
 export const FavoritePropertyCard = ({ 
@@ -35,26 +35,9 @@ export const FavoritePropertyCard = ({
   featured, 
   addedDate, 
   ownerName, 
-  ownerPhone, 
-  status 
+  ownerPhone 
 }: FavoritePropertyCardProps) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "available": return "bg-green-100 text-green-800";
-      case "sold": return "bg-red-100 text-red-800";
-      case "reserved": return "bg-yellow-100 text-yellow-800";
-      default: return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "available": return "ხელმისაწვდომი";
-      case "sold": return "გაყიდული";
-      case "reserved": return "დაჯავშნული";
-      default: return status;
-    }
-  };
+  const navigate = useNavigate();
 
   const handleRemoveFromFavorites = () => {
     // Handle removing from favorites
@@ -67,32 +50,24 @@ export const FavoritePropertyCard = ({
   };
 
   const handleViewProperty = () => {
-    // Handle viewing property details
-    console.log("View property:", id);
+    navigate(`/property/${id}`);
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Card className="border hover:shadow-sm transition-shadow">
       <CardContent className="p-0">
-        <div className="flex items-center gap-6 p-6">
+        <div className="flex items-center gap-4 p-4">
           {/* Image */}
           <div className="relative flex-shrink-0">
             <img 
               src={image} 
               alt={title}
-              className="w-32 h-32 object-cover rounded-lg"
+              className="w-20 h-20 object-cover rounded-md"
             />
             {featured && (
-              <div className="absolute -top-2 -right-2">
-                <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs px-2 py-1">
+              <div className="absolute -top-1 -right-1">
+                <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs px-1 py-0.5">
                   რჩეული
-                </Badge>
-              </div>
-            )}
-            {status !== "available" && (
-              <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
-                <Badge className={getStatusColor(status)}>
-                  {getStatusText(status)}
                 </Badge>
               </div>
             )}
@@ -100,94 +75,64 @@ export const FavoritePropertyCard = ({
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="font-semibold text-xl truncate pr-4">{title}</h3>
-              <span className="text-xl font-bold text-primary whitespace-nowrap">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-medium text-base truncate pr-4">
+                {title}
+              </h3>
+              <span className="text-base font-semibold text-gray-900 whitespace-nowrap">
                 {price.toLocaleString()} ₾
               </span>
             </div>
             
-            <div className="flex items-center text-gray-600 mb-3">
-              <MapPin className="h-5 w-5 mr-2 flex-shrink-0" />
-              <span className="text-base truncate">{address}</span>
+            <div className="flex items-center text-gray-500 mb-2">
+              <MapPin className="h-3 w-3 mr-1" />
+              <span className="text-xs">
+                {address}
+              </span>
             </div>
             
-            <div className="flex items-center gap-6 text-base text-gray-600 mb-2">
+            <div className="flex items-center gap-3 text-xs text-gray-600">
               <div className="flex items-center">
-                <Bed className="h-5 w-5 mr-2" />
+                <Bed className="h-3 w-3 mr-1" />
                 <span>{bedrooms}</span>
               </div>
               <div className="flex items-center">
-                <Bath className="h-5 w-5 mr-2" />
+                <Bath className="h-3 w-3 mr-1" />
                 <span>{bathrooms}</span>
               </div>
               <div className="flex items-center">
-                <Square className="h-5 w-5 mr-2" />
+                <Square className="h-3 w-3 mr-1" />
                 <span>{area} მ²</span>
               </div>
-              <Badge variant="outline" className="text-sm px-3 py-1">
+              <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {type}
               </Badge>
-              <Badge variant="outline" className="text-sm px-3 py-1">
-                {transactionType}
-              </Badge>
-            </div>
-
-            {/* Owner and Date Info */}
-            <div className="flex items-center gap-6 text-sm text-gray-600">
-              <div className="flex items-center">
-                <span>მფლობელი: {ownerName}</span>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1" />
-                <span>დამატებული: {addedDate}</span>
-              </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col items-end gap-3 flex-shrink-0">
-            {status === "available" && (
-              <Badge className="bg-green-100 text-green-800 px-3 py-1">
-                {getStatusText(status)}
-              </Badge>
-            )}
-            
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={handleViewProperty}
-                className="flex items-center"
-              >
-                <Eye className="h-4 w-4 mr-1" />
-                ნახვა
-              </Button>
-              
-              {status === "available" && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={handleContactOwner}
-                  className="flex items-center"
-                >
-                  <Phone className="h-4 w-4 mr-1" />
-                  დარეკვა
-                </Button>
-              )}
-            </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={handleViewProperty}>
+              <Eye className="h-4 w-4" />
+            </Button>
             
             <Button 
               variant="ghost" 
               size="sm"
-              onClick={handleRemoveFromFavorites}
-              className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="h-8 w-8 p-0"
+              onClick={handleContactOwner}
             >
-              <Heart className="h-4 w-4 mr-1 fill-current" />
-              ამოშლა
+              <Phone className="h-4 w-4" />
             </Button>
             
-            <span className="text-sm text-gray-500">ID: {id}</span>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="h-8 w-8 p-0 text-red-600 hover:bg-red-50"
+              onClick={handleRemoveFromFavorites}
+            >
+              <Heart className="h-4 w-4 fill-current" />
+            </Button>
           </div>
         </div>
       </CardContent>
