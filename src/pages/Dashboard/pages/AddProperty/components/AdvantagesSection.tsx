@@ -1,9 +1,7 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormField, FormItem, FormControl } from "@/components/ui/form";
+import { FormField, FormItem } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { Waves, Martini, Dumbbell, Flame, ChefHat, Bath, TreePine, Apple, Shield, Warehouse, Fan, Eye } from "lucide-react";
+import { Waves, Martini, Dumbbell, Flame, ChefHat, Bath, TreePine, Apple, Shield, Warehouse, Fan, Eye, Check } from "lucide-react";
 
 export const AdvantagesSection = () => {
   const form = useFormContext();
@@ -42,23 +40,25 @@ export const AdvantagesSection = () => {
                     name="advantages"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(advantage.id)}
-                              onCheckedChange={(checked) => {
-                                const updatedAdvantages = checked
-                                  ? [...(field.value || []), advantage.id]
-                                  : (field.value || []).filter((value) => value !== advantage.id);
-                                field.onChange(updatedAdvantages);
-                              }}
-                            />
-                          </FormControl>
-                          <Label className="flex items-center gap-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                        <button 
+                          type="button"
+                          className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors cursor-pointer w-full text-left"
+                          onClick={() => {
+                            const isChecked = field.value?.includes(advantage.id);
+                            const updatedAdvantages = !isChecked
+                              ? [...(field.value || []), advantage.id]
+                              : (field.value || []).filter((value) => value !== advantage.id);
+                            field.onChange(updatedAdvantages);
+                          }}
+                        >
+                          <div className={`flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${field.value?.includes(advantage.id) ? 'bg-primary text-primary-foreground' : 'bg-background'} transition-colors`}>
+                            {field.value?.includes(advantage.id) && <Check className="h-3 w-3" />}
+                          </div>
+                          <span className="flex items-center gap-2 text-sm font-medium leading-none">
                             <span className="text-muted-foreground">{advantage.icon}</span>
                             {advantage.label}
-                          </Label>
-                        </div>
+                          </span>
+                        </button>
                       </FormItem>
                     )}
                   />

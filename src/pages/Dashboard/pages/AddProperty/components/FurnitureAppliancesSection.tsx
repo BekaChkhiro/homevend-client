@@ -1,9 +1,7 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormField, FormItem, FormControl } from "@/components/ui/form";
+import { FormField, FormItem } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { Sofa, Bed, Table, ChefHat, Wind, Refrigerator, WashingMachine, Utensils } from "lucide-react";
+import { Sofa, Bed, Table, ChefHat, Wind, Refrigerator, WashingMachine, Utensils, Check } from "lucide-react";
 
 export const FurnitureAppliancesSection = () => {
   const form = useFormContext();
@@ -41,23 +39,25 @@ export const FurnitureAppliancesSection = () => {
                     name="furnitureAppliances"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked) => {
-                                const updatedItems = checked
-                                  ? [...(field.value || []), item.id]
-                                  : (field.value || []).filter((value) => value !== item.id);
-                                field.onChange(updatedItems);
-                              }}
-                            />
-                          </FormControl>
-                          <Label className="flex items-center gap-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                        <button 
+                          type="button"
+                          className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors cursor-pointer w-full text-left"
+                          onClick={() => {
+                            const isChecked = field.value?.includes(item.id);
+                            const updatedItems = !isChecked
+                              ? [...(field.value || []), item.id]
+                              : (field.value || []).filter((value) => value !== item.id);
+                            field.onChange(updatedItems);
+                          }}
+                        >
+                          <div className={`flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${field.value?.includes(item.id) ? 'bg-primary text-primary-foreground' : 'bg-background'} transition-colors`}>
+                            {field.value?.includes(item.id) && <Check className="h-3 w-3" />}
+                          </div>
+                          <span className="flex items-center gap-2 text-sm font-medium leading-none">
                             <span className="text-muted-foreground">{item.icon}</span>
                             {item.label}
-                          </Label>
-                        </div>
+                          </span>
+                        </button>
                       </FormItem>
                     )}
                   />
