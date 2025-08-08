@@ -111,27 +111,15 @@ export const Header = () => {
               <span>ჩვენ შესახებ</span>
             </Link>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">
-                <Building className="h-4 w-4" />
-                <span>უძრავი ქონება</span>
-                <ChevronDown className="h-3 w-3 ml-1" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-56">
-                <DropdownMenuItem asChild>
-                  <Link to="/properties" className="flex items-center gap-2 cursor-pointer">
-                    <Building className="h-4 w-4" />
-                    <span>უძრავი ქონება</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/agencies" className="flex items-center gap-2 cursor-pointer">
-                    <Building2 className="h-4 w-4" />
-                    <span>სააგენტოები</span>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Link to="/properties" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">
+              <Building className="h-4 w-4" />
+              <span>უძრავი ქონება</span>
+            </Link>
+            
+            <Link to="/agencies" className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">
+              <Building2 className="h-4 w-4" />
+              <span>სააგენტოები</span>
+            </Link>
             
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all">

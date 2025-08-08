@@ -75,112 +75,88 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Card className="border hover:shadow-sm transition-shadow">
       <CardContent className="p-0">
-        <div className="flex items-center gap-6 p-6">
+        <div className="flex items-center gap-4 p-4">
           {/* Image */}
           <div className="relative flex-shrink-0">
             <img 
               src={getMainImage()} 
               alt={property.title || `${property.propertyType} ${property.city}-ში`}
-              className="w-32 h-32 object-cover rounded-lg"
+              className="w-20 h-20 object-cover rounded-md"
             />
           </div>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="font-semibold text-xl truncate pr-4">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-medium text-base truncate pr-4">
                 {property.title || `${property.propertyType} ${property.city}-ში`}
               </h3>
-              <span className="text-xl font-bold text-primary whitespace-nowrap">
+              <span className="text-base font-semibold text-gray-900 whitespace-nowrap">
                 {formatPrice(property.totalPrice)} ₾
               </span>
             </div>
             
-            <div className="flex items-center text-gray-600 mb-3">
-              <MapPin className="h-5 w-5 mr-2 flex-shrink-0" />
-              <span className="text-base truncate">
+            <div className="flex items-center text-gray-500 mb-2">
+              <MapPin className="h-3 w-3 mr-1" />
+              <span className="text-xs">
                 {property.street}, {property.city}
               </span>
             </div>
             
-            <div className="flex items-center gap-6 text-base text-gray-600 mb-2">
+            <div className="flex items-center gap-3 text-xs text-gray-600">
               {property.bedrooms && (
                 <div className="flex items-center">
-                  <Bed className="h-5 w-5 mr-2" />
+                  <Bed className="h-3 w-3 mr-1" />
                   <span>{property.bedrooms}</span>
                 </div>
               )}
               {property.bathrooms && (
                 <div className="flex items-center">
-                  <Bath className="h-5 w-5 mr-2" />
+                  <Bath className="h-3 w-3 mr-1" />
                   <span>{property.bathrooms}</span>
                 </div>
               )}
               <div className="flex items-center">
-                <Square className="h-5 w-5 mr-2" />
+                <Square className="h-3 w-3 mr-1" />
                 <span>{property.area} მ²</span>
               </div>
-              <Badge variant="outline" className="text-sm px-3 py-1">
+              <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {property.propertyType}
               </Badge>
-              <Badge variant="outline" className="text-sm px-3 py-1">
-                {property.dealType}
-              </Badge>
-            </div>
-
-            {/* Statistics and Contact Info */}
-            <div className="flex items-center gap-6 text-sm text-gray-600">
-              <div className="flex items-center">
-                <Eye className="h-4 w-4 mr-1" />
-                <span>{property.viewCount} ნახვა</span>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1" />
-                <span>შექმნილია: {formatDate(property.createdAt)}</span>
-              </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col items-end gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {property.status !== "pending" && (
-              <Badge className={`${getStatusColor(property.status)} px-3 py-1`}>
+              <Badge className={`${getStatusColor(property.status)} px-2 py-1 text-xs`}>
                 {getStatusText(property.status)}
               </Badge>
             )}
             
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="flex items-center"
-              >
-                <Eye className="h-4 w-4 mr-1" />
-                ნახვა
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
-                className="flex items-center"
-              >
-                <Edit className="h-4 w-4 mr-1" />
-                რედაქტირება
-              </Button>
-            </div>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Eye className="h-4 w-4" />
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
             
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="h-8 w-8 p-0 text-red-600 hover:bg-red-50"
                 >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  წაშლა
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -198,8 +174,6 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            
-            <span className="text-sm text-gray-500">ID: {property.id}</span>
           </div>
         </div>
       </CardContent>
