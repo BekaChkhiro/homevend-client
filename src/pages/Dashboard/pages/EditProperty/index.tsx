@@ -60,7 +60,7 @@ export const EditProperty = () => {
 
       try {
         setIsPropertyLoading(true);
-        const property = await propertyApi.getPropertyById(id);
+        const property = await propertyApi.getPropertyByIdForEdit(id);
         
         // Populate form with property data
         form.reset({

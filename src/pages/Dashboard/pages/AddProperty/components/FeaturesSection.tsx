@@ -5,6 +5,8 @@ import { Wifi, Tv, Zap, Building, Truck, Droplets, Phone, Shield, DoorOpen, Chef
 
 export const FeaturesSection = () => {
   const form = useFormContext();
+  const features = form.watch("features");
+  
   return (
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
@@ -37,29 +39,32 @@ export const FeaturesSection = () => {
                     key={feature.id}
                     control={form.control}
                     name="features"
-                    render={({ field }) => (
-                      <FormItem>
-                        <button 
-                          type="button"
-                          className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors cursor-pointer w-full text-left"
-                          onClick={() => {
-                            const isChecked = field.value?.includes(feature.id);
-                            const updatedFeatures = !isChecked
-                              ? [...(field.value || []), feature.id]
-                              : (field.value || []).filter((value) => value !== feature.id);
-                            field.onChange(updatedFeatures);
-                          }}
-                        >
-                          <div className={`flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${field.value?.includes(feature.id) ? 'bg-primary text-primary-foreground' : 'bg-background'} transition-colors`}>
-                            {field.value?.includes(feature.id) && <Check className="h-3 w-3" />}
-                          </div>
-                          <span className="flex items-center gap-2 text-sm font-medium leading-none">
-                            <span className="text-muted-foreground">{feature.icon}</span>
-                            {feature.label}
-                          </span>
-                        </button>
-                      </FormItem>
-                    )}
+                    render={({ field }) => {
+                      const isChecked = features?.includes(feature.id) || false;
+                      
+                      return (
+                        <FormItem>
+                          <button 
+                            type="button"
+                            className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors cursor-pointer w-full text-left"
+                            onClick={() => {
+                              const updatedFeatures = !isChecked
+                                ? [...(features || []), feature.id]
+                                : (features || []).filter((value) => value !== feature.id);
+                              field.onChange(updatedFeatures);
+                            }}
+                          >
+                            <div className={`flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${isChecked ? 'bg-primary text-primary-foreground' : 'bg-background'} transition-colors`}>
+                              {isChecked && <Check className="h-3 w-3" />}
+                            </div>
+                            <span className="flex items-center gap-2 text-sm font-medium leading-none">
+                              <span className="text-muted-foreground">{feature.icon}</span>
+                              {feature.label}
+                            </span>
+                          </button>
+                        </FormItem>
+                      );
+                    }}
                   />
                 ))}
               </div>
