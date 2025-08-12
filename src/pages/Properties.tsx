@@ -236,43 +236,47 @@ const Properties = () => {
       <div className="pt-32">
 
         {/* Property Search Section */}
-        <PropertySearchHero onSearch={(searchFilters) => handleFilterChange({
-          ...filters,
-          search: searchFilters.search,
-          transactionType: searchFilters.transactionType,
-          propertyType: searchFilters.propertyType,
-          priceMin: searchFilters.priceMin,
-          priceMax: searchFilters.priceMax,
-          location: searchFilters.location,
-          bedrooms: searchFilters.bedrooms,
-          bathrooms: searchFilters.bathrooms,
-          areaMin: searchFilters.areaMin,
-          areaMax: searchFilters.areaMax,
-          // Extended filter fields
-          rooms: searchFilters.rooms,
-          totalFloors: searchFilters.totalFloors,
-          buildingStatus: searchFilters.buildingStatus,
-          constructionYearMin: searchFilters.constructionYearMin,
-          constructionYearMax: searchFilters.constructionYearMax,
-          condition: searchFilters.condition,
-          projectType: searchFilters.projectType,
-          ceilingHeightMin: searchFilters.ceilingHeightMin,
-          ceilingHeightMax: searchFilters.ceilingHeightMax,
-          heating: searchFilters.heating,
-          parking: searchFilters.parking,
-          hotWater: searchFilters.hotWater,
-          buildingMaterial: searchFilters.buildingMaterial,
-          hasBalcony: searchFilters.hasBalcony,
-          hasPool: searchFilters.hasPool,
-          hasLivingRoom: searchFilters.hasLivingRoom,
-          hasLoggia: searchFilters.hasLoggia,
-          hasVeranda: searchFilters.hasVeranda,
-          hasYard: searchFilters.hasYard,
-          hasStorage: searchFilters.hasStorage,
-          selectedFeatures: searchFilters.selectedFeatures,
-          selectedAdvantages: searchFilters.selectedAdvantages,
-          selectedFurnitureAppliances: searchFilters.selectedFurnitureAppliances
-        })} />
+        <PropertySearchHero 
+          totalProperties={totalProperties}
+          filteredCount={filteredProperties.length}
+          onSearch={(searchFilters) => handleFilterChange({
+            ...filters,
+            search: searchFilters.search,
+            transactionType: searchFilters.transactionType,
+            propertyType: searchFilters.propertyType,
+            priceMin: searchFilters.priceMin,
+            priceMax: searchFilters.priceMax,
+            location: searchFilters.location,
+            bedrooms: searchFilters.bedrooms,
+            bathrooms: searchFilters.bathrooms,
+            areaMin: searchFilters.areaMin,
+            areaMax: searchFilters.areaMax,
+            // Extended filter fields
+            rooms: searchFilters.rooms,
+            totalFloors: searchFilters.totalFloors,
+            buildingStatus: searchFilters.buildingStatus,
+            constructionYearMin: searchFilters.constructionYearMin,
+            constructionYearMax: searchFilters.constructionYearMax,
+            condition: searchFilters.condition,
+            projectType: searchFilters.projectType,
+            ceilingHeightMin: searchFilters.ceilingHeightMin,
+            ceilingHeightMax: searchFilters.ceilingHeightMax,
+            heating: searchFilters.heating,
+            parking: searchFilters.parking,
+            hotWater: searchFilters.hotWater,
+            buildingMaterial: searchFilters.buildingMaterial,
+            hasBalcony: searchFilters.hasBalcony,
+            hasPool: searchFilters.hasPool,
+            hasLivingRoom: searchFilters.hasLivingRoom,
+            hasLoggia: searchFilters.hasLoggia,
+            hasVeranda: searchFilters.hasVeranda,
+            hasYard: searchFilters.hasYard,
+            hasStorage: searchFilters.hasStorage,
+            selectedFeatures: searchFilters.selectedFeatures,
+            selectedAdvantages: searchFilters.selectedAdvantages,
+            selectedFurnitureAppliances: searchFilters.selectedFurnitureAppliances
+          })} 
+        />
 
         {/* Top Ad Banner */}
         <div className="container mx-auto px-4 py-6">
