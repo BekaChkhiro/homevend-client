@@ -142,6 +142,11 @@ export const propertyApi = {
     return response.data.data;
   },
   
+  getPropertyByIdForEdit: async (id: string) => {
+    const response = await apiClient.get(`/properties/${id}?edit=true`);
+    return response.data.data;
+  },
+  
   getUserProperties: async () => {
     const response = await apiClient.get('/properties/user/my-properties');
     return response.data.data;

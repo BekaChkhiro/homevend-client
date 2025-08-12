@@ -5,6 +5,8 @@ import { Waves, Martini, Dumbbell, Flame, ChefHat, Bath, TreePine, Apple, Shield
 
 export const AdvantagesSection = () => {
   const form = useFormContext();
+  const advantages = form.watch("advantages");
+  
   return (
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
@@ -38,29 +40,32 @@ export const AdvantagesSection = () => {
                     key={advantage.id}
                     control={form.control}
                     name="advantages"
-                    render={({ field }) => (
-                      <FormItem>
-                        <button 
-                          type="button"
-                          className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors cursor-pointer w-full text-left"
-                          onClick={() => {
-                            const isChecked = field.value?.includes(advantage.id);
-                            const updatedAdvantages = !isChecked
-                              ? [...(field.value || []), advantage.id]
-                              : (field.value || []).filter((value) => value !== advantage.id);
-                            field.onChange(updatedAdvantages);
-                          }}
-                        >
-                          <div className={`flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${field.value?.includes(advantage.id) ? 'bg-primary text-primary-foreground' : 'bg-background'} transition-colors`}>
-                            {field.value?.includes(advantage.id) && <Check className="h-3 w-3" />}
-                          </div>
-                          <span className="flex items-center gap-2 text-sm font-medium leading-none">
-                            <span className="text-muted-foreground">{advantage.icon}</span>
-                            {advantage.label}
-                          </span>
-                        </button>
-                      </FormItem>
-                    )}
+                    render={({ field }) => {
+                      const isChecked = advantages?.includes(advantage.id) || false;
+                      
+                      return (
+                        <FormItem>
+                          <button 
+                            type="button"
+                            className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors cursor-pointer w-full text-left"
+                            onClick={() => {
+                              const updatedAdvantages = !isChecked
+                                ? [...(advantages || []), advantage.id]
+                                : (advantages || []).filter((value) => value !== advantage.id);
+                              field.onChange(updatedAdvantages);
+                            }}
+                          >
+                            <div className={`flex h-4 w-4 items-center justify-center rounded-sm border border-primary ${isChecked ? 'bg-primary text-primary-foreground' : 'bg-background'} transition-colors`}>
+                              {isChecked && <Check className="h-3 w-3" />}
+                            </div>
+                            <span className="flex items-center gap-2 text-sm font-medium leading-none">
+                              <span className="text-muted-foreground">{advantage.icon}</span>
+                              {advantage.label}
+                            </span>
+                          </button>
+                        </FormItem>
+                      );
+                    }}
                   />
                 ))}
               </div>

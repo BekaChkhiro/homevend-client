@@ -131,6 +131,14 @@ const PropertyDetail = () => {
   }
 
   // Transform property data for display
+  console.log('🏠 PropertyDetail - Raw property data:', {
+    id: property.id,
+    furnitureAppliances: property.furnitureAppliances,
+    features: property.features,
+    advantages: property.advantages,
+    tags: property.tags
+  });
+  
   const displayProperty = {
     id: property.id,
     title: property.title || `${property.propertyType} ${property.dealType} ${property.city}`,
@@ -276,15 +284,25 @@ const PropertyDetail = () => {
                   )}
 
                   {/* Furniture & Appliances Section */}
-                  {displayProperty.furnitureAppliances && displayProperty.furnitureAppliances.length > 0 && (
+                  {(() => {
+                    console.log('🛋️ PropertyDetail - Furniture section check:', {
+                      furnitureAppliances: displayProperty.furnitureAppliances,
+                      length: displayProperty.furnitureAppliances?.length,
+                      shouldShow: displayProperty.furnitureAppliances && displayProperty.furnitureAppliances.length > 0
+                    });
+                    return displayProperty.furnitureAppliances && displayProperty.furnitureAppliances.length > 0;
+                  })() && (
                     <div className="mb-6">
                       <h3 className="text-lg font-semibold mb-3">ავეჯი და ტექნიკა</h3>
                       <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-                        {displayProperty.furnitureAppliances.map((item, index) => (
-                          <div key={`furniture-${index}`} className="bg-card border border-border rounded-md px-3 py-2 hover:shadow-sm transition-shadow duration-200">
-                            <span className="text-xs font-medium text-card-foreground text-center block">{item}</span>
-                          </div>
-                        ))}
+                        {displayProperty.furnitureAppliances.map((item, index) => {
+                          console.log(`🔧 Rendering furniture item ${index}:`, item);
+                          return (
+                            <div key={`furniture-${index}`} className="bg-card border border-border rounded-md px-3 py-2 hover:shadow-sm transition-shadow duration-200">
+                              <span className="text-xs font-medium text-card-foreground text-center block">{item}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
