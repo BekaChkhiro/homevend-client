@@ -58,85 +58,95 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
     <Card className="border hover:shadow-sm transition-shadow">
       <CardContent className="p-0">
         <div className="flex items-center gap-4 p-4">
+
+          {/* Image - Reduced size */}
+
           {/* Image */}
+
           <div className="relative flex-shrink-0">
             <img 
               src={getMainImage()} 
               alt={property.title || `${property.propertyType} ${property.city}-ში`}
-              className="w-20 h-20 object-cover rounded-md"
+
+              className="w-20 h-20 object-cover rounded-lg"
+
             />
           </div>
 
-          {/* Content */}
+          {/* Content - Reduced spacing */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
-              <h3 className="font-medium text-base truncate pr-4">
+
+              <h3 className="font-semibold text-lg truncate pr-4">
                 {property.title || `${property.propertyType} ${property.city}-ში`}
               </h3>
-              <span className="text-base font-semibold text-gray-900 whitespace-nowrap">
+              <span className="text-lg font-bold text-primary whitespace-nowrap">
+
                 {formatPrice(property.totalPrice)} ₾
               </span>
             </div>
-            
-            <div className="flex items-center text-gray-500 mb-2">
-              <MapPin className="h-3 w-3 mr-1" />
-              <span className="text-xs">
+
+            <div className="flex items-center text-gray-600 mb-2">
+              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span className="text-sm truncate">
+
                 {property.street}, {property.city}
               </span>
             </div>
             
-            <div className="flex items-center gap-3 text-xs text-gray-600">
+
+            <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
               {property.bedrooms && (
                 <div className="flex items-center">
-                  <Bed className="h-3 w-3 mr-1" />
+                  <Bed className="h-4 w-4 mr-1" />
+
                   <span>{property.bedrooms}</span>
                 </div>
               )}
               {property.bathrooms && (
                 <div className="flex items-center">
-                  <Bath className="h-3 w-3 mr-1" />
+
+                  <Bath className="h-4 w-4 mr-1" />
+
                   <span>{property.bathrooms}</span>
                 </div>
               )}
               <div className="flex items-center">
-                <Square className="h-3 w-3 mr-1" />
+
+                <Square className="h-4 w-4 mr-1" />
+
                 <span>{property.area} მ²</span>
               </div>
               <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {property.propertyType}
               </Badge>
+
+              <Badge variant="outline" className="text-xs px-2 py-0.5">
+                {property.dealType}
+              </Badge>
+            </div>
+
+            {/* Statistics - Simplified */}
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center">
+                <Eye className="h-3 w-3 mr-1" />
+                <span>{property.viewCount} ნახვა</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar className="h-3 w-3 mr-1" />
+                <span>{formatDate(property.createdAt)}</span>
+              </div>
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Actions - Reduced size */}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
             
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 w-8 p-0"
-              onClick={() => navigate(`/property/${property.id}`)}
-            >
-              <Eye className="h-4 w-4" />
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            
-            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className="h-8 w-8 p-0 text-red-600 hover:bg-red-50"
-                >
-                  <Trash2 className="h-4 w-4" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-6 w-6">
+                  <MoreHorizontal className="h-4 w-4" />
+
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>

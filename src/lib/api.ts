@@ -131,7 +131,6 @@ export const propertyApi = {
     dealType?: string;
     minPrice?: number;
     maxPrice?: number;
-    status?: string;
   }) => {
     const response = await publicApiClient.get('/properties', { params });
     return response.data.data;
@@ -166,6 +165,8 @@ export const propertyApi = {
     const response = await apiClient.delete(`/properties/${id}`);
     return response.data;
   },
+
+
 };
 
 // Admin API

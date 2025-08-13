@@ -85,8 +85,8 @@ const Properties = () => {
       setIsLoading(true);
       console.log('Fetching properties from API...');
       
-      // Get all properties (no status filter to show pending ones too for now) - same as Home page
-      const response = await propertyApi.getProperties({ status: '' });
+      // Get all properties - same as Home page
+      const response = await propertyApi.getProperties({});
       console.log('API Response:', response); // Debug log
       
       // The api.ts already extracts .data, so response = {properties: [], pagination: {}}
