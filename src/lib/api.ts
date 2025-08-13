@@ -197,3 +197,4 @@ export const adminApi = {
 };
 
 export default apiClient;
+export { publicApiClient };

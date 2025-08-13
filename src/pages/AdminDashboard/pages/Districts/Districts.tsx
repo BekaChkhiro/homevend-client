@@ -16,27 +16,17 @@ interface District {
   id: number;
   nameKa: string;
   nameEn: string;
+  nameRu?: string;
   description?: string;
+  pricePerSqm: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-interface PriceStatistic {
-  id: number;
-  propertyType: string;
-  dealType: string;
-  averagePricePerSqm: number;
-  currency: string;
-}
-
-interface DistrictWithStats extends District {
-  priceStatistics: PriceStatistic[];
-  currentPricePerSqm?: number;
-}
 
 const Districts = () => {
-  const [districts, setDistricts] = useState<DistrictWithStats[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingDistrict, setEditingDistrict] = useState<District | null>(null);
   const [deletingDistrict, setDeletingDistrict] = useState<District | null>(null);
@@ -44,6 +34,7 @@ const Districts = () => {
   const [formData, setFormData] = useState({
     nameKa: '',
     nameEn: '',
+    nameRu: '',
     description: '',
     isActive: true,
     pricePerSqm: ''
@@ -57,7 +48,12 @@ const Districts = () => {
 
   const fetchDistricts = async () => {
     try {
-      const response = await fetch('/api/districts');
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/districts', {
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : '',
+        }
+      });
       if (response.ok) {
         const data = await response.json();
         setDistricts(data.data || []);
@@ -82,7 +78,7 @@ const Districts = () => {
 
     try {
       const method = editingDistrict ? 'PUT' : 'POST';
-      const url = editingDistrict ? `/api/districts/${editingDistrict.id}` : '/api/districts';
+      const url = editingDistrict ? `http://localhost:3000/api/districts/${editingDistrict.id}` : 'http://localhost:3000/api/districts';
       
       const token = localStorage.getItem('token');
       const response = await fetch(url, {
@@ -120,7 +116,7 @@ const Districts = () => {
   const handleDelete = async (district: District) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/districts/${district.id}`, {
+      const response = await fetch(`http://localhost:3000/api/districts/${district.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',
@@ -153,6 +149,7 @@ const Districts = () => {
     setFormData({
       nameKa: '',
       nameEn: '',
+      nameRu: '',
       description: '',
       isActive: true,
       pricePerSqm: ''
@@ -161,13 +158,14 @@ const Districts = () => {
     setIsDialogOpen(false);
   };
 
-  const openEditDialog = (district: DistrictWithStats) => {
+  const openEditDialog = (district: District) => {
     setFormData({
       nameKa: district.nameKa,
       nameEn: district.nameEn,
+      nameRu: district.nameRu || '',
       description: district.description || '',
       isActive: district.isActive,
-      pricePerSqm: district.currentPricePerSqm ? district.currentPricePerSqm.toString() : ''
+      pricePerSqm: district.pricePerSqm ? district.pricePerSqm.toString() : ''
     });
     setEditingDistrict(district);
     setIsDialogOpen(true);
@@ -243,6 +241,16 @@ const Districts = () => {
                     onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
                     placeholder="e.g: Vake"
                     required
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="nameRu">დასახელება (რუსული)</Label>
+                  <Input
+                    id="nameRu"
+                    value={formData.nameRu}
+                    onChange={(e) => setFormData({ ...formData, nameRu: e.target.value })}
+                    placeholder="მაგ: Ваке"
                   />
                 </div>
 
@@ -333,12 +341,12 @@ const Districts = () => {
                 </p>
               )}
 
-              {district.currentPricePerSqm && (
+              {district.pricePerSqm && (
                 <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-green-700">ფასი 1 კვ/მ:</span>
                     <span className="text-lg font-bold text-green-600">
-                      ${district.currentPricePerSqm.toLocaleString()} USD
+                      ${district.pricePerSqm.toLocaleString()} USD
                     </span>
                   </div>
                 </div>
