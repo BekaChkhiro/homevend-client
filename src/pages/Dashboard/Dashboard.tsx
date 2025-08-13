@@ -3,16 +3,12 @@ import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
 import { Sidebar } from "./components/Sidebar";
-import { ProgressBar } from "./components/ProgressBar";
-import { usePropertyCompletion } from "./hooks/usePropertyCompletion";
-import { PropertyFormProvider, usePropertyForm } from "./contexts/PropertyFormContext";
+import { PropertyFormProvider } from "./contexts/PropertyFormContext";
 
 const DashboardContent = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { formData } = usePropertyForm();
-  const { completionPercentage } = usePropertyCompletion(formData);
 
   // თუ მომხმარებელი არ არის ავტორიზებული, გადავამისამართოთ შესვლის გვერდზე
   useEffect(() => {
@@ -60,20 +56,9 @@ const DashboardContent = () => {
           <Sidebar user={user} />
         </div>
 
-        {/* კონტენტის ნაწილი - მხოლოდ ეს სქროლდება */}
-        <div className="flex-1 bg-white rounded-lg border overflow-hidden flex flex-col">
-          {/* პროგრესის ბარი - ფიქსირებული */}
-          <div className="sticky top-0 z-10 bg-white">
-            <ProgressBar 
-              percentage={completionPercentage} 
-              title="განცხადების შევსების მოწმება"
-            />
-          </div>
-          
-          {/* მთავარი კონტენტი - სქროლადი */}
-          <div className="flex-1 overflow-y-auto p-6">
-            <Outlet />
-          </div>
+        {/* კონტენტის ნაწილი */}
+        <div className="flex-1 bg-white rounded-lg border overflow-y-auto p-6">
+          <Outlet />
         </div>
       </div>
     </div>

@@ -18,10 +18,10 @@ const Overview = () => {
     { title: 'ახალი განაცხადები', value: '32', icon: FileText, change: '+8%' },
   ];
 
-  const pendingListings = [
-    { id: 1, title: '3 ოთახიანი ბინა ვაკეში', price: '$120,000', status: 'pending', user: 'გიორგი ბერიძე' },
-    { id: 2, title: '2 ოთახიანი ბინა საბურთალოზე', price: '$85,000', status: 'pending', user: 'მარიამ ჯავახიშვილი' },
-    { id: 3, title: 'საკუთარი სახლი დიღომში', price: '$250,000', status: 'pending', user: 'დავით კაპანაძე' },
+  const recentListings = [
+    { id: 1, title: '3 ოთახიანი ბინა ვაკეში', price: '$120,000', user: 'გიორგი ბერიძე' },
+    { id: 2, title: '2 ოთახიანი ბინა საბურთალოზე', price: '$85,000', user: 'მარიამ ჯავახიშვილი' },
+    { id: 3, title: 'საკუთარი სახლი დიღომში', price: '$250,000', user: 'დავით კაპანაძე' },
   ];
 
   const recentUsers = [
@@ -58,12 +58,12 @@ const Overview = () => {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>დასამტკიცებელი განცხადებები</CardTitle>
-            <CardDescription>განცხადებები, რომლებიც საჭიროებენ თქვენს დამტკიცებას</CardDescription>
+            <CardTitle>უახლესი განცხადებები</CardTitle>
+            <CardDescription>ბოლოს დამატებული განცხადებები</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {pendingListings.map((listing) => (
+              {recentListings.map((listing) => (
                 <div key={listing.id} className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
                     <h4 className="font-semibold">{listing.title}</h4>

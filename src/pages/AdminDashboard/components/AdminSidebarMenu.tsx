@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart3, Users, Home, Settings, Monitor } from "lucide-react";
+import { BarChart3, Users, Home, Settings, Monitor, MapPin, DollarSign } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -46,6 +46,13 @@ export const AdminSidebarMenu: React.FC = () => {
       category: "content"
     },
     { 
+      id: "districts", 
+      path: "/admin/districts", 
+      label: "რაიონები და ფასები", 
+      icon: <MapPin className="h-5 w-5" />,
+      category: "data"
+    },
+    { 
       id: "settings", 
       path: "/admin/settings", 
       label: "პარამეტრები", 
@@ -57,6 +64,7 @@ export const AdminSidebarMenu: React.FC = () => {
   // Group menu items by category
   const analyticsItems = menuItems.filter(item => item.category === "analytics");
   const contentItems = menuItems.filter(item => item.category === "content");
+  const dataItems = menuItems.filter(item => item.category === "data");
   const systemItems = menuItems.filter(item => item.category === "system");
   const uncategorizedItems = menuItems.filter(item => !item.category);
 
@@ -121,6 +129,7 @@ export const AdminSidebarMenu: React.FC = () => {
     <div className="p-3">
       {analyticsItems.length > 0 && renderCategory("ანალიტიკა", analyticsItems)}
       {contentItems.length > 0 && renderCategory("კონტენტი", contentItems)}
+      {dataItems.length > 0 && renderCategory("მონაცემები", dataItems)}
       {systemItems.length > 0 && renderCategory("სისტემა", systemItems)}
       {uncategorizedItems.length > 0 && uncategorizedItems.map(renderMenuItem)}
     </div>

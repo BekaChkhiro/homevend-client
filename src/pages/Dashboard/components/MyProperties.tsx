@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { UserPropertyCard } from "./UserPropertyCard";
 import { propertyApi } from "@/lib/api";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface Property {
   id: string;
@@ -24,12 +33,13 @@ interface Property {
   contactPhone: string;
 }
 
-
 export const MyProperties: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const propertiesPerPage = 10;
 
   useEffect(() => {
     fetchUserProperties();
@@ -55,7 +65,15 @@ export const MyProperties: React.FC = () => {
   const handleDeleteProperty = async (propertyId: string) => {
     try {
       await propertyApi.deleteProperty(propertyId);
-      setProperties(properties.filter(p => p.id !== propertyId));
+      const updatedProperties = properties.filter(p => p.id !== propertyId);
+      setProperties(updatedProperties);
+      
+      // Reset to first page if current page is empty after deletion
+      const newTotalPages = Math.ceil(updatedProperties.length / propertiesPerPage);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
+      
       toast({
         title: "წარმატება",
         description: "განცხადება წარმატებით წაიშალა",
@@ -69,6 +87,14 @@ export const MyProperties: React.FC = () => {
       });
     }
   };
+
+  
+  // Pagination calculations
+  const totalPages = Math.ceil(properties.length / propertiesPerPage);
+  const startIndex = (currentPage - 1) * propertiesPerPage;
+  const endIndex = startIndex + propertiesPerPage;
+  const paginatedProperties = properties.slice(startIndex, endIndex);
+
   const hasProperties = properties.length > 0;
   
   if (isLoading) {
@@ -96,6 +122,7 @@ export const MyProperties: React.FC = () => {
             />
           ))}
         </div>
+
       ) : (
         <div className="bg-white p-8 rounded-lg border text-center">
           <div className="max-w-xs mx-auto">

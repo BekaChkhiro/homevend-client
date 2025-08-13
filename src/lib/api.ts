@@ -141,6 +141,11 @@ export const propertyApi = {
     return response.data.data;
   },
   
+  getPropertyByIdForEdit: async (id: string) => {
+    const response = await apiClient.get(`/properties/${id}?edit=true`);
+    return response.data.data;
+  },
+  
   getUserProperties: async () => {
     const response = await apiClient.get('/properties/user/my-properties');
     return response.data.data;
@@ -160,7 +165,8 @@ export const propertyApi = {
     const response = await apiClient.delete(`/properties/${id}`);
     return response.data;
   },
-  
+
+
 };
 
 // Admin API
@@ -192,3 +198,4 @@ export const adminApi = {
 };
 
 export default apiClient;
+export { publicApiClient };

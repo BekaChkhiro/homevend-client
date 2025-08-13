@@ -21,7 +21,6 @@ import { propertyApi } from "@/lib/api";
 
 export const AddProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isDraftSaving, setIsDraftSaving] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -121,28 +120,6 @@ export const AddProperty = () => {
     }
   };
 
-  const handleSaveDraft = async () => {
-    setIsDraftSaving(true);
-    try {
-      const formData = form.getValues();
-      // Save to localStorage as draft
-      localStorage.setItem('property_draft', JSON.stringify(formData));
-      
-      toast({
-        title: "დრაფთი შენახულია",
-        description: "შეგიძლიათ მოგვიანებით განაგრძოთ განცხადების შევსება",
-      });
-    } catch (error) {
-      console.error("Draft save error:", error);
-      toast({
-        title: "შეცდომა",
-        description: "შეცდომა მოხდა დრაფთის შენახვისას",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDraftSaving(false);
-    }
-  };
   
   return (
     <div className="w-full h-screen overflow-hidden flex flex-col relative">
@@ -189,10 +166,8 @@ export const AddProperty = () => {
       </div>
       
       <FormActions
-        onSaveDraft={handleSaveDraft}
         onSubmit={form.handleSubmit(onSubmit)}
         isLoading={isLoading}
-        isDraftSaving={isDraftSaving}
       />
     </div>
   );

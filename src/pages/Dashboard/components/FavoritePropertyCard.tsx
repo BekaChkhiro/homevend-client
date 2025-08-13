@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, Eye, Phone, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
+import { Heart, Eye, Phone, MapPin, Bed, Bath, Square } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface FavoritePropertyCardProps {
   id: number;
@@ -37,6 +38,9 @@ export const FavoritePropertyCard = ({
   ownerPhone 
 }: FavoritePropertyCardProps) => {
 
+  const navigate = useNavigate();
+
+
   const handleRemoveFromFavorites = () => {
     // Handle removing from favorites
     console.log("Remove from favorites:", id);
@@ -48,20 +52,25 @@ export const FavoritePropertyCard = ({
   };
 
   const handleViewProperty = () => {
-    // Handle viewing property details
-    console.log("View property:", id);
+    navigate(`/property/${id}`);
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Card className="border hover:shadow-sm transition-shadow">
       <CardContent className="p-0">
         <div className="flex items-center gap-4 p-4">
+
           {/* Image - Reduced size */}
+
+          {/* Image */}
+
           <div className="relative flex-shrink-0">
             <img 
               src={image} 
               alt={title}
+
               className="w-20 h-20 object-cover rounded-lg"
+
             />
             {featured && (
               <div className="absolute -top-1 -right-1">
@@ -75,12 +84,14 @@ export const FavoritePropertyCard = ({
           {/* Content - Reduced spacing */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
+
               <h3 className="font-semibold text-lg truncate pr-4">{title}</h3>
               <span className="text-lg font-bold text-primary whitespace-nowrap">
+
                 {price.toLocaleString()} ₾
               </span>
             </div>
-            
+
             <div className="flex items-center text-gray-600 mb-2">
               <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
               <span className="text-sm truncate">{address}</span>
@@ -97,11 +108,13 @@ export const FavoritePropertyCard = ({
               </div>
               <div className="flex items-center">
                 <Square className="h-4 w-4 mr-1" />
+
                 <span>{area} მ²</span>
               </div>
               <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {type}
               </Badge>
+
               <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {transactionType}
               </Badge>
@@ -137,15 +150,19 @@ export const FavoritePropertyCard = ({
                 დარეკვა
               </Button>
             </div>
+
             
             <Button 
               variant="ghost" 
               size="sm"
+              className="h-8 w-8 p-0 text-red-600 hover:bg-red-50"
               onClick={handleRemoveFromFavorites}
+
               className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50 text-xs px-2 py-1 h-7"
             >
               <Heart className="h-3 w-3 mr-1 fill-current" />
               ამოშლა
+
             </Button>
           </div>
         </div>

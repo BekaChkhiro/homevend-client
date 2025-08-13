@@ -28,7 +28,7 @@ const transformProperty = (backendProperty: any): Property => {
     image: backendProperty.photos && backendProperty.photos.length > 0
       ? backendProperty.photos[0]
       : "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop",
-    featured: backendProperty.status === 'active'
+    featured: false
   };
 
   console.log('Transformed to:', transformed);
@@ -143,7 +143,7 @@ const Listings = () => {
   const fetchProperties = async () => {
     try {
       setIsLoading(true);
-      const response = await propertyApi.getProperties({ status: 'active' });
+      const response = await propertyApi.getProperties({});
       const backendProperties = response?.properties || [];
 
       // Transform backend data to frontend format

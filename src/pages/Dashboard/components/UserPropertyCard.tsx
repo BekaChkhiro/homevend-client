@@ -1,8 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,56 +55,72 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Card className="border hover:shadow-sm transition-shadow">
       <CardContent className="p-0">
         <div className="flex items-center gap-4 p-4">
+
           {/* Image - Reduced size */}
+
+          {/* Image */}
+
           <div className="relative flex-shrink-0">
             <img 
               src={getMainImage()} 
               alt={property.title || `${property.propertyType} ${property.city}-ში`}
+
               className="w-20 h-20 object-cover rounded-lg"
+
             />
           </div>
 
           {/* Content - Reduced spacing */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
+
               <h3 className="font-semibold text-lg truncate pr-4">
                 {property.title || `${property.propertyType} ${property.city}-ში`}
               </h3>
               <span className="text-lg font-bold text-primary whitespace-nowrap">
+
                 {formatPrice(property.totalPrice)} ₾
               </span>
             </div>
-            
+
             <div className="flex items-center text-gray-600 mb-2">
               <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
               <span className="text-sm truncate">
+
                 {property.street}, {property.city}
               </span>
             </div>
             
+
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
               {property.bedrooms && (
                 <div className="flex items-center">
                   <Bed className="h-4 w-4 mr-1" />
+
                   <span>{property.bedrooms}</span>
                 </div>
               )}
               {property.bathrooms && (
                 <div className="flex items-center">
+
                   <Bath className="h-4 w-4 mr-1" />
+
                   <span>{property.bathrooms}</span>
                 </div>
               )}
               <div className="flex items-center">
+
                 <Square className="h-4 w-4 mr-1" />
+
                 <span>{property.area} მ²</span>
               </div>
               <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {property.propertyType}
               </Badge>
+
               <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {property.dealType}
               </Badge>
@@ -131,44 +146,24 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-6 w-6">
                   <MoreHorizontal className="h-4 w-4" />
+
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Eye className="mr-2 h-4 w-4" />
-                  ნახვა
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}>
-                  <Edit className="mr-2 h-4 w-4" />
-                  რედაქტირება
-                </DropdownMenuItem>
-                <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem onSelect={(e) => {
-                      e.preventDefault();
-                      setDeleteDialogOpen(true);
-                    }} className="text-red-600 focus:text-red-600">
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      წაშლა
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>გაუქმება</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                        წაშლა
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                    წაშლა
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </CardContent>
