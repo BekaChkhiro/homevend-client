@@ -21,6 +21,19 @@ interface Property {
   propertyType: string;
   dealType: string;
   city: string;
+  district?: string;
+  cityData?: {
+    id: number;
+    code: string;
+    nameGeorgian: string;
+    nameEnglish: string;
+  };
+  areaData?: {
+    id: number;
+    nameKa: string;
+    nameEn: string;
+    nameRu: string;
+  };
   street: string;
   area: string;
   totalPrice: string;

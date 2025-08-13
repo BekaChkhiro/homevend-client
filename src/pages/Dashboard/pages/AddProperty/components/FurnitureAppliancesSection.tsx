@@ -7,8 +7,6 @@ export const FurnitureAppliancesSection = () => {
   const form = useFormContext();
   const furnitureAppliances = form.watch("furnitureAppliances");
   
-  // Debug logging
-  console.log("🛋️ FurnitureAppliancesSection - Current values:", furnitureAppliances);
   
   return (
     <div className="space-y-8">
@@ -52,7 +50,6 @@ export const FurnitureAppliancesSection = () => {
                             type="button"
                             className="flex items-center space-x-3 p-3 rounded-lg border border-input hover:bg-accent transition-colors cursor-pointer w-full text-left"
                             onClick={() => {
-                              console.log(`🔧 ${item.id} clicked - currently checked: ${isChecked}, furnitureAppliances:`, furnitureAppliances);
                               const updatedItems = !isChecked
                                 ? [...(furnitureAppliances || []), item.id]
                                 : (furnitureAppliances || []).filter((value) => value !== item.id);

@@ -17,6 +17,19 @@ interface Property {
   propertyType: string;
   dealType: string;
   city: string;
+  district?: string;
+  cityData?: {
+    id: number;
+    code: string;
+    nameGeorgian: string;
+    nameEnglish: string;
+  };
+  areaData?: {
+    id: number;
+    nameKa: string;
+    nameEn: string;
+    nameRu: string;
+  };
   street: string;
   area: string;
   totalPrice: string;
@@ -139,11 +152,32 @@ const PropertyDetail = () => {
     tags: property.tags
   });
   
+  // Build location string with district if available
+  const getLocationString = (property: Property) => {
+    let location = property.street;
+    
+    // Add district if available
+    if (property.areaData?.nameKa) {
+      location += `, ${property.areaData.nameKa}`;
+    } else if (property.district) {
+      location += `, ${property.district}`;
+    }
+    
+    // Add city
+    if (property.cityData?.nameGeorgian) {
+      location += `, ${property.cityData.nameGeorgian}`;
+    } else if (property.city) {
+      location += `, ${property.city}`;
+    }
+    
+    return location;
+  };
+  
   const displayProperty = {
     id: property.id,
     title: property.title || `${property.propertyType} ${property.dealType} ${property.city}`,
     price: parseInt(property.totalPrice) || 0,
-    address: `${property.street}, ${property.city}`,
+    address: getLocationString(property),
     bedrooms: parseInt(property.bedrooms || '1'),
     bathrooms: parseInt(property.bathrooms || '1'),
     area: parseInt(property.area) || 0,
@@ -376,6 +410,18 @@ const PropertyDetail = () => {
                       <span className="text-muted-foreground">ტიპი:</span>
                       <span>{displayProperty.type}</span>
                     </div>
+                    {property.cityData && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">ქალაქი:</span>
+                        <span>{property.cityData.nameGeorgian}</span>
+                      </div>
+                    )}
+                    {property.areaData && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">უბანი:</span>
+                        <span>{property.areaData.nameKa}</span>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -395,7 +441,7 @@ const PropertyDetail = () => {
                 id: prop.id,
                 title: `${prop.propertyType} ${prop.dealType} ${prop.city}`,
                 price: parseInt(prop.totalPrice) || 0,
-                address: `${prop.street}, ${prop.city}`,
+                address: getLocationString(prop),
                 bedrooms: parseInt(prop.bedrooms || '1'),
                 bathrooms: parseInt(prop.bathrooms || '1'),
                 area: parseInt(prop.area) || 0,
