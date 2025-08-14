@@ -46,19 +46,40 @@ const Home = () => {
       console.log('Properties found:', data.length);
       
       // Transform API data to match the Property interface
-      const transformedProperties = data.map((prop: any) => ({
-        id: parseInt(prop.id) || prop.id,
-        title: prop.title || `${prop.propertyType} ${prop.city}`,
-        price: parseInt(prop.totalPrice) || 0,
-        address: `${prop.street}, ${prop.city}`,
-        bedrooms: parseInt(prop.bedrooms) || 1,
-        bathrooms: parseInt(prop.bathrooms) || 1,
-        area: parseInt(prop.area) || 0,
-        type: prop.propertyType || 'ბინა',
-        transactionType: prop.dealType || 'იყიდება',
-        image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
-        featured: prop.viewCount > 10 || Math.random() > 0.7 // Featured if popular or randomly
-      }));
+      const transformedProperties = data.map((prop: any) => {
+        // Build address properly
+        const parts = [];
+        if (prop.street && prop.street.trim()) parts.push(prop.street);
+        if (prop.areaData?.nameKa) {
+          parts.push(prop.areaData.nameKa);
+        } else if (prop.district && prop.district.trim()) {
+          parts.push(prop.district);
+        }
+        if (prop.cityData?.nameGeorgian) {
+          parts.push(prop.cityData.nameGeorgian);
+        } else if (prop.city && prop.city.trim()) {
+          parts.push(prop.city);
+        }
+        const address = parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
+        
+        return {
+          id: parseInt(prop.id) || prop.id,
+          title: prop.title || `${prop.propertyType} ${prop.city}`,
+          price: parseInt(prop.totalPrice) || 0,
+          address: address,
+          city: prop.city,
+          district: prop.district,
+          cityData: prop.cityData,
+          areaData: prop.areaData,
+          bedrooms: parseInt(prop.bedrooms) || 1,
+          bathrooms: parseInt(prop.bathrooms) || 1,
+          area: parseInt(prop.area) || 0,
+          type: prop.propertyType || 'ბინა',
+          transactionType: prop.dealType || 'იყიდება',
+          image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
+          featured: prop.viewCount > 10 || Math.random() > 0.7 // Featured if popular or randomly
+        };
+      });
       
       setProperties(transformedProperties);
       setFilteredProperties(transformedProperties);

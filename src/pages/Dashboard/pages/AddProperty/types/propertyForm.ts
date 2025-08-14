@@ -5,6 +5,8 @@ export const propertyFormSchema = z.object({
   title: z.string().min(1, "განცხადების სათაური აუცილებელია"),
   propertyType: z.string().min(1, "უძრავი ქონების ტიპი აუცილებელია"),
   dealType: z.string().min(1, "გარიგების ტიპი აუცილებელია"),
+  dailyRentalSubcategory: z.string().optional(),
+  district: z.string().optional(),
   city: z.string().min(1, "ქალაქი აუცილებელია"),
   street: z.string().min(1, "ქუჩა აუცილებელია"),
   streetNumber: z.string().optional(),

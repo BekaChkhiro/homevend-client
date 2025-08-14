@@ -121,11 +121,25 @@ export interface Property {
   title: string;
   price: number;
   address: string;
+  city?: string;
+  district?: string;
+  cityData?: {
+    id: number;
+    code: string;
+    nameGeorgian: string;
+    nameEnglish: string;
+  };
+  areaData?: {
+    id: number;
+    nameKa: string;
+    nameEn: string;
+  };
   bedrooms: number;
   bathrooms: number;
   area: number;
   type: string;
   transactionType: string;
+  dailyRentalSubcategory?: string;
   image: string;
   featured: boolean;
 }
@@ -137,6 +151,7 @@ export interface FilterState {
   location: string;
   propertyType: string;
   transactionType: string;
+  dailyRentalSubcategory?: string;
   bedrooms: string;
   bathrooms?: string;
   areaMin: string;

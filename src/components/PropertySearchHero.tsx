@@ -32,6 +32,7 @@ interface PropertySearchFilters {
   areaMax: string;
   bedrooms: string;
   bathrooms: string;
+  dailyRentalSubcategory: string;
   location: string;
   // Building Details
   rooms: string;
@@ -84,6 +85,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
     areaMax: "",
     bedrooms: "all",
     bathrooms: "all",
+    dailyRentalSubcategory: "all",
     location: "",
     // Building Details
     rooms: "all",
@@ -137,6 +139,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
       areaMax: "",
       bedrooms: "all",
       bathrooms: "all",
+      dailyRentalSubcategory: "all",
       location: "",
       // Building Details
       rooms: "all",
@@ -344,6 +347,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                 bathrooms: filters.bathrooms,
                 rooms: filters.rooms,
                 location: filters.location,
+                dailyRentalSubcategory: filters.dailyRentalSubcategory,
                 totalFloors: filters.totalFloors,
                 buildingStatus: filters.buildingStatus,
                 constructionYearMin: filters.constructionYearMin,
@@ -375,6 +379,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
               onClearFilters={clearAllFilters}
               totalProperties={totalProperties}
               filteredCount={filteredCount}
+              transactionType={filters.transactionType}
             />
 
             {/* Search and Clear Buttons */}

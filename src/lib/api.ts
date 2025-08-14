@@ -197,5 +197,136 @@ export const adminApi = {
   }
 };
 
+// Cities cache to prevent duplicate requests
+let citiesCache: any = null;
+let citiesCachePromise: Promise<any> | null = null;
+let lastCacheTime: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Cities API
+export const citiesApi = {
+  getAllCities: async (isActive?: boolean) => {
+    const cacheKey = `cities_${isActive}`;
+    const now = Date.now();
+    
+    // Use cache if available, valid, and request is for active cities
+    if (isActive === true && citiesCache && (now - lastCacheTime < CACHE_DURATION)) {
+      return citiesCache;
+    }
+    
+    // If there's already a request in progress, wait for it
+    if (citiesCachePromise) {
+      try {
+        return await citiesCachePromise;
+      } catch (error) {
+        // If the pending request failed, we'll make a new one below
+        citiesCachePromise = null;
+      }
+    }
+    
+    // Make the request and cache the promise
+    citiesCachePromise = (async () => {
+      try {
+        const params = isActive !== undefined ? { isActive } : {};
+        const response = await publicApiClient.get('/cities', { params });
+        const data = response.data.data;
+        
+        // Cache the result if it's for active cities
+        if (isActive === true) {
+          citiesCache = data;
+          lastCacheTime = now;
+        }
+        
+        return data;
+      } catch (error) {
+        // Don't cache failures, allow retry
+        throw error;
+      } finally {
+        // Clear the promise cache after request completes (success or failure)
+        citiesCachePromise = null;
+      }
+    })();
+    
+    return citiesCachePromise;
+  },
+  
+  getCityById: async (id: number) => {
+    const response = await publicApiClient.get(`/cities/${id}`);
+    return response.data.data;
+  },
+  
+  searchCities: async (query: string) => {
+    const response = await publicApiClient.get(`/cities/search`, { 
+      params: { q: query } 
+    });
+    return response.data.data;
+  }
+};
+
+// Areas cache to prevent duplicate requests
+const areasCache = new Map<number, any>();
+const areasCachePromises = new Map<number, Promise<any>>();
+const areasCacheTime = new Map<number, number>();
+const AREAS_CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+// Areas API
+export const areasApi = {
+  getAllAreas: async (cityId?: number) => {
+    const params = cityId ? { cityId } : {};
+    const response = await publicApiClient.get('/areas', { params });
+    return response.data.data;
+  },
+  
+  getAreaById: async (id: number) => {
+    const response = await publicApiClient.get(`/areas/${id}`);
+    return response.data.data;
+  },
+  
+  getAreasByCity: async (cityId: number) => {
+    const now = Date.now();
+    
+    // Use cache if available and valid
+    if (areasCache.has(cityId)) {
+      const cacheTime = areasCacheTime.get(cityId) || 0;
+      if (now - cacheTime < AREAS_CACHE_DURATION) {
+        return areasCache.get(cityId);
+      }
+    }
+    
+    // If there's already a request in progress for this city, wait for it
+    if (areasCachePromises.has(cityId)) {
+      try {
+        return await areasCachePromises.get(cityId);
+      } catch (error) {
+        // If the pending request failed, we'll make a new one below
+        areasCachePromises.delete(cityId);
+      }
+    }
+    
+    // Make the request and cache the promise
+    const promise = (async () => {
+      try {
+        const response = await publicApiClient.get(`/areas/city/${cityId}`);
+        const data = response.data.data;
+        
+        // Cache the result
+        areasCache.set(cityId, data);
+        areasCacheTime.set(cityId, now);
+        
+        return data;
+      } catch (error) {
+        // Don't cache failures
+        throw error;
+      } finally {
+        // Clear the promise cache after request completes
+        areasCachePromises.delete(cityId);
+      }
+    })();
+    
+    areasCachePromises.set(cityId, promise);
+    return promise;
+  }
+};
+
 export default apiClient;
 export { publicApiClient };

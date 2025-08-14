@@ -1,10 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, MoreHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Property {
@@ -13,6 +11,19 @@ interface Property {
   propertyType: string;
   dealType: string;
   city: string;
+  district?: string;
+  cityData?: {
+    id: number;
+    code: string;
+    nameGeorgian: string;
+    nameEnglish: string;
+  };
+  areaData?: {
+    id: number;
+    nameKa: string;
+    nameEn: string;
+    nameRu: string;
+  };
   street: string;
   area: string;
   totalPrice: string;
@@ -31,7 +42,6 @@ interface UserPropertyCardProps {
 }
 
 export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) => {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -50,9 +60,28 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
     return "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop";
   };
 
+  const getLocationString = () => {
+    const parts = [];
+    
+    // Add district/area if available
+    if (property.areaData?.nameKa) {
+      parts.push(property.areaData.nameKa);
+    } else if (property.district) {
+      parts.push(property.district);
+    }
+    
+    // Add city
+    if (property.cityData?.nameGeorgian) {
+      parts.push(property.cityData.nameGeorgian);
+    } else if (property.city) {
+      parts.push(property.city);
+    }
+    
+    return parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
+  };
+
   const handleDelete = () => {
     onDelete(property.id);
-    setDeleteDialogOpen(false);
   };
 
   return (
@@ -90,8 +119,7 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
             <div className="flex items-center text-gray-600 mb-2">
               <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
               <span className="text-sm truncate">
-
-                {property.street}, {property.city}
+                {getLocationString()}
               </span>
             </div>
             
@@ -140,44 +168,60 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
             </div>
           </div>
 
-          {/* Actions - Reduced size */}
-          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+          {/* Actions - Direct buttons */}
+          <div className="flex gap-1 flex-shrink-0">
+            {/* View button */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2"
+              onClick={() => navigate(`/property/${property.id}`)}
+              title="ნახვა"
+            >
+              <Eye className="h-4 w-4 mr-1" />
+              <span className="text-xs">ნახვა</span>
+            </Button>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-6 w-6">
-                  <MoreHorizontal className="h-4 w-4" />
+            {/* Edit button */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2"
+              onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
+              title="რედაქტირება"
+            >
+              <Edit className="h-4 w-4 mr-1" />
+              <span className="text-xs">რედაქტირება</span>
+            </Button>
+            
+            {/* Delete button with AlertDialog */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  title="წაშლა"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  <span className="text-xs">წაშლა</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}>
-                  <Edit className="h-4 w-4 mr-2" />
-                  რედაქტირება
-                </DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      წაშლა
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>გაუქმება</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                        წაშლა
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                    წაშლა
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </CardContent>

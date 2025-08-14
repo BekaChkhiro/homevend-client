@@ -17,12 +17,22 @@ import { DescriptionSection } from "../AddProperty/components/DescriptionSection
 import { PhotoGallerySection } from "../AddProperty/components/PhotoGallerySection";
 import { FormActions } from "../AddProperty/components/FormActions";
 import { propertyFormSchema, type PropertyFormData } from "../AddProperty/types/propertyForm";
-import { propertyApi } from "@/lib/api";
+import { propertyApi, citiesApi } from "@/lib/api";
+
+interface City {
+  id: number;
+  code: string;
+  nameGeorgian: string;
+  nameEnglish: string;
+  nameRussian: string;
+  isActive: boolean;
+}
 
 export const EditProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDraftSaving, setIsDraftSaving] = useState(false);
   const [isPropertyLoading, setIsPropertyLoading] = useState(true);
+  const [cities, setCities] = useState<City[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
@@ -44,6 +54,47 @@ export const EditProperty = () => {
       hasStorage: false,
     },
   });
+
+  // Fetch cities on component mount
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchCities = async (retryCount = 0) => {
+      if (!isMounted) return;
+      
+      try {
+        const fetchedCities = await citiesApi.getAllCities(true); // Only active cities
+        if (isMounted) {
+          setCities(fetchedCities);
+        }
+      } catch (error: any) {
+        if (!isMounted) return;
+        
+        // Handle 429 with single retry
+        if (error.response?.status === 429 && retryCount === 0) {
+          const retryAfter = Math.min(error.response?.data?.retryAfter || 2000, 5000);
+          
+          setTimeout(() => {
+            if (isMounted) {
+              fetchCities(retryCount + 1);
+            }
+          }, retryAfter);
+          return;
+        }
+        
+        // Give up and use empty array
+        if (isMounted) {
+          setCities([]);
+        }
+      }
+    };
+
+    fetchCities();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Load property data when component mounts
   useEffect(() => {
@@ -67,7 +118,9 @@ export const EditProperty = () => {
           title: property.title || "",
           propertyType: property.propertyType || "",
           dealType: property.dealType || "",
-          city: property.city || "",
+          dailyRentalSubcategory: property.dailyRentalSubcategory || "",
+          city: property.cityData?.code || property.city || "",
+          district: property.areaData?.id?.toString() || "",
           street: property.street || "",
           streetNumber: property.streetNumber || "",
           cadastralCode: property.cadastralCode || "",
@@ -134,59 +187,101 @@ export const EditProperty = () => {
   const onSubmit = async (data: PropertyFormData) => {
     if (!id) return;
     
+    // Ensure cities are loaded before submission
+    if (cities.length === 0) {
+      toast({
+        title: "შეცდომა",
+        description: "ქალაქები ჯერ არ ჩაიტვირთა. გთხოვთ მოიცადოთ.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     try {
       // Convert form data to API format
+      // Helper functions for data conversion
+      const cleanData = (value: any) => value === "" ? undefined : value;
+      const toNumber = (value: any) => value !== "" && value != null ? Number(value) : undefined;
+      const toRequiredNumber = (value: any) => Number(value);
+      
+      // Map city code to cityId using fetched cities (case-insensitive)
+      const getCityId = (cityCode: string) => {
+        const city = cities.find(c => 
+          c.code.toLowerCase() === cityCode.toLowerCase() ||
+          c.nameEnglish?.toLowerCase() === cityCode.toLowerCase()
+        );
+        if (!city) {
+          console.warn('City not found for code:', cityCode, 'Available codes:', cities.map(c => c.code));
+          return undefined;
+        }
+        return city.id;
+      };
+      
+      const cityId = getCityId(data.city);
+      if (!cityId) {
+        toast({
+          title: "შეცდომა",
+          description: `ქალაქი "${data.city}" ვერ მოიძებნა. გთხოვთ აირჩიოთ სწორი ქალაქი.`,
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const propertyData = {
         title: data.title,
         propertyType: data.propertyType,
         dealType: data.dealType,
-        city: data.city,
+        dailyRentalSubcategory: cleanData(data.dailyRentalSubcategory),
+        cityId: cityId,
+        city: data.city, // Keep for backward compatibility
+        areaId: data.district ? toNumber(data.district) : undefined,
+        district: data.district,
         street: data.street,
-        streetNumber: data.streetNumber,
-        cadastralCode: data.cadastralCode,
-        rooms: data.rooms,
-        bedrooms: data.bedrooms,
-        bathrooms: data.bathrooms,
-        totalFloors: data.totalFloors,
-        buildingStatus: data.buildingStatus,
-        constructionYear: data.constructionYear,
-        condition: data.condition,
-        projectType: data.projectType,
-        ceilingHeight: data.ceilingHeight,
-        heating: data.heating,
-        parking: data.parking,
-        hotWater: data.hotWater,
-        buildingMaterial: data.buildingMaterial,
+        streetNumber: cleanData(data.streetNumber),
+        cadastralCode: cleanData(data.cadastralCode),
+        rooms: toNumber(data.rooms),
+        bedrooms: toNumber(data.bedrooms),
+        bathrooms: toNumber(data.bathrooms),
+        totalFloors: toNumber(data.totalFloors),
+        buildingStatus: cleanData(data.buildingStatus),
+        constructionYear: cleanData(data.constructionYear),
+        condition: cleanData(data.condition),
+        projectType: cleanData(data.projectType),
+        ceilingHeight: toNumber(data.ceilingHeight),
+        heating: cleanData(data.heating),
+        parking: cleanData(data.parking),
+        hotWater: cleanData(data.hotWater),
+        buildingMaterial: cleanData(data.buildingMaterial),
         hasBalcony: data.hasBalcony,
-        balconyCount: data.balconyCount,
-        balconyArea: data.balconyArea,
+        balconyCount: toNumber(data.balconyCount),
+        balconyArea: toNumber(data.balconyArea),
         hasPool: data.hasPool,
-        poolType: data.poolType,
+        poolType: cleanData(data.poolType),
         hasLivingRoom: data.hasLivingRoom,
-        livingRoomArea: data.livingRoomArea,
-        livingRoomType: data.livingRoomType,
+        livingRoomArea: toNumber(data.livingRoomArea),
+        livingRoomType: cleanData(data.livingRoomType),
         hasLoggia: data.hasLoggia,
-        loggiaArea: data.loggiaArea,
+        loggiaArea: toNumber(data.loggiaArea),
         hasVeranda: data.hasVeranda,
-        verandaArea: data.verandaArea,
+        verandaArea: toNumber(data.verandaArea),
         hasYard: data.hasYard,
-        yardArea: data.yardArea,
+        yardArea: toNumber(data.yardArea),
         hasStorage: data.hasStorage,
-        storageArea: data.storageArea,
-        storageType: data.storageType,
+        storageArea: toNumber(data.storageArea),
+        storageType: cleanData(data.storageType),
         features: data.features,
         advantages: data.advantages,
         furnitureAppliances: data.furnitureAppliances,
         tags: data.tags,
-        area: data.area,
-        totalPrice: data.totalPrice,
-        pricePerSqm: data.pricePerSqm,
+        area: toRequiredNumber(data.area),
+        totalPrice: toRequiredNumber(data.totalPrice),
+        pricePerSqm: toNumber(data.pricePerSqm),
         contactName: data.contactName,
         contactPhone: data.contactPhone,
-        descriptionGeorgian: data.descriptionGeorgian,
-        descriptionEnglish: data.descriptionEnglish,
-        descriptionRussian: data.descriptionRussian,
+        descriptionGeorgian: cleanData(data.descriptionGeorgian),
+        descriptionEnglish: cleanData(data.descriptionEnglish),
+        descriptionRussian: cleanData(data.descriptionRussian),
         // TODO: Handle photo uploads
         photos: []
       };
@@ -201,9 +296,11 @@ export const EditProperty = () => {
       navigate('/dashboard/my-properties');
     } catch (error: any) {
       console.error("Update error:", error);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
       toast({
         title: "შეცდომა",
-        description: error.response?.data?.message || "შეცდომა მოხდა განცხადების განახლებისას",
+        description: error.response?.data?.message || error.response?.data?.errors?.join(', ') || "შეცდომა მოხდა განცხადების განახლებისას",
         variant: "destructive",
       });
     } finally {

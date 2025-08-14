@@ -20,7 +20,6 @@ export const PropertyDetailsSection = () => {
   const hasYard = form.watch("hasYard");
   const hasStorage = form.watch("hasStorage");
 
-  console.log(form.getValues());
 
 
   return (

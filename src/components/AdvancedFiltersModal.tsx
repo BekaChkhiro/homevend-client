@@ -25,6 +25,23 @@ import {
 } from "lucide-react";
 
 // Filter options (same as PropertySearchHero)
+const transactionTypes = [
+  { value: 'all', label: 'ყველა' },
+  { value: 'იყიდება', label: 'იყიდება' },
+  { value: 'ქირავდება', label: 'ქირავდება' },
+  { value: 'გირავდება', label: 'გირავდება' },
+  { value: 'გაიცემა იჯარით', label: 'გაიცემა იჯარით' },
+  { value: 'ქირავდება დღიურად', label: 'ქირავდება დღიურად' },
+  { value: 'ნასყიდობა გამოსყიდობის უფლებით', label: 'ნასყიდობა გამოსყიდობის უფლებით' }
+];
+
+const dailyRentalSubcategories = [
+  { value: "all", label: "ყველა" },
+  { value: "sea", label: "დღიურად ზღვაზე" },
+  { value: "mountains", label: "დღიურად მთაში" },
+  { value: "villa", label: "აგარაკები დღიურად" }
+];
+
 const buildingStatusOptions = [
   { value: "all", label: "ყველა" },
   { value: "ახალი აშენება", label: "ახალი აშენება" },
@@ -114,6 +131,7 @@ interface AdvancedFilterState {
   bathrooms: string;
   rooms: string;
   location: string;
+  dailyRentalSubcategory: string;
   
   // Building details
   totalFloors: string;
@@ -150,6 +168,7 @@ interface AdvancedFiltersModalProps {
   onClearFilters: () => void;
   totalProperties: number;
   filteredCount: number;
+  transactionType?: string;
 }
 
 interface SavedFilter {
@@ -164,7 +183,8 @@ export const AdvancedFiltersModal = ({
   onApplyFilters, 
   onClearFilters,
   totalProperties,
-  filteredCount 
+  filteredCount,
+  transactionType 
 }: AdvancedFiltersModalProps) => {
   const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState<AdvancedFilterState>(initialFilters);
@@ -197,6 +217,7 @@ export const AdvancedFiltersModal = ({
       filters.bathrooms !== "all",
       filters.rooms !== "all",
       filters.location !== "",
+      filters.dailyRentalSubcategory !== "" && filters.dailyRentalSubcategory !== "all",
       filters.totalFloors !== "all",
       filters.buildingStatus !== "all",
       filters.constructionYearMin !== "",
@@ -237,6 +258,7 @@ export const AdvancedFiltersModal = ({
       bathrooms: "all",
       rooms: "all",
       location: "",
+      dailyRentalSubcategory: "all",
       totalFloors: "all",
       buildingStatus: "all",
       constructionYearMin: "",
@@ -480,6 +502,29 @@ export const AdvancedFiltersModal = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Daily Rental Subcategory - Only show when daily rental is selected in main filter */}
+                {transactionType === 'ქირავდება დღიურად' && (
+                  <div className="bg-slate-50/50 p-6 rounded-xl border border-slate-100">
+                    <Label className="text-lg font-bold mb-4 block text-slate-900">
+                      დღიური ქირაობის ტიპი
+                    </Label>
+                    <div className="space-y-2">
+                      <Select value={filters.dailyRentalSubcategory || "all"} onValueChange={(value) => setFilters({...filters, dailyRentalSubcategory: value})}>
+                        <SelectTrigger className="h-12 bg-white border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-200">
+                          <SelectValue placeholder="აირჩიეთ ტიპი" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {dailyRentalSubcategories.map((subcategory) => (
+                            <SelectItem key={subcategory.value} value={subcategory.value}>
+                              {subcategory.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
 
                 {/* Location */}
                 <div className="bg-slate-50/50 p-6 rounded-xl border border-slate-100">

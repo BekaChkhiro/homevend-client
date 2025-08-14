@@ -15,16 +15,52 @@ import { useToast } from "@/components/ui/use-toast";
 const transformProperty = (backendProperty: any): Property => {
   console.log('Transforming property:', backendProperty);
 
+  // Build the address/location string properly
+  const buildAddress = () => {
+    const parts = [];
+    
+    // Add street if available
+    if (backendProperty.street && backendProperty.street.trim()) {
+      parts.push(backendProperty.street);
+    }
+    
+    // Add district/area if available
+    if (backendProperty.areaData?.nameKa) {
+      parts.push(backendProperty.areaData.nameKa);
+    } else if (backendProperty.district && backendProperty.district.trim()) {
+      parts.push(backendProperty.district);
+    }
+    
+    // Add city if available
+    if (backendProperty.cityData?.nameGeorgian) {
+      parts.push(backendProperty.cityData.nameGeorgian);
+    } else if (backendProperty.city && backendProperty.city.trim()) {
+      parts.push(backendProperty.city);
+    }
+    
+    // If we have no parts, return a default
+    if (parts.length === 0) {
+      return 'მდებარეობა არ არის მითითებული';
+    }
+    
+    return parts.join(', ');
+  };
+
   const transformed = {
     id: backendProperty.id,
     title: backendProperty.title || `${backendProperty.propertyType || 'ქონება'} ${backendProperty.city || ''}-ში`,
     price: parseInt(backendProperty.totalPrice) || 0,
-    address: `${backendProperty.street || ''}, ${backendProperty.city || ''}`,
+    address: buildAddress(),
+    city: backendProperty.city,
+    district: backendProperty.district,
+    cityData: backendProperty.cityData,
+    areaData: backendProperty.areaData,
     bedrooms: parseInt(backendProperty.bedrooms || '1'),
     bathrooms: parseInt(backendProperty.bathrooms || '1'),
     area: parseInt(backendProperty.area) || 0,
     type: backendProperty.propertyType || 'უცნობი ტიპი',
     transactionType: backendProperty.dealType || 'იყიდება',
+    dailyRentalSubcategory: backendProperty.dailyRentalSubcategory || '',
     image: backendProperty.photos && backendProperty.photos.length > 0
       ? backendProperty.photos[0]
       : "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop",
@@ -129,6 +165,7 @@ const Listings = () => {
     location: "",
     propertyType: "",
     transactionType: "",
+    dailyRentalSubcategory: "",
     bedrooms: "",
     areaMin: "",
     areaMax: ""
@@ -193,13 +230,19 @@ const Listings = () => {
 
       const matchesType = !newFilters.propertyType || property.type === newFilters.propertyType;
 
+      const matchesTransactionType = !newFilters.transactionType || newFilters.transactionType === 'all' || property.transactionType === newFilters.transactionType;
+
+      const matchesDailyRentalSubcategory = !newFilters.dailyRentalSubcategory || 
+        newFilters.dailyRentalSubcategory === '' || 
+        (property.transactionType === 'ქირავდება დღიურად' && property.dailyRentalSubcategory === newFilters.dailyRentalSubcategory);
+
       const matchesBedrooms = !newFilters.bedrooms || property.bedrooms === parseInt(newFilters.bedrooms);
 
       const matchesAreaMin = !newFilters.areaMin || property.area >= parseInt(newFilters.areaMin);
       const matchesAreaMax = !newFilters.areaMax || property.area <= parseInt(newFilters.areaMax);
 
       return matchesSearch && matchesPriceMin && matchesPriceMax && matchesLocation &&
-        matchesType && matchesBedrooms && matchesAreaMin && matchesAreaMax;
+        matchesType && matchesTransactionType && matchesDailyRentalSubcategory && matchesBedrooms && matchesAreaMin && matchesAreaMax;
     });
 
     setFilteredProperties(filtered);

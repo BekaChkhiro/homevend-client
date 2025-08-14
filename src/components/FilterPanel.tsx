@@ -15,7 +15,14 @@ interface FilterPanelProps {
 
 export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
   const updateFilter = (key: keyof FilterState, value: string) => {
-    onFilterChange({ ...filters, [key]: value });
+    const newFilters = { ...filters, [key]: value };
+    
+    // Clear daily rental subcategory if transaction type changes to non-daily
+    if (key === 'transactionType' && value !== 'ქირავდება დღიურად') {
+      newFilters.dailyRentalSubcategory = '';
+    }
+    
+    onFilterChange(newFilters);
   };
 
   const clearFilters = () => {
@@ -26,6 +33,7 @@ export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
       location: "",
       propertyType: "all",
       transactionType: "all",
+      dailyRentalSubcategory: "",
       bedrooms: "",
       areaMin: "",
       areaMax: ""
@@ -59,6 +67,24 @@ export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Daily Rental Subcategory - Only show when Daily Rental is selected */}
+        {filters.transactionType === 'ქირავდება დღიურად' && (
+          <div>
+            <Label className="text-sm font-medium mb-2 block">დღიური ქირაობის ტიპი</Label>
+            <Select value={filters.dailyRentalSubcategory || ""} onValueChange={(value) => updateFilter("dailyRentalSubcategory", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="აირჩიეთ ტიპი" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">ყველა</SelectItem>
+                <SelectItem value="sea">დღიურად ზღვაზე</SelectItem>
+                <SelectItem value="mountains">დღიურად მთაში</SelectItem>
+                <SelectItem value="villa">აგარაკები დღიურად</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* Property Type */}
         <div>
