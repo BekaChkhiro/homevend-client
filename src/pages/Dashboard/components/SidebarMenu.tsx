@@ -1,8 +1,9 @@
 import React from "react";
-import { Heart, Home, User, Plus, DollarSign } from "lucide-react";
+import { Heart, Home, User, Plus, DollarSign, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface MenuItem {
   id: string;
@@ -10,13 +11,15 @@ interface MenuItem {
   label: string;
   icon: React.ReactNode;
   category?: string; // Optional category for grouping
+  roles?: string[];
 }
 
 export const SidebarMenu: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuth();
   
   // Define menu items with categories
-  const menuItems: MenuItem[] = [
+  const allMenuItems: MenuItem[] = [
     { 
       id: "add-property", 
       path: "/dashboard/add-property", 
@@ -45,6 +48,14 @@ export const SidebarMenu: React.FC = () => {
       icon: <User className="h-5 w-5" />,
       category: "account"
     },
+    {
+      id: "users",
+      path: "/dashboard/users",
+      label: "აგენტები",
+      icon: <Users className="h-5 w-5" />,
+      category: "account",
+      roles: ['agency'],
+    },
     { 
       id: "balance", 
       path: "/dashboard/balance", 
@@ -53,6 +64,11 @@ export const SidebarMenu: React.FC = () => {
       category: "account"
     },
   ];
+
+  const menuItems = allMenuItems.filter(item => {
+    if (!item.roles) return true;
+    return user && item.roles.includes(user.role);
+  });
 
   // Group menu items by category
   const propertyItems = menuItems.filter(item => item.category === "properties");

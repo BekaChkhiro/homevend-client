@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
+import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 
@@ -34,6 +34,13 @@ interface Property {
   photos: string[];
   contactName: string;
   contactPhone: string;
+  // New fields for agency functionality
+  owner?: {
+    id: number;
+    fullName: string;
+    email: string;
+  };
+  isOwnProperty?: boolean;
 }
 
 interface UserPropertyCardProps {
@@ -122,6 +129,16 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
                 {getLocationString()}
               </span>
             </div>
+
+            {/* Show owner info if property belongs to an agent */}
+            {property.owner && !property.isOwnProperty && (
+              <div className="flex items-center text-gray-600 mb-2">
+                <User className="h-4 w-4 mr-1 flex-shrink-0" />
+                <span className="text-sm truncate">
+                  აგენტი: {property.owner.fullName}
+                </span>
+              </div>
+            )}
             
 
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
@@ -182,46 +199,50 @@ export const UserPropertyCard = ({ property, onDelete }: UserPropertyCardProps) 
               <span className="text-xs">ნახვა</span>
             </Button>
             
-            {/* Edit button */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 px-2"
-              onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
-              title="რედაქტირება"
-            >
-              <Edit className="h-4 w-4 mr-1" />
-              <span className="text-xs">რედაქტირება</span>
-            </Button>
+            {/* Edit button - only for own properties */}
+            {property.isOwnProperty !== false && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 px-2"
+                onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
+                title="რედაქტირება"
+              >
+                <Edit className="h-4 w-4 mr-1" />
+                <span className="text-xs">რედაქტირება</span>
+              </Button>
+            )}
             
-            {/* Delete button with AlertDialog */}
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                  title="წაშლა"
-                >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  <span className="text-xs">წაშლა</span>
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>გაუქმება</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                    წაშლა
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            {/* Delete button with AlertDialog - only for own properties */}
+            {property.isOwnProperty !== false && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    title="წაშლა"
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    <span className="text-xs">წაშლა</span>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                      წაშლა
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </div>
         </div>
       </CardContent>

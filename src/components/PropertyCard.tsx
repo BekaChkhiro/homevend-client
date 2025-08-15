@@ -107,6 +107,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <MapPin className="h-4 w-4 mr-1" />
             {getDistrictAndStreet()}
           </div>
+          {property.agentName && (
+            <div className="text-xs text-muted-foreground mt-1">
+              აგენტი: {property.agentName}
+            </div>
+          )}
         </div>
         
         <div className="flex items-center justify-between mb-4">

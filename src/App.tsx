@@ -17,6 +17,9 @@ import Properties from "./pages/Properties";
 import PriceStatistics from "./pages/PriceStatistics";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Agencies from "./pages/Agencies";
+import AgencyDetail from "./pages/AgencyDetail";
+import UserProfile from "./pages/UserProfile";
 import { Services } from "./pages/Services";
 import AdminOverview from "./pages/AdminDashboard/pages/Overview";
 import AdminUsers from "./pages/AdminDashboard/pages/Users";
@@ -30,6 +33,7 @@ import { MyProperties } from "./pages/Dashboard/components/MyProperties";
 import { Favorites } from "./pages/Dashboard/components/Favorites";
 import { ProfilePage } from "./pages/Dashboard/components/ProfilePage";
 import { BalancePage } from "./pages/Dashboard/components/BalancePage";
+import UsersPage from "./pages/Dashboard/pages/Users";
 import { TestComponent } from "./pages/Dashboard/components/TestComponent";
 import { SimpleAddProperty, SimpleMyProperties, SimpleFavorites, SimpleProfile, SimpleBalance } from "./pages/Dashboard/components/SimpleTest";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -51,6 +55,9 @@ const App = () => (
           <Route path="/properties" element={<Properties />} />
           <Route path="/price-statistics" element={<PriceStatistics />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/agencies" element={<Agencies />} />
+          <Route path="/agencies/:id" element={<AgencyDetail />} />
+          <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/advertise" element={<Advertising />} />
@@ -65,6 +72,7 @@ const App = () => (
             <Route path="favorites" element={<Favorites />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="balance" element={<BalancePage />} />
+            <Route path="users" element={<UsersPage />} />
           </Route>
           <Route path="/admin" element={
             <ProtectedRoute requiredRole="admin">
