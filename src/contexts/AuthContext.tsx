@@ -6,7 +6,7 @@ export interface User {
   id: number;
   fullName: string;
   email: string;
-  role: 'user' | 'agent' | 'admin';
+  role: 'user' | 'agent' | 'admin' | 'agency';
 }
 
 export interface AuthContextType {

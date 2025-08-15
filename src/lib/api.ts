@@ -147,7 +147,7 @@ export const propertyApi = {
   },
   
   getUserProperties: async () => {
-    const response = await apiClient.get('/properties/user/my-properties');
+    const response = await apiClient.get('/properties/my-properties');
     return response.data.data;
   },
   
@@ -325,6 +325,34 @@ export const areasApi = {
     
     areasCachePromises.set(cityId, promise);
     return promise;
+  }
+};
+
+// Agency API
+export const agencyApi = {
+  getAgencies: async (params?: { page?: number; limit?: number; search?: string; city?: string; isVerified?: boolean }) => {
+    const response = await publicApiClient.get('/agencies', { params });
+    return response.data.data;
+  },
+  
+  getAgencyById: async (id: string) => {
+    const response = await publicApiClient.get(`/agencies/${id}`);
+    return response.data.data;
+  },
+  
+  getMyAgencyUsers: async () => {
+    const response = await apiClient.get('/agencies/my/users');
+    return response.data.data;
+  },
+  
+  addUserToMyAgency: async (email: string) => {
+    const response = await apiClient.post('/agencies/my/users', { email });
+    return response.data;
+  },
+  
+  removeUserFromMyAgency: async (userId: number) => {
+    const response = await apiClient.delete(`/agencies/my/users/${userId}`);
+    return response.data;
   }
 };
 

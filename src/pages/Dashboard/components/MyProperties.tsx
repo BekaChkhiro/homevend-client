@@ -44,6 +44,13 @@ interface Property {
   photos: string[];
   contactName: string;
   contactPhone: string;
+  // New fields for agency functionality
+  owner?: {
+    id: number;
+    fullName: string;
+    email: string;
+  };
+  isOwnProperty?: boolean;
 }
 
 export const MyProperties: React.FC = () => {

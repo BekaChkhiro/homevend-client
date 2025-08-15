@@ -66,6 +66,7 @@ interface PropertySearchHeroProps {
   onSearch: (filters: PropertySearchFilters) => void;
   totalProperties?: number;
   filteredCount?: number;
+  variant?: 'default' | 'minimal';
   renderAdvancedFilters?: (props: {
     filters: PropertySearchFilters;
     onApplyFilters: (filters: PropertySearchFilters) => void;
@@ -73,7 +74,7 @@ interface PropertySearchHeroProps {
   }) => React.ReactNode;
 }
 
-export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCount = 0, renderAdvancedFilters }: PropertySearchHeroProps) => {
+export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', renderAdvancedFilters }: PropertySearchHeroProps) => {
   const [filters, setFilters] = useState<PropertySearchFilters>({
     search: "",
     transactionType: "all",
@@ -208,10 +209,23 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
     filters.selectedFurnitureAppliances.length > 0;
 
 
+  // Dynamic styling based on variant
+  const sectionClasses = variant === 'minimal' 
+    ? "py-8" 
+    : "bg-gradient-to-br from-primary/5 via-background to-secondary/10 py-8";
+    
+  const containerClasses = variant === 'minimal'
+    ? "bg-white/95 backdrop-blur-sm rounded-3xl p-6 border border-gray-200 mx-auto"
+    : "bg-white/95 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20 mx-auto";
+
+  const buttonClasses = variant === 'minimal'
+    ? "group h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl transition-all duration-300 text-base"
+    : "group h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base";
+
   return (
-    <section className="bg-gradient-to-br from-primary/5 via-background to-secondary/10 py-8">
+    <section className={sectionClasses}>
       <div className="container mx-auto px-4">
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20 mx-auto">
+        <div className={containerClasses}>
           <div className="flex gap-4 items-end">
             {/* Transaction Type */}
             <div className="w-2/12 flex flex-col gap-2">
@@ -389,7 +403,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                   <Button 
                     onClick={handleSearch}
                     size="lg" 
-                    className="group h-12 col-span-7 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base"
+                    className={`${buttonClasses} col-span-7`}
                   >
                     <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
                     ძიება
@@ -409,7 +423,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                 <Button 
                   onClick={handleSearch}
                   size="lg" 
-                  className="group h-12 w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base"
+                  className={`${buttonClasses} w-full`}
                 >
                   <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
                   ძიება

@@ -142,6 +142,7 @@ export interface Property {
   dailyRentalSubcategory?: string;
   image: string;
   featured: boolean;
+  agentName?: string;
 }
 
 export interface FilterState {
