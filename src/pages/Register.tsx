@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth, type AuthContextType } from "@/contexts/AuthContext";
-import { User, Building, Upload, X } from "lucide-react";
+import { User, Building, Upload, X, Wrench } from "lucide-react";
 
 const Register = () => {
   const { toast } = useToast();
@@ -21,12 +21,17 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "user" as "user" | "agency",
+    role: "user" as "user" | "agency" | "developer",
     // Agency specific fields
     agencyName: "",
     agencyPhone: "",
     agencySocialMedia: "",
     agencyWebsite: "",
+    // Developer specific fields (same as agency)
+    developerName: "",
+    developerPhone: "",
+    developerSocialMedia: "",
+    developerWebsite: "",
   });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>("");
@@ -42,10 +47,10 @@ const Register = () => {
     setActiveTab(value);
     setFormData({
       ...formData,
-      role: value as "user" | "agency",
+      role: value as "user" | "agency" | "developer",
     });
     // Reset logo when switching tabs
-    if (value !== "agency") {
+    if (value !== "agency" && value !== "developer") {
       setLogoFile(null);
       setLogoPreview("");
     }
@@ -129,6 +134,14 @@ const Register = () => {
           socialMediaUrl: formData.agencySocialMedia || undefined,
           website: formData.agencyWebsite || undefined,
         };
+      } else if (formData.role === "developer") {
+        // For developer registration, don't send fullName
+        registrationData.developerData = {
+          name: formData.developerName,
+          phone: formData.developerPhone,
+          socialMediaUrl: formData.developerSocialMedia || undefined,
+          website: formData.developerWebsite || undefined,
+        };
       } else {
         // For regular user registration, send fullName
         registrationData.fullName = formData.fullName;
@@ -170,14 +183,18 @@ const Register = () => {
             </CardHeader>
             <CardContent>
               <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="user" className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    რეგულარული მომხმარებელი
+                    მომხმარებელი
                   </TabsTrigger>
                   <TabsTrigger value="agency" className="flex items-center gap-2">
                     <Building className="h-4 w-4" />
                     სააგენტო
+                  </TabsTrigger>
+                  <TabsTrigger value="developer" className="flex items-center gap-2">
+                    <Wrench className="h-4 w-4" />
+                    დეველოპერი
                   </TabsTrigger>
                 </TabsList>
 
@@ -410,8 +427,170 @@ const Register = () => {
                     </div>
                   </TabsContent>
 
+                  <TabsContent value="developer" className="space-y-4">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label htmlFor="developerName" className="text-sm font-medium">
+                          დეველოპერული კომპანიის დასახელება
+                        </label>
+                        <Input
+                          id="developerName"
+                          name="developerName"
+                          placeholder="შეიყვანეთ კომპანიის დასახელება"
+                          required
+                          value={formData.developerName}
+                          onChange={handleChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label htmlFor="developerLogo" className="text-sm font-medium">
+                          ლოგო (არასავალდებულო)
+                        </label>
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1">
+                            <div className="relative">
+                              <input
+                                id="developerLogo"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleLogoChange}
+                                disabled={isLoading}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                              />
+                              <div className="flex items-center gap-2 px-3 py-2 border border-input rounded-md bg-background hover:bg-gray-50 transition-colors cursor-pointer">
+                                <Upload className="h-4 w-4 text-gray-500" />
+                                <span className="text-sm text-gray-600">
+                                  {logoFile ? logoFile.name : "აირჩიეთ ლოგოს ფაილი"}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          {logoPreview && (
+                            <div className="relative">
+                              <img
+                                src={logoPreview}
+                                alt="ლოგოს წინასწარი ნახვა"
+                                className="w-16 h-16 object-cover rounded-md border"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setLogoFile(null);
+                                  setLogoPreview("");
+                                }}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                                disabled={isLoading}
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          მხარდაჭერილი ფორმატები: JPG, PNG, GIF. მაქსიმალური ზომა: 5MB
+                        </p>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="email" className="text-sm font-medium">
+                          ელ-ფოსტა
+                        </label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder="კომპანიის ელ-ფოსტის მისამართი"
+                          required
+                          value={formData.email}
+                          onChange={handleChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label htmlFor="developerPhone" className="text-sm font-medium">
+                          ტელეფონის ნომერი
+                        </label>
+                        <Input
+                          id="developerPhone"
+                          name="developerPhone"
+                          placeholder="ტელეფონის ნომერი"
+                          required
+                          value={formData.developerPhone}
+                          onChange={handleChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label htmlFor="developerSocialMedia" className="text-sm font-medium">
+                          სოციალური მედია URL (არასავალდებულო)
+                        </label>
+                        <Input
+                          id="developerSocialMedia"
+                          name="developerSocialMedia"
+                          placeholder="https://facebook.com/yourpage"
+                          value={formData.developerSocialMedia}
+                          onChange={handleChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label htmlFor="developerWebsite" className="text-sm font-medium">
+                          ვებსაიტი (არასავალდებულო)
+                        </label>
+                        <Input
+                          id="developerWebsite"
+                          name="developerWebsite"
+                          placeholder="https://yourwebsite.com"
+                          value={formData.developerWebsite}
+                          onChange={handleChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="password" className="text-sm font-medium">
+                          პაროლი
+                        </label>
+                        <Input
+                          id="password"
+                          name="password"
+                          type="password"
+                          placeholder="შეიყვანეთ პაროლი"
+                          required
+                          minLength={6}
+                          value={formData.password}
+                          onChange={handleChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="confirmPassword" className="text-sm font-medium">
+                          გაიმეორეთ პაროლი
+                        </label>
+                        <Input
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          type="password"
+                          placeholder="გაიმეორეთ პაროლი"
+                          required
+                          value={formData.confirmPassword}
+                          onChange={handleChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </div>
+                  </TabsContent>
+
                   <Button type="submit" className="w-full mt-6" disabled={isLoading}>
-                    {isLoading ? "მიმდინარეობს..." : formData.role === "agency" ? "სააგენტოს რეგისტრაცია" : "რეგისტრაცია"}
+                    {isLoading ? "მიმდინარეობს..." : 
+                     formData.role === "agency" ? "სააგენტოს რეგისტრაცია" :
+                     formData.role === "developer" ? "დეველოპერის რეგისტრაცია" : "რეგისტრაცია"}
                   </Button>
                 </form>
               </Tabs>

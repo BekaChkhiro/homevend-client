@@ -21,16 +21,16 @@ export const SidebarMenu: React.FC = () => {
   // Define menu items with categories
   const allMenuItems: MenuItem[] = [
     { 
-      id: "add-property", 
-      path: "/dashboard/add-property", 
-      label: "დამატება", 
+      id: user?.role === 'developer' ? "add-project" : "add-property", 
+      path: user?.role === 'developer' ? "/dashboard/add-project" : "/dashboard/add-property", 
+      label: user?.role === 'developer' ? "პროექტის დამატება" : "განცხადების დამატება", 
       icon: <Plus className="h-5 w-5" />,
       category: "properties"
     },
     { 
       id: "my-properties", 
       path: "/dashboard/my-properties", 
-      label: "ჩემი განცხადებები", 
+      label: user?.role === 'developer' ? "ჩემი პროექტები" : "ჩემი განცხადებები", 
       icon: <Home className="h-5 w-5" />,
       category: "properties"
     },
@@ -134,7 +134,7 @@ export const SidebarMenu: React.FC = () => {
 
   return (
     <div className="p-3">
-      {propertyItems.length > 0 && renderCategory("განცხადებები", propertyItems)}
+      {propertyItems.length > 0 && renderCategory(user?.role === 'developer' ? "პროექტები" : "განცხადებები", propertyItems)}
       {accountItems.length > 0 && renderCategory("ანგარიში", accountItems)}
       {uncategorizedItems.length > 0 && uncategorizedItems.map(renderMenuItem)}
     </div>

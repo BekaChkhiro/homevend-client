@@ -21,6 +21,8 @@ import Agencies from "./pages/Agencies";
 import AgencyDetail from "./pages/AgencyDetail";
 import UserProfile from "./pages/UserProfile";
 import { Services } from "./pages/Services";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import AdminOverview from "./pages/AdminDashboard/pages/Overview";
 import AdminUsers from "./pages/AdminDashboard/pages/Users";
 import AdminListings from "./pages/AdminDashboard/pages/Listings";
@@ -29,6 +31,7 @@ import AdminDistricts from "./pages/AdminDashboard/pages/Districts";
 import AdminSettings from "./pages/AdminDashboard/pages/Settings";
 import { AddProperty } from "./pages/Dashboard/pages/AddProperty";
 import { EditProperty } from "./pages/Dashboard/pages/EditProperty";
+import { AddProject } from "./pages/Dashboard/pages/AddProject";
 import { MyProperties } from "./pages/Dashboard/components/MyProperties";
 import { Favorites } from "./pages/Dashboard/components/Favorites";
 import { ProfilePage } from "./pages/Dashboard/components/ProfilePage";
@@ -55,6 +58,8 @@ const App = () => (
           <Route path="/properties" element={<Properties />} />
           <Route path="/price-statistics" element={<PriceStatistics />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/agencies" element={<Agencies />} />
           <Route path="/agencies/:id" element={<AgencyDetail />} />
           <Route path="/user/:userId" element={<UserProfile />} />
@@ -67,6 +72,7 @@ const App = () => (
             <Route index element={<MyProperties />} />
             <Route path="test" element={<TestComponent />} />
             <Route path="add-property" element={<AddProperty />} />
+            <Route path="add-project" element={<AddProject />} />
             <Route path="edit-property/:id" element={<EditProperty />} />
             <Route path="my-properties" element={<MyProperties />} />
             <Route path="favorites" element={<Favorites />} />
