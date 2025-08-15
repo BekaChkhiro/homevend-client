@@ -1,0 +1,414 @@
+import React, { useState, useEffect } from "react";
+import { Header } from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { MapPin, Calendar, Building2, Eye, Filter, Search } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+
+interface Project {
+  id: number;
+  uuid: string;
+  projectName: string;
+  description?: string;
+  street: string;
+  streetNumber?: string;
+  projectType: 'private_house' | 'apartment_building';
+  deliveryStatus: 'completed_with_renovation' | 'green_frame' | 'black_frame' | 'white_frame';
+  deliveryDate?: string;
+  numberOfBuildings: number;
+  totalApartments: number;
+  numberOfFloors: number;
+  viewCount: number;
+  createdAt: string;
+  city: {
+    id: number;
+    nameGeorgian: string;
+  };
+  areaData?: {
+    id: number;
+    nameKa: string;
+  };
+  developer: {
+    id: number;
+    fullName: string;
+  };
+  pricing: Array<{
+    id: number;
+    roomType: string;
+    totalArea: number;
+    pricePerSqm: number;
+    totalPriceFrom: number;
+    totalPriceTo?: number;
+    availableUnits: number;
+  }>;
+}
+
+interface ProjectFilters {
+  search: string;
+  city: string;
+  area: string;
+  projectType: string;
+  deliveryStatus: string;
+}
+
+const Projects = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState<ProjectFilters>({
+    search: '',
+    city: '',
+    area: '',
+    projectType: 'all',
+    deliveryStatus: 'all'
+  });
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const projectType = searchParams.get('projectType');
+    if (projectType) {
+      setFilters(prev => ({ ...prev, projectType }));
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [currentPage, filters]);
+
+  const fetchProjects = async () => {
+    try {
+      setIsLoading(true);
+      const queryParams = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: '12',
+        ...(filters.city && { city: filters.city }),
+        ...(filters.area && { area: filters.area }),
+        ...(filters.projectType && filters.projectType !== 'all' && { projectType: filters.projectType }),
+        ...(filters.deliveryStatus && filters.deliveryStatus !== 'all' && { deliveryStatus: filters.deliveryStatus })
+      });
+
+      const response = await fetch(`/api/projects?${queryParams}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch projects: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Projects API response:', data); // Debug log
+      setProjects(Array.isArray(data.projects) ? data.projects : []);
+      setTotalPages(data.pagination?.totalPages || 1);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      toast({
+        title: "შეცდომა",
+        description: "პროექტების ჩატვირთვისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFilterChange = (key: keyof ProjectFilters, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      city: '',
+      area: '',
+      projectType: 'all',
+      deliveryStatus: 'all'
+    });
+    setCurrentPage(1);
+  };
+
+  const getProjectTypeLabel = (type: string) => {
+    switch (type) {
+      case 'private_house':
+        return 'კერძო სახლი';
+      case 'apartment_building':
+        return 'საცხოვრებელი კომპლექსი';
+      default:
+        return type;
+    }
+  };
+
+  const getDeliveryStatusLabel = (status: string) => {
+    switch (status) {
+      case 'completed_with_renovation':
+        return 'ჩაბარება რემონტით';
+      case 'green_frame':
+        return 'მწვანე კარკასი';
+      case 'black_frame':
+        return 'შავი კარკასი';
+      case 'white_frame':
+        return 'თეთრი კარკასი';
+      default:
+        return status;
+    }
+  };
+
+  const getDeliveryStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed_with_renovation':
+        return 'bg-green-100 text-green-800';
+      case 'green_frame':
+        return 'bg-emerald-100 text-emerald-800';
+      case 'black_frame':
+        return 'bg-gray-100 text-gray-800';
+      case 'white_frame':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('ka-GE', {
+      style: 'currency',
+      currency: 'GEL',
+      minimumFractionDigits: 0
+    }).format(price);
+  };
+
+  const getMinPrice = (pricing: Project['pricing']) => {
+    if (!pricing || pricing.length === 0) return null;
+    return Math.min(...pricing.map(p => p.totalPriceFrom));
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <div className="container mx-auto py-10 px-4 pt-48">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              პროექტები
+            </h1>
+            <p className="text-gray-600">
+              იპოვეთ საუკეთესო განვითარების პროექტები თბილისში
+            </p>
+          </div>
+
+          {/* Filters */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <div className="flex items-center gap-4 mb-4">
+              <Filter className="h-5 w-5 text-gray-500" />
+              <h2 className="text-lg font-medium">ფილტრები</h2>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={clearFilters}
+                className="ml-auto"
+              >
+                გასუფთავება
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="ძიება..."
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              
+              <Select value={filters.projectType} onValueChange={(value) => handleFilterChange('projectType', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="პროექტის ტიპი" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">ყველა ტიპი</SelectItem>
+                  <SelectItem value="private_house">კერძო სახლი</SelectItem>
+                  <SelectItem value="apartment_building">საცხოვრებელი კომპლექსი</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filters.deliveryStatus} onValueChange={(value) => handleFilterChange('deliveryStatus', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="ჩაბარების სტატუსი" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">ყველა სტატუსი</SelectItem>
+                  <SelectItem value="completed_with_renovation">ჩაბარება რემონტით</SelectItem>
+                  <SelectItem value="green_frame">მწვანე კარკასი</SelectItem>
+                  <SelectItem value="black_frame">შავი კარკასი</SelectItem>
+                  <SelectItem value="white_frame">თეთრი კარკასი</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Input
+                placeholder="ქალაქი"
+                value={filters.city}
+                onChange={(e) => handleFilterChange('city', e.target.value)}
+              />
+
+              <Input
+                placeholder="რაიონი"
+                value={filters.area}
+                onChange={(e) => handleFilterChange('area', e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Projects Grid */}
+          {isLoading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-gray-600">პროექტების ჩატვირთვა...</p>
+              </div>
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="text-center py-12">
+              <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-medium text-gray-900 mb-2">
+                პროექტები ვერ მოიძებნა
+              </h3>
+              <p className="text-gray-600">
+                სცადეთ სხვა ფილტრების გამოყენება
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects.map((project) => {
+                const minPrice = getMinPrice(project.pricing);
+                return (
+                  <Card 
+                    key={project.id} 
+                    className="group cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                    onClick={() => navigate(`/projects/${project.id}`)}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors">
+                          {project.projectName}
+                        </CardTitle>
+                        <Badge className={getDeliveryStatusColor(project.deliveryStatus)}>
+                          {getDeliveryStatusLabel(project.deliveryStatus)}
+                        </Badge>
+                      </div>
+                      <CardDescription className="line-clamp-2">
+                        {project.description}
+                      </CardDescription>
+                    </CardHeader>
+
+                    <CardContent className="space-y-4">
+                      {/* Location */}
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <MapPin className="h-4 w-4" />
+                        <span className="text-sm">
+                          {project.city.nameGeorgian}
+                          {project.areaData && `, ${project.areaData.nameKa}`}
+                          , {project.street}
+                          {project.streetNumber && ` ${project.streetNumber}`}
+                        </span>
+                      </div>
+
+                      {/* Project Info */}
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-gray-500">ტიპი:</span>
+                          <p className="font-medium">{getProjectTypeLabel(project.projectType)}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">კორპუსები:</span>
+                          <p className="font-medium">{project.numberOfBuildings}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">ბინები:</span>
+                          <p className="font-medium">{project.totalApartments}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">სართულები:</span>
+                          <p className="font-medium">{project.numberOfFloors}</p>
+                        </div>
+                      </div>
+
+                      {/* Price */}
+                      {minPrice && (
+                        <div className="pt-2 border-t">
+                          <span className="text-gray-500 text-sm">ფასი დაწყებული:</span>
+                          <p className="text-2xl font-bold text-primary">
+                            {formatPrice(minPrice)}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between pt-2 border-t text-sm text-gray-500">
+                        <span>დეველოპერი: {project.developer.fullName}</span>
+                        <div className="flex items-center gap-1">
+                          <Eye className="h-4 w-4" />
+                          <span>{project.viewCount}</span>
+                        </div>
+                      </div>
+
+                      {project.deliveryDate && (
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Calendar className="h-4 w-4" />
+                          <span>ჩაბარება: {new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</span>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-8">
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  წინა
+                </Button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    onClick={() => setCurrentPage(page)}
+                    className="w-10"
+                  >
+                    {page}
+                  </Button>
+                ))}
+                
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  შემდეგი
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Projects;

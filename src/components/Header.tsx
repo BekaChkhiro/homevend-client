@@ -46,9 +46,9 @@ export const Header = () => {
             </Button>
             
             <Button variant="outline" size="sm" className="border-primary/20 hover:bg-primary/5 hover:text-primary" asChild>
-              <Link to="/dashboard/add-property" className="flex items-center gap-1.5">
+              <Link to={user?.role === 'developer' ? "/dashboard/add-project" : "/dashboard/add-property"} className="flex items-center gap-1.5">
                 <PlusCircle className="h-4 w-4" />
-                <span>განცხადების დამატება</span>
+                <span>{user?.role === 'developer' ? 'პროექტის დამატება' : 'განცხადების დამატება'}</span>
               </Link>
             </Button>
             
@@ -129,21 +129,21 @@ export const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-64">
                 <DropdownMenuItem asChild>
-                  <Link to="/new-projects" className="flex items-center gap-2 cursor-pointer">
+                  <Link to="/projects" className="flex items-center gap-2 cursor-pointer">
                     <LayoutGrid className="h-4 w-4" />
-                    <span>ახალი პროექტები</span>
+                    <span>ყველა პროექტი</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/developer-apartments" className="flex items-center gap-2 cursor-pointer">
+                  <Link to="/projects?projectType=apartment_building" className="flex items-center gap-2 cursor-pointer">
                     <Building2 className="h-4 w-4" />
-                    <span>ბინები დეველოპერებისგან</span>
+                    <span>საცხოვრებელი კომპლექსები</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/construction-projects" className="flex items-center gap-2 cursor-pointer">
+                  <Link to="/projects?projectType=private_house" className="flex items-center gap-2 cursor-pointer">
                     <Construction className="h-4 w-4" />
-                    <span>მშენებარე პროექტები</span>
+                    <span>კერძო სახლები</span>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>

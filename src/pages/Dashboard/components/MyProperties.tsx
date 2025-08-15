@@ -4,7 +4,9 @@ import { Plus, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { UserPropertyCard } from "./UserPropertyCard";
+import { MyProjects } from "./MyProjects";
 import { propertyApi } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Pagination,
   PaginationContent,
@@ -56,10 +58,16 @@ interface Property {
 export const MyProperties: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const propertiesPerPage = 10;
+
+  // If user is a developer, show projects instead
+  if (user?.role === 'developer') {
+    return <MyProjects />;
+  }
 
   useEffect(() => {
     fetchUserProperties();
