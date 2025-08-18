@@ -1,125 +1,177 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FavoritePropertyCard } from "./FavoritePropertyCard";
 import { Button } from "@/components/ui/button";
-import { Heart, Search } from "lucide-react";
+import { Heart, Search, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { favoritesApi } from "@/lib/api";
+import { useToast } from "@/components/ui/use-toast";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
-// Test favorite properties data
-const testFavoriteProperties = [
-  {
-    id: 4001,
-    title: "ლუქსუსური პენტჰაუსი ვაკეში",
-    price: 380000,
-    address: "ვაკე, თბილისი",
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 180,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=500&h=300&fit=crop",
-    featured: true,
-    addedDate: "2024-01-20",
-    ownerName: "გიორგი მელაძე",
-    ownerPhone: "+995 599 123 456",
-  },
-  {
-    id: 4002,
-    title: "კომფორტული ბინა საბურთალოში",
-    price: 180000,
-    address: "საბურთალო, თბილისი",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 95,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1527576539890-dfa815648363?w=500&h=300&fit=crop",
-    featured: false,
-    addedDate: "2024-01-18",
-    ownerName: "ნინო ხარაძე",
-    ownerPhone: "+995 555 987 654",
-  },
-  {
-    id: 4003,
-    title: "ახალი ბინა ისანში",
-    price: 95000,
-    address: "ისანი, თბილისი",
-    bedrooms: 2,
-    bathrooms: 1,
-    area: 75,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=500&h=300&fit=crop",
-    featured: false,
-    addedDate: "2024-01-15",
-    ownerName: "დავით ლომიძე",
-    ownerPhone: "+995 577 456 789",
-  },
-  {
-    id: 4004,
-    title: "სტუდია ძველ თბილისში",
-    price: 85000,
-    address: "ძველი თბილისი",
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 35,
-    type: "ბინები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop",
-    featured: false,
-    addedDate: "2024-01-10",
-    ownerName: "მარიამ წიწკიშვილი",
-    ownerPhone: "+995 593 321 654",
-  },
-  {
-    id: 4005,
-    title: "კოტეჯი დიდ დიღომში",
-    price: 220000,
-    address: "დიდი დიღომი, თბილისი",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 160,
-    type: "სახლები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop",
-    featured: false,
-    addedDate: "2024-01-12",
-    ownerName: "ლევან გელაშვილი",
-    ownerPhone: "+995 568 147 258",
-  },
-  {
-    id: 4006,
-    title: "ვილა მთაწმინდაზე",
-    price: 450000,
-    address: "მთაწმინდა, თბილისი",
-    bedrooms: 5,
-    bathrooms: 4,
-    area: 350,
-    type: "აგარაკები",
-    transactionType: "იყიდება",
-    image: "https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=500&h=300&fit=crop",
-    featured: true,
-    addedDate: "2024-01-08",
-    ownerName: "ანა ჯავახიშვილი",
-    ownerPhone: "+995 579 852 741",
-  }
-];
+interface FavoriteProperty {
+  id: number;
+  title: string;
+  propertyType: string;
+  dealType: string;
+  city: string;
+  district: string;
+  street: string;
+  area: string;
+  totalPrice: string;
+  bedrooms: string;
+  bathrooms: string;
+  photos: string[];
+  contactPhone: string;
+  status: string;
+  createdAt: string;
+  favoriteAddedAt: string;
+  user: {
+    id: number;
+    fullName: string;
+    email: string;
+    role: string;
+  };
+}
 
 export const Favorites: React.FC = () => {
   const navigate = useNavigate();
-  const hasFavorites = testFavoriteProperties.length > 0;
+  const { toast } = useToast();
+  const { toggleFavorite } = useFavorites();
+  const [favorites, setFavorites] = useState<FavoriteProperty[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+
+  const fetchFavorites = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await favoritesApi.getFavorites();
+      setFavorites(response.favorites);
+    } catch (error: any) {
+      console.error('Error fetching favorites:', error);
+      setError('ფავორიტების ჩატვირთვისას მოხდა შეცდომა');
+      toast({
+        title: "შეცდომა",
+        description: "ფავორიტების ჩატვირთვისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveFromFavorites = async (propertyId: number) => {
+    try {
+      // Use the FavoritesContext to remove - this will update global state
+      await toggleFavorite(propertyId);
+      // Update local state to remove from the list immediately
+      setFavorites(prev => prev.filter(fav => fav.id !== propertyId));
+      toast({
+        title: "წარმატება",
+        description: "განცხადება წაიშალა ფავორიტებიდან",
+      });
+    } catch (error: any) {
+      console.error('Error removing from favorites:', error);
+      toast({
+        title: "შეცდომა", 
+        description: "ფავორიტებიდან წაშლისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const translatePropertyType = (type: string) => {
+    const translations: Record<string, string> = {
+      'apartment': 'ბინა',
+      'house': 'სახლი',
+      'cottage': 'კოტეჯი',
+      'land': 'მიწა',
+      'commercial': 'კომერციული'
+    };
+    return translations[type] || type;
+  };
+
+  const translateDealType = (type: string) => {
+    const translations: Record<string, string> = {
+      'sale': 'იყიდება',
+      'rent': 'ქირავდება', 
+      'daily': 'დღიური ქირავნობა'
+    };
+    return translations[type] || type;
+  };
+
+  const formatAddress = (property: FavoriteProperty) => {
+    let address = property.street;
+    if (property.district) {
+      address += `, ${property.district}`;
+    }
+    if (property.city) {
+      address += `, ${property.city}`;
+    }
+    return address;
+  };
+
+  if (loading) {
+    return (
+      <>
+        <h2 className="text-xl font-medium mb-4">ფავორიტები</h2>
+        <div className="flex items-center justify-center h-32">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">ფავორიტების ჩატვირთვა...</span>
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <h2 className="text-xl font-medium mb-4">ფავორიტები</h2>
+        <div className="bg-white p-8 rounded-lg border text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={fetchFavorites}>
+            თავიდან სცადეთ
+          </Button>
+        </div>
+      </>
+    );
+  }
   
   return (
     <>
       <h2 className="text-xl font-medium mb-4">ფავორიტები</h2>
 
-      {hasFavorites ? (
+      {favorites.length > 0 ? (
         <div className="space-y-3">
-          {testFavoriteProperties.map((property) => (
-            <FavoritePropertyCard
-              key={property.id}
-              {...property}
-            />
-          ))}
+          {favorites.map((property) => {
+            const transformedProperty = {
+              id: property.id,
+              title: property.title,
+              price: parseInt(property.totalPrice) || 0,
+              address: formatAddress(property),
+              bedrooms: parseInt(property.bedrooms) || 0,
+              bathrooms: parseInt(property.bathrooms) || 0,
+              area: parseInt(property.area) || 0,
+              type: translatePropertyType(property.propertyType),
+              transactionType: translateDealType(property.dealType),
+              image: property.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
+              featured: false, // You could add logic to determine this
+              addedDate: new Date(property.favoriteAddedAt).toLocaleDateString('ka-GE'),
+              ownerName: property.user.fullName,
+              ownerPhone: property.contactPhone,
+              onRemoveFromFavorites: () => handleRemoveFromFavorites(property.id)
+            };
+
+            return (
+              <FavoritePropertyCard
+                key={property.id}
+                {...transformedProperty}
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="bg-white p-8 rounded-lg border text-center">

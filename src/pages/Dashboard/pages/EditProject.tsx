@@ -218,8 +218,33 @@ export const EditProject: React.FC = () => {
         mainDoorLock: project.mainDoorLock || false,
       });
 
-      // Set custom amenities if they exist
-      if (project.customAmenities) {
+      // Convert amenities array to customAmenities format
+      if (project.amenities && Array.isArray(project.amenities)) {
+        const amenitiesMap: {[key: string]: string} = {};
+        project.amenities.forEach((amenity: any) => {
+          // Convert database distance format to form format
+          let distanceKey: string;
+          switch (amenity.distance) {
+            case 'on_site':
+              distanceKey = 'onSite';
+              break;
+            case 'within_300m':
+              distanceKey = '300m';
+              break;
+            case 'within_500m':
+              distanceKey = '500m';
+              break;
+            case 'within_1km':
+              distanceKey = '1km';
+              break;
+            default:
+              distanceKey = amenity.distance;
+          }
+          amenitiesMap[amenity.amenityType] = distanceKey;
+        });
+        setCustomAmenities(amenitiesMap);
+      } else if (project.customAmenities) {
+        // Fallback for old format
         setCustomAmenities(project.customAmenities);
       }
     } catch (error) {

@@ -194,6 +194,7 @@ export const AddProperty = () => {
         photos: []
       };
 
+
       await propertyApi.createProperty(propertyData);
       
       toast({

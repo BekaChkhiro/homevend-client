@@ -43,6 +43,7 @@ import UsersPage from "./pages/Dashboard/pages/Users";
 import { TestComponent } from "./pages/Dashboard/components/TestComponent";
 import { SimpleAddProperty, SimpleMyProperties, SimpleFavorites, SimpleProfile, SimpleBalance } from "./pages/Dashboard/components/SimpleTest";
 import { AuthProvider } from "./contexts/AuthContext";
+import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
+        <FavoritesProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -103,6 +105,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        </FavoritesProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

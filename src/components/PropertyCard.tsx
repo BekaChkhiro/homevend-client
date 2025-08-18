@@ -1,10 +1,11 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Bed, Bath, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MapPin, Bed, Bath, Square } from "lucide-react";
 import type { Property } from "@/pages/Index";
 import { Link } from "react-router-dom";
+import { FavoriteButton } from "./FavoriteButton";
 
 interface PropertyCardProps {
   property: Property;
@@ -84,13 +85,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             ტოპ ქონება
           </Badge>
         )}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute top-3 right-3 h-8 w-8 p-0 bg-white/80 hover:bg-white"
-        >
-          <Heart className="h-4 w-4" />
-        </Button>
+        <FavoriteButton
+          propertyId={property.id}
+          className="absolute top-3 right-3"
+        />
         {getCityName() && (
           <Badge className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 backdrop-blur-sm">
             {getCityName()}

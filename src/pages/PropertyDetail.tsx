@@ -6,10 +6,11 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag } from "lucide-react";
 import { AdBanner } from "@/components/AdBanner";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
 interface Property {
   id: number;
@@ -112,6 +113,128 @@ interface Property {
   };
 }
 
+// Translation functions moved outside component to prevent recreation on every render
+const translateBuildingStatus = (status: string) => {
+  const translations: Record<string, string> = {
+    'old-built': 'ძველი აშენება', 'new-built': 'ახალი აშენება', 'under-construction': 'მშენებლობის პროცესში'
+  };
+  return translations[status] || status;
+};
+
+const translateConstructionYear = (year: string) => {
+  const translations: Record<string, string> = {
+    'before-1955': '1955 წლამდე', '1955-2000': '1955-2000 წლები', 'after-2000': '2000 წლის შემდეგ'
+  };
+  return translations[year] || year;
+};
+
+const translateCondition = (condition: string) => {
+  const translations: Record<string, string> = {
+    'excellent': 'შესანიშნავი', 'very-good': 'ძალიან კარგი', 'good': 'კარგი',
+    'needs-renovation': 'საჭიროებს რემონტს', 'under-renovation': 'რემონტის პროცესში',
+    'black-frame': 'შავი კარკასი', 'white-frame': 'თეთრი კარკასი', 'green-frame': 'მწვანე კარკასი'
+  };
+  return translations[condition] || condition;
+};
+
+const translateProjectType = (type: string) => {
+  const translations: Record<string, string> = {
+    'standard': 'სტანდარტული', 'non-standard': 'არასტანდარტული', 'elite': 'ელიტური'
+  };
+  return translations[type] || type;
+};
+
+const translateBuildingMaterial = (material: string) => {
+  const translations: Record<string, string> = {
+    'brick': 'აგური', 'block': 'ბლოკი', 'panel': 'პანელი', 'monolith': 'მონოლითი'
+  };
+  return translations[material] || material;
+};
+
+const translatePropertyType = (type: string) => {
+  const translations: Record<string, string> = {
+    'apartment': 'ბინა', 'house': 'სახლი', 'cottage': 'კოტეჯი', 'land': 'მიწა'
+  };
+  return translations[type] || type;
+};
+
+const translateDealType = (type: string) => {
+  const translations: Record<string, string> = {
+    'sale': 'იყიდება', 'rent': 'ქირავდება', 'daily': 'დღიური ქირავნობა'
+  };
+  return translations[type] || type;
+};
+
+const translateParking = (parking: string) => {
+  const translations: Record<string, string> = {
+    'garage': 'გარაჟი', 'parking-space': 'პარკინგი', 'no-parking': 'პარკინგი არ არის'
+  };
+  return translations[parking] || parking;
+};
+
+const translateHeating = (heating: string) => {
+  const translations: Record<string, string> = {
+    'central-heating': 'ცენტრალური გათბობა', 'gas-heating': 'გაზით გათბობა'
+  };
+  return translations[heating] || heating;
+};
+
+const translateHotWater = (hotWater: string) => {
+  const translations: Record<string, string> = {
+    'central-hot-water': 'ცენტრალური ცხელი წყალი', 'solar-heater': 'მზის კოლექტორი'
+  };
+  return translations[hotWater] || hotWater;
+};
+
+const translatePoolType = (poolType: string) => {
+  const translations: Record<string, string> = {
+    'indoor': 'შიდა აუზი', 'outdoor': 'გარე აუზი', 'jacuzzi': 'ჯაკუზი'
+  };
+  return translations[poolType] || poolType;
+};
+
+const translateFeature = (feature: string) => {
+  const translations: Record<string, string> = {
+    'internet': 'ინტერნეტი', 'elevator': 'ლიფტი', 'tv': 'ტელევიზორი',
+    'cargo-elevator': 'სამუშაო ლიფტი', 'water': 'წყალი', 'gas': 'გაზი',
+    'kitchen-appliances': 'სამზარეულო ტექნიკა', 'phone': 'ტელეფონი',
+    'electricity': 'ელექტროენერგია', 'intercom': 'დომოფონი',
+    'fenced': 'შემოღობილი', 'sewerage': 'კანალიზაცია'
+  };
+  return translations[feature] || feature;
+};
+
+const translateAdvantage = (advantage: string) => {
+  const translations: Record<string, string> = {
+    'spa': 'სპა', 'fireplace': 'ბუხარი', 'bbq': 'შაშლიკის ადგილი',
+    'bar': 'ბარი', 'gym': 'სპორტული დარბაზი', 'jacuzzi': 'ჯაკუზი',
+    'fruit-trees': 'ხილის ხეები', 'yard-lighting': 'ეზოს განათება',
+    'sauna': 'საუნა', 'alarm': 'სიგნალიზაცია', 'security': 'უსაფრთხოება',
+    'wine-cellar': 'ღვინის მარანი', 'ventilation': 'ვენტილაცია'
+  };
+  return translations[advantage] || advantage;
+};
+
+const translateFurnitureAppliance = (item: string) => {
+  const translations: Record<string, string> = {
+    'refrigerator': 'მაცივარი', 'dishwasher': 'ჭურჭლის სარეცხი', 'oven': 'ღუმელი',
+    'bed': 'საწოლი', 'sofa': 'დივანი', 'gas-stove': 'გაზქურა',
+    'air-conditioner': 'კონდიციონერი', 'washing-machine': 'სარეცხი მანქანა',
+    'chairs': 'სკამები', 'furniture': 'ავეჯი', 'table': 'მაგიდა',
+    'stove-electric': 'ელექტრო ქურა'
+  };
+  return translations[item] || item;
+};
+
+const translateTag = (tag: string) => {
+  const translations: Record<string, string> = {
+    'luxury': 'ლუქსი', 'new': 'ახალი', 'code-door': 'კარი კოდით',
+    'airbnb-booking': 'Airbnb/Booking ექაუნთი', 'investment': 'საინვესტიციო',
+    'disability-friendly': 'სსმპ'
+  };
+  return translations[tag] || tag;
+};
+
 const PropertyDetail = () => {
   const { id } = useParams();
   const { toast } = useToast();
@@ -140,13 +263,39 @@ const PropertyDetail = () => {
       const propertyData = await propertyApi.getPropertyById(id);
       setProperty(propertyData);
 
-      // Fetch similar properties of the same type
-      const allProperties = await propertyApi.getProperties({ status: '' });
-      const similar = allProperties?.properties?.filter((prop: any) =>
-        prop.propertyType === propertyData.propertyType &&
-        prop.id !== propertyData.id
-      ).slice(0, 3) || [];
-      setSimilarProperties(similar);
+      // Fetch similar properties with rate limiting handling - delay this call
+      setTimeout(async () => {
+        try {
+          const allProperties = await propertyApi.getProperties({});
+          const similar = allProperties?.properties?.filter((prop: any) =>
+            prop.propertyType === propertyData.propertyType &&
+            prop.id !== propertyData.id
+          ).slice(0, 3) || [];
+          setSimilarProperties(similar);
+        } catch (error: any) {
+          // Handle rate limiting specifically
+          if (error.response?.status === 429) {
+            const retryAfter = error.response?.data?.retryAfter || 2000;
+            console.warn(`Rate limited, retrying similar properties after ${retryAfter}ms`);
+            setTimeout(async () => {
+              try {
+                const allProperties = await propertyApi.getProperties({});
+                const similar = allProperties?.properties?.filter((prop: any) =>
+                  prop.propertyType === propertyData.propertyType &&
+                  prop.id !== propertyData.id
+                ).slice(0, 3) || [];
+                setSimilarProperties(similar);
+              } catch (retryError) {
+                console.warn('Failed to load similar properties after retry:', retryError);
+                setSimilarProperties([]);
+              }
+            }, Math.min(retryAfter, 5000)); // Cap at 5 seconds max
+          } else {
+            console.warn('Failed to load similar properties:', error);
+            setSimilarProperties([]);
+          }
+        }
+      }, 1000); // Delay initial similar properties call by 1 second
 
     } catch (error: any) {
       console.error('Error fetching property:', error);
@@ -170,228 +319,6 @@ const PropertyDetail = () => {
     }).format(numPrice || 0);
   };
 
-  // Translation functions for property data
-  const translateBuildingStatus = (status: string) => {
-    const translations: Record<string, string> = {
-      'old-built': 'ძველი აშენება',
-      'new-built': 'ახალი აშენება',
-      'under-construction': 'მშენებლობის პროცესში'
-    };
-    return translations[status] || status;
-  };
-
-  const translateConstructionYear = (year: string) => {
-    const translations: Record<string, string> = {
-      'before-1955': '1955 წლამდე',
-      '1955-2000': '1955-2000 წლები',
-      'after-2000': '2000 წლის შემდეგ'
-    };
-    return translations[year] || year;
-  };
-
-  const translateCondition = (condition: string) => {
-    const translations: Record<string, string> = {
-      'excellent': 'შესანიშნავი',
-      'very-good': 'ძალიან კარგი',
-      'good': 'კარგი',
-      'needs-renovation': 'საჭიროებს რემონტს',
-      'under-renovation': 'რემონტის პროცესში',
-      'old-renovated': 'ძველი რემონტი',
-      'newly-renovated': 'ახლად გარემონტებული',
-      'black-frame': 'შავი კარკასი',
-      'white-frame': 'თეთრი კარკასი',
-      'green-frame': 'მწვანე კარკასი'
-    };
-    return translations[condition] || condition;
-  };
-
-  const translateProjectType = (type: string) => {
-    const translations: Record<string, string> = {
-      'standard': 'სტანდარტული',
-      'non-standard': 'არასტანდარტული',
-      'elite': 'ელიტური',
-      'old-fund': 'ძველი ფონდი',
-      'villa': 'ვილა'
-    };
-    return translations[type] || type;
-  };
-
-  const translateBuildingMaterial = (material: string) => {
-    const translations: Record<string, string> = {
-      'brick': 'აგური',
-      'block': 'ბლოკი',
-      'panel': 'პანელი',
-      'monolith': 'მონოლითი',
-      'wood': 'ხე',
-      'stone': 'ქვა'
-    };
-    return translations[material] || material;
-  };
-
-  const translatePropertyType = (type: string) => {
-    const translations: Record<string, string> = {
-      'apartment': 'ბინა',
-      'house': 'სახლი',
-      'cottage': 'კოტეჯი',
-      'land': 'მიწა',
-      'commercial': 'კომერციული',
-      'office': 'ოფისი',
-      'hotel': 'სასტუმრო'
-    };
-    return translations[type] || type;
-  };
-
-  const translateDealType = (type: string) => {
-    const translations: Record<string, string> = {
-      'sale': 'იყიდება',
-      'rent': 'ქირავდება',
-      'mortgage': 'იპოთეკით',
-      'lease': 'იჯარით',
-      'daily': 'დღიური ქირავნობა'
-    };
-    return translations[type] || type;
-  };
-
-  const translateParking = (parking: string) => {
-    const translations: Record<string, string> = {
-      'garage': 'გარაჟი',
-      'parking-space': 'პარკინგი',
-      'street-parking': 'ქუჩის პარკინგი',
-      'yard-parking': 'ეზოს პარკინგი',
-      'no-parking': 'პარკინგი არ არის'
-    };
-    return translations[parking] || parking;
-  };
-
-  const translateHeating = (heating: string) => {
-    const translations: Record<string, string> = {
-      'central-heating': 'ცენტრალური გათბობა',
-      'gas-heating': 'გაზით გათბობა',
-      'electric-heating': 'ელექტრო გათბობა',
-      'fireplace': 'ბუხარი',
-      'no-heating': 'გათბობა არ არის'
-    };
-    return translations[heating] || heating;
-  };
-
-
-  const translateHotWater = (hotWater: string) => {
-    const translations: Record<string, string> = {
-      'central-hot-water': 'ცენტრალური ცხელი წყალი',
-      'gas-water-heater': 'გაზის წყალგამათბობელი',
-      'electric-water-heater': 'ელექტრო წყალგამათბობელი',
-      'boiler': 'კოტელი',
-      'no-hot-water': 'ცხელი წყალი არ არის'
-    };
-    return translations[hotWater] || hotWater;
-  };
-
-  const translatePoolType = (poolType: string) => {
-    const translations: Record<string, string> = {
-      'indoor': 'შიდა აუზი',
-      'outdoor': 'გარე აუზი',
-      'jacuzzi': 'ჯაკუზი'
-    };
-    return translations[poolType] || poolType;
-  };
-
-  const translateLivingRoomType = (livingRoomType: string) => {
-    const translations: Record<string, string> = {
-      'separate': 'ცალკე',
-      'combined': 'გაერთიანებული',
-      'studio': 'სტუდიო'
-    };
-    return translations[livingRoomType] || livingRoomType;
-  };
-
-  const translateStorageType = (storageType: string) => {
-    const translations: Record<string, string> = {
-      'basement': 'ქვეშეთა',
-      'attic': 'საჩრდილო',
-      'pantry': 'კამარა',
-      'closet': 'კარადა'
-    };
-    return translations[storageType] || storageType;
-  };
-
-  const translateFeature = (feature: string) => {
-    const translations: Record<string, string> = {
-      'Internet': 'ინტერნეტი',
-      'Elevator': 'ლიფტი',
-      'Cargo Elevator': 'სამუშაო ლიფტი',
-      'Electricity': 'ელექტროენერგია',
-      'Gas': 'გაზი',
-      'Water': 'წყალი',
-      'Sewage': 'კანალიზაცია',
-      'Phone Line': 'ტელეფონი',
-      'Cable TV': 'კაბელური ტელევიზია',
-      'Air Conditioning': 'კონდიციონერი',
-      'Security System': 'უსაფრთხოების სისტემა',
-      'Video Surveillance': 'ვიდეო თვალყურის დევნება'
-    };
-    return translations[feature] || feature;
-  };
-
-  const translateAdvantage = (advantage: string) => {
-    const translations: Record<string, string> = {
-      'Fireplace': 'ბუხარი',
-      'BBQ': 'შაშლიკის ადგილი',
-      'Yard Lighting': 'ეზოს განათება',
-      'Sauna': 'საუნა',
-      'Gym': 'სპორტული დარბაზი',
-      'Swimming Pool': 'ცურვის აუზი',
-      'Garden': 'ბაღი',
-      'Terrace': 'ტერასა',
-      'Balcony': 'აივანი',
-      'Mountain View': 'მთის ხედი',
-      'Sea View': 'ზღვის ხედი',
-      'City View': 'ქალაქის ხედი',
-      'Quiet Location': 'მშვიდი მდებარეობა',
-      'Central Location': 'ცენტრალური მდებარეობა'
-    };
-    return translations[advantage] || advantage;
-  };
-
-  const translateFurnitureAppliance = (item: string) => {
-    const translations: Record<string, string> = {
-      'Bed': 'საწოლი',
-      'Furniture': 'ავეჯი',
-      'Table': 'მაგიდა',
-      'Electric Stove': 'ელექტრო ქურა',
-      'Gas Stove': 'გაზქურა',
-      'Refrigerator': 'მაცივარი',
-      'Washing Machine': 'სარეცხი მანქანა',
-      'Dishwasher': 'ჭურჭლის სარეცხი',
-      'Microwave': 'მიკროტალღური',
-      'TV': 'ტელევიზორი',
-      'Sofa': 'დივანი',
-      'Wardrobe': 'კარადა',
-      'Air Conditioner': 'კონდიციონერი',
-      'Heater': 'გამათბობელი'
-    };
-    return translations[item] || item;
-  };
-
-  const translateTag = (tag: string) => {
-    const translations: Record<string, string> = {
-      'Luxury': 'ლუქსი',
-      'New': 'ახალი',
-      'Investment': 'ინვესტიცია',
-      'Premium': 'პრემიუმი',
-      'Modern': 'თანამედროვე',
-      'Historic': 'ისტორიული',
-      'Renovated': 'გარემონტებული',
-      'Exclusive': 'ექსკლუზივური',
-      'Family': 'ოჯახური',
-      'Business': 'ბიზნეს',
-      'Commercial': 'კომერციული',
-      'Residential': 'საცხოვრებელი',
-      'Furnished': 'ავეჯიანი',
-      'Unfurnished': 'ავეჯის გარეშე',
-      'Pet Friendly': 'შინაური ცხოველები დაშვებული'
-    };
-    return translations[tag] || tag;
-  };
 
   const getContactTitle = (userRole?: string) => {
     switch (userRole) {
@@ -435,13 +362,6 @@ const PropertyDetail = () => {
   }
 
   // Transform property data for display
-  console.log('🏠 PropertyDetail - Raw property data:', {
-    id: property.id,
-    furnitureAppliances: property.furnitureAppliances,
-    features: property.features,
-    advantages: property.advantages,
-    tags: property.tags
-  });
   
   // Build location string with district if available
   const getLocationString = (property: Property) => {
@@ -545,18 +465,26 @@ const PropertyDetail = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Heart className="h-4 w-4" />
-                      </Button>
+                      <FavoriteButton 
+                        propertyId={property.id}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                      />
                       <Button variant="outline" size="sm">
                         <Share2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
 
-                  <div className="text-4xl font-bold text-primary mb-6">
+                  <div className="text-4xl font-bold text-primary mb-2">
                     {formatPrice(displayProperty.price)}
                   </div>
+                  {property.pricePerSqm && (
+                    <div className="text-lg font-semibold text-muted-foreground mb-6">
+                      {formatPrice(property.pricePerSqm)}/მ²
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="flex items-center">
@@ -659,52 +587,83 @@ const PropertyDetail = () => {
                         ქონების სტრუქტურა
                       </h3>
                       
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {property.rooms && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Home className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Home className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ოთახები</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.rooms}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ოთახები</span>
-                            <p className="font-bold text-lg" style={{ color: '#0f172a' }}>{property.rooms}</p>
                           </div>
                         )}
                         {property.bedrooms && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Bed className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Bed className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>საძინებელი</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.bedrooms}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>საძინებელი</span>
-                            <p className="font-bold text-lg" style={{ color: '#0f172a' }}>{property.bedrooms}</p>
                           </div>
                         )}
                         {property.bathrooms && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Bath className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Bath className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სველი წერტილი</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.bathrooms}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სველი წერტილი</span>
-                            <p className="font-bold text-lg" style={{ color: '#0f172a' }}>{property.bathrooms}</p>
                           </div>
                         )}
                         {property.totalFloors && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Layers className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Layers className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სართულები სულ</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.totalFloors}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სართულები სულ</span>
-                            <p className="font-bold text-lg" style={{ color: '#0f172a' }}>{property.totalFloors}</p>
                           </div>
                         )}
                         {property.propertyFloor && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Layers className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Layers className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ქონების სართული</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.propertyFloor}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ქონების სართული</span>
-                            <p className="font-bold text-lg" style={{ color: '#0f172a' }}>{property.propertyFloor}</p>
                           </div>
                         )}
+                        <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                          <div className="flex items-start gap-3">
+                            <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <Square className="h-4 w-4" />
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სარგო ფართი</span>
+                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.area} მ²</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -717,59 +676,83 @@ const PropertyDetail = () => {
                         შენობის ინფორმაცია
                       </h3>
                       
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {property.buildingStatus && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Settings className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Settings className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სტატუსი</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingStatus(property.buildingStatus)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სტატუსი</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateBuildingStatus(property.buildingStatus)}</p>
                           </div>
                         )}
                         {property.constructionYear && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <CalendarIcon className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <CalendarIcon className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აშენების წელი</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateConstructionYear(property.constructionYear)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აშენების წელი</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateConstructionYear(property.constructionYear)}</p>
                           </div>
                         )}
                         {property.condition && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Wrench className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Wrench className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>მდგომარეობა</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateCondition(property.condition)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>მდგომარეობა</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateCondition(property.condition)}</p>
                           </div>
                         )}
                         {property.projectType && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Building className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Building className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>პროექტის ტიპი</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateProjectType(property.projectType)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>პროექტის ტიპი</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateProjectType(property.projectType)}</p>
                           </div>
                         )}
                         {property.ceilingHeight && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Ruler className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Ruler className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ჭერის სიმაღლე</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.ceilingHeight} მ</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ჭერის სიმაღლე</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{property.ceilingHeight} მ</p>
                           </div>
                         )}
                         {property.buildingMaterial && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Hammer className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Hammer className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სამშენებლო მასალა</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingMaterial(property.buildingMaterial)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სამშენებლო მასალა</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateBuildingMaterial(property.buildingMaterial)}</p>
                           </div>
                         )}
                       </div>
@@ -784,32 +767,44 @@ const PropertyDetail = () => {
                         ინფრასტრუქტურა
                       </h3>
                       
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {property.heating && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Thermometer className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Thermometer className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>გათბობა</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHeating(property.heating)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>გათბობა</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateHeating(property.heating)}</p>
                           </div>
                         )}
                         {property.parking && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Car className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Car className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>პარკირება</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateParking(property.parking)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>პარკირება</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateParking(property.parking)}</p>
                           </div>
                         )}
                         {property.hotWater && (
-                          <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                            <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                              <Droplets className="h-4 w-4" />
+                          <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                            <div className="flex items-start gap-3">
+                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <Droplets className="h-4 w-4" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ცხელი წყალი</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHotWater(property.hotWater)}</p>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ცხელი წყალი</span>
-                            <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{translateHotWater(property.hotWater)}</p>
                           </div>
                         )}
                       </div>
@@ -825,97 +820,125 @@ const PropertyDetail = () => {
                           დამატებითი სივრცეები
                         </h3>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                           {property.hasBalcony && (
-                            <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                                <Home className="h-4 w-4" />
+                            <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                              <div className="flex items-start gap-3">
+                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                  <Home className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აივანი</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  {(property.balconyCount || property.balconyArea) && (
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
+                                      {property.balconyCount && `${property.balconyCount}ც`}
+                                      {property.balconyCount && property.balconyArea && ' • '}
+                                      {property.balconyArea && `${property.balconyArea}მ²`}
+                                    </p>
+                                  )}
+                                </div>
                               </div>
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აივანი</span>
-                              <p className="font-bold text-sm mb-1" style={{ color: '#0f172a' }}>კი</p>
-                              {(property.balconyCount || property.balconyArea) && (
-                                <p className="text-xs opacity-60" style={{ color: '#0f172a' }}>
-                                  {property.balconyCount && `${property.balconyCount}ც`}
-                                  {property.balconyCount && property.balconyArea && ' • '}
-                                  {property.balconyArea && `${property.balconyArea}მ²`}
-                                </p>
-                              )}
                             </div>
                           )}
                           {property.hasPool && (
-                            <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                                <Droplets className="h-4 w-4" />
+                            <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                              <div className="flex items-start gap-3">
+                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                  <Droplets className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აუზი</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  {property.poolType && (
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{translatePoolType(property.poolType)}</p>
+                                  )}
+                                </div>
                               </div>
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აუზი</span>
-                              <p className="font-bold text-sm mb-1" style={{ color: '#0f172a' }}>კი</p>
-                              {property.poolType && (
-                                <p className="text-xs opacity-60" style={{ color: '#0f172a' }}>{translatePoolType(property.poolType)}</p>
-                              )}
                             </div>
                           )}
                           {property.hasLivingRoom && (
-                            <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                                <Sofa className="h-4 w-4" />
+                            <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                              <div className="flex items-start gap-3">
+                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                  <Sofa className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>მისაღები</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  {property.livingRoomArea && (
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
+                                      {property.livingRoomArea}მ²
+                                    </p>
+                                  )}
+                                </div>
                               </div>
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>მისაღები</span>
-                              <p className="font-bold text-sm mb-1" style={{ color: '#0f172a' }}>კი</p>
-                              {(property.livingRoomArea || property.livingRoomType) && (
-                                <p className="text-xs opacity-60" style={{ color: '#0f172a' }}>
-                                  {property.livingRoomArea && `${property.livingRoomArea}მ²`}
-                                </p>
-                              )}
                             </div>
                           )}
                           {property.hasLoggia && (
-                            <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                                <Square className="h-4 w-4" />
+                            <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                              <div className="flex items-start gap-3">
+                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                  <Square className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ლოჯი</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  {property.loggiaArea && (
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.loggiaArea}მ²</p>
+                                  )}
+                                </div>
                               </div>
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ლოჯი</span>
-                              <p className="font-bold text-sm mb-1" style={{ color: '#0f172a' }}>კი</p>
-                              {property.loggiaArea && (
-                                <p className="text-xs opacity-60" style={{ color: '#0f172a' }}>{property.loggiaArea}მ²</p>
-                              )}
                             </div>
                           )}
                           {property.hasVeranda && (
-                            <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                                <Home className="h-4 w-4" />
+                            <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                              <div className="flex items-start gap-3">
+                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                  <Home className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ვერანდა</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  {property.verandaArea && (
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.verandaArea}მ²</p>
+                                  )}
+                                </div>
                               </div>
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ვერანდა</span>
-                              <p className="font-bold text-sm mb-1" style={{ color: '#0f172a' }}>კი</p>
-                              {property.verandaArea && (
-                                <p className="text-xs opacity-60" style={{ color: '#0f172a' }}>{property.verandaArea}მ²</p>
-                              )}
                             </div>
                           )}
                           {property.hasYard && (
-                            <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                                <Square className="h-4 w-4" />
+                            <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                              <div className="flex items-start gap-3">
+                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                  <Square className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აქვს ეზო</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  {property.yardArea && (
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.yardArea}მ²</p>
+                                  )}
+                                </div>
                               </div>
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აქვს ეზო</span>
-                              <p className="font-bold text-sm mb-1" style={{ color: '#0f172a' }}>კი</p>
-                              {property.yardArea && (
-                                <p className="text-xs opacity-60" style={{ color: '#0f172a' }}>{property.yardArea}მ²</p>
-                              )}
                             </div>
                           )}
                           {property.hasStorage && (
-                            <div className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                                <Square className="h-4 w-4" />
+                            <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
+                              <div className="flex items-start gap-3">
+                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                  <Square className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სათავსო</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  {property.storageArea && (
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
+                                      {property.storageArea}მ²
+                                    </p>
+                                  )}
+                                </div>
                               </div>
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სათავსო</span>
-                              <p className="font-bold text-sm mb-1" style={{ color: '#0f172a' }}>კი</p>
-                              {(property.storageArea || property.storageType) && (
-                                <p className="text-xs opacity-60" style={{ color: '#0f172a' }}>
-                                  {property.storageArea && `${property.storageArea}მ²`}
-                                </p>
-                              )}
                             </div>
                           )}
                         </div>
@@ -923,75 +946,7 @@ const PropertyDetail = () => {
                     </Card>
                   )}
 
-                  {/* Price and Area */}
-                  <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                        <DollarSign className="h-4 w-4" style={{ color: '#0f172a' }} />
-                        ფასი და ფართი
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Main Price */}
-                        <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors text-center">
-                          <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                            <Banknote className="h-4 w-4" />
-                          </div>
-                          <span className="text-xs font-medium block mb-2 opacity-70" style={{ color: '#0f172a' }}>მთავარი ფასი</span>
-                          <div className="text-2xl font-bold mb-2" style={{ color: '#0f172a' }}>
-                            {formatPrice(property.totalPrice)}
-                          </div>
-                          <Badge className="bg-gray-200 hover:bg-gray-300" style={{ color: '#0f172a' }}>
-                            {translateDealType(property.dealType)}
-                          </Badge>
-                        </div>
 
-                        {/* Area and Price per sqm */}
-                        <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors text-center">
-                          <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                            <Square className="h-4 w-4" />
-                          </div>
-                          <span className="text-xs font-medium block mb-2 opacity-70" style={{ color: '#0f172a' }}>სარგო ფართი</span>
-                          <div className="text-2xl font-bold mb-2" style={{ color: '#0f172a' }}>
-                            {property.area} მ²
-                          </div>
-                          {property.pricePerSqm && (
-                            <div className="text-sm font-semibold opacity-80" style={{ color: '#0f172a' }}>
-                              {formatPrice(property.pricePerSqm)}/მ²
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Contact Information */}
-                  <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                        <Phone className="h-4 w-4" style={{ color: '#0f172a' }} />
-                        საკონტაქტო ინფორმაცია
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors text-center">
-                          <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                            <Phone className="h-4 w-4" />
-                          </div>
-                          <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>კონტაქტის სახელი</span>
-                          <p className="font-bold text-sm" style={{ color: '#0f172a' }}>{property.contactName}</p>
-                        </div>
-
-                        <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors text-center">
-                          <div className="text-white rounded-lg p-2 w-fit mx-auto mb-2" style={{ backgroundColor: '#0f172a' }}>
-                            <Phone className="h-4 w-4" />
-                          </div>
-                          <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ტელეფონი</span>
-                          <p className="font-bold text-sm font-mono tracking-wide" style={{ color: '#0f172a' }}>{property.contactPhone}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
 
                   {/* Features Section */}
                   {displayProperty.features && displayProperty.features.length > 0 && (
@@ -1116,7 +1071,11 @@ const PropertyDetail = () => {
                       >
                         {displayProperty.agent.name}
                       </Link>
-                      <p className="text-sm text-gray-500">უძრავი აგენტი</p>
+                      <p className="text-sm text-gray-500">
+                        {property.user.role === 'agency' ? 'აგენტი' : 
+                         property.user.role === 'developer' ? 'დეველოპერი' : 
+                         'მომხმარებელი'}
+                      </p>
                     </div>
                   </div>
                   
@@ -1191,9 +1150,10 @@ const PropertyDetail = () => {
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute top-2 right-2">
-                        <Button variant="ghost" size="sm" className="bg-white/80 rounded-full h-8 w-8 p-0">
-                          <Heart className="h-4 w-4" />
-                        </Button>
+                        <FavoriteButton 
+                          propertyId={similarProperty.id}
+                          className="bg-white/80 rounded-full"
+                        />
                       </div>
                     </div>
                     <CardContent className="p-4">
