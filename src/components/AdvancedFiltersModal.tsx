@@ -9,6 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
+import { LocationFilter } from "@/components/LocationFilter";
 import { 
   SlidersHorizontal, 
   Filter, 
@@ -37,69 +39,77 @@ const transactionTypes = [
 
 const dailyRentalSubcategories = [
   { value: "all", label: "ყველა" },
-  { value: "sea", label: "დღიურად ზღვაზე" },
-  { value: "mountains", label: "დღიურად მთაში" },
-  { value: "villa", label: "აგარაკები დღიურად" }
+  { value: "sea", label: "ზღვასთან დღიური ქირაობა" },
+  { value: "mountains", label: "მთაში დღიური ქირაობა" },
+  { value: "villa", label: "დღიური ვილები" }
 ];
 
 const buildingStatusOptions = [
   { value: "all", label: "ყველა" },
-  { value: "ახალი აშენება", label: "ახალი აშენება" },
-  { value: "მშენებარე", label: "მშენებარე" },
-  { value: "ექსისტინგი", label: "არსებული" },
-  { value: "რეკონსტრუქცია", label: "რეკონსტრუქცია" }
+  { value: "old-built", label: "ძველი აშენებული" },
+  { value: "new-built", label: "ახალი აშენებული" },
+  { value: "under-construction", label: "მშენებარე" }
 ];
 
 const conditionOptions = [
   { value: "all", label: "ყველა" },
-  { value: "ახალი", label: "ახალი" },
-  { value: "კარგი", label: "კარგი" },
-  { value: "საშუალო", label: "საშუალო" },
-  { value: "საჭიროებს რემონტს", label: "საჭიროებს რემონტს" },
-  { value: "ძველი რემონტი", label: "ძველი რემონტი" }
+  { value: "newly-renovated", label: "ახალი გარემონტებული" },
+  { value: "old-renovated", label: "ძველი გარემონტებული" },
+  { value: "ongoing-renovation", label: "მიმდინარე რემონტი" },
+  { value: "needs-renovation", label: "სარემონტო" },
+  { value: "white-frame", label: "თეთრი კარკასი" },
+  { value: "black-frame", label: "შავი კარკასი" },
+  { value: "green-frame", label: "მწვანე კარკასი" },
+  { value: "white-plus", label: "თეთრი პლიუსი" }
 ];
 
 const heatingOptions = [
   { value: "all", label: "ყველა" },
-  { value: "ცენტრალური", label: "ცენტრალური" },
-  { value: "ავტონომიური", label: "ავტონომიური" },
-  { value: "კონდიციონერი", label: "კონდიციონერი" },
-  { value: "ერთჯერადი", label: "ერთჯერადი" },
-  { value: "არ არის", label: "არ არის" }
+  { value: "central-heating", label: "ცენტრალური გათბობა" },
+  { value: "gas-heater", label: "გაზის გამათბობელი" },
+  { value: "electric-heater", label: "დენის გამათბობელი" },
+  { value: "central-floor", label: "ცენტრალური+იატაკის გათბობა" },
+  { value: "no-heating", label: "გათბობის გარეშე" },
+  { value: "individual", label: "ინდივიდუალური" },
+  { value: "floor-heating", label: "იატაკის გათბობა" }
 ];
 
 const parkingOptions = [
   { value: "all", label: "ყველა" },
-  { value: "კერძო ზოვი", label: "კერძო ზოვი" },
-  { value: "გარაჟი", label: "გარაჟი" },
-  { value: "ქუჩაში", label: "ქუჩაში" },
-  { value: "არ არის", label: "არ არის" }
+  { value: "garage", label: "ავტოფარეხი" },
+  { value: "parking-space", label: "პარკინგის ადგილი" },
+  { value: "yard-parking", label: "ეზოს პარკინგი" },
+  { value: "underground-parking", label: "მიწისქვეშა პარკინგი" },
+  { value: "paid-parking", label: "ფასიანი ავტოსადგომი" },
+  { value: "no-parking", label: "პარკინგის გარეშე" }
 ];
 
 const hotWaterOptions = [
   { value: "all", label: "ყველა" },
-  { value: "ცენტრალური", label: "ცენტრალური" },
-  { value: "ელექტრო", label: "ელექტრო" },
-  { value: "გაზი", label: "გაზი" },
-  { value: "არ არის", label: "არ არის" }
+  { value: "gas-water-heater", label: "გაზის გამაცხელებელი" },
+  { value: "boiler", label: "ავზი" },
+  { value: "electric-water-heater", label: "დენის გამაცხელებელი" },
+  { value: "solar-heater", label: "მზის გამაცხელებელი" },
+  { value: "no-hot-water", label: "ცხელი წყლის გარეშე" },
+  { value: "central-hot-water", label: "ცენტრალური ცხელი წყალი" },
+  { value: "natural-hot-water", label: "ბუნებრივი ცხელი წყალი" },
+  { value: "individual", label: "ინდივიდუალური" }
 ];
 
 const buildingMaterialOptions = [
   { value: "all", label: "ყველა" },
-  { value: "ბეტონი", label: "ბეტონი" },
-  { value: "აგური", label: "აგური" },
-  { value: "ბლოკი", label: "ბლოკი" },
-  { value: "ხე", label: "ხე" },
-  { value: "კომბინირებული", label: "კომბინირებული" }
+  { value: "block", label: "ბლოკი" },
+  { value: "brick", label: "აგური" },
+  { value: "wood", label: "ხის მასალა" },
+  { value: "reinforced-concrete", label: "რკინა-ბეტონი" },
+  { value: "combined", label: "კომბინირებული" }
 ];
 
 const projectTypeOptions = [
   { value: "all", label: "ყველა" },
-  { value: "ქრუშოვკა", label: "ქრუშოვკა" },
-  { value: "ბრეჟნევკა", label: "ბრეჟნევკა" },
-  { value: "სტალინკა", label: "სტალინკა" },
-  { value: "ახალი პროექტი", label: "ახალი პროექტი" },
-  { value: "კერძო სახლი", label: "კერძო სახლი" }
+  { value: "non-standard", label: "არასტანდარტული" },
+  { value: "villa", label: "ვილა" },
+  { value: "townhouse", label: "თაუნჰაუსი" }
 ];
 
 const commonFeatures = [
@@ -164,11 +174,17 @@ interface AdvancedFilterState {
 
 interface AdvancedFiltersModalProps {
   filters: AdvancedFilterState;
-  onApplyFilters: (filters: AdvancedFilterState) => void;
-  onClearFilters: () => void;
-  totalProperties: number;
-  filteredCount: number;
+  onApplyFilters?: (filters: AdvancedFilterState) => void;
+  onClearFilters?: () => void;
+  totalProperties?: number;
+  filteredCount?: number;
   transactionType?: string;
+  basicFilters?: {
+    search?: string;
+    transactionType?: string;
+    propertyType?: string;
+    city?: string;
+  };
 }
 
 interface SavedFilter {
@@ -182,10 +198,12 @@ export const AdvancedFiltersModal = ({
   filters: initialFilters, 
   onApplyFilters, 
   onClearFilters,
-  totalProperties,
-  filteredCount,
-  transactionType 
+  totalProperties = 0,
+  filteredCount = 0,
+  transactionType,
+  basicFilters
 }: AdvancedFiltersModalProps) => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState<AdvancedFilterState>(initialFilters);
   const [activeTab, setActiveTab] = useState("basic");
@@ -244,7 +262,63 @@ export const AdvancedFiltersModal = ({
   };
 
   const handleApplyFilters = () => {
-    onApplyFilters(filters);
+    if (onApplyFilters) {
+      // If onApplyFilters prop exists, use it (for backward compatibility)
+      onApplyFilters(filters);
+      setOpen(false);
+      return;
+    }
+
+    // Otherwise, navigate to properties page with URL filters
+    const searchParams = new URLSearchParams();
+    
+    // Add basic filters from props if available
+    if (basicFilters?.search) searchParams.set('search', basicFilters.search);
+    if (basicFilters?.transactionType && basicFilters.transactionType !== 'all') {
+      searchParams.set('transactionType', basicFilters.transactionType);
+    }
+    if (basicFilters?.propertyType && basicFilters.propertyType !== 'all') {
+      searchParams.set('propertyType', basicFilters.propertyType);
+    }
+    if (basicFilters?.city && basicFilters.city !== 'all') {
+      searchParams.set('location', basicFilters.city);
+    }
+    
+    // Add advanced filters
+    if (filters.priceMin) searchParams.set('priceMin', filters.priceMin);
+    if (filters.priceMax) searchParams.set('priceMax', filters.priceMax);
+    if (filters.areaMin) searchParams.set('areaMin', filters.areaMin);
+    if (filters.areaMax) searchParams.set('areaMax', filters.areaMax);
+    if (filters.bedrooms && filters.bedrooms !== 'all') searchParams.set('bedrooms', filters.bedrooms);
+    if (filters.bathrooms && filters.bathrooms !== 'all') searchParams.set('bathrooms', filters.bathrooms);
+    if (filters.rooms && filters.rooms !== 'all') searchParams.set('rooms', filters.rooms);
+    if (filters.location) searchParams.set('location', filters.location);
+    if (filters.dailyRentalSubcategory && filters.dailyRentalSubcategory !== 'all') searchParams.set('dailyRentalSubcategory', filters.dailyRentalSubcategory);
+    if (filters.totalFloors && filters.totalFloors !== 'all') searchParams.set('totalFloors', filters.totalFloors);
+    if (filters.buildingStatus && filters.buildingStatus !== 'all') searchParams.set('buildingStatus', filters.buildingStatus);
+    if (filters.constructionYearMin) searchParams.set('constructionYearMin', filters.constructionYearMin);
+    if (filters.constructionYearMax) searchParams.set('constructionYearMax', filters.constructionYearMax);
+    if (filters.condition && filters.condition !== 'all') searchParams.set('condition', filters.condition);
+    if (filters.projectType && filters.projectType !== 'all') searchParams.set('projectType', filters.projectType);
+    if (filters.ceilingHeightMin) searchParams.set('ceilingHeightMin', filters.ceilingHeightMin);
+    if (filters.ceilingHeightMax) searchParams.set('ceilingHeightMax', filters.ceilingHeightMax);
+    if (filters.heating && filters.heating !== 'all') searchParams.set('heating', filters.heating);
+    if (filters.parking && filters.parking !== 'all') searchParams.set('parking', filters.parking);
+    if (filters.hotWater && filters.hotWater !== 'all') searchParams.set('hotWater', filters.hotWater);
+    if (filters.buildingMaterial && filters.buildingMaterial !== 'all') searchParams.set('buildingMaterial', filters.buildingMaterial);
+    if (filters.hasBalcony) searchParams.set('hasBalcony', 'true');
+    if (filters.hasPool) searchParams.set('hasPool', 'true');
+    if (filters.hasLivingRoom) searchParams.set('hasLivingRoom', 'true');
+    if (filters.hasLoggia) searchParams.set('hasLoggia', 'true');
+    if (filters.hasVeranda) searchParams.set('hasVeranda', 'true');
+    if (filters.hasYard) searchParams.set('hasYard', 'true');
+    if (filters.hasStorage) searchParams.set('hasStorage', 'true');
+    if (filters.selectedFeatures?.length) searchParams.set('selectedFeatures', filters.selectedFeatures.join(','));
+    if (filters.selectedAdvantages?.length) searchParams.set('selectedAdvantages', filters.selectedAdvantages.join(','));
+    if (filters.selectedFurnitureAppliances?.length) searchParams.set('selectedFurnitureAppliances', filters.selectedFurnitureAppliances.join(','));
+    
+    const queryString = searchParams.toString();
+    navigate(`/properties${queryString ? `?${queryString}` : ''}`);
     setOpen(false);
   };
 
@@ -283,7 +357,14 @@ export const AdvancedFiltersModal = ({
       selectedFurnitureAppliances: []
     };
     setFilters(clearedFilters);
-    onClearFilters();
+    
+    if (onClearFilters) {
+      onClearFilters();
+    } else {
+      // If no callback provided, navigate to properties page without filters
+      navigate('/properties');
+      setOpen(false);
+    }
   };
 
   const handleSaveFilter = () => {
@@ -460,7 +541,12 @@ export const AdvancedFiltersModal = ({
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3</SelectItem>
                           <SelectItem value="4">4</SelectItem>
-                          <SelectItem value="5">5+</SelectItem>
+                          <SelectItem value="5">5</SelectItem>
+                          <SelectItem value="6">6</SelectItem>
+                          <SelectItem value="7">7</SelectItem>
+                          <SelectItem value="8">8</SelectItem>
+                          <SelectItem value="9">9</SelectItem>
+                          <SelectItem value="10+">10+</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -479,7 +565,12 @@ export const AdvancedFiltersModal = ({
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3</SelectItem>
                           <SelectItem value="4">4</SelectItem>
-                          <SelectItem value="5">5+</SelectItem>
+                          <SelectItem value="5">5</SelectItem>
+                          <SelectItem value="6">6</SelectItem>
+                          <SelectItem value="7">7</SelectItem>
+                          <SelectItem value="8">8</SelectItem>
+                          <SelectItem value="9">9</SelectItem>
+                          <SelectItem value="10+">10+</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -497,6 +588,7 @@ export const AdvancedFiltersModal = ({
                           <SelectItem value="1">1</SelectItem>
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3+</SelectItem>
+                          <SelectItem value="shared">საერთო</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -531,16 +623,12 @@ export const AdvancedFiltersModal = ({
                   <Label className="text-lg font-bold mb-4 block text-slate-900">
                     მდებარეობა
                   </Label>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">რაიონი ან უბანი</Label>
-                    <Input
-                      type="text"
-                      placeholder="მთაწმინდა, ვაკე, საბურთალო..."
-                      value={filters.location}
-                      onChange={(e) => setFilters({...filters, location: e.target.value})}
-                      className="h-12 bg-white border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-200"
-                    />
-                  </div>
+                  <LocationFilter
+                    value={filters.location}
+                    onChange={(location) => setFilters({...filters, location: location})}
+                    showTitle={false}
+                    compact={false}
+                  />
                 </div>
               </TabsContent>
 

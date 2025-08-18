@@ -42,6 +42,7 @@ import { BalancePage } from "./pages/Dashboard/components/BalancePage";
 import UsersPage from "./pages/Dashboard/pages/Users";
 import { TestComponent } from "./pages/Dashboard/components/TestComponent";
 import { SimpleAddProperty, SimpleMyProperties, SimpleFavorites, SimpleProfile, SimpleBalance } from "./pages/Dashboard/components/SimpleTest";
+import TestFilters from "./pages/TestFilters";
 import { AuthProvider } from "./contexts/AuthContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -61,6 +62,7 @@ const App = () => (
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/properties" element={<Properties />} />
+          <Route path="/test-filters" element={<TestFilters />} />
           <Route path="/price-statistics" element={<PriceStatistics />} />
           <Route path="/services" element={<Services />} />
           <Route path="/projects" element={<Projects />} />

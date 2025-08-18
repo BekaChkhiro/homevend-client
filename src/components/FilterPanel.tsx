@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { FilterX } from "lucide-react";
 import type { FilterState } from "@/pages/Index";
 import { transactionTypes, propertyTypes } from "@/pages/Home/components/FilterTypes";
+import { LocationFilter } from "@/components/LocationFilter";
 
 interface FilterPanelProps {
   filters: FilterState;
@@ -14,6 +15,7 @@ interface FilterPanelProps {
 }
 
 export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
+
   const updateFilter = (key: keyof FilterState, value: string) => {
     const newFilters = { ...filters, [key]: value };
     
@@ -103,16 +105,13 @@ export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
           </Select>
         </div>
 
-        {/* Address */}
-        <div>
-          <Label className="text-sm font-medium mb-2 block">მისამართი</Label>
-          <Input
-            type="text"
-            placeholder="შეიყვანეთ მისამართი"
-            value={filters.location}
-            onChange={(e) => updateFilter("location", e.target.value)}
-          />
-        </div>
+        {/* Location - Hierarchical Selection */}
+        <LocationFilter
+          value={filters.location}
+          onChange={(location) => updateFilter("location", location)}
+          showTitle={true}
+          compact={false}
+        />
 
         {/* Price Range */}
         <div>
