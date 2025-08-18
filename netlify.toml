@@ -2,6 +2,9 @@
   publish = "build"
   command = "bun install && bun run build"
 
+[build.environment]
+  VITE_API_URL = "https://homevend-backend.onrender.com/api"
+
 [dev]
   command = "bun run dev"
   port = 8080

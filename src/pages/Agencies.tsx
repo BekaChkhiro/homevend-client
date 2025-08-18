@@ -17,6 +17,7 @@ import {
   TrendingUp
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { agencyApi } from "@/lib/api";
 
 interface Agency {
   id: number;
@@ -41,18 +42,6 @@ interface Agency {
   };
 }
 
-interface AgenciesResponse {
-  success: boolean;
-  data: {
-    agencies: Agency[];
-    pagination: {
-      page: number;
-      limit: number;
-      total: number;
-      pages: number;
-    };
-  };
-}
 
 const Agencies = () => {
   const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -69,24 +58,20 @@ const Agencies = () => {
   const fetchAgencies = async (page: number, search?: string) => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: '12'
-      });
+      
+      const params: any = {
+        page,
+        limit: 12
+      };
       
       if (search && search.trim()) {
-        params.append('search', search.trim());
+        params.search = search.trim();
       }
       
-      const response = await fetch(`/api/agencies?${params}`);
-      const data: AgenciesResponse = await response.json();
+      const data = await agencyApi.getAgencies(params);
       
-      if (data.success) {
-        setAgencies(data.data.agencies);
-        setPagination(data.data.pagination);
-      } else {
-        console.error('Failed to fetch agencies');
-      }
+      setAgencies(data.agencies);
+      setPagination(data.pagination);
     } catch (error) {
       console.error('Error fetching agencies:', error);
     } finally {
