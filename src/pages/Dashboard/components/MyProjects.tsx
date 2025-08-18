@@ -276,7 +276,7 @@ export const MyProjects: React.FC = () => {
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors">
                             <Trash2 className="h-4 w-4 mr-1" />
                             წაშლა
                           </Button>
@@ -349,6 +349,14 @@ export const MyProjects: React.FC = () => {
                         <Eye className="h-4 w-4" />
                         <span>{project.viewCount}</span>
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(`/dashboard/projects/${project.id}/manage-properties`)}
+                      >
+                        <Building2 className="h-4 w-4 mr-1" />
+                        განცხადების მართვა
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"

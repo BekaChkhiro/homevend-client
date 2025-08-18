@@ -6,7 +6,8 @@ export interface User {
   id: number;
   fullName: string;
   email: string;
-  role: 'user' | 'agent' | 'admin' | 'agency';
+  role: 'user' | 'agent' | 'admin' | 'agency' | 'developer';
+  phoneNumber?: string;
 }
 
 export interface AuthContextType {
@@ -14,7 +15,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (userData: { fullName: string; email: string; password: string }) => Promise<boolean>;
+  register: (userData: any) => Promise<boolean>;
   logout: (options: { redirectToLogin?: boolean }) => void;
 }
 
@@ -98,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (userData: { fullName: string; email: string; password: string }): Promise<boolean> => {
+  const register = async (userData: any): Promise<boolean> => {
     try {
       setLoading(true);
       const { user, token } = await authApi.register(userData);

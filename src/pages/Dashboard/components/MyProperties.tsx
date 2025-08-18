@@ -64,11 +64,6 @@ export const MyProperties: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const propertiesPerPage = 10;
 
-  // If user is a developer, show projects instead
-  if (user?.role === 'developer') {
-    return <MyProjects />;
-  }
-
   useEffect(() => {
     fetchUserProperties();
   }, []);

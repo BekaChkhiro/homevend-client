@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag } from "lucide-react";
+import { Heart, MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag } from "lucide-react";
 import { AdBanner } from "@/components/AdBanner";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
@@ -96,10 +96,19 @@ interface Property {
   status: string;
   viewCount: number;
   createdAt: string;
+  project?: {
+    id: number;
+    projectName: string;
+    street: string;
+    city: {
+      nameGeorgian: string;
+    };
+  };
   user: {
     id: number;
     fullName: string;
     email: string;
+    role?: string;
   };
 }
 
@@ -384,6 +393,17 @@ const PropertyDetail = () => {
     return translations[tag] || tag;
   };
 
+  const getContactTitle = (userRole?: string) => {
+    switch (userRole) {
+      case 'agency':
+        return 'დაუკავშირდით აგენტს';
+      case 'developer':
+        return 'დაუკავშირდით დეველოპერს';
+      default:
+        return 'დაუკავშირდით';
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -612,6 +632,7 @@ const PropertyDetail = () => {
                             </div>
                           </div>
                         </div>
+
 
                         {property.cadastralCode && (
                           <div className="lg:col-span-2 bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2" style={{ borderLeftColor: '#0f172a' }}>
@@ -1076,10 +1097,10 @@ const PropertyDetail = () => {
             {/* Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-36 space-y-6">
-              {/* Agent Info */}
+              {/* Developer/Agent Info */}
               <Card className="mb-6 overflow-hidden border border-gray-300 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="bg-gradient-to-r from-primary to-primary/80 p-4 text-white">
-                  <h3 className="text-xl font-bold text-center">დაუკავშირდით აგენტს</h3>
+                  <h3 className="text-xl font-bold text-center">{getContactTitle(property.user.role)}</h3>
                 </div>
                 <CardContent className="p-6">
                   <div className="flex items-center mb-6">
@@ -1098,6 +1119,30 @@ const PropertyDetail = () => {
                       <p className="text-sm text-gray-500">უძრავი აგენტი</p>
                     </div>
                   </div>
+                  
+                  {/* Project info if linked */}
+                  {property.project && (
+                    <div className="mb-6 bg-blue-50 rounded-lg p-4 hover:bg-blue-100 transition-colors border border-blue-200">
+                      <div className="flex items-start gap-3">
+                        <div className="text-white rounded-lg p-2 bg-blue-600">
+                          <Building2 className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-xs font-medium block mb-1 text-blue-800">დაკავშირებული პროექტი</span>
+                          <Link 
+                            to={`/projects/${property.project.id}`}
+                            className="font-semibold text-sm leading-tight break-words text-blue-900 hover:text-blue-700 hover:underline transition-colors"
+                          >
+                            {property.project.projectName}
+                          </Link>
+                          <p className="text-xs text-blue-700 mt-1">
+                            {property.project.city.nameGeorgian}, {property.project.street}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="space-y-4">
                     <Button className="w-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 py-5 font-medium" variant="default">
                       <Phone className="h-5 w-5 mr-3" />

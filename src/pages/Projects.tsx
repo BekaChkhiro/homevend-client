@@ -36,6 +36,11 @@ interface Project {
     id: number;
     fullName: string;
   };
+  photos?: Array<{
+    id: number;
+    url: string;
+    fileName: string;
+  }>;
   pricing: Array<{
     id: number;
     roomType: string;
@@ -102,7 +107,18 @@ const Projects = () => {
 
       const data = await response.json();
       console.log('Projects API response:', data); // Debug log
-      setProjects(Array.isArray(data.projects) ? data.projects : []);
+      
+      // Add mock photos to each project
+      const projectsWithPhotos = Array.isArray(data.projects) ? data.projects.map((project: Project) => ({
+        ...project,
+        photos: [
+          { id: 1, url: '/placeholder.svg', fileName: `${project.projectName}-1.jpg` },
+          { id: 2, url: '/placeholder.svg', fileName: `${project.projectName}-2.jpg` },
+          { id: 3, url: '/placeholder.svg', fileName: `${project.projectName}-3.jpg` }
+        ]
+      })) : [];
+      
+      setProjects(projectsWithPhotos);
       setTotalPages(data.pagination?.totalPages || 1);
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -291,9 +307,24 @@ const Projects = () => {
                 return (
                   <Card 
                     key={project.id} 
-                    className="group cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                    className="group cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden"
                     onClick={() => navigate(`/projects/${project.id}`)}
                   >
+                    {/* Project Photo */}
+                    <div className="aspect-video w-full overflow-hidden bg-gray-100">
+                      {project.photos && project.photos.length > 0 ? (
+                        <img
+                          src={project.photos[0].url}
+                          alt={project.projectName}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                          <Building2 className="h-12 w-12 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                    
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors">

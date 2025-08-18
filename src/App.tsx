@@ -32,7 +32,10 @@ import AdminSettings from "./pages/AdminDashboard/pages/Settings";
 import { AddProperty } from "./pages/Dashboard/pages/AddProperty";
 import { EditProperty } from "./pages/Dashboard/pages/EditProperty";
 import { AddProject } from "./pages/Dashboard/pages/AddProject";
+import { EditProject } from "./pages/Dashboard/pages/EditProject";
 import { MyProperties } from "./pages/Dashboard/components/MyProperties";
+import { MyProjects } from "./pages/Dashboard/components/MyProjects";
+import { ManageProjectProperties } from "./pages/Dashboard/components/ManageProjectProperties";
 import { Favorites } from "./pages/Dashboard/components/Favorites";
 import { ProfilePage } from "./pages/Dashboard/components/ProfilePage";
 import { BalancePage } from "./pages/Dashboard/components/BalancePage";
@@ -73,8 +76,11 @@ const App = () => (
             <Route path="test" element={<TestComponent />} />
             <Route path="add-property" element={<AddProperty />} />
             <Route path="add-project" element={<AddProject />} />
+            <Route path="edit-project/:id" element={<EditProject />} />
             <Route path="edit-property/:id" element={<EditProperty />} />
             <Route path="my-properties" element={<MyProperties />} />
+            <Route path="my-projects" element={<MyProjects />} />
+            <Route path="projects/:projectId/manage-properties" element={<ManageProjectProperties />} />
             <Route path="favorites" element={<Favorites />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="balance" element={<BalancePage />} />
