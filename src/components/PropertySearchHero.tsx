@@ -1,4 +1,4 @@
-import { Search, MapPin, Home, CreditCard, Building2, Warehouse, TreePine, Factory, Hotel, Coins, X, SlidersHorizontal, Filter, Car, Thermometer, Droplets } from "lucide-react";
+import { Search, MapPin, Home, CreditCard, Building2, Warehouse, TreePine, Factory, Hotel, Coins, X, SlidersHorizontal, Filter, Car, Thermometer, Droplets, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { transactionTypes, propertyTypes } from "@/pages/Home/components/FilterTypes";
 import { AdvancedFiltersModal } from "@/components/AdvancedFiltersModal";
 import { LocationFilter } from "@/components/LocationFilter";
+import { ActiveFilters } from "@/components/ActiveFilters";
 
 const cities = [
   { value: "all", label: "ქალაქი" },
@@ -69,6 +70,9 @@ interface PropertySearchHeroProps {
   filteredCount?: number;
   variant?: 'default' | 'minimal';
   initialFilters?: Partial<PropertySearchFilters>;
+  isSearching?: boolean;
+  onRemoveFilter?: (filterKey: string) => void;
+  onClearAllFilters?: () => void;
   renderAdvancedFilters?: (props: {
     filters: PropertySearchFilters;
     onApplyFilters: (filters: PropertySearchFilters) => void;
@@ -76,7 +80,7 @@ interface PropertySearchHeroProps {
   }) => React.ReactNode;
 }
 
-export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', initialFilters, renderAdvancedFilters }: PropertySearchHeroProps) => {
+export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', initialFilters, isSearching = false, onRemoveFilter, onClearAllFilters, renderAdvancedFilters }: PropertySearchHeroProps) => {
   const getDefaultFilters = (): PropertySearchFilters => ({
     search: "",
     transactionType: "all",
@@ -136,6 +140,9 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
   }, [initialFilters]);
 
   const handleSearch = () => {
+    console.log('🔍 PropertySearchHero handleSearch called');
+    console.log('🔍 Current filters:', filters);
+    
     // Combine city selection with search input (district/street)
     const searchLocation = buildSearchLocation(filters.city, filters.search);
     
@@ -144,6 +151,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
       location: searchLocation
     };
     
+    console.log('🔍 Calling onSearch with:', searchFilters);
     onSearch(searchFilters);
     setShowAdditionalFilters(false);
   };
@@ -220,6 +228,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
       selectedFurnitureAppliances: []
     };
     setFilters(clearedFilters);
+    // Apply cleared filters immediately
     onSearch(clearedFilters);
   };
 
@@ -287,7 +296,11 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
               </div>
               <Select 
                 value={filters.transactionType} 
-                onValueChange={(value) => setFilters({...filters, transactionType: value})}
+                onValueChange={(value) => {
+                  console.log('🆗 Transaction type changed to:', value);
+                  setFilters({...filters, transactionType: value});
+                  // Don't trigger search automatically - wait for Search button
+                }}
               >
                 <SelectTrigger className="h-12 text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors">
                   <SelectValue placeholder="აირჩიეთ ტიპი" />
@@ -296,12 +309,12 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                   {transactionTypes.map((type) => {
                     const getIcon = (value: string) => {
                       switch(value) {
-                        case 'იყიდება': return <Coins className="h-4 w-4 text-primary" />;
-                        case 'ქირავდება': return <Home className="h-4 w-4 text-primary" />;
-                        case 'გირავდება': return <CreditCard className="h-4 w-4 text-primary" />;
-                        case 'გაიცემა იჯარით': return <Building2 className="h-4 w-4 text-primary" />;
-                        case 'ქირავდება დღიურად': return <Hotel className="h-4 w-4 text-primary" />;
-                        case 'ნასყიდობა გამოსყიდობის უფლებით': return <CreditCard className="h-4 w-4 text-primary" />;
+                        case 'sale': return <Coins className="h-4 w-4 text-primary" />;
+                        case 'rent': return <Home className="h-4 w-4 text-primary" />;
+                        case 'mortgage': return <CreditCard className="h-4 w-4 text-primary" />;
+                        case 'lease': return <Building2 className="h-4 w-4 text-primary" />;
+                        case 'daily': return <Hotel className="h-4 w-4 text-primary" />;
+                        case 'rent-to-buy': return <CreditCard className="h-4 w-4 text-primary" />;
                         default: return <CreditCard className="h-4 w-4 text-primary" />;
                       }
                     };
@@ -328,7 +341,11 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
               </div>
               <Select 
                 value={filters.propertyType} 
-                onValueChange={(value) => setFilters({...filters, propertyType: value})}
+                onValueChange={(value) => {
+                  console.log('🆗 Property type changed to:', value);
+                  setFilters({...filters, propertyType: value});
+                  // Don't trigger search automatically - wait for Search button
+                }}
               >
                 <SelectTrigger className="h-12 text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors">
                   <SelectValue placeholder="აირჩიეთ ტიპი" />
@@ -337,12 +354,13 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                   {propertyTypes.map((type) => {
                     const getIcon = (value: string) => {
                       switch(value) {
-                        case 'ბინები': return <Building2 className="h-4 w-4 text-primary" />;
-                        case 'სახლები': return <Home className="h-4 w-4 text-primary" />;
-                        case 'აგარაკები': return <TreePine className="h-4 w-4 text-primary" />;
-                        case 'მიწის ნაკვეთები': return <MapPin className="h-4 w-4 text-primary" />;
-                        case 'კომერციული ფართები': return <Factory className="h-4 w-4 text-primary" />;
-                        case 'სასტუმროები': return <Hotel className="h-4 w-4 text-primary" />;
+                        case 'apartment': return <Building2 className="h-4 w-4 text-primary" />;
+                        case 'house': return <Home className="h-4 w-4 text-primary" />;
+                        case 'cottage': return <TreePine className="h-4 w-4 text-primary" />;
+                        case 'land': return <MapPin className="h-4 w-4 text-primary" />;
+                        case 'commercial': return <Factory className="h-4 w-4 text-primary" />;
+                        case 'office': return <Building2 className="h-4 w-4 text-primary" />;
+                        case 'hotel': return <Hotel className="h-4 w-4 text-primary" />;
                         default: return <Home className="h-4 w-4 text-primary" />;
                       }
                     };
@@ -381,7 +399,11 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
                   <Select 
                     value={filters.city} 
-                    onValueChange={(value) => setFilters({...filters, city: value})}
+                    onValueChange={(value) => {
+                      console.log('🆗 City changed to:', value);
+                      setFilters({...filters, city: value});
+                      // Don't trigger search automatically - wait for Search button
+                    }}
                   >
                     <SelectTrigger className="h-9 w-36 text-sm border border-slate-300 hover:border-primary/50 focus:border-primary rounded-lg transition-colors bg-white/90 backdrop-blur-sm">
                       <SelectValue placeholder="ქალაქი" />
@@ -438,7 +460,9 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
               onApplyFilters={(advancedFilters) => {
                 const updatedFilters = { ...filters, ...advancedFilters };
                 setFilters(updatedFilters);
-                onSearch(updatedFilters);
+                // Apply advanced filters immediately when Apply button is clicked
+                const searchLocation = buildSearchLocation(updatedFilters.city, updatedFilters.search);
+                onSearch({...updatedFilters, location: searchLocation});
               }}
               onClearFilters={clearAllFilters}
               totalProperties={totalProperties}
@@ -454,9 +478,19 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                     onClick={handleSearch}
                     size="lg" 
                     className={`${buttonClasses} col-span-7`}
+                    disabled={isSearching}
                   >
-                    <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                    ძიება
+                    {isSearching ? (
+                      <>
+                        <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                        ძიება...
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+                        ძიება
+                      </>
+                    )}
                   </Button>
                   
                   <Button 
@@ -474,14 +508,33 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                   onClick={handleSearch}
                   size="lg" 
                   className={`${buttonClasses} w-full`}
+                  disabled={isSearching}
                 >
-                  <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                  ძიება
+                  {isSearching ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      ძიება...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+                      ძიება
+                    </>
+                  )}
                 </Button>
               )}
             </div>
           </div>
         </div>
+        
+        {/* Active Filters - Show inside the same container */}
+        {onRemoveFilter && onClearAllFilters && (
+          <ActiveFilters 
+            filters={filters}
+            onRemoveFilter={onRemoveFilter}
+            onClearAll={onClearAllFilters}
+          />
+        )}
       </div>
     </section>
   );

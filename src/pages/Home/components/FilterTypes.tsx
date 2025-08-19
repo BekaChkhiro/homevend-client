@@ -12,21 +12,21 @@ export interface FilterState {
 
 export const transactionTypes = [
   { value: 'all', label: 'ყველა' },
-  { value: 'იყიდება', label: 'იყიდება' },
-  { value: 'ქირავდება', label: 'ქირავდება' },
-  { value: 'გირავდება', label: 'გირავდება' },
-  { value: 'გაიცემა იჯარით', label: 'გაიცემა იჯარით' },
-  { value: 'ქირავდება დღიურად', label: 'ქირავდება დღიურად' },
-  { value: 'ნასყიდობა გამოსყიდობის უფლებით', label: 'ნასყიდობა გამოსყიდობის უფლებით' }
+  { value: 'sale', label: 'იყიდება' },
+  { value: 'rent', label: 'ქირავდება' },
+  { value: 'mortgage', label: 'გირავდება' },
+  { value: 'lease', label: 'გაიცემა იჯარით' },
+  { value: 'daily', label: 'ქირავდება დღიურად' },
+  { value: 'rent-to-buy', label: 'ნასყიდობა გამოსყიდობის უფლებით' }
 ];
 
 export const propertyTypes = [
   { value: 'all', label: 'ყველა' },
-  { value: 'ბინები', label: 'ბინები' },
-  { value: 'სახლები', label: 'სახლები' },
-  { value: 'აგარაკები', label: 'აგარაკები' },
-  { value: 'მიწის ნაკვეთები', label: 'მიწის ნაკვეთები' },
-  { value: 'კომერციული ფართები', label: 'კომერციული ფართები' },
-  { value: 'საოფისე ფართები', label: 'საოფისე ფართები' },
-  { value: 'სასტუმროები', label: 'სასტუმროები' }
+  { value: 'apartment', label: 'ბინები' },
+  { value: 'house', label: 'სახლები' },
+  { value: 'cottage', label: 'აგარაკები' },
+  { value: 'land', label: 'მიწის ნაკვეთები' },
+  { value: 'commercial', label: 'კომერციული ფართები' },
+  { value: 'office', label: 'საოფისე ფართები' },
+  { value: 'hotel', label: 'სასტუმროები' }
 ];

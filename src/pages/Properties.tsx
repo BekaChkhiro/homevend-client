@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { PropertyCard } from "@/components/PropertyCard";
+import { PropertyCardSkeleton } from "@/components/PropertyCardSkeleton";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdBanner } from "@/components/AdBanner";
@@ -61,6 +62,7 @@ const Properties = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFiltering, setIsFiltering] = useState(false);
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
@@ -69,6 +71,7 @@ const Properties = () => {
     priceMin: "",
     priceMax: "",
     location: "",
+    city: "all",
     propertyType: "all",
     transactionType: "all",
     bedrooms: "all",
@@ -114,6 +117,7 @@ const Properties = () => {
       priceMin: searchParams.get('priceMin') || '',
       priceMax: searchParams.get('priceMax') || '',
       location: searchParams.get('location') || '',
+      city: searchParams.get('city') || 'all',
       propertyType: searchParams.get('propertyType') || 'all',
       transactionType: searchParams.get('transactionType') || 'all',
       dailyRentalSubcategory: searchParams.get('dailyRentalSubcategory') || 'all',
@@ -149,6 +153,12 @@ const Properties = () => {
   };
 
   const updateURLFromFilters = (newFilters: FilterState, newSortBy?: string, newPage?: number) => {
+    console.log('🆕 updateURLFromFilters called with:', {
+      filters: newFilters,
+      sortBy: newSortBy,
+      page: newPage
+    });
+    
     const searchParams = new URLSearchParams();
     
     // Only add non-empty/non-default values to URL
@@ -156,6 +166,7 @@ const Properties = () => {
     if (newFilters.priceMin) searchParams.set('priceMin', newFilters.priceMin);
     if (newFilters.priceMax) searchParams.set('priceMax', newFilters.priceMax);
     if (newFilters.location) searchParams.set('location', newFilters.location);
+    if (newFilters.city && newFilters.city !== 'all') searchParams.set('city', newFilters.city);
     if (newFilters.propertyType && newFilters.propertyType !== 'all') searchParams.set('propertyType', newFilters.propertyType);
     if (newFilters.transactionType && newFilters.transactionType !== 'all') searchParams.set('transactionType', newFilters.transactionType);
     if (newFilters.dailyRentalSubcategory && newFilters.dailyRentalSubcategory !== 'all') searchParams.set('dailyRentalSubcategory', newFilters.dailyRentalSubcategory);
@@ -194,7 +205,10 @@ const Properties = () => {
     if (newPage && newPage > 1) searchParams.set('page', newPage.toString());
     
     const newSearch = searchParams.toString();
-    navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ''}`, { replace: true });
+    const newURL = `${location.pathname}${newSearch ? `?${newSearch}` : ''}`;
+    console.log('🆕 Navigating to:', newURL);
+    console.log('🆕 Search params:', newSearch);
+    navigate(newURL, { replace: true });
   };
 
   // Initialize filters from URL on component mount
@@ -208,12 +222,12 @@ const Properties = () => {
     setCurrentPage(urlPage);
   }, [location.search]);
 
-  // Apply filters when properties are loaded or filters/sort change
+  // Apply filters when properties are loaded
   useEffect(() => {
     if (properties.length > 0) {
       applyFiltersAndSort(filters, sortBy);
     }
-  }, [properties, filters, sortBy]);
+  }, [properties]); // Removed filters and sortBy to prevent duplicate calls
 
   // Fetch properties from API
   useEffect(() => {
@@ -363,10 +377,19 @@ const Properties = () => {
   };
 
   const handleFilterChange = (newFilters: FilterState) => {
+    console.log('🔄 handleFilterChange called with:', newFilters);
+    setIsFiltering(true);
     setFilters(newFilters);
     setCurrentPage(1); // Reset to first page when filters change
-    applyFiltersAndSort(newFilters, sortBy);
     updateURLFromFilters(newFilters, sortBy, 1);
+    // Apply filters with a small delay to show loading state
+    setTimeout(() => {
+      applyFiltersAndSort(newFilters, sortBy);
+      // Simulate filtering delay for better UX
+      setTimeout(() => {
+        setIsFiltering(false);
+      }, 300);
+    }, 100);
   };
 
   const applyFiltersAndSort = (currentFilters: FilterState, currentSort: string) => {
@@ -408,13 +431,19 @@ const Properties = () => {
         );
       })();
 
-      // Property type and transaction type
-      const matchesType = !currentFilters.propertyType || currentFilters.propertyType === "all" || property.type === currentFilters.propertyType;
-      const matchesTransaction = !currentFilters.transactionType || currentFilters.transactionType === "all" || property.transactionType === currentFilters.transactionType;
+      // Property type filtering - handle both English and Georgian values
+      const matchesType = !currentFilters.propertyType || currentFilters.propertyType === "all" || 
+        property.type === currentFilters.propertyType || 
+        property.type === mapPropertyTypeToGeorgian(currentFilters.propertyType);
+        
+      // Transaction type filtering - handle both English and Georgian values  
+      const matchesTransaction = !currentFilters.transactionType || currentFilters.transactionType === "all" || 
+        property.transactionType === currentFilters.transactionType || 
+        property.transactionType === mapDealTypeToGeorgian(currentFilters.transactionType);
 
       // Debug transaction type matching
       if (currentFilters.transactionType && currentFilters.transactionType !== "all") {
-        console.log(`🏷️ Checking transaction type: filter="${currentFilters.transactionType}" vs property="${property.transactionType}" (ID: ${property.id})`);
+        console.log(`🏷️ Checking transaction type: filter="${currentFilters.transactionType}" vs property="${property.transactionType}" (ID: ${property.id}), matches=${matchesTransaction}`);
       }
 
       // Price filters
@@ -615,10 +644,17 @@ const Properties = () => {
   };
 
   const handleSortChange = (value: string) => {
+    console.log('🔄 handleSortChange called with:', value);
+    setIsFiltering(true);
     setSortBy(value);
     setCurrentPage(1); // Reset to first page when sort changes
-    applyFiltersAndSort(filters, value);
     updateURLFromFilters(filters, value, 1);
+    setTimeout(() => {
+      applyFiltersAndSort(filters, value);
+      setTimeout(() => {
+        setIsFiltering(false);
+      }, 200);
+    }, 100);
   };
 
   const getPropertyTypeStats = () => {
@@ -643,6 +679,7 @@ const Properties = () => {
   const paginatedProperties = filteredProperties.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
+    console.log('🔄 handlePageChange called with page:', page);
     setCurrentPage(page);
     updateURLFromFilters(filters, sortBy, page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -663,9 +700,127 @@ const Properties = () => {
           totalProperties={totalProperties}
           filteredCount={filteredProperties.length}
           initialFilters={filters}
+          isSearching={isFiltering}
+          onRemoveFilter={(filterKey: string) => {
+            const newFilters = { ...filters };
+            
+            // Handle different filter types
+            switch (filterKey) {
+              case 'search':
+                newFilters.search = '';
+                break;
+              case 'location':
+                newFilters.location = '';
+                break;
+              case 'city':
+                newFilters.city = 'all';
+                break;
+              case 'transactionType':
+                newFilters.transactionType = 'all';
+                break;
+              case 'propertyType':
+                newFilters.propertyType = 'all';
+                break;
+              case 'priceMin':
+                newFilters.priceMin = '';
+                break;
+              case 'priceMax':
+                newFilters.priceMax = '';
+                break;
+              case 'areaMin':
+                newFilters.areaMin = '';
+                break;
+              case 'areaMax':
+                newFilters.areaMax = '';
+                break;
+              case 'bedrooms':
+                newFilters.bedrooms = 'all';
+                break;
+              case 'bathrooms':
+                newFilters.bathrooms = 'all';
+                break;
+              case 'rooms':
+                newFilters.rooms = 'all';
+                break;
+              case 'condition':
+                newFilters.condition = 'all';
+                break;
+              case 'buildingStatus':
+                newFilters.buildingStatus = 'all';
+                break;
+              case 'heating':
+                newFilters.heating = 'all';
+                break;
+              case 'hasBalcony':
+                newFilters.hasBalcony = false;
+                break;
+              case 'hasPool':
+                newFilters.hasPool = false;
+                break;
+              case 'hasYard':
+                newFilters.hasYard = false;
+                break;
+              case 'hasStorage':
+                newFilters.hasStorage = false;
+                break;
+              case 'selectedFeatures':
+                newFilters.selectedFeatures = [];
+                break;
+              case 'selectedAdvantages':
+                newFilters.selectedAdvantages = [];
+                break;
+              case 'selectedFurnitureAppliances':
+                newFilters.selectedFurnitureAppliances = [];
+                break;
+              default:
+                break;
+            }
+            
+            handleFilterChange(newFilters);
+          }}
+          onClearAllFilters={() => {
+            const clearedFilters = {
+              search: "",
+              priceMin: "",
+              priceMax: "",
+              location: "",
+              city: "all",
+              propertyType: "all",
+              transactionType: "all",
+              bedrooms: "all",
+              bathrooms: "all",
+              areaMin: "",
+              areaMax: "",
+              rooms: "all",
+              totalFloors: "all",
+              buildingStatus: "all",
+              constructionYearMin: "",
+              constructionYearMax: "",
+              condition: "all",
+              projectType: "all",
+              ceilingHeightMin: "",
+              ceilingHeightMax: "",
+              heating: "all",
+              parking: "all",
+              hotWater: "all",
+              buildingMaterial: "all",
+              hasBalcony: false,
+              hasPool: false,
+              hasLivingRoom: false,
+              hasLoggia: false,
+              hasVeranda: false,
+              hasYard: false,
+              hasStorage: false,
+              selectedFeatures: [],
+              selectedAdvantages: [],
+              selectedFurnitureAppliances: []
+            };
+            handleFilterChange(clearedFilters);
+          }}
           onSearch={(searchFilters) => handleFilterChange({
             ...filters,
             search: searchFilters.search,
+            city: searchFilters.city,
             transactionType: searchFilters.transactionType,
             propertyType: searchFilters.propertyType,
             priceMin: searchFilters.priceMin,
@@ -708,40 +863,82 @@ const Properties = () => {
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          {/* Results Header with Sorting */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">განცხადებები</h2>
-              <p className="text-muted-foreground">
-                ნაჩვენებია {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} საერთოდან {totalProperties} განცხადებიდან)
-              </p>
+          {/* Loading skeleton header */}
+          {isLoading ? (
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+              <div>
+                <div className="h-8 bg-gray-200 rounded w-40 mb-2 animate-pulse"></div>
+                <div className="h-4 bg-gray-100 rounded w-80 animate-pulse"></div>
+              </div>
+              <div className="h-10 bg-gray-200 rounded w-48 animate-pulse"></div>
             </div>
+          ) : (
+            /* Results Header with Sorting - only show when not loading */
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+              <div>
+                <h2 className="text-2xl font-bold mb-2">განცხადებები</h2>
+                <p className="text-muted-foreground">
+                  ნაჩვენებია {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} საერთოდან {totalProperties} განცხადებიდან)
+                </p>
+              </div>
 
-            <div className="flex items-center gap-4">
-              <Select value={sortBy} onValueChange={handleSortChange}>
-                <SelectTrigger className="w-48">
-                  <SlidersHorizontal className="h-4 w-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">ყველაზე ახალი</SelectItem>
-                  <SelectItem value="price-low">ფასი: ზრდადობით</SelectItem>
-                  <SelectItem value="price-high">ფასი: კლებადობით</SelectItem>
-                  <SelectItem value="area-large">ფართობი: დიდიდან პატარამდე</SelectItem>
-                  <SelectItem value="area-small">ფართობი: პატარიდან დიდამდე</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-4">
+                <Select value={sortBy} onValueChange={handleSortChange}>
+                  <SelectTrigger className="w-48">
+                    <SlidersHorizontal className="h-4 w-4 mr-2" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">ყველაზე ახალი</SelectItem>
+                    <SelectItem value="price-low">ფასი: ზრდადობით</SelectItem>
+                    <SelectItem value="price-high">ფასი: კლებადობით</SelectItem>
+                    <SelectItem value="area-large">ფართობი: დიდიდან პატარამდე</SelectItem>
+                    <SelectItem value="area-small">ფართობი: პატარიდან დიდამდე</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Main Content */}
           <div>
               {isLoading ? (
-                <div className="text-center py-12">
-                  <div className="flex items-center justify-center space-x-2">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                    <span>განცხადებები იტვირთება...</span>
+                <div className="mb-8">
+                  {/* Initial page load skeleton */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                    {Array.from({ length: 8 }).map((_, index) => (
+                      <PropertyCardSkeleton key={`initial-skeleton-${index}`} />
+                    ))}
                   </div>
+                  
+                  {/* Second row of skeletons */}
+                  <div className="mb-8">
+                    <div className="h-6 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {Array.from({ length: 8 }).map((_, index) => (
+                      <PropertyCardSkeleton key={`initial-skeleton-second-${index}`} />
+                    ))}
+                  </div>
+                </div>
+              ) : isFiltering ? (
+                <div className="mb-8">
+                  {/* Skeleton loading with actual results count */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                    {Array.from({ length: Math.min(8, PROPERTIES_PER_PAGE) }).map((_, index) => (
+                      <PropertyCardSkeleton key={`skeleton-${index}`} />
+                    ))}
+                  </div>
+                  
+                  {/* Show more skeletons if there were more properties */}
+                  {filteredProperties.length > 8 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {Array.from({ length: Math.min(8, filteredProperties.length - 8) }).map((_, index) => (
+                        <PropertyCardSkeleton key={`skeleton-more-${index}`} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : filteredProperties.length === 0 ? (
                 <div className="text-center py-12">
@@ -756,9 +953,10 @@ const Properties = () => {
                       priceMin: "",
                       priceMax: "",
                       location: "",
-                      propertyType: "",
-                      transactionType: "",
-                      bedrooms: "",
+                      city: "all",
+                      propertyType: "all",
+                      transactionType: "all",
+                      bedrooms: "all",
                       bathrooms: "all",
                       areaMin: "",
                       areaMax: "",
