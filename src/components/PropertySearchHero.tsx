@@ -2,9 +2,10 @@ import { Search, MapPin, Home, CreditCard, Building2, Warehouse, TreePine, Facto
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { transactionTypes, propertyTypes } from "@/pages/Home/components/FilterTypes";
 import { AdvancedFiltersModal } from "@/components/AdvancedFiltersModal";
+import { LocationFilter } from "@/components/LocationFilter";
 
 const cities = [
   { value: "all", label: "ქალაქი" },
@@ -67,6 +68,7 @@ interface PropertySearchHeroProps {
   totalProperties?: number;
   filteredCount?: number;
   variant?: 'default' | 'minimal';
+  initialFilters?: Partial<PropertySearchFilters>;
   renderAdvancedFilters?: (props: {
     filters: PropertySearchFilters;
     onApplyFilters: (filters: PropertySearchFilters) => void;
@@ -74,8 +76,8 @@ interface PropertySearchHeroProps {
   }) => React.ReactNode;
 }
 
-export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', renderAdvancedFilters }: PropertySearchHeroProps) => {
-  const [filters, setFilters] = useState<PropertySearchFilters>({
+export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', initialFilters, renderAdvancedFilters }: PropertySearchHeroProps) => {
+  const getDefaultFilters = (): PropertySearchFilters => ({
     search: "",
     transactionType: "all",
     propertyType: "all",
@@ -116,10 +118,58 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
     selectedFurnitureAppliances: []
   });
 
+  const [filters, setFilters] = useState<PropertySearchFilters>(() => ({
+    ...getDefaultFilters(),
+    ...initialFilters
+  }));
+  
+  const [showAdditionalFilters, setShowAdditionalFilters] = useState(false);
+
+  // Update filters when initialFilters prop changes
+  useEffect(() => {
+    if (initialFilters) {
+      setFilters(prev => ({
+        ...getDefaultFilters(),
+        ...initialFilters
+      }));
+    }
+  }, [initialFilters]);
 
   const handleSearch = () => {
-    onSearch(filters);
+    // Combine city selection with search input (district/street)
+    const searchLocation = buildSearchLocation(filters.city, filters.search);
+    
+    const searchFilters = {
+      ...filters,
+      location: searchLocation
+    };
+    
+    onSearch(searchFilters);
     setShowAdditionalFilters(false);
+  };
+
+  // Helper function to build location string from city selection and search input
+  const buildSearchLocation = (cityValue: string, searchText: string) => {
+    const cityName = cityValue !== 'all' ? cities.find(c => c.value === cityValue)?.label : '';
+    const searchPart = searchText?.trim() || '';
+    
+    // If only city is selected, return city
+    if (cityName && !searchPart) {
+      return cityName;
+    }
+    
+    // If only search text is entered, return search text
+    if (!cityName && searchPart) {
+      return searchPart;
+    }
+    
+    // If both city and search text, combine them
+    if (cityName && searchPart) {
+      return `${cityName}, ${searchPart}`;
+    }
+    
+    // If neither, return empty
+    return '';
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -321,7 +371,7 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                 <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500" />
                 <Input
                   type="text"
-                  placeholder="შეიყვანეთ მისამართი, რაიონი..."
+                  placeholder="უბანი, ქუჩა, ნომერი..."
                   value={filters.search}
                   onChange={(e) => setFilters({...filters, search: e.target.value})}
                   onKeyPress={handleKeyPress}

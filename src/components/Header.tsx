@@ -3,6 +3,7 @@ import { Home, Phone, Mail, LogIn, LogOut, User, Shield, ChevronDown, Building, 
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +14,7 @@ import {
 
 export const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { favorites } = useFavorites();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -36,12 +38,14 @@ export const Header = () => {
           
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm" className="hover:bg-primary/5 hover:text-primary relative" asChild>
-              <Link to="/wishlist" className="flex items-center gap-1.5">
+              <Link to={isAuthenticated ? "/dashboard/favorites" : "/login"} className="flex items-center gap-1.5">
                 <Heart className="h-5 w-5" />
                 <span className="sr-only">ვიშლისთი</span>
-                <div className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
-                </div>
+                {isAuthenticated && favorites.size > 0 && (
+                  <div className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {favorites.size}
+                  </div>
+                )}
               </Link>
             </Button>
             

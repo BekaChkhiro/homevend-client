@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { transactionTypes, propertyTypes } from "@/pages/Home/components/FilterTypes";
+import { useNavigate } from "react-router-dom";
 
 const cities = [
   { value: "all", label: "ქალაქი" },
@@ -144,10 +145,11 @@ interface HeroSearchFilters {
 }
 
 interface HeroSectionProps {
-  onSearch: (filters: HeroSearchFilters) => void;
+  onSearch?: (filters: HeroSearchFilters) => void;
 }
 
 export const HeroSection = ({ onSearch }: HeroSectionProps) => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState<HeroSearchFilters>({
     search: "",
     transactionType: "all",
@@ -156,7 +158,23 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
   });
 
   const handleSearch = () => {
-    onSearch(filters);
+    // If onSearch prop exists, use it (for backward compatibility)
+    if (onSearch) {
+      onSearch(filters);
+      return;
+    }
+
+    // Otherwise, navigate to properties page with URL filters
+    const searchParams = new URLSearchParams();
+    
+    // Add non-default values to URL
+    if (filters.search) searchParams.set('search', filters.search);
+    if (filters.transactionType && filters.transactionType !== 'all') searchParams.set('transactionType', filters.transactionType);
+    if (filters.propertyType && filters.propertyType !== 'all') searchParams.set('propertyType', filters.propertyType);
+    if (filters.city && filters.city !== 'all') searchParams.set('location', filters.city);
+    
+    const queryString = searchParams.toString();
+    navigate(`/properties${queryString ? `?${queryString}` : ''}`);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -351,7 +369,16 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
               {['ვაკე', 'საბურთალო', 'ისანი', 'გლდანი', 'ძველი თბილისი', 'მთაწმინდა'].map((location) => (
                 <button
                   key={location}
-                  onClick={() => setFilters({...filters, search: location})}
+                  onClick={() => {
+                    if (onSearch) {
+                      setFilters({...filters, search: location});
+                    } else {
+                      // Navigate directly to properties page with this location filter
+                      const searchParams = new URLSearchParams();
+                      searchParams.set('search', location);
+                      navigate(`/properties?${searchParams.toString()}`);
+                    }
+                  }}
                   className="px-4 py-2 bg-white/80 hover:bg-primary/10 border border-slate-200 hover:border-primary/30 rounded-full text-sm text-slate-700 hover:text-primary transition-all duration-200 backdrop-blur-sm"
                 >
                   <MapPin className="inline h-3 w-3 mr-1" />

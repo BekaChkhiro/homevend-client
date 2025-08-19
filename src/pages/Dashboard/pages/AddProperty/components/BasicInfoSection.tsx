@@ -8,6 +8,7 @@ import { useFormContext } from "react-hook-form";
 import { Home, Building2, Tent, Hotel, Briefcase, CreditCard, MapPin, BookOpen } from "lucide-react";
 import type { PropertyFormData } from "../types/propertyForm";
 import { citiesApi, areasApi } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface City {
   id: number;
@@ -27,14 +28,26 @@ interface Area {
   isActive: boolean;
 }
 
+interface Project {
+  id: number;
+  projectName: string;
+  city: {
+    nameGeorgian: string;
+  };
+  street: string;
+}
+
 export const BasicInfoSection = () => {
   const form = useFormContext<PropertyFormData>();
+  const { user } = useAuth();
   const watchedDealType = form.watch("dealType");
   const watchedCity = form.watch("city");
   const [cities, setCities] = useState<City[]>([]);
   const [citiesLoading, setCitiesLoading] = useState(true);
   const [areas, setAreas] = useState<Area[]>([]);
   const [areasLoading, setAreasLoading] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(false);
 
   // Fetch cities on component mount
   useEffect(() => {
@@ -119,6 +132,38 @@ export const BasicInfoSection = () => {
 
     fetchAreas();
   }, [watchedCity, cities.length, citiesLoading]);
+
+  // Fetch projects for developers
+  useEffect(() => {
+    const fetchProjects = async () => {
+      if (user?.role !== 'developer') {
+        return;
+      }
+
+      try {
+        setProjectsLoading(true);
+        const response = await fetch('/api/projects/my-projects', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setProjects(data || []);
+        } else {
+          setProjects([]);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        setProjects([]);
+      } finally {
+        setProjectsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, [user]);
 
   return (
     <div className="space-y-8">
@@ -326,6 +371,54 @@ export const BasicInfoSection = () => {
           <div className="mt-3 p-3 bg-muted/50 rounded-lg">
             <p className="text-xs text-muted-foreground">
               💡 თუ არ აირჩევთ კონკრეტულ კატეგორიას, ქონება ჩაირთვება ზოგად "დღიური ქირაობა" კატეგორიაში
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Project Selection - Only show for developers */}
+      {user?.role === 'developer' && (
+        <div className="bg-card rounded-xl border border-border/50 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="mb-6">
+            <Label className="text-base font-semibold text-foreground flex items-center gap-3">
+              <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
+                <Building2 className="h-4 w-4 text-primary" />
+              </div>
+              <span>პროექტთან დაკავშირება</span>
+              <span className="text-sm font-normal text-muted-foreground">(არასავალდებულო)</span>
+            </Label>
+            <p className="text-sm text-muted-foreground mt-1 ml-11">აირჩიეთ პროექტი რომელთანაც უნდა დაკავშირდეს ეს განცხადება</p>
+          </div>
+          <FormField
+            control={form.control}
+            name="projectId"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors">
+                      <SelectValue placeholder={projectsLoading ? "იტვირთება..." : "აირჩიეთ პროექტი (არასავალდებულო)"} />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px]">
+                      {projectsLoading ? (
+                        <SelectItem value="loading" disabled>იტვირთება...</SelectItem>
+                      ) : (
+                        projects.map((project) => (
+                          <SelectItem key={project.id} value={project.id.toString()}>
+                            {project.projectName} - {project.city.nameGeorgian}, {project.street}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="mt-3 p-3 bg-muted/50 rounded-lg">
+            <p className="text-xs text-muted-foreground">
+              💡 თუ აირჩევთ პროექტს, ეს განცხადება ასევე გამოჩნდება პროექტის გვერდზე როგორც დაკავშირებული ქონება
             </p>
           </div>
         </div>

@@ -143,6 +143,65 @@ export interface Property {
   image: string;
   featured: boolean;
   agentName?: string;
+  
+  // Extended properties from database model
+  rooms?: string;
+  totalFloors?: string;
+  propertyFloor?: string;
+  buildingStatus?: string;
+  constructionYear?: string | number;
+  condition?: string;
+  projectType?: string;
+  ceilingHeight?: number;
+  
+  // Infrastructure
+  heating?: string;
+  parking?: string;
+  hotWater?: string;
+  buildingMaterial?: string;
+  
+  // Boolean amenities
+  hasBalcony?: boolean;
+  balconyCount?: number;
+  balconyArea?: number;
+  hasPool?: boolean;
+  poolType?: string;
+  hasLivingRoom?: boolean;
+  livingRoomArea?: number;
+  livingRoomType?: string;
+  hasLoggia?: boolean;
+  loggiaArea?: number;
+  hasVeranda?: boolean;
+  verandaArea?: number;
+  hasYard?: boolean;
+  yardArea?: number;
+  hasStorage?: boolean;
+  storageArea?: number;
+  storageType?: string;
+  
+  // Many-to-many relationships
+  features?: Array<{ id: number; name: string; nameKa: string; nameEn: string } | string>;
+  advantages?: Array<{ id: number; name: string; nameKa: string; nameEn: string } | string>;
+  furnitureAppliances?: Array<{ id: number; name: string; nameKa: string; nameEn: string } | string>;
+  tags?: Array<{ id: number; name: string; nameKa: string; nameEn: string } | string>;
+  
+  // Additional fields
+  photos?: string[];
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  descriptionGeorgian?: string;
+  descriptionEnglish?: string;
+  descriptionRussian?: string;
+  viewCount?: number;
+  favoriteCount?: number;
+  inquiryCount?: number;
+  isFeatured?: boolean;
+  featuredUntil?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  publishedAt?: Date;
+  expiresAt?: Date;
 }
 
 export interface FilterState {

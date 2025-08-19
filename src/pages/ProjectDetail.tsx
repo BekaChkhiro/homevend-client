@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -12,19 +11,16 @@ import {
   Calendar,
   Building2,
   Eye,
-  Car,
   Shield,
-  Lightbulb,
-  TreePine,
-  Camera,
   Users,
   ArrowLeft,
   Phone,
   Mail,
-  Globe,
-  Facebook,
   Check,
-  X
+  X,
+  Camera,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 interface ProjectDetail {
@@ -57,54 +53,21 @@ interface ProjectDetail {
     id: number;
     fullName: string;
     email: string;
+    phone?: string;
   };
-  pricing: Array<{
+  customAmenities?: {[key: string]: string};
+  amenities?: Array<{
     id: number;
-    roomType: string;
-    numberOfRooms: number;
-    totalArea: number;
-    livingArea?: number;
-    balconyArea?: number;
-    pricePerSqm: number;
-    totalPriceFrom: number;
-    totalPriceTo?: number;
-    availableUnits: number;
-    totalUnits: number;
-    hasBalcony: boolean;
-    hasTerrace: boolean;
-    hasLoggia: boolean;
-    floorFrom?: number;
-    floorTo?: number;
+    amenityType: string;
+    distance: string;
+    nameGeorgian?: string;
+    nameEnglish?: string;
   }>;
-  // Amenities
-  hasGroceryStore: boolean;
-  hasBikePath: boolean;
-  hasSportsField: boolean;
-  hasChildrenArea: boolean;
-  hasSquare: boolean;
-  // 300m amenities
-  pharmacy300m: boolean;
-  kindergarten300m: boolean;
-  school300m: boolean;
-  busStop300m: boolean;
-  groceryStore300m: boolean;
-  bikePath300m: boolean;
-  sportsField300m: boolean;
-  stadium300m: boolean;
-  square300m: boolean;
-  // 500m amenities
-  pharmacy500m: boolean;
-  kindergarten500m: boolean;
-  school500m: boolean;
-  university500m: boolean;
-  busStop500m: boolean;
-  groceryStore500m: boolean;
-  bikePath500m: boolean;
-  sportsField500m: boolean;
-  stadium500m: boolean;
-  square500m: boolean;
-  // 1km amenities
-  hospital1km: boolean;
+  photos?: Array<{
+    id: number;
+    url: string;
+    fileName: string;
+  }>;
   // Services
   securityService: boolean;
   hasLobby: boolean;
@@ -117,6 +80,36 @@ interface ProjectDetail {
   hasDoorman: boolean;
   fireSystem: boolean;
   mainDoorLock: boolean;
+  linkedProperties?: Array<{
+    id: number;
+    uuid?: string;
+    title: string;
+    propertyType: string;
+    dealType: string;
+    street?: string;
+    streetNumber?: string;
+    area: number;
+    totalPrice: number;
+    pricePerSqm?: number;
+    rooms?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+    floor?: number;
+    viewCount?: number;
+    createdAt?: string;
+    city?: {
+      id: number;
+      nameGeorgian: string;
+    };
+    areaData?: {
+      id: number;
+      nameKa: string;
+    };
+    user?: {
+      id: number;
+      fullName: string;
+    };
+  }>;
 }
 
 const ProjectDetail = () => {
@@ -125,12 +118,30 @@ const ProjectDetail = () => {
   const { toast } = useToast();
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [showPhone, setShowPhone] = useState(false);
 
   useEffect(() => {
     if (id) {
       fetchProject(id);
     }
   }, [id]);
+
+  // Keyboard navigation for photo slideshow
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (project?.photos && project.photos.length > 1) {
+        if (e.key === 'ArrowLeft') {
+          prevPhoto();
+        } else if (e.key === 'ArrowRight') {
+          nextPhoto();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [project?.photos]);
 
   const fetchProject = async (projectId: string) => {
     try {
@@ -150,6 +161,21 @@ const ProjectDetail = () => {
       }
 
       const data = await response.json();
+      
+      // Add mock photos for testing
+      data.photos = [
+        { id: 1, url: '/placeholder.svg', fileName: 'project-exterior-1.jpg' },
+        { id: 2, url: '/placeholder.svg', fileName: 'project-exterior-2.jpg' },
+        { id: 3, url: '/placeholder.svg', fileName: 'project-interior-1.jpg' },
+        { id: 4, url: '/placeholder.svg', fileName: 'project-lobby.jpg' },
+        { id: 5, url: '/placeholder.svg', fileName: 'project-courtyard.jpg' },
+        { id: 6, url: '/placeholder.svg', fileName: 'project-building.jpg' }
+      ];
+      
+      // Developer phone will come from real API data
+      
+      // linkedProperties will come from API only - no mock data
+      
       setProject(data);
     } catch (error) {
       console.error('Error fetching project:', error);
@@ -204,31 +230,20 @@ const ProjectDetail = () => {
     }
   };
 
-  const getRoomTypeLabel = (roomType: string) => {
-    switch (roomType) {
-      case 'studio':
-        return 'სტუდიო';
-      case 'one_bedroom':
-        return '1 საძინებელი';
-      case 'two_bedroom':
-        return '2 საძინებელი';
-      case 'three_bedroom':
-        return '3 საძინებელი';
-      case 'four_bedroom':
-        return '4 საძინებელი';
-      case 'five_plus_bedroom':
-        return '5+ საძინებელი';
-      default:
-        return roomType;
+  const nextPhoto = () => {
+    if (project?.photos && project.photos.length > 0) {
+      setCurrentPhotoIndex((prev) => 
+        prev === project.photos!.length - 1 ? 0 : prev + 1
+      );
     }
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ka-GE', {
-      style: 'currency',
-      currency: 'GEL',
-      minimumFractionDigits: 0
-    }).format(price);
+  const prevPhoto = () => {
+    if (project?.photos && project.photos.length > 0) {
+      setCurrentPhotoIndex((prev) => 
+        prev === 0 ? project.photos!.length - 1 : prev - 1
+      );
+    }
   };
 
   const BooleanIcon = ({ value }: { value: boolean }) => (
@@ -279,7 +294,7 @@ const ProjectDetail = () => {
       <Header />
       
       <div className="container mx-auto py-10 px-4 pt-48">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* Back Button */}
           <Button
             variant="ghost"
@@ -326,354 +341,278 @@ const ProjectDetail = () => {
             )}
           </div>
 
-          <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="overview">მიმოხილვა</TabsTrigger>
-              <TabsTrigger value="pricing">ფასები</TabsTrigger>
-              <TabsTrigger value="amenities">კომფორტი</TabsTrigger>
-              <TabsTrigger value="developer">დეველოპერი</TabsTrigger>
-            </TabsList>
-
-            {/* Overview Tab */}
-            <TabsContent value="overview" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Project Info */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Building2 className="h-5 w-5" />
-                      პროექტის ინფორმაცია
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">ტიპი:</span>
-                        <p className="font-medium">{getProjectTypeLabel(project.projectType)}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">კორპუსები:</span>
-                        <p className="font-medium">{project.numberOfBuildings}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">ბინები:</span>
-                        <p className="font-medium">{project.totalApartments}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">სართულები:</span>
-                        <p className="font-medium">{project.numberOfFloors}</p>
-                      </div>
-                      {project.parkingSpaces && (
-                        <div>
-                          <span className="text-gray-500">პარკინგი:</span>
-                          <p className="font-medium">{project.parkingSpaces} ადგილი</p>
-                        </div>
-                      )}
-                      {project.deliveryDate && (
-                        <div>
-                          <span className="text-gray-500">ჩაბარება:</span>
-                          <p className="font-medium">{new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</p>
-                        </div>
-                      )}
+          {/* Main Content Layout */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            {/* Left Content - Photos and Main Info */}
+            <div className="xl:col-span-2 space-y-8">
+              {/* Photo Slideshow */}
+              {project.photos && project.photos.length > 0 && (
+                <div className="relative">
+                  <div className="aspect-video rounded-xl overflow-hidden bg-gray-100 shadow-lg">
+                    <img
+                      src={project.photos[currentPhotoIndex].url}
+                      alt={project.photos[currentPhotoIndex].fileName}
+                      className="w-full h-full object-cover"
+                    />
+                    
+                    {/* Navigation Arrows */}
+                    {project.photos.length > 1 && (
+                      <>
+                        <button
+                          onClick={prevPhoto}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-2 rounded-full transition-all backdrop-blur-sm"
+                        >
+                          <ChevronLeft className="h-5 w-5" />
+                        </button>
+                        <button
+                          onClick={nextPhoto}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-2 rounded-full transition-all backdrop-blur-sm"
+                        >
+                          <ChevronRight className="h-5 w-5" />
+                        </button>
+                      </>
+                    )}
+                    
+                    {/* Photo Counter */}
+                    <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+                      {currentPhotoIndex + 1} / {project.photos.length}
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Location */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5" />
-                      ლოკაცია
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <p><strong>ქალაქი:</strong> {project.city.nameGeorgian}</p>
-                      {project.areaData && (
-                        <p><strong>რაიონი:</strong> {project.areaData.nameKa}</p>
-                      )}
-                      <p><strong>მისამართი:</strong> {project.street}{project.streetNumber && ` ${project.streetNumber}`}</p>
-                      {project.latitude && project.longitude && (
-                        <div className="pt-2">
-                          <p className="text-sm text-gray-600">კოორდინატები: {project.latitude}, {project.longitude}</p>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Pricing Tab */}
-            <TabsContent value="pricing" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>ფასები ოთახების მიხედვით</CardTitle>
-                  <CardDescription>
-                    ხელმისაწვდომი ბინების ტიპები და მათი ღირებულება
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {project.pricing && project.pricing.length > 0 ? (
-                    <div className="grid gap-4">
-                      {project.pricing.map((price) => (
-                        <div key={price.id} className="border rounded-lg p-4">
-                          <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <h3 className="font-semibold text-lg">
-                                {getRoomTypeLabel(price.roomType)}
-                              </h3>
-                              <p className="text-gray-600">
-                                {price.numberOfRooms} ოთახი • {price.totalArea} მ²
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-2xl font-bold text-primary">
-                                {formatPrice(price.totalPriceFrom)}
-                                {price.totalPriceTo && (
-                                  <span className="text-base font-normal text-gray-600">
-                                    - {formatPrice(price.totalPriceTo)}
-                                  </span>
-                                )}
-                              </p>
-                              <p className="text-sm text-gray-600">
-                                {formatPrice(price.pricePerSqm)} / მ²
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                            <div>
-                              <span className="text-gray-500">ხელმისაწვდომი:</span>
-                              <p className="font-medium">{price.availableUnits} / {price.totalUnits}</p>
-                            </div>
-                            {price.livingArea && (
-                              <div>
-                                <span className="text-gray-500">საცხოვრებელი:</span>
-                                <p className="font-medium">{price.livingArea} მ²</p>
-                              </div>
-                            )}
-                            {price.balconyArea && (
-                              <div>
-                                <span className="text-gray-500">ბალკონი:</span>
-                                <p className="font-medium">{price.balconyArea} მ²</p>
-                              </div>
-                            )}
-                            {price.floorFrom && price.floorTo && (
-                              <div>
-                                <span className="text-gray-500">სართული:</span>
-                                <p className="font-medium">{price.floorFrom}-{price.floorTo}</p>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="flex gap-4 mt-3 text-sm">
-                            <div className="flex items-center gap-2">
-                              <BooleanIcon value={price.hasBalcony} />
-                              <span>ბალკონი</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <BooleanIcon value={price.hasTerrace} />
-                              <span>ტერასა</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <BooleanIcon value={price.hasLoggia} />
-                              <span>ლოჯია</span>
-                            </div>
-                          </div>
-                        </div>
+                  </div>
+                  
+                  {/* Photo Thumbnails */}
+                  {project.photos.length > 1 && (
+                    <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+                      {project.photos.map((photo, index) => (
+                        <button
+                          key={photo.id}
+                          onClick={() => setCurrentPhotoIndex(index)}
+                          className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                            index === currentPhotoIndex 
+                              ? 'border-primary shadow-md' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <img
+                            src={photo.url}
+                            alt={photo.fileName}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
                       ))}
                     </div>
-                  ) : (
-                    <p className="text-gray-600">ფასების ინფორმაცია არ არის ხელმისაწვდომი</p>
                   )}
+                </div>
+              )}
+              
+              {/* Project Details */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    პროექტის დეტალები
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-500 mb-1">კორპუსი</div>
+                      <div className="text-2xl font-bold text-primary">{project.numberOfBuildings}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-500 mb-1">ბინა</div>
+                      <div className="text-2xl font-bold text-primary">{project.totalApartments}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-gray-500 mb-1">სართული</div>
+                      <div className="text-2xl font-bold text-primary">{project.numberOfFloors}</div>
+                    </div>
+                    {project.parkingSpaces && (
+                      <div className="text-center">
+                        <div className="text-sm text-gray-500 mb-1">პარკინგი</div>
+                        <div className="text-2xl font-bold text-primary">{project.parkingSpaces}</div>
+                      </div>
+                    )}
+                    <div className="text-center">
+                      <div className="text-sm text-gray-500 mb-1">ტიპი</div>
+                      <div className="text-sm font-medium text-gray-700">{getProjectTypeLabel(project.projectType)}</div>
+                    </div>
+                    {project.deliveryDate && (
+                      <div className="text-center">
+                        <div className="text-sm text-gray-500 mb-1">ჩაბარება</div>
+                        <div className="text-sm font-medium text-gray-700">{new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</div>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
-            </TabsContent>
 
-            {/* Amenities Tab */}
-            <TabsContent value="amenities" className="space-y-6">
-              <div className="grid gap-6">
-                {/* Project Area Amenities */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>პროექტის ტერიტორიაზე</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasGroceryStore} />
-                        <span>მაღაზია</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasBikePath} />
-                        <span>ველოსიპედის ბილიკი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasSportsField} />
-                        <span>სპორტული მოედანი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasChildrenArea} />
-                        <span>ბავშვთა მოედანი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasSquare} />
-                        <span>მოედანი</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 300m Amenities */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>300 მეტრის რადიუსში</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.pharmacy300m} />
-                        <span>აფთიაქი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.kindergarten300m} />
-                        <span>ბაღი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.school300m} />
-                        <span>სკოლა</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.busStop300m} />
-                        <span>ავტობუსის გაჩერება</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.groceryStore300m} />
-                        <span>მაღაზია</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.stadium300m} />
-                        <span>სტადიონი</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 500m Amenities */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>500 მეტრის რადიუსში</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.pharmacy500m} />
-                        <span>აფთიაქი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.kindergarten500m} />
-                        <span>ბაღი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.school500m} />
-                        <span>სკოლა</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.university500m} />
-                        <span>უნივერსიტეტი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.busStop500m} />
-                        <span>ავტობუსის გაჩერება</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.stadium500m} />
-                        <span>სტადიონი</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 1km Amenities */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>1 კილომეტრის რადიუსში</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hospital1km} />
-                        <span>ჰოსპიტალი</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Services */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Shield className="h-5 w-5" />
-                      სერვისები
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.securityService} />
-                        <span>უსაფრთხოების სერვისი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasLobby} />
-                        <span>ლობი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasConcierge} />
-                        <span>კონსიერჟი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.videoSurveillance} />
-                        <span>ვიდეო ზედამხედველობა</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasLighting} />
-                        <span>განათება</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.landscaping} />
-                        <span>ლანდშაფტის დიზაინი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.yardCleaning} />
-                        <span>ეზოს დალაგება</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.entranceCleaning} />
-                        <span>შესასვლელის დალაგება</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.hasDoorman} />
-                        <span>კარისკაცი</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.fireSystem} />
-                        <span>ხანძრის ჩაქრობის სისტემა</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BooleanIcon value={project.mainDoorLock} />
-                        <span>მთავარი კარის საკეტი</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Developer Tab */}
-            <TabsContent value="developer" className="space-y-6">
+              {/* Location */}
               <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5" />
+                    ლოკაცია
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-[80px_1fr] gap-y-3 gap-x-4 items-center">
+                    <span className="text-sm text-gray-500">ქალაქი:</span>
+                    <span className="font-medium">{project.city.nameGeorgian}</span>
+                    
+                    {project.areaData && (
+                      <>
+                        <span className="text-sm text-gray-500">რაიონი:</span>
+                        <span className="font-medium">{project.areaData.nameKa}</span>
+                      </>
+                    )}
+                    
+                    <span className="text-sm text-gray-500">მისამართი:</span>
+                    <span className="font-medium">{project.street}{project.streetNumber && ` ${project.streetNumber}`}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Amenities */}
+              {project.amenities && project.amenities.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>კომფორტი და მანძილები</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {(() => {
+                      // Amenity labels in Georgian
+                      const amenityLabels: {[key: string]: string} = {
+                        pharmacy: '💊 აფთიაქი',
+                        kindergarten: '👶 საბავშო ბაღი',
+                        school: '🎒 სკოლა',
+                        university: '🎓 უნივერსიტეტი',
+                        hospital: '🏥 საავადმყოფო',
+                        clinic: '🩺 კლინიკა',
+                        bus_stop: '🚌 ავტობუსის გაჩერება',
+                        metro: '🚇 მეტრო',
+                        grocery_store: '🛒 საყიდლების მაღაზია',
+                        supermarket: '🏬 სუპერმარკეტი',
+                        mall: '🏢 სავაჭრო ცენტრი',
+                        bank: '🏦 ბანკი',
+                        atm: '💳 ბანკომატი',
+                        restaurant: '🍽️ რესტორანი',
+                        cafe: '☕ კაფე',
+                        bakery: '🥖 საცხობი',
+                        sports_center: '🏋️ სპორტული ცენტრი',
+                        stadium: '🏟️ სტადიონი',
+                        swimming_pool: '🏊 საცურაო აუზი',
+                        park: '🌳 პარკი',
+                        square: '🏛️ მოედანი',
+                        cinema: '🎬 კინო',
+                        theater: '🎭 თეატრი',
+                        library: '📚 ბიბლიოთეკა',
+                        post_office: '📫 ფოსტის განყოფილება',
+                        gas_station: '⛽ ბენზინგასამართი სადგური',
+                        car_wash: '🚗 ავტორეცხვა',
+                        veterinary: '🐕 ვეტერინარული კლინიკა',
+                        beauty_center: '💄 სილამაზის სალონი',
+                        dentist: '🦷 სტომატოლოგია',
+                        gym: '💪 სპორტული დარბაზი',
+                        garden: '🌳 ბაღი/პარკი',
+                        parking: '🚗 პარკინგი',
+                        laundry: '🧺 სამრეცხაო',
+                        storage: '📦 საწყობი',
+                        children_area: '🎪 ბავშვთა მოედანი',
+                        bike_path: '🚴 ველოსიპედის ბილიკი',
+                        sports_field: '⚽ სპორტული მოედანი'
+                      };
+
+                      // Group amenities by distance
+                      const amenitiesByDistance = project.amenities.reduce((acc: {[key: string]: any[]}, amenity) => {
+                        const distance = amenity.distance;
+                        if (!acc[distance]) {
+                          acc[distance] = [];
+                        }
+                        acc[distance].push(amenity);
+                        return acc;
+                      }, {});
+
+                      const distanceSections = [
+                        { key: 'on_site', title: '🏢 პროექტის ტერიტორიაზე', color: 'bg-gray-50' },
+                        { key: 'within_300m', title: '📍 300 მეტრის რადიუსში', color: '' },
+                        { key: 'within_500m', title: '📍 500 მეტრის რადიუსში', color: '' },
+                        { key: 'within_1km', title: '📍 1 კილომეტრის რადიუსში', color: '' }
+                      ];
+
+                      return (
+                        <div className="space-y-6">
+                          {distanceSections.map((section, index) => {
+                            const amenitiesInSection = amenitiesByDistance[section.key];
+                            if (!amenitiesInSection || amenitiesInSection.length === 0) {
+                              return null;
+                            }
+
+                            return (
+                              <div key={section.key}>
+                                <div className={`${section.color} p-4 rounded-lg`}>
+                                  <h4 className="font-semibold text-gray-800 mb-3">{section.title}</h4>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {amenitiesInSection.map((amenity) => (
+                                      <div key={amenity.id} className="flex items-center gap-2">
+                                        <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
+                                        <span className="text-sm">{amenityLabels[amenity.amenityType] || amenity.amenityType}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                                {index < distanceSections.length - 1 && <Separator className="my-4" />}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Services - Only show services that are true */}
+              {(() => {
+                const availableServices = [
+                  { key: 'securityService', label: 'უსაფრთხოების სერვისი', value: project.securityService },
+                  { key: 'hasLobby', label: 'ლობი', value: project.hasLobby },
+                  { key: 'hasConcierge', label: 'კონსიერჟი', value: project.hasConcierge },
+                  { key: 'videoSurveillance', label: 'ვიდეო ზედამხედველობა', value: project.videoSurveillance },
+                  { key: 'hasLighting', label: 'განათება', value: project.hasLighting },
+                  { key: 'landscaping', label: 'ლანდშაფტის დიზაინი', value: project.landscaping },
+                  { key: 'yardCleaning', label: 'ეზოს დალაგება', value: project.yardCleaning },
+                  { key: 'entranceCleaning', label: 'შესასვლელის დალაგება', value: project.entranceCleaning },
+                  { key: 'hasDoorman', label: 'კარისკაცი', value: project.hasDoorman },
+                  { key: 'fireSystem', label: 'ხანძრის ჩაქრობის სისტემა', value: project.fireSystem },
+                  { key: 'mainDoorLock', label: 'მთავარი კარის საკეტი', value: project.mainDoorLock }
+                ].filter(service => service.value === true);
+
+                return availableServices.length > 0 ? (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Shield className="h-5 w-5" />
+                        ჩაბარების შემდგომ სერვისები
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {availableServices.map((service) => (
+                          <div key={service.key} className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-green-600" />
+                            <span>{service.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : null;
+              })()}
+            </div>
+
+            {/* Right Sidebar - Developer Info */}
+            <div className="space-y-6">
+              <Card className="sticky top-24">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="h-5 w-5" />
@@ -682,33 +621,157 @@ const ProjectDetail = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-semibold">{project.developer.fullName}</h3>
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Users className="h-8 w-8 text-primary" />
+                      </div>
+                      <h3 className="font-semibold text-lg">{project.developer.fullName}</h3>
                     </div>
                     
                     <Separator />
                     
                     <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <Mail className="h-5 w-5 text-gray-400" />
-                        <span>{project.developer.email}</span>
+                      <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
+                        <Mail className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                        <span className="text-sm break-all">{project.developer.email}</span>
                       </div>
                     </div>
 
-                    <div className="pt-4">
-                      <Button
-                        onClick={() => navigate(`/projects?developer=${project.developer.id}`)}
-                        variant="outline"
-                        className="w-full"
-                      >
-                        ყველა პროექტის ნახვა
-                      </Button>
+                    <div className="space-y-2">
+                      {project.developer.phone ? (
+                        <>
+                          {!showPhone ? (
+                            <Button
+                              variant="outline"
+                              className="w-full"
+                              onClick={() => setShowPhone(true)}
+                            >
+                              <Phone className="h-4 w-4 mr-2" />
+                              ნომრის ნახვა
+                            </Button>
+                          ) : (
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border">
+                                <Phone className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">{project.developer.phone}</span>
+                              </div>
+                              <Button
+                                variant="default"
+                                className="w-full"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(project.developer.phone!);
+                                  toast({
+                                    title: "ნომერი დაკოპირდა",
+                                    description: project.developer.phone,
+                                  });
+                                }}
+                              >
+                                ნომრის კოპირება
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          disabled
+                        >
+                          <Phone className="h-4 w-4 mr-2" />
+                          ნომერი მიუწვდომელია
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
+
+          {/* All Apartments - Full Width */}
+          {project?.linkedProperties && project.linkedProperties.length > 0 && (
+            <div className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    ყველა {project.linkedProperties.length} ბინა პროექტში
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {project.linkedProperties.map((property) => (
+                      <Card key={property.id} className="hover:shadow-md transition-all duration-300 cursor-pointer border-l-4 border-l-primary/30 hover:border-l-primary" onClick={() => navigate(`/property/${property.id}`)}>
+                        <CardContent className="p-0">
+                          <div className="flex min-h-[140px]">
+                            {/* Property Photo */}
+                            <div className="w-36 flex-shrink-0 bg-gray-100 rounded-l-lg overflow-hidden">
+                              <img
+                                src="/placeholder.svg"
+                                alt={property.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            
+                            {/* Property Info */}
+                            <div className="flex-1 p-4">
+                              <div className="h-full flex flex-col justify-between space-y-2">
+                                {/* Title */}
+                                <h3 className="font-semibold text-base line-clamp-2 text-gray-900 leading-tight">
+                                  {property.title}
+                                </h3>
+                                
+                                {/* Price per sqm (most prominent) */}
+                                <div className="flex items-baseline gap-2">
+                                  {property.pricePerSqm ? (
+                                    <div className="text-xl font-bold text-primary">
+                                      ₾{new Intl.NumberFormat('ka-GE').format(property.pricePerSqm)}
+                                    </div>
+                                  ) : (
+                                    <div className="text-xl font-bold text-primary">
+                                      ₾{Math.round(property.totalPrice / property.area).toLocaleString()}
+                                    </div>
+                                  )}
+                                  <div className="text-xs text-gray-500">მ²-ზე</div>
+                                </div>
+                                
+                                {/* Key Info with Badges */}
+                                <div className="flex gap-1.5 flex-wrap">
+                                  {/* Area Badge */}
+                                  <Badge variant="secondary" className="text-xs px-2 py-1">
+                                    {property.area} მ²
+                                  </Badge>
+                                  
+                                  {/* Rooms Badge */}
+                                  {property.rooms && (
+                                    <Badge variant="outline" className="text-xs px-2 py-1">
+                                      {property.rooms} ოთახი
+                                    </Badge>
+                                  )}
+                                  
+                                  {/* Bedrooms Badge */}
+                                  {property.bedrooms && (
+                                    <Badge variant="outline" className="text-xs px-2 py-1">
+                                      {property.bedrooms} საძინებელი
+                                    </Badge>
+                                  )}
+                                  
+                                  {/* Floor Badge */}
+                                  <Badge variant="outline" className="text-xs px-2 py-1">
+                                    {property.floor || 1} სართული
+                                  </Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>

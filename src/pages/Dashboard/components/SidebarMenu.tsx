@@ -20,20 +20,53 @@ export const SidebarMenu: React.FC = () => {
   
   // Define menu items with categories
   const allMenuItems: MenuItem[] = [
-    { 
-      id: user?.role === 'developer' ? "add-project" : "add-property", 
-      path: user?.role === 'developer' ? "/dashboard/add-project" : "/dashboard/add-property", 
-      label: user?.role === 'developer' ? "პროექტის დამატება" : "განცხადების დამატება", 
-      icon: <Plus className="h-5 w-5" />,
-      category: "properties"
-    },
-    { 
-      id: "my-properties", 
-      path: "/dashboard/my-properties", 
-      label: user?.role === 'developer' ? "ჩემი პროექტები" : "ჩემი განცხადებები", 
-      icon: <Home className="h-5 w-5" />,
-      category: "properties"
-    },
+    // For developers, show both project and property options
+    ...(user?.role === 'developer' ? [
+      { 
+        id: "add-project", 
+        path: "/dashboard/add-project", 
+        label: "პროექტის დამატება", 
+        icon: <Plus className="h-5 w-5" />,
+        category: "projects"
+      },
+      { 
+        id: "add-property", 
+        path: "/dashboard/add-property", 
+        label: "განცხადების დამატება", 
+        icon: <Plus className="h-5 w-5" />,
+        category: "properties"
+      },
+      { 
+        id: "my-projects", 
+        path: "/dashboard/my-projects", 
+        label: "ჩემი პროექტები", 
+        icon: <Home className="h-5 w-5" />,
+        category: "projects"
+      },
+      { 
+        id: "my-properties", 
+        path: "/dashboard/my-properties", 
+        label: "ჩემი განცხადებები", 
+        icon: <Home className="h-5 w-5" />,
+        category: "properties"
+      },
+    ] : [
+      // For regular users, show only property options
+      { 
+        id: "add-property", 
+        path: "/dashboard/add-property", 
+        label: "განცხადების დამატება", 
+        icon: <Plus className="h-5 w-5" />,
+        category: "properties"
+      },
+      { 
+        id: "my-properties", 
+        path: "/dashboard/my-properties", 
+        label: "ჩემი განცხადებები", 
+        icon: <Home className="h-5 w-5" />,
+        category: "properties"
+      },
+    ]),
     { 
       id: "favorites", 
       path: "/dashboard/favorites", 
@@ -71,6 +104,7 @@ export const SidebarMenu: React.FC = () => {
   });
 
   // Group menu items by category
+  const projectItems = menuItems.filter(item => item.category === "projects");
   const propertyItems = menuItems.filter(item => item.category === "properties");
   const accountItems = menuItems.filter(item => item.category === "account");
   const uncategorizedItems = menuItems.filter(item => !item.category);
@@ -134,7 +168,8 @@ export const SidebarMenu: React.FC = () => {
 
   return (
     <div className="p-3">
-      {propertyItems.length > 0 && renderCategory(user?.role === 'developer' ? "პროექტები" : "განცხადებები", propertyItems)}
+      {projectItems.length > 0 && renderCategory("პროექტები", projectItems)}
+      {propertyItems.length > 0 && renderCategory("განცხადებები", propertyItems)}
       {accountItems.length > 0 && renderCategory("ანგარიში", accountItems)}
       {uncategorizedItems.length > 0 && uncategorizedItems.map(renderMenuItem)}
     </div>

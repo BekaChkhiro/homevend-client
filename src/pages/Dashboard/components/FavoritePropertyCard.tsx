@@ -19,6 +19,7 @@ interface FavoritePropertyCardProps {
   addedDate: string;
   ownerName: string;
   ownerPhone: string;
+  onRemoveFromFavorites?: () => void;
 }
 
 export const FavoritePropertyCard = ({ 
@@ -35,15 +36,16 @@ export const FavoritePropertyCard = ({
   featured, 
   addedDate, 
   ownerName, 
-  ownerPhone 
+  ownerPhone,
+  onRemoveFromFavorites
 }: FavoritePropertyCardProps) => {
 
   const navigate = useNavigate();
 
-
   const handleRemoveFromFavorites = () => {
-    // Handle removing from favorites
-    console.log("Remove from favorites:", id);
+    if (onRemoveFromFavorites) {
+      onRemoveFromFavorites();
+    }
   };
 
   const handleContactOwner = () => {
@@ -155,12 +157,11 @@ export const FavoritePropertyCard = ({
             <Button 
               variant="ghost" 
               size="sm"
-              className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50 text-xs px-2 py-1 h-7 h-8 w-8 p-0 text-red-600 hover:bg-red-50"
+              className="flex items-center text-red-600 hover:text-red-700 hover:bg-red-50 text-xs px-2 py-1 h-7"
               onClick={handleRemoveFromFavorites}
             >
               <Heart className="h-3 w-3 mr-1 fill-current" />
               ამოშლა
-
             </Button>
           </div>
         </div>

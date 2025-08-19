@@ -140,6 +140,7 @@ export const AddProperty = () => {
         propertyType: data.propertyType,
         dealType: data.dealType,
         dailyRentalSubcategory: cleanData(data.dailyRentalSubcategory),
+        projectId: data.projectId ? toNumber(data.projectId) : undefined,
         cityId: cityId,
         city: data.city,
         areaId: data.district ? toNumber(data.district) : undefined,
@@ -192,6 +193,7 @@ export const AddProperty = () => {
         // TODO: Handle photo uploads
         photos: []
       };
+
 
       await propertyApi.createProperty(propertyData);
       

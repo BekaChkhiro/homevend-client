@@ -87,7 +87,7 @@ export const authApi = {
     return { user, token };
   },
   
-  register: async (userData: { fullName: string; email: string; password: string }) => {
+  register: async (userData: any) => {
     const response = await apiClient.post('/auth/register', userData);
     const { user, token, refreshToken } = response.data.data;
     
@@ -164,9 +164,30 @@ export const propertyApi = {
   deleteProperty: async (id: string) => {
     const response = await apiClient.delete(`/properties/${id}`);
     return response.data;
+  }
+};
+
+// Favorites API
+export const favoritesApi = {
+  getFavorites: async () => {
+    const response = await apiClient.get('/favorites');
+    return response.data.data;
   },
-
-
+  
+  addToFavorites: async (propertyId: number) => {
+    const response = await apiClient.post('/favorites', { propertyId });
+    return response.data.data;
+  },
+  
+  removeFromFavorites: async (propertyId: number) => {
+    const response = await apiClient.delete(`/favorites/${propertyId}`);
+    return response.data;
+  },
+  
+  isFavorite: async (propertyId: number) => {
+    const response = await apiClient.get(`/favorites/check/${propertyId}`);
+    return response.data.data.isFavorite;
+  }
 };
 
 // Admin API

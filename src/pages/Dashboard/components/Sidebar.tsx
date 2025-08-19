@@ -10,8 +10,8 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ user }) => {
   return (
-    <div className="w-64 mr-8 h-fit sticky top-0">
-      <div className="bg-white rounded-lg border overflow-hidden">
+    <div className="w-64 mr-8 flex flex-col h-full">
+      <div className="bg-white rounded-lg border flex flex-col flex-1">
         {/* პროფილის მონაცემები */}
         <ProfileSection user={user} />
         
@@ -19,7 +19,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ user }) => {
         <BalanceSection />
         
         {/* მენიუს ელემენტები */}
-        <SidebarMenu />
+        <div className="flex-1">
+          <SidebarMenu />
+        </div>
       </div>
     </div>
   );

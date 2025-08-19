@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar, DollarSign, Bed, Square } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhotoGallerySection } from "./AddProject/components/PhotoGallerySection";
 
@@ -25,33 +25,13 @@ interface Area {
   nameKa: string;
 }
 
-interface UserProperty {
-  id: number;
-  title: string;
-  propertyType: string;
-  dealType: string;
-  city: string;
-  street: string;
-  streetNumber?: string;
-  area: number;
-  totalPrice: number;
-  rooms?: string;
-  viewCount: number;
-  createdAt: string;
-  cityData?: {
-    nameGeorgian: string;
-  };
-  areaData?: {
-    nameKa: string;
-  };
-}
-
-
-export const AddProject: React.FC = () => {
+export const EditProject: React.FC = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
   const [areas, setAreas] = useState<Area[]>([]);
 
@@ -141,16 +121,15 @@ export const AddProject: React.FC = () => {
     mainDoorLock: false,
   });
 
-  const [userProperties, setUserProperties] = useState<UserProperty[]>([]);
-  const [selectedProperties, setSelectedProperties] = useState<number[]>([]);
-  const [propertiesLoading, setPropertiesLoading] = useState(false);
   const [customAmenities, setCustomAmenities] = useState<{[key: string]: string}>({});
   const [projectImages, setProjectImages] = useState<File[]>([]);
 
   useEffect(() => {
     fetchCities();
-    fetchUserProperties();
-  }, []);
+    if (id) {
+      fetchProject();
+    }
+  }, [id]);
 
   useEffect(() => {
     if (formData.cityId) {
@@ -160,6 +139,126 @@ export const AddProject: React.FC = () => {
       setFormData(prev => ({ ...prev, areaId: "" }));
     }
   }, [formData.cityId]);
+
+  const fetchProject = async () => {
+    try {
+      setIsFetching(true);
+      const response = await fetch(`/api/projects/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast({
+            title: "შეცდომა",
+            description: "პროექტი ვერ მოიძებნა",
+            variant: "destructive",
+          });
+          navigate('/dashboard');
+          return;
+        }
+        throw new Error('Failed to fetch project');
+      }
+
+      const project = await response.json();
+      
+      // Convert project data to form format
+      setFormData({
+        projectName: project.projectName || "",
+        description: project.description || "",
+        cityId: project.cityId?.toString() || "",
+        areaId: project.areaId?.toString() || "",
+        street: project.street || "",
+        streetNumber: project.streetNumber || "",
+        projectType: project.projectType || "",
+        deliveryStatus: project.deliveryStatus || "",
+        deliveryDate: project.deliveryDate ? project.deliveryDate.split('T')[0] : "",
+        numberOfBuildings: project.numberOfBuildings?.toString() || "",
+        totalApartments: project.totalApartments?.toString() || "",
+        numberOfFloors: project.numberOfFloors?.toString() || "",
+        parkingSpaces: project.parkingSpaces?.toString() || "",
+        // Copy all boolean amenity fields
+        hasGroceryStore: project.hasGroceryStore || false,
+        hasBikePath: project.hasBikePath || false,
+        hasSportsField: project.hasSportsField || false,
+        hasChildrenArea: project.hasChildrenArea || false,
+        hasSquare: project.hasSquare || false,
+        pharmacy300m: project.pharmacy300m || false,
+        kindergarten300m: project.kindergarten300m || false,
+        school300m: project.school300m || false,
+        busStop300m: project.busStop300m || false,
+        groceryStore300m: project.groceryStore300m || false,
+        bikePath300m: project.bikePath300m || false,
+        sportsField300m: project.sportsField300m || false,
+        stadium300m: project.stadium300m || false,
+        square300m: project.square300m || false,
+        pharmacy500m: project.pharmacy500m || false,
+        kindergarten500m: project.kindergarten500m || false,
+        school500m: project.school500m || false,
+        university500m: project.university500m || false,
+        busStop500m: project.busStop500m || false,
+        groceryStore500m: project.groceryStore500m || false,
+        bikePath500m: project.bikePath500m || false,
+        sportsField500m: project.sportsField500m || false,
+        stadium500m: project.stadium500m || false,
+        square500m: project.square500m || false,
+        hospital1km: project.hospital1km || false,
+        securityService: project.securityService || false,
+        hasLobby: project.hasLobby || false,
+        hasConcierge: project.hasConcierge || false,
+        videoSurveillance: project.videoSurveillance || false,
+        hasLighting: project.hasLighting || false,
+        landscaping: project.landscaping || false,
+        yardCleaning: project.yardCleaning || false,
+        entranceCleaning: project.entranceCleaning || false,
+        hasDoorman: project.hasDoorman || false,
+        fireSystem: project.fireSystem || false,
+        mainDoorLock: project.mainDoorLock || false,
+      });
+
+      // Convert amenities array to customAmenities format
+      if (project.amenities && Array.isArray(project.amenities)) {
+        const amenitiesMap: {[key: string]: string} = {};
+        project.amenities.forEach((amenity: any) => {
+          // Convert database distance format to form format
+          let distanceKey: string;
+          switch (amenity.distance) {
+            case 'on_site':
+              distanceKey = 'onSite';
+              break;
+            case 'within_300m':
+              distanceKey = '300m';
+              break;
+            case 'within_500m':
+              distanceKey = '500m';
+              break;
+            case 'within_1km':
+              distanceKey = '1km';
+              break;
+            default:
+              distanceKey = amenity.distance;
+          }
+          amenitiesMap[amenity.amenityType] = distanceKey;
+        });
+        setCustomAmenities(amenitiesMap);
+      } else if (project.customAmenities) {
+        // Fallback for old format
+        setCustomAmenities(project.customAmenities);
+      }
+    } catch (error) {
+      console.error('Error fetching project:', error);
+      toast({
+        title: "შეცდომა",
+        description: "პროექტის ჩატვირთვისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+      navigate('/dashboard');
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
   const fetchCities = async () => {
     try {
@@ -202,7 +301,6 @@ export const AddProject: React.FC = () => {
     }
   };
 
-
   const handleInputChange = (name: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -214,39 +312,6 @@ export const AddProject: React.FC = () => {
     }));
   };
 
-  const fetchUserProperties = async () => {
-    try {
-      setPropertiesLoading(true);
-      const response = await fetch('/api/properties/my-properties', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        // Only show properties that are not already linked to any project
-        const unlinkedProperties = data.filter((property: any) => !property.projectId);
-        setUserProperties(unlinkedProperties || []);
-      } else {
-        setUserProperties([]);
-      }
-    } catch (error) {
-      console.error('Error fetching user properties:', error);
-      setUserProperties([]);
-    } finally {
-      setPropertiesLoading(false);
-    }
-  };
-
-  const handlePropertySelection = (propertyId: number, selected: boolean) => {
-    if (selected) {
-      setSelectedProperties(prev => [...prev, propertyId]);
-    } else {
-      setSelectedProperties(prev => prev.filter(id => id !== propertyId));
-    }
-  };
-
   const clearCustomAmenity = (amenityType: string) => {
     setCustomAmenities(prev => {
       const newState = { ...prev };
@@ -255,15 +320,13 @@ export const AddProject: React.FC = () => {
     });
   };
 
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (user?.role !== 'developer') {
       toast({
         title: "შეცდომა",
-        description: "მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება",
+        description: "მხოლოდ დეველოპერებს შეუძლიათ პროექტების რედაქტირება",
         variant: "destructive",
       });
       return;
@@ -284,8 +347,8 @@ export const AddProject: React.FC = () => {
         customAmenities: customAmenities,
       };
 
-      const response = await fetch('/api/projects', {
-        method: 'POST',
+      const response = await fetch(`/api/projects/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -294,46 +357,20 @@ export const AddProject: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create project');
+        throw new Error('Failed to update project');
       }
-
-      const newProject = await response.json();
-
-      // Link selected properties to the project
-      if (selectedProperties.length > 0) {
-        try {
-          await Promise.all(selectedProperties.map(async (propertyId) => {
-            const linkResponse = await fetch(`/api/properties/${propertyId}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              },
-              body: JSON.stringify({ projectId: newProject.project?.id || newProject.id }),
-            });
-            
-            if (!linkResponse.ok) {
-              console.error(`Failed to link property ${propertyId} to project`);
-            }
-          }));
-        } catch (linkError) {
-          console.error('Error linking properties to project:', linkError);
-          // Don't fail the whole operation if linking fails
-        }
-      }
-
 
       toast({
         title: "წარმატება",
-        description: `პროექტი წარმატებით შეიქმნა${selectedProperties.length > 0 ? ` და ${selectedProperties.length} განცხადება მიმაგრდა` : ''}`,
+        description: "პროექტი წარმატებით განახლდა",
       });
 
       navigate('/dashboard');
     } catch (error: any) {
-      console.error('Error creating project:', error);
+      console.error('Error updating project:', error);
       toast({
         title: "შეცდომა",
-        description: "პროექტის შექმნისას მოხდა შეცდომა",
+        description: "პროექტის განახლებისას მოხდა შეცდომა",
         variant: "destructive",
       });
     } finally {
@@ -348,7 +385,7 @@ export const AddProject: React.FC = () => {
           <CardHeader>
             <CardTitle>წვდომა აკრძალულია</CardTitle>
             <CardDescription>
-              მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება
+              მხოლოდ დეველოპერებს შეუძლიათ პროექტების რედაქტირება
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -358,6 +395,19 @@ export const AddProject: React.FC = () => {
             </Button>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
+
+  if (isFetching) {
+    return (
+      <div className="max-w-4xl mx-auto py-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">პროექტის ჩატვირთვა...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -374,17 +424,16 @@ export const AddProject: React.FC = () => {
           უკან დაბრუნება
         </Button>
         
-        <h1 className="text-2xl font-bold mb-2">ახალი პროექტის დამატება</h1>
-        <p className="text-gray-600">შეავსეთ პროექტის ინფორმაცია</p>
+        <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება</h1>
+        <p className="text-gray-600">შეცვალეთ პროექტის ინფორმაცია</p>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="basic">ძირითადი ინფო</TabsTrigger>
             <TabsTrigger value="amenities">კომფორტი</TabsTrigger>
             <TabsTrigger value="services">სერვისები</TabsTrigger>
-            <TabsTrigger value="properties">განცხადების მიმაგრება</TabsTrigger>
           </TabsList>
 
           {/* Basic Information Tab */}
@@ -796,134 +845,6 @@ export const AddProject: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* Properties Tab */}
-          <TabsContent value="properties" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5" />
-                  განცხადების მიმაგრება პროექტზე
-                </CardTitle>
-                <CardDescription>
-                  აირჩიეთ თქვენი არსებული განცხადებები რომლებიც გსურთ ამ პროექტთან დაკავშირება
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {propertiesLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <span className="ml-2">განცხადებების ჩატვირთვა...</span>
-                  </div>
-                ) : userProperties.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>თქვენ არ გაქვთ არსებული განცხადებები რომლებიც შეიძლება მიამაგროთ</p>
-                    <p className="text-sm mt-2">ჯერ შექმენით განცხადება, შემდეგ მოახერხებთ მის მიმაგრებას პროექტზე</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-sm text-gray-600 mb-4">
-                      {selectedProperties.length > 0 
-                        ? `${selectedProperties.length} განცხადება არჩეულია მიმაგრებისთვის`
-                        : 'აირჩიეთ განცხადებები რომლებიც გსურთ პროექტთან მიამაგროთ'
-                      }
-                    </div>
-                    
-                    <div className="grid grid-cols-1 gap-4 max-h-96 overflow-y-auto">
-                      {userProperties.map((property) => (
-                        <div 
-                          key={property.id} 
-                          className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
-                            selectedProperties.includes(property.id) 
-                              ? 'border-primary bg-primary/5 ring-2 ring-primary/20' 
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                          onClick={() => handlePropertySelection(property.id, !selectedProperties.includes(property.id))}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Checkbox
-                                  checked={selectedProperties.includes(property.id)}
-                                  onCheckedChange={() => handlePropertySelection(property.id, !selectedProperties.includes(property.id))}
-                                  className="pointer-events-none"
-                                />
-                                <h4 className="font-semibold text-sm line-clamp-2">{property.title}</h4>
-                              </div>
-                              
-                              <div className="space-y-2 text-sm text-gray-600">
-                                <div className="flex items-center gap-2">
-                                  <MapPin className="h-4 w-4" />
-                                  <span>
-                                    {property.cityData?.nameGeorgian || property.city}
-                                    {property.areaData && `, ${property.areaData.nameKa}`}
-                                    , {property.street}
-                                    {property.streetNumber && ` ${property.streetNumber}`}
-                                  </span>
-                                </div>
-                                
-                                <div className="flex items-center gap-4">
-                                  <div className="flex items-center gap-1">
-                                    <Square className="h-4 w-4" />
-                                    <span>{property.area} მ²</span>
-                                  </div>
-                                  {property.rooms && (
-                                    <div className="flex items-center gap-1">
-                                      <Bed className="h-4 w-4" />
-                                      <span>{property.rooms} ოთახი</span>
-                                    </div>
-                                  )}
-                                  <div className="flex items-center gap-1">
-                                    <DollarSign className="h-4 w-4" />
-                                    <span>
-                                      {new Intl.NumberFormat('ka-GE', {
-                                        style: 'currency',
-                                        currency: 'GEL',
-                                        minimumFractionDigits: 0
-                                      }).format(property.totalPrice)}
-                                    </span>
-                                  </div>
-                                </div>
-                                
-                                <div className="flex items-center justify-between">
-                                  <div className="flex gap-2">
-                                    <Badge variant="outline" className="text-xs">
-                                      {property.propertyType === 'apartment' ? 'ბინა' :
-                                       property.propertyType === 'house' ? 'სახლი' :
-                                       property.propertyType === 'commercial' ? 'კომერციული' :
-                                       property.propertyType}
-                                    </Badge>
-                                    <Badge variant="secondary" className="text-xs">
-                                      {property.dealType === 'sale' ? 'იყიდება' :
-                                       property.dealType === 'rent' ? 'ქირავდება' :
-                                       property.dealType === 'daily' ? 'დღიური' :
-                                       property.dealType}
-                                    </Badge>
-                                  </div>
-                                  <span className="text-xs text-gray-400">
-                                    {new Date(property.createdAt).toLocaleDateString('ka-GE')}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {selectedProperties.length > 0 && (
-                      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-800">
-                          <strong>{selectedProperties.length}</strong> განცხადება მიმაგრდება ამ პროექტზე პროექტის შექმნის შემდეგ
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
         </Tabs>
 
         <div className="flex justify-end space-x-4 pt-6">
@@ -935,7 +856,7 @@ export const AddProject: React.FC = () => {
             გაუქმება
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "შენახვა..." : "პროექტის შენახვა"}
+            {isLoading ? "შენახვა..." : "ცვლილებების შენახვა"}
           </Button>
         </div>
       </form>

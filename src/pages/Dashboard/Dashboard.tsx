@@ -45,19 +45,19 @@ const DashboardContent = () => {
   console.log("Dashboard rendering, location:", location.pathname);
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* ძირითადი ჰედერი */}
       <Header />
 
       {/* მთავარი კონტენტი */}
-      <div className="flex-1 container mx-auto flex mt-6 min-h-0 pt-32">
+      <div className="flex-1 container mx-auto flex pt-32 pb-6 px-4">
         {/* მენიუ სიდებარი - ფიქსირებული */}
         <div className="flex-shrink-0">
           <Sidebar user={user} />
         </div>
 
         {/* კონტენტის ნაწილი */}
-        <div className="flex-1 bg-white rounded-lg border overflow-y-auto p-6">
+        <div className="flex-1 bg-white rounded-lg border p-6 min-h-0">
           <Outlet />
         </div>
       </div>
