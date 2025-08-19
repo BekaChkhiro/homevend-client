@@ -377,5 +377,40 @@ export const agencyApi = {
   }
 };
 
+// Project API
+export const projectApi = {
+  getProjects: async (params?: { 
+    page?: number; 
+    limit?: number; 
+    city?: string; 
+    area?: string; 
+    projectType?: string; 
+    deliveryStatus?: string 
+  }) => {
+    const response = await publicApiClient.get('/projects', { params });
+    return response.data.data;
+  },
+  
+  getProjectById: async (id: string) => {
+    const response = await publicApiClient.get(`/projects/${id}`);
+    return response.data.data;
+  },
+  
+  createProject: async (projectData: any) => {
+    const response = await apiClient.post('/projects', projectData);
+    return response.data.data;
+  },
+  
+  updateProject: async (id: string, projectData: any) => {
+    const response = await apiClient.put(`/projects/${id}`, projectData);
+    return response.data.data;
+  },
+  
+  deleteProject: async (id: string) => {
+    const response = await apiClient.delete(`/projects/${id}`);
+    return response.data;
+  }
+};
+
 export default apiClient;
 export { publicApiClient };
