@@ -1,43 +1,48 @@
-import { Search, MapPin, Home, CreditCard, Building2, Warehouse, TreePine, Factory, Hotel, Coins, X, SlidersHorizontal, Filter, Car, Thermometer, Droplets, Loader2 } from "lucide-react";
+import { Search, MapPin, Home, CreditCard, Building2, Warehouse, TreePine, Factory, Hotel, Coins, X, SlidersHorizontal, Filter, Car, Thermometer, Droplets, Loader2, Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { transactionTypes, propertyTypes } from "@/pages/Home/components/FilterTypes";
 import { AdvancedFiltersModal } from "@/components/AdvancedFiltersModal";
 import { LocationFilter } from "@/components/LocationFilter";
 import { ActiveFilters } from "@/components/ActiveFilters";
+import { citiesApi, areasApi } from "@/lib/api";
+import { cn } from "@/lib/utils";
 
-const cities = [
-  { value: "all", label: "ქალაქი" },
-  { value: "თბილისი", label: "თბილისი" },
-  { value: "ბათუმი", label: "ბათუმი" },
-  { value: "ქუთაისი", label: "ქუთაისი" },
-  { value: "რუსთავი", label: "რუსთავი" },
-  { value: "ზუგდიდი", label: "ზუგდიდი" },
-  { value: "თელავი", label: "თელავი" },
-  { value: "გორი", label: "გორი" },
-  { value: "ბაკურიანი", label: "ბაკურიანი" },
-  { value: "ბორჯომი", label: "ბორჯომი" },
-  { value: "გუდაური", label: "გუდაური" },
-];
+interface City {
+  id: number;
+  code: string;
+  nameGeorgian: string;
+  nameEnglish?: string;
+}
+
+interface Area {
+  id: number;
+  nameKa: string;
+  nameEn: string;
+  cityId: number;
+}
 
 
 interface PropertySearchFilters {
   search: string;
   transactionType: string;
-  propertyType: string;
+  propertyType: string | string[];
   city: string;
   priceMin: string;
   priceMax: string;
   areaMin: string;
   areaMax: string;
-  bedrooms: string;
-  bathrooms: string;
+  bedrooms: string | string[];
+  bathrooms: string | string[];
   dailyRentalSubcategory: string;
   location: string;
   // Building Details
-  rooms: string;
+  rooms: string | string[];
   totalFloors: string;
   buildingStatus: string;
   constructionYearMin: string;
@@ -80,22 +85,38 @@ interface PropertySearchHeroProps {
   }) => React.ReactNode;
 }
 
-export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', initialFilters, isSearching = false, onRemoveFilter, onClearAllFilters, renderAdvancedFilters }: PropertySearchHeroProps) => {
+export interface PropertySearchHeroRef {
+  clearAllFilters: () => void;
+}
+
+export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySearchHeroProps>(({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', initialFilters, isSearching = false, onRemoveFilter, onClearAllFilters, renderAdvancedFilters }, ref) => {
+  // API data state
+  const [cities, setCities] = useState<City[]>([]);
+  const [areas, setAreas] = useState<Area[]>([]);
+  const [selectedCityId, setSelectedCityId] = useState<number | null>(null);
+  const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
+  const [isLoadingCities, setIsLoadingCities] = useState(true);
+  const [isLoadingAreas, setIsLoadingAreas] = useState(false);
+  const [cityPopoverOpen, setCityPopoverOpen] = useState(false);
+  const [areaPopoverOpen, setAreaPopoverOpen] = useState(false);
+  const [transactionTypePopoverOpen, setTransactionTypePopoverOpen] = useState(false);
+  const [propertyTypePopoverOpen, setPropertyTypePopoverOpen] = useState(false);
+
   const getDefaultFilters = (): PropertySearchFilters => ({
     search: "",
     transactionType: "all",
-    propertyType: "all",
+    propertyType: [],
     city: "all",
     priceMin: "",
     priceMax: "",
     areaMin: "",
     areaMax: "",
-    bedrooms: "all",
-    bathrooms: "all",
+    bedrooms: [],
+    bathrooms: [],
     dailyRentalSubcategory: "all",
     location: "",
     // Building Details
-    rooms: "all",
+    rooms: [],
     totalFloors: "all",
     buildingStatus: "all",
     constructionYearMin: "",
@@ -129,6 +150,45 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
   
   const [showAdditionalFilters, setShowAdditionalFilters] = useState(false);
 
+  // Load cities on component mount
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        setIsLoadingCities(true);
+        const citiesData = await citiesApi.getAllCities(true);
+        setCities(citiesData || []);
+      } catch (error) {
+        console.error('Failed to load cities:', error);
+        setCities([]);
+      } finally {
+        setIsLoadingCities(false);
+      }
+    };
+    loadCities();
+  }, []);
+
+  // Load areas when city is selected
+  useEffect(() => {
+    const loadAreas = async () => {
+      if (!selectedCityId) {
+        setAreas([]);
+        return;
+      }
+      
+      try {
+        setIsLoadingAreas(true);
+        const areasData = await areasApi.getAreasByCity(selectedCityId);
+        setAreas(areasData || []);
+      } catch (error) {
+        console.error('Failed to load areas:', error);
+        setAreas([]);
+      } finally {
+        setIsLoadingAreas(false);
+      }
+    };
+    loadAreas();
+  }, [selectedCityId]);
+
   // Update filters when initialFilters prop changes
   useEffect(() => {
     if (initialFilters) {
@@ -139,12 +199,17 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
     }
   }, [initialFilters]);
 
+  // Expose clearAllFilters function to parent via ref
+  useImperativeHandle(ref, () => ({
+    clearAllFilters
+  }));
+
   const handleSearch = () => {
     console.log('🔍 PropertySearchHero handleSearch called');
     console.log('🔍 Current filters:', filters);
     
-    // Combine city selection with search input (district/street)
-    const searchLocation = buildSearchLocation(filters.city, filters.search);
+    // Build location from selected city and area
+    const searchLocation = buildLocationString();
     
     const searchFilters = {
       ...filters,
@@ -156,28 +221,59 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
     setShowAdditionalFilters(false);
   };
 
-  // Helper function to build location string from city selection and search input
-  const buildSearchLocation = (cityValue: string, searchText: string) => {
-    const cityName = cityValue !== 'all' ? cities.find(c => c.value === cityValue)?.label : '';
-    const searchPart = searchText?.trim() || '';
+  // Helper function to build location string from city and area selection
+  const buildLocationString = () => {
+    const cityName = selectedCityId ? cities.find(c => c.id === selectedCityId)?.nameGeorgian : '';
+    const areaName = selectedAreaId ? areas.find(a => a.id === selectedAreaId)?.nameKa : '';
     
-    // If only city is selected, return city
-    if (cityName && !searchPart) {
-      return cityName;
+    const locationParts = [cityName, areaName].filter(Boolean);
+    return locationParts.join(', ');
+  };
+
+  // Handle city selection
+  const handleCityChange = (value: string) => {
+    console.log('🆗 City changed to:', value);
+    const numericCityId = value === 'all' ? null : parseInt(value);
+    setSelectedCityId(numericCityId);
+    setSelectedAreaId(null); // Reset area selection
+    setCityPopoverOpen(false); // Close popover
+    
+    // Update filters
+    const cityName = numericCityId ? cities.find(c => c.id === numericCityId)?.nameGeorgian || value : 'all';
+    setFilters({...filters, city: cityName, search: ''});
+  };
+
+  // Handle area selection
+  const handleAreaChange = (value: string) => {
+    console.log('🆗 Area changed to:', value);
+    const numericAreaId = value === 'all' ? null : parseInt(value);
+    setSelectedAreaId(numericAreaId);
+    setAreaPopoverOpen(false); // Close popover
+  };
+
+  // Handle transaction type selection
+  const handleTransactionTypeChange = (value: string) => {
+    console.log('🆗 Transaction type changed to:', value);
+    setFilters({...filters, transactionType: value});
+    setTransactionTypePopoverOpen(false);
+  };
+
+  // Handle property type selection  
+  const handlePropertyTypeChange = (value: string) => {
+    console.log('🆗 Property type changed to:', value);
+    const currentPropertyTypes = Array.isArray(filters.propertyType) ? filters.propertyType : [];
+    
+    let newPropertyTypes;
+    if (currentPropertyTypes.includes(value)) {
+      // Remove if already selected
+      newPropertyTypes = currentPropertyTypes.filter(type => type !== value);
+    } else {
+      // Add if not selected
+      newPropertyTypes = [...currentPropertyTypes, value];
     }
     
-    // If only search text is entered, return search text
-    if (!cityName && searchPart) {
-      return searchPart;
-    }
-    
-    // If both city and search text, combine them
-    if (cityName && searchPart) {
-      return `${cityName}, ${searchPart}`;
-    }
-    
-    // If neither, return empty
-    return '';
+    setFilters({...filters, propertyType: newPropertyTypes});
+    // Don't close popover to allow multiple selections
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -190,18 +286,18 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
     const clearedFilters = {
       search: "",
       transactionType: "all",
-      propertyType: "all",
+      propertyType: [],
       city: "all",
       priceMin: "",
       priceMax: "",
       areaMin: "",
       areaMax: "",
-      bedrooms: "all",
-      bathrooms: "all",
+      bedrooms: [],
+      bathrooms: [],
       dailyRentalSubcategory: "all",
       location: "",
       // Building Details
-      rooms: "all",
+      rooms: [],
       totalFloors: "all",
       buildingStatus: "all",
       constructionYearMin: "",
@@ -227,6 +323,18 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
       selectedAdvantages: [],
       selectedFurnitureAppliances: []
     };
+    
+    // Clear city and area selections
+    setSelectedCityId(null);
+    setSelectedAreaId(null);
+    setAreas([]); // Clear areas list
+    
+    // Close any open popovers
+    setCityPopoverOpen(false);
+    setAreaPopoverOpen(false);
+    setTransactionTypePopoverOpen(false);
+    setPropertyTypePopoverOpen(false);
+    
     setFilters(clearedFilters);
     // Apply cleared filters immediately
     onSearch(clearedFilters);
@@ -234,16 +342,16 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
 
   const hasActiveFilters = filters.search !== "" || 
     filters.transactionType !== "all" || 
-    filters.propertyType !== "all" || 
+    (Array.isArray(filters.propertyType) ? filters.propertyType.length > 0 : filters.propertyType !== "all") || 
     filters.city !== "all" ||
     filters.priceMin !== "" ||
     filters.priceMax !== "" ||
     filters.areaMin !== "" ||
     filters.areaMax !== "" ||
-    filters.bedrooms !== "all" ||
-    filters.bathrooms !== "all" ||
+    (Array.isArray(filters.bedrooms) ? filters.bedrooms.length > 0 : filters.bedrooms !== "all") ||
+    (Array.isArray(filters.bathrooms) ? filters.bathrooms.length > 0 : filters.bathrooms !== "all") ||
     filters.location !== "" ||
-    filters.rooms !== "all" ||
+    (Array.isArray(filters.rooms) ? filters.rooms.length > 0 : filters.rooms !== "all") ||
     filters.totalFloors !== "all" ||
     filters.buildingStatus !== "all" ||
     filters.constructionYearMin !== "" ||
@@ -294,41 +402,78 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                   გარიგების ტიპი
                 </label>
               </div>
-              <Select 
-                value={filters.transactionType} 
-                onValueChange={(value) => {
-                  console.log('🆗 Transaction type changed to:', value);
-                  setFilters({...filters, transactionType: value});
-                  // Don't trigger search automatically - wait for Search button
-                }}
-              >
-                <SelectTrigger className="h-12 text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors">
-                  <SelectValue placeholder="აირჩიეთ ტიპი" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  {transactionTypes.map((type) => {
-                    const getIcon = (value: string) => {
-                      switch(value) {
-                        case 'sale': return <Coins className="h-4 w-4 text-primary" />;
-                        case 'rent': return <Home className="h-4 w-4 text-primary" />;
-                        case 'mortgage': return <CreditCard className="h-4 w-4 text-primary" />;
-                        case 'lease': return <Building2 className="h-4 w-4 text-primary" />;
-                        case 'daily': return <Hotel className="h-4 w-4 text-primary" />;
-                        case 'rent-to-buy': return <CreditCard className="h-4 w-4 text-primary" />;
-                        default: return <CreditCard className="h-4 w-4 text-primary" />;
-                      }
-                    };
-                    return (
-                      <SelectItem key={type.value} value={type.value} className="text-base py-3">
-                        <div className="flex items-center gap-3">
-                          {getIcon(type.value)}
-                          <span>{type.label}</span>
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
+              <Popover open={transactionTypePopoverOpen} onOpenChange={setTransactionTypePopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={transactionTypePopoverOpen}
+                    className="h-12 w-full justify-between text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                  >
+                    {filters.transactionType && filters.transactionType !== 'all' ? (
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const getIcon = (value: string) => {
+                            switch(value) {
+                              case 'sale': return <Coins className="h-4 w-4 text-primary" />;
+                              case 'rent': return <Home className="h-4 w-4 text-primary" />;
+                              case 'mortgage': return <CreditCard className="h-4 w-4 text-primary" />;
+                              case 'lease': return <Building2 className="h-4 w-4 text-primary" />;
+                              case 'daily': return <Hotel className="h-4 w-4 text-primary" />;
+                              case 'rent-to-buy': return <CreditCard className="h-4 w-4 text-primary" />;
+                              default: return <CreditCard className="h-4 w-4 text-primary" />;
+                            }
+                          };
+                          return getIcon(filters.transactionType);
+                        })()}
+                        {transactionTypes.find((type) => type.value === filters.transactionType)?.label}
+                      </div>
+                    ) : (
+                      "აირჩიეთ ტიპი"
+                    )}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="მოძებნეთ გარიგების ტიპი..." />
+                    <CommandList>
+                      <CommandEmpty>გარიგების ტიპი ვერ მოიძებნა</CommandEmpty>
+                      <CommandGroup>
+                        {transactionTypes.map((type) => {
+                          const getIcon = (value: string) => {
+                            switch(value) {
+                              case 'sale': return <Coins className="h-4 w-4 text-primary" />;
+                              case 'rent': return <Home className="h-4 w-4 text-primary" />;
+                              case 'mortgage': return <CreditCard className="h-4 w-4 text-primary" />;
+                              case 'lease': return <Building2 className="h-4 w-4 text-primary" />;
+                              case 'daily': return <Hotel className="h-4 w-4 text-primary" />;
+                              case 'rent-to-buy': return <CreditCard className="h-4 w-4 text-primary" />;
+                              default: return <CreditCard className="h-4 w-4 text-primary" />;
+                            }
+                          };
+                          return (
+                            <CommandItem
+                              key={type.value}
+                              value={type.label}
+                              onSelect={() => handleTransactionTypeChange(type.value)}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  filters.transactionType === type.value ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {getIcon(type.value)}
+                              <span className="ml-2">{type.label}</span>
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
             {/* Property Type */}
@@ -339,87 +484,215 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                   ქონების ტიპი
                 </label>
               </div>
-              <Select 
-                value={filters.propertyType} 
-                onValueChange={(value) => {
-                  console.log('🆗 Property type changed to:', value);
-                  setFilters({...filters, propertyType: value});
-                  // Don't trigger search automatically - wait for Search button
-                }}
-              >
-                <SelectTrigger className="h-12 text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors">
-                  <SelectValue placeholder="აირჩიეთ ტიპი" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  {propertyTypes.map((type) => {
-                    const getIcon = (value: string) => {
-                      switch(value) {
-                        case 'apartment': return <Building2 className="h-4 w-4 text-primary" />;
-                        case 'house': return <Home className="h-4 w-4 text-primary" />;
-                        case 'cottage': return <TreePine className="h-4 w-4 text-primary" />;
-                        case 'land': return <MapPin className="h-4 w-4 text-primary" />;
-                        case 'commercial': return <Factory className="h-4 w-4 text-primary" />;
-                        case 'office': return <Building2 className="h-4 w-4 text-primary" />;
-                        case 'hotel': return <Hotel className="h-4 w-4 text-primary" />;
-                        default: return <Home className="h-4 w-4 text-primary" />;
-                      }
-                    };
-                    return (
-                      <SelectItem key={type.value} value={type.value} className="text-base py-3">
-                        <div className="flex items-center gap-3">
-                          {getIcon(type.value)}
-                          <span>{type.label}</span>
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
+              <Popover open={propertyTypePopoverOpen} onOpenChange={setPropertyTypePopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={propertyTypePopoverOpen}
+                    className="h-12 w-full justify-between text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                  >
+                    {Array.isArray(filters.propertyType) && filters.propertyType.length > 0 ? (
+                      <div className="flex items-center gap-2">
+                        <Home className="h-4 w-4 text-primary" />
+                        {filters.propertyType.length === 1 
+                          ? propertyTypes.find((type) => type.value === filters.propertyType[0])?.label 
+                          : `${filters.propertyType.length} არჩეული`
+                        }
+                      </div>
+                    ) : (
+                      "აირჩიეთ ტიპი"
+                    )}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="მოძებნეთ ქონების ტიპი..." />
+                    <CommandList>
+                      <CommandEmpty>ქონების ტიპი ვერ მოიძებნა</CommandEmpty>
+                      <CommandGroup>
+                        {propertyTypes.map((type) => {
+                          const getIcon = (value: string) => {
+                            switch(value) {
+                              case 'apartment': return <Building2 className="h-4 w-4 text-primary" />;
+                              case 'house': return <Home className="h-4 w-4 text-primary" />;
+                              case 'cottage': return <TreePine className="h-4 w-4 text-primary" />;
+                              case 'land': return <MapPin className="h-4 w-4 text-primary" />;
+                              case 'commercial': return <Factory className="h-4 w-4 text-primary" />;
+                              case 'office': return <Building2 className="h-4 w-4 text-primary" />;
+                              case 'hotel': return <Hotel className="h-4 w-4 text-primary" />;
+                              default: return <Home className="h-4 w-4 text-primary" />;
+                            }
+                          };
+                          const isSelected = Array.isArray(filters.propertyType) 
+                            ? filters.propertyType.includes(type.value) 
+                            : filters.propertyType === type.value;
+                          
+                          return (
+                            <CommandItem
+                              key={type.value}
+                              value={type.label}
+                              onSelect={() => handlePropertyTypeChange(type.value)}
+                            >
+                              <Checkbox
+                                checked={isSelected}
+                                className="mr-2"
+                              />
+                              {getIcon(type.value)}
+                              <span className="ml-2">{type.label}</span>
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
-            {/* Search Input with Integrated City Selection */}
-            <div className="w-4/12 flex flex-col gap-2">
+            {/* Location Selection - City and District */}
+            <div className="w-5/12 flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
                 <label className="text-xs font-semibold text-slate-700">
-                  მისამართი
+                  მდებარეობა
                 </label>
               </div>
-              <div className="relative">
-                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500" />
-                <Input
-                  type="text"
-                  placeholder="უბანი, ქუჩა, ნომერი..."
-                  value={filters.search}
-                  onChange={(e) => setFilters({...filters, search: e.target.value})}
-                  onKeyPress={handleKeyPress}
-                  className="h-12 text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl pl-11 pr-32 transition-colors"
-                />
-
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                  <Select 
-                    value={filters.city} 
-                    onValueChange={(value) => {
-                      console.log('🆗 City changed to:', value);
-                      setFilters({...filters, city: value});
-                      // Don't trigger search automatically - wait for Search button
-                    }}
-                  >
-                    <SelectTrigger className="h-9 w-36 text-sm border border-slate-300 hover:border-primary/50 focus:border-primary rounded-lg transition-colors bg-white/90 backdrop-blur-sm">
-                      <SelectValue placeholder="ქალაქი" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl max-h-60 w-48">
-                      {cities.map((city) => (
-                        <SelectItem key={city.value} value={city.value} className="text-sm py-2">
+              <div className="flex gap-2">
+                {/* City Selection */}
+                <div className="flex-1">
+                  <Popover open={cityPopoverOpen} onOpenChange={setCityPopoverOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={cityPopoverOpen}
+                        className="h-12 w-full justify-between text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                        disabled={isLoadingCities}
+                      >
+                        {isLoadingCities ? (
+                          "იტვირთება..."
+                        ) : selectedCityId ? (
                           <div className="flex items-center gap-2">
                             <MapPin className="h-3 w-3 text-primary" />
-                            <span>{city.label}</span>
+                            {cities.find((city) => city.id === selectedCityId)?.nameGeorgian}
                           </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        ) : (
+                          "ქალაქი"
+                        )}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="მოძებნეთ ქალაქი..." />
+                        <CommandList>
+                          <CommandEmpty>ქალაქი ვერ მოიძებნა</CommandEmpty>
+                          <CommandGroup>
+                            <CommandItem
+                              key="all"
+                              value="all-cities"
+                              onSelect={() => handleCityChange('all')}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedCityId === null ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              ყველა ქალაქი
+                            </CommandItem>
+                            {cities.map((city) => (
+                              <CommandItem
+                                key={city.id}
+                                value={city.nameGeorgian}
+                                onSelect={() => handleCityChange(city.id.toString())}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedCityId === city.id ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                <MapPin className="mr-2 h-3 w-3 text-primary" />
+                                {city.nameGeorgian}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
+
+                {/* Area/District Selection - Only show when city is selected AND has areas */}
+                {selectedCityId && areas.length > 0 && (
+                  <div className="flex-1">
+                    <Popover open={areaPopoverOpen} onOpenChange={setAreaPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={areaPopoverOpen}
+                          className="h-12 w-full justify-between text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                          disabled={isLoadingAreas}
+                        >
+                          {isLoadingAreas ? (
+                            "იტვირთება..."
+                          ) : selectedAreaId ? (
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-3 w-3 text-primary" />
+                              {areas.find((area) => area.id === selectedAreaId)?.nameKa}
+                            </div>
+                          ) : (
+                            "უბანი"
+                          )}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="მოძებნეთ უბანი..." />
+                          <CommandList>
+                            <CommandEmpty>უბანი ვერ მოიძებნა</CommandEmpty>
+                            <CommandGroup>
+                              <CommandItem
+                                key="all"
+                                value="all-areas"
+                                onSelect={() => handleAreaChange('all')}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedAreaId === null ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                ყველა უბანი
+                              </CommandItem>
+                              {areas.map((area) => (
+                                <CommandItem
+                                  key={area.id}
+                                  value={area.nameKa}
+                                  onSelect={() => handleAreaChange(area.id.toString())}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      selectedAreaId === area.id ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  <MapPin className="mr-2 h-3 w-3 text-primary" />
+                                  {area.nameKa}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -458,11 +731,13 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                 selectedFurnitureAppliances: filters.selectedFurnitureAppliances
               }}
               onApplyFilters={(advancedFilters) => {
+                console.log('🎯 PropertySearchHero: onApplyFilters called', { advancedFilters, currentFilters: filters });
                 const updatedFilters = { ...filters, ...advancedFilters };
+                console.log('📋 PropertySearchHero: updatedFilters', updatedFilters);
                 setFilters(updatedFilters);
                 // Apply advanced filters immediately when Apply button is clicked
-                const searchLocation = buildSearchLocation(updatedFilters.city, updatedFilters.search);
-                onSearch({...updatedFilters, location: searchLocation});
+                console.log('🔍 PropertySearchHero: calling onSearch with', updatedFilters);
+                onSearch(updatedFilters);
               }}
               onClearFilters={clearAllFilters}
               totalProperties={totalProperties}
@@ -471,13 +746,13 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
             />
 
             {/* Search and Clear Buttons */}
-            <div className="w-3/12 flex flex-col justify-end">
+            <div className={`${selectedCityId && areas.length > 0 ? 'w-2/12' : 'w-3/12'} flex flex-col justify-end`}>
               {hasActiveFilters ? (
-                <div className="grid grid-cols-10 gap-2">
+                <div className="w-full">
                   <Button 
                     onClick={handleSearch}
                     size="lg" 
-                    className={`${buttonClasses} col-span-7`}
+                    className={`${buttonClasses} w-full`}
                     disabled={isSearching}
                   >
                     {isSearching ? (
@@ -491,16 +766,6 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
                         ძიება
                       </>
                     )}
-                  </Button>
-                  
-                  <Button 
-                    onClick={clearAllFilters}
-                    variant="outline" 
-                    size="lg"
-                    className="h-12 col-span-3 flex items-center justify-center border border-slate-300 hover:bg-slate-100 rounded-xl transition-all duration-300"
-                    aria-label="გასუფთავება"
-                  >
-                    <X className="h-6 w-6 text-red-500" />
                   </Button>
                 </div>
               ) : (
@@ -538,4 +803,4 @@ export const PropertySearchHero = ({ onSearch, totalProperties = 0, filteredCoun
       </div>
     </section>
   );
-};
+});

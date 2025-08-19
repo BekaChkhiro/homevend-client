@@ -3,9 +3,9 @@ export interface FilterState {
   priceMin: string;
   priceMax: string;
   location: string;
-  propertyType: string;
+  propertyType: string | string[];
   transactionType: string;
-  bedrooms: string;
+  bedrooms: string | string[];
   areaMin: string;
   areaMax: string;
 }

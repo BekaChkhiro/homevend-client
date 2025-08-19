@@ -210,15 +210,15 @@ export interface FilterState {
   priceMax: string;
   location: string;
   city?: string;
-  propertyType: string;
+  propertyType: string | string[];
   transactionType: string;
   dailyRentalSubcategory?: string;
-  bedrooms: string;
-  bathrooms?: string;
+  bedrooms: string | string[];
+  bathrooms?: string | string[];
   areaMin: string;
   areaMax: string;
   // Extended fields for comprehensive filtering
-  rooms?: string;
+  rooms?: string | string[];
   totalFloors?: string;
   buildingStatus?: string;
   constructionYearMin?: string;

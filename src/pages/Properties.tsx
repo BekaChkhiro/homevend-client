@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyCardSkeleton } from "@/components/PropertyCardSkeleton";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdBanner } from "@/components/AdBanner";
-import { PropertySearchHero } from "@/components/PropertySearchHero";
+import { PropertySearchHero, PropertySearchHeroRef } from "@/components/PropertySearchHero";
 import type { Property, FilterState } from "@/pages/Index";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,6 +32,8 @@ import {
 
 
 const Properties = () => {
+  const searchHeroRef = useRef<PropertySearchHeroRef>(null);
+  
   // Mapping function to convert database enum values to Georgian display values
   const mapDealTypeToGeorgian = (dealType: string): string => {
     const mapping: { [key: string]: string } = {
@@ -72,14 +74,14 @@ const Properties = () => {
     priceMax: "",
     location: "",
     city: "all",
-    propertyType: "all",
+    propertyType: [],
     transactionType: "all",
-    bedrooms: "all",
-    bathrooms: "all",
+    bedrooms: [],
+    bathrooms: [],
     areaMin: "",
     areaMax: "",
     // Extended fields
-    rooms: "all",
+    rooms: [],
     totalFloors: "all",
     buildingStatus: "all",
     constructionYearMin: "",
@@ -118,15 +120,31 @@ const Properties = () => {
       priceMax: searchParams.get('priceMax') || '',
       location: searchParams.get('location') || '',
       city: searchParams.get('city') || 'all',
-      propertyType: searchParams.get('propertyType') || 'all',
+      propertyType: (() => {
+        const propertyTypeParam = searchParams.get('propertyType');
+        if (!propertyTypeParam || propertyTypeParam === 'all') return [];
+        return propertyTypeParam.includes(',') ? propertyTypeParam.split(',') : [propertyTypeParam];
+      })(),
       transactionType: searchParams.get('transactionType') || 'all',
       dailyRentalSubcategory: searchParams.get('dailyRentalSubcategory') || 'all',
-      bedrooms: searchParams.get('bedrooms') || 'all',
-      bathrooms: searchParams.get('bathrooms') || 'all',
+      bedrooms: (() => {
+        const bedroomsParam = searchParams.get('bedrooms');
+        if (!bedroomsParam || bedroomsParam === 'all') return [];
+        return bedroomsParam.includes(',') ? bedroomsParam.split(',') : [bedroomsParam];
+      })(),
+      bathrooms: (() => {
+        const bathroomsParam = searchParams.get('bathrooms');
+        if (!bathroomsParam || bathroomsParam === 'all') return [];
+        return bathroomsParam.includes(',') ? bathroomsParam.split(',') : [bathroomsParam];
+      })(),
       areaMin: searchParams.get('areaMin') || '',
       areaMax: searchParams.get('areaMax') || '',
       // Extended fields
-      rooms: searchParams.get('rooms') || 'all',
+      rooms: (() => {
+        const roomsParam = searchParams.get('rooms');
+        if (!roomsParam || roomsParam === 'all') return [];
+        return roomsParam.includes(',') ? roomsParam.split(',') : [roomsParam];
+      })(),
       totalFloors: searchParams.get('totalFloors') || 'all',
       buildingStatus: searchParams.get('buildingStatus') || 'all',
       constructionYearMin: searchParams.get('constructionYearMin') || '',
@@ -167,16 +185,40 @@ const Properties = () => {
     if (newFilters.priceMax) searchParams.set('priceMax', newFilters.priceMax);
     if (newFilters.location) searchParams.set('location', newFilters.location);
     if (newFilters.city && newFilters.city !== 'all') searchParams.set('city', newFilters.city);
-    if (newFilters.propertyType && newFilters.propertyType !== 'all') searchParams.set('propertyType', newFilters.propertyType);
+    if (newFilters.propertyType) {
+      if (Array.isArray(newFilters.propertyType) && newFilters.propertyType.length > 0) {
+        searchParams.set('propertyType', newFilters.propertyType.join(','));
+      } else if (typeof newFilters.propertyType === 'string' && newFilters.propertyType !== 'all') {
+        searchParams.set('propertyType', newFilters.propertyType);
+      }
+    }
     if (newFilters.transactionType && newFilters.transactionType !== 'all') searchParams.set('transactionType', newFilters.transactionType);
     if (newFilters.dailyRentalSubcategory && newFilters.dailyRentalSubcategory !== 'all') searchParams.set('dailyRentalSubcategory', newFilters.dailyRentalSubcategory);
-    if (newFilters.bedrooms && newFilters.bedrooms !== 'all') searchParams.set('bedrooms', newFilters.bedrooms);
-    if (newFilters.bathrooms && newFilters.bathrooms !== 'all') searchParams.set('bathrooms', newFilters.bathrooms);
+    if (newFilters.bedrooms) {
+      if (Array.isArray(newFilters.bedrooms) && newFilters.bedrooms.length > 0) {
+        searchParams.set('bedrooms', newFilters.bedrooms.join(','));
+      } else if (typeof newFilters.bedrooms === 'string' && newFilters.bedrooms !== 'all') {
+        searchParams.set('bedrooms', newFilters.bedrooms);
+      }
+    }
+    if (newFilters.bathrooms) {
+      if (Array.isArray(newFilters.bathrooms) && newFilters.bathrooms.length > 0) {
+        searchParams.set('bathrooms', newFilters.bathrooms.join(','));
+      } else if (typeof newFilters.bathrooms === 'string' && newFilters.bathrooms !== 'all') {
+        searchParams.set('bathrooms', newFilters.bathrooms);
+      }
+    }
     if (newFilters.areaMin) searchParams.set('areaMin', newFilters.areaMin);
     if (newFilters.areaMax) searchParams.set('areaMax', newFilters.areaMax);
     
     // Extended fields
-    if (newFilters.rooms && newFilters.rooms !== 'all') searchParams.set('rooms', newFilters.rooms);
+    if (newFilters.rooms) {
+      if (Array.isArray(newFilters.rooms) && newFilters.rooms.length > 0) {
+        searchParams.set('rooms', newFilters.rooms.join(','));
+      } else if (typeof newFilters.rooms === 'string' && newFilters.rooms !== 'all') {
+        searchParams.set('rooms', newFilters.rooms);
+      }
+    }
     if (newFilters.totalFloors && newFilters.totalFloors !== 'all') searchParams.set('totalFloors', newFilters.totalFloors);
     if (newFilters.buildingStatus && newFilters.buildingStatus !== 'all') searchParams.set('buildingStatus', newFilters.buildingStatus);
     if (newFilters.constructionYearMin) searchParams.set('constructionYearMin', newFilters.constructionYearMin);
@@ -222,12 +264,12 @@ const Properties = () => {
     setCurrentPage(urlPage);
   }, [location.search]);
 
-  // Apply filters when properties are loaded
+  // Apply filters when properties are loaded or filters change
   useEffect(() => {
     if (properties.length > 0) {
       applyFiltersAndSort(filters, sortBy);
     }
-  }, [properties]); // Removed filters and sortBy to prevent duplicate calls
+  }, [properties, filters, sortBy]);
 
   // Fetch properties from API
   useEffect(() => {
@@ -377,13 +419,14 @@ const Properties = () => {
   };
 
   const handleFilterChange = (newFilters: FilterState) => {
-    console.log('🔄 handleFilterChange called with:', newFilters);
+    console.log('🔄 Properties: handleFilterChange called with:', newFilters);
     setIsFiltering(true);
     setFilters(newFilters);
     setCurrentPage(1); // Reset to first page when filters change
     updateURLFromFilters(newFilters, sortBy, 1);
     // Apply filters with a small delay to show loading state
     setTimeout(() => {
+      console.log('⚡ Properties: About to apply filters and sort');
       applyFiltersAndSort(newFilters, sortBy);
       // Simulate filtering delay for better UX
       setTimeout(() => {
@@ -431,10 +474,26 @@ const Properties = () => {
         );
       })();
 
-      // Property type filtering - handle both English and Georgian values
-      const matchesType = !currentFilters.propertyType || currentFilters.propertyType === "all" || 
-        property.type === currentFilters.propertyType || 
-        property.type === mapPropertyTypeToGeorgian(currentFilters.propertyType);
+      // Property type filtering - handle both arrays and strings
+      const matchesType = (() => {
+        if (!currentFilters.propertyType) return true;
+        
+        if (Array.isArray(currentFilters.propertyType)) {
+          // If array is empty, show all properties
+          if (currentFilters.propertyType.length === 0) return true;
+          
+          // Check if property type matches any of the selected types
+          return currentFilters.propertyType.some(selectedType => 
+            property.type === selectedType || 
+            property.type === mapPropertyTypeToGeorgian(selectedType)
+          );
+        } else {
+          // Handle legacy string format
+          return currentFilters.propertyType === "all" || 
+            property.type === currentFilters.propertyType || 
+            property.type === mapPropertyTypeToGeorgian(currentFilters.propertyType);
+        }
+      })();
         
       // Transaction type filtering - handle both English and Georgian values  
       const matchesTransaction = !currentFilters.transactionType || currentFilters.transactionType === "all" || 
@@ -454,13 +513,54 @@ const Properties = () => {
       const matchesAreaMin = !currentFilters.areaMin || property.area >= parseInt(currentFilters.areaMin);
       const matchesAreaMax = !currentFilters.areaMax || property.area <= parseInt(currentFilters.areaMax);
 
-      // Room count filters
-      const matchesBedrooms = !currentFilters.bedrooms || currentFilters.bedrooms === "all" || property.bedrooms === parseInt(currentFilters.bedrooms);
-      const matchesBathrooms = !currentFilters.bathrooms || currentFilters.bathrooms === "all" || property.bathrooms === parseInt(currentFilters.bathrooms);
+      // Room count filters - handle both arrays and strings
+      const matchesBedrooms = (() => {
+        if (!currentFilters.bedrooms) return true;
+        
+        if (Array.isArray(currentFilters.bedrooms)) {
+          if (currentFilters.bedrooms.length === 0) return true;
+          return currentFilters.bedrooms.some(bedroom => {
+            if (bedroom === '10+') return property.bedrooms >= 10;
+            return property.bedrooms === parseInt(bedroom);
+          });
+        } else {
+          return currentFilters.bedrooms === "all" || property.bedrooms === parseInt(currentFilters.bedrooms);
+        }
+      })();
+
+      const matchesBathrooms = (() => {
+        if (!currentFilters.bathrooms) return true;
+        
+        if (Array.isArray(currentFilters.bathrooms)) {
+          if (currentFilters.bathrooms.length === 0) return true;
+          return currentFilters.bathrooms.some(bathroom => {
+            if (bathroom === '3+') return property.bathrooms >= 3;
+            if (bathroom === 'shared') return property.bathrooms === 0; // Assuming 0 means shared
+            return property.bathrooms === parseInt(bathroom);
+          });
+        } else {
+          return currentFilters.bathrooms === "all" || property.bathrooms === parseInt(currentFilters.bathrooms);
+        }
+      })();
       
       // Rooms filter (check both rooms field and bedrooms as fallback)
-      const matchesRooms = !currentFilters.rooms || currentFilters.rooms === "all" || 
-        (property.rooms ? property.rooms === currentFilters.rooms : property.bedrooms === parseInt(currentFilters.rooms));
+      const matchesRooms = (() => {
+        if (!currentFilters.rooms) return true;
+        
+        if (Array.isArray(currentFilters.rooms)) {
+          if (currentFilters.rooms.length === 0) return true;
+          return currentFilters.rooms.some(room => {
+            if (room === '10+') {
+              return property.rooms ? property.rooms >= 10 : property.bedrooms >= 10;
+            }
+            const roomCount = parseInt(room);
+            return property.rooms ? property.rooms === roomCount : property.bedrooms === roomCount;
+          });
+        } else {
+          return currentFilters.rooms === "all" || 
+            (property.rooms ? property.rooms === parseInt(currentFilters.rooms) : property.bedrooms === parseInt(currentFilters.rooms));
+        }
+      })();
 
       // Building details filters (with defensive checks)
       const matchesTotalFloors = !currentFilters.totalFloors || currentFilters.totalFloors === "all" || 
@@ -697,6 +797,7 @@ const Properties = () => {
 
         {/* Property Search Section */}
         <PropertySearchHero 
+          ref={searchHeroRef}
           totalProperties={totalProperties}
           filteredCount={filteredProperties.length}
           initialFilters={filters}
@@ -719,7 +820,7 @@ const Properties = () => {
                 newFilters.transactionType = 'all';
                 break;
               case 'propertyType':
-                newFilters.propertyType = 'all';
+                newFilters.propertyType = [];
                 break;
               case 'priceMin':
                 newFilters.priceMin = '';
@@ -734,13 +835,13 @@ const Properties = () => {
                 newFilters.areaMax = '';
                 break;
               case 'bedrooms':
-                newFilters.bedrooms = 'all';
+                newFilters.bedrooms = [];
                 break;
               case 'bathrooms':
-                newFilters.bathrooms = 'all';
+                newFilters.bathrooms = [];
                 break;
               case 'rooms':
-                newFilters.rooms = 'all';
+                newFilters.rooms = [];
                 break;
               case 'condition':
                 newFilters.condition = 'all';
@@ -773,49 +874,44 @@ const Properties = () => {
                 newFilters.selectedFurnitureAppliances = [];
                 break;
               default:
+                // Handle individual property type removal
+                if (filterKey.startsWith('propertyType-')) {
+                  const index = parseInt(filterKey.replace('propertyType-', ''));
+                  if (Array.isArray(newFilters.propertyType)) {
+                    newFilters.propertyType = newFilters.propertyType.filter((_, i) => i !== index);
+                  }
+                }
+                // Handle individual rooms removal
+                else if (filterKey.startsWith('rooms-')) {
+                  const index = parseInt(filterKey.replace('rooms-', ''));
+                  if (Array.isArray(newFilters.rooms)) {
+                    newFilters.rooms = newFilters.rooms.filter((_, i) => i !== index);
+                  }
+                }
+                // Handle individual bedrooms removal
+                else if (filterKey.startsWith('bedrooms-')) {
+                  const index = parseInt(filterKey.replace('bedrooms-', ''));
+                  if (Array.isArray(newFilters.bedrooms)) {
+                    newFilters.bedrooms = newFilters.bedrooms.filter((_, i) => i !== index);
+                  }
+                }
+                // Handle individual bathrooms removal
+                else if (filterKey.startsWith('bathrooms-')) {
+                  const index = parseInt(filterKey.replace('bathrooms-', ''));
+                  if (Array.isArray(newFilters.bathrooms)) {
+                    newFilters.bathrooms = newFilters.bathrooms.filter((_, i) => i !== index);
+                  }
+                }
                 break;
             }
             
             handleFilterChange(newFilters);
           }}
           onClearAllFilters={() => {
-            const clearedFilters = {
-              search: "",
-              priceMin: "",
-              priceMax: "",
-              location: "",
-              city: "all",
-              propertyType: "all",
-              transactionType: "all",
-              bedrooms: "all",
-              bathrooms: "all",
-              areaMin: "",
-              areaMax: "",
-              rooms: "all",
-              totalFloors: "all",
-              buildingStatus: "all",
-              constructionYearMin: "",
-              constructionYearMax: "",
-              condition: "all",
-              projectType: "all",
-              ceilingHeightMin: "",
-              ceilingHeightMax: "",
-              heating: "all",
-              parking: "all",
-              hotWater: "all",
-              buildingMaterial: "all",
-              hasBalcony: false,
-              hasPool: false,
-              hasLivingRoom: false,
-              hasLoggia: false,
-              hasVeranda: false,
-              hasYard: false,
-              hasStorage: false,
-              selectedFeatures: [],
-              selectedAdvantages: [],
-              selectedFurnitureAppliances: []
-            };
-            handleFilterChange(clearedFilters);
+            // Call PropertySearchHero's clear function to reset city/district selections
+            if (searchHeroRef.current) {
+              searchHeroRef.current.clearAllFilters();
+            }
           }}
           onSearch={(searchFilters) => handleFilterChange({
             ...filters,
@@ -954,14 +1050,14 @@ const Properties = () => {
                       priceMax: "",
                       location: "",
                       city: "all",
-                      propertyType: "all",
+                      propertyType: [],
                       transactionType: "all",
-                      bedrooms: "all",
-                      bathrooms: "all",
+                      bedrooms: [],
+                      bathrooms: [],
                       areaMin: "",
                       areaMax: "",
                       // Extended fields
-                      rooms: "all",
+                      rooms: [],
                       totalFloors: "all",
                       buildingStatus: "all",
                       constructionYearMin: "",
