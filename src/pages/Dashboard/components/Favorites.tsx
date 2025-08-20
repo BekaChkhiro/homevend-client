@@ -183,7 +183,7 @@ export const Favorites: React.FC = () => {
             </p>
             <Button 
               className="flex items-center mx-auto"
-              onClick={() => navigate('/listings')}
+              onClick={() => navigate('/properties')}
             >
               <Search className="h-4 w-4 mr-1" />
               განცხადებების ძებნა

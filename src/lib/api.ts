@@ -471,6 +471,68 @@ export const agencyApi = {
   }
 };
 
+// Balance API
+export const balanceApi = {
+  getBalance: async () => {
+    const response = await apiClient.get('/balance');
+    return response.data.data;
+  },
+  
+  topUp: async (amount: number, paymentMethod: string = 'test') => {
+    const response = await apiClient.post('/balance/top-up', {
+      amount,
+      paymentMethod
+    });
+    return response.data.data;
+  },
+  
+  getTransactionHistory: async (params?: { page?: number; limit?: number; type?: string; status?: string }) => {
+    const response = await apiClient.get('/balance/transactions', { params });
+    return response.data.data;
+  }
+};
+
+// VIP API
+export const vipApi = {
+  getPricing: async () => {
+    const response = await apiClient.get('/vip/pricing');
+    return response.data.data;
+  },
+  
+  purchaseVipStatus: async (propertyId: number, vipType: string, days: number) => {
+    const response = await apiClient.post('/vip/purchase', {
+      propertyId,
+      vipType,
+      days
+    });
+    return response.data.data;
+  },
+  
+  getPropertyVipStatus: async (propertyId: number) => {
+    const response = await apiClient.get(`/vip/property/${propertyId}`);
+    return response.data.data;
+  }
+};
+
+// Admin VIP API
+export const adminVipApi = {
+  getAllVipPricing: async () => {
+    const response = await apiClient.get('/admin/vip-pricing');
+    return response.data.data;
+  },
+  
+  updateVipPricing: async (id: number, data: {
+    pricePerDay?: number;
+    descriptionKa?: string;
+    descriptionEn?: string;
+    features?: string[];
+    isActive?: boolean;
+  }) => {
+    const response = await apiClient.put(`/admin/vip-pricing/${id}`, data);
+    return response.data.data;
+  }
+};
+
 // Project API
 export const projectApi = {
   getProjects: async (params?: { 

@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag, Crown } from "lucide-react";
 import { AdBanner } from "@/components/AdBanner";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
@@ -111,6 +111,10 @@ interface Property {
     email: string;
     role?: string;
   };
+  
+  // VIP status fields
+  vipStatus?: 'none' | 'vip' | 'vip_plus' | 'super_vip';
+  vipExpiresAt?: string;
 }
 
 // Translation functions moved outside component to prevent recreation on every render
@@ -461,7 +465,36 @@ const PropertyDetail = () => {
                         {property.dailyRentalSubcategory && (
                           <Badge variant="outline">{property.dailyRentalSubcategory}</Badge>
                         )}
-                        <Badge className="bg-primary text-primary-foreground">ტოპ ქონება</Badge>
+                        {(() => {
+                          // Check if property has active VIP status
+                          const isVipActive = property.vipStatus && property.vipStatus !== 'none' && 
+                            property.vipExpiresAt && new Date(property.vipExpiresAt) > new Date();
+                          
+                          if (!isVipActive) return null;
+                          
+                          const vipColors = {
+                            vip: 'bg-blue-100 text-blue-800 border-blue-300',
+                            vip_plus: 'bg-purple-100 text-purple-800 border-purple-300',
+                            super_vip: 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                          };
+                          
+                          const vipLabels = {
+                            vip: 'VIP',
+                            vip_plus: 'VIP+',
+                            super_vip: 'SUPER VIP'
+                          };
+                          
+                          const vipType = property.vipStatus!;
+                          const colorClass = vipColors[vipType as keyof typeof vipColors];
+                          const label = vipLabels[vipType as keyof typeof vipLabels];
+                          
+                          return (
+                            <Badge className={colorClass}>
+                              <Crown className="h-3 w-3 mr-1" />
+                              {label}
+                            </Badge>
+                          );
+                        })()}
                       </div>
                     </div>
                     <div className="flex gap-2">

@@ -436,12 +436,14 @@ const Properties = () => {
           createdAt: prop.createdAt ? new Date(prop.createdAt) : undefined,
           updatedAt: prop.updatedAt ? new Date(prop.updatedAt) : undefined,
           publishedAt: prop.publishedAt ? new Date(prop.publishedAt) : undefined,
-          expiresAt: prop.expiresAt ? new Date(prop.expiresAt) : undefined
+          expiresAt: prop.expiresAt ? new Date(prop.expiresAt) : undefined,
+          
+          // VIP status fields
+          vipStatus: prop.vipStatus || 'none',
+          vipExpiresAt: prop.vipExpiresAt
         };
       });
       
-      console.log('✨ Transformed properties count:', transformedProperties.length);
-      console.log('🏷️ Transaction types in data:', transformedProperties.slice(0, 3).map(p => p.transactionType));
       
       // No need for separate properties and filteredProperties since filtering is server-side
       setProperties(transformedProperties);

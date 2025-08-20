@@ -104,7 +104,7 @@ const Home = () => {
       
       // Fetch all data in parallel
       const [propertiesResponse, agenciesResponse, projectsResponse] = await Promise.allSettled([
-        propertyApi.getProperties({ status: '', limit: 20 }),
+        propertyApi.getProperties({ limit: 20 }),
         agencyApi.getAgencies({ limit: 4 }),
         projectApi.getProjects({ limit: 6 })
       ]);
@@ -143,7 +143,10 @@ const Home = () => {
             type: prop.propertyType || 'ბინა',
             transactionType: prop.dealType || 'იყიდება',
             image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
-            featured: prop.viewCount > 10 || Math.random() > 0.7
+            featured: prop.viewCount > 10 || Math.random() > 0.7,
+            // VIP status fields
+            vipStatus: prop.vipStatus || 'none',
+            vipExpiresAt: prop.vipExpiresAt
           };
         });
         
@@ -395,115 +398,6 @@ const Home = () => {
                     </CardContent>
                   </Card>
                 ))}
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Projects Carousel */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  პროექტები
-                </h2>
-                <p className="text-gray-600">
-                  იპოვნეთ საუკეთესო განვითარების პროექტები
-                </p>
-              </div>
-              <Button asChild variant="outline">
-                <Link to="/projects">
-                  ყველას ნახვა
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden animate-pulse">
-                    <div className="aspect-video bg-gray-200"></div>
-                    <div className="p-6">
-                      <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                      <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="h-4 bg-gray-200 rounded"></div>
-                        <div className="h-4 bg-gray-200 rounded"></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : projects.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.map((project) => {
-                  const minPrice = getMinPrice(project.pricing);
-                  return (
-                    <Card 
-                      key={project.id} 
-                      className="hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => navigate(`/projects/${project.id}`)}
-                    >
-                      <div className="aspect-video w-full overflow-hidden bg-gray-100">
-                        {project.photos && project.photos.length > 0 ? (
-                          <img
-                            src={project.photos[0].url}
-                            alt={project.projectName}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
-                            <Building2 className="h-12 w-12 text-gray-400" />
-                          </div>
-                        )}
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="line-clamp-1">{project.projectName}</CardTitle>
-                        <CardDescription className="line-clamp-2">
-                          {project.description || 'პროექტის დეტალური აღწერა'}
-                        </CardDescription>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <MapPin className="h-4 w-4" />
-                          <span>{project.city?.nameGeorgian || 'თბილისი'}</span>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                          <div>
-                            <span className="text-sm text-gray-500">კორპუსები:</span>
-                            <p className="font-medium">{project.numberOfBuildings || 0}</p>
-                          </div>
-                          <div>
-                            <span className="text-sm text-gray-500">ბინები:</span>
-                            <p className="font-medium">{project.totalApartments || 0}</p>
-                          </div>
-                        </div>
-                        {minPrice ? (
-                          <div>
-                            <span className="text-sm text-gray-500">ფასი დაწყებული:</span>
-                            <p className="text-lg font-bold text-primary">
-                              {formatPrice(minPrice)}
-                            </p>
-                          </div>
-                        ) : (
-                          <div>
-                            <span className="text-sm text-gray-500">ფასი:</span>
-                            <p className="text-lg font-bold text-gray-600">
-                              მიმდინარეობს დაზუსტება
-                            </p>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">პროექტები ჯერ არ არის დამატებული</p>
               </div>
             )}
           </div>

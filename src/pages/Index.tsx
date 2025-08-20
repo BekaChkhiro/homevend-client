@@ -202,6 +202,10 @@ export interface Property {
   updatedAt?: Date;
   publishedAt?: Date;
   expiresAt?: Date;
+  
+  // VIP status fields
+  vipStatus?: 'none' | 'vip' | 'vip_plus' | 'super_vip';
+  vipExpiresAt?: string;
 }
 
 export interface FilterState {
