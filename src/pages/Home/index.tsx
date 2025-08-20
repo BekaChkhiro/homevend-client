@@ -5,10 +5,11 @@ import { PropertySearchHero } from "@/components/PropertySearchHero";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyCardSkeleton } from "@/components/PropertyCardSkeleton";
 import { FeaturedPropertiesCarousel } from "@/components/FeaturedPropertiesCarousel";
+import { DistrictCarousel } from "@/components/DistrictCarousel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Building2, MapPin, TrendingUp, Users, BarChart3, Home as HomeIcon } from "lucide-react";
+import { ArrowRight, Building2, MapPin, TrendingUp, Users, BarChart3, Home as HomeIcon, CheckCircle, Phone, Globe, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { propertyApi, agencyApi, projectApi } from "@/lib/api";
 import type { Property, FilterState } from "@/pages/Index";
@@ -20,6 +21,16 @@ interface Agency {
   logoUrl?: string;
   agentCount: number;
   propertyCount: number;
+  totalSales?: number;
+  isVerified?: boolean;
+  owner?: {
+    fullName: string;
+  };
+  address?: string;
+  phone?: string;
+  website?: string;
+  socialMediaUrl?: string;
+  createdAt?: string;
 }
 
 interface Project {
@@ -267,42 +278,120 @@ const Home = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {agencies.map((agency) => (
-                  <Card key={agency.id} className="hover:shadow-lg transition-shadow">
-                    <CardHeader className="text-center">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        {agency.logoUrl ? (
-                          <img
-                            src={agency.logoUrl}
-                            alt={agency.name}
-                            className="w-12 h-12 rounded-full object-cover"
-                          />
-                        ) : (
-                          <Building2 className="h-8 w-8 text-primary" />
+                  <Card key={agency.id} className="hover:shadow-lg transition-shadow duration-200">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start gap-3">
+                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          {agency.logoUrl ? (
+                            <img
+                              src={agency.logoUrl}
+                              alt={agency.name}
+                              className="w-10 h-10 rounded-lg object-cover"
+                            />
+                          ) : (
+                            <Building2 className="h-6 w-6 text-primary" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <CardTitle className="text-lg truncate">
+                              {agency.name}
+                            </CardTitle>
+                            {agency.isVerified && (
+                              <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            მოღვაწე: {agency.owner?.fullName || 'არ არის მითითებული'}
+                          </p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      {agency.description && (
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                          {agency.description}
+                        </p>
+                      )}
+                      
+                      <div className="space-y-2 mb-4">
+                        {agency.address && (
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <MapPin className="h-4 w-4 flex-shrink-0" />
+                            <span className="truncate">{agency.address}</span>
+                          </div>
+                        )}
+                        {agency.phone && (
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Phone className="h-4 w-4 flex-shrink-0" />
+                            <span>{agency.phone}</span>
+                          </div>
+                        )}
+                        {agency.website && (
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Globe className="h-4 w-4 flex-shrink-0" />
+                            <a 
+                              href={agency.website} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline truncate"
+                            >
+                              ვებსაიტი
+                            </a>
+                          </div>
+                        )}
+                        {agency.socialMediaUrl && (
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Star className="h-4 w-4 flex-shrink-0" />
+                            <a 
+                              href={agency.socialMediaUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline truncate"
+                            >
+                              სოციალური მედია
+                            </a>
+                          </div>
                         )}
                       </div>
-                      <CardTitle className="text-lg">{agency.name}</CardTitle>
-                      {agency.description && (
-                        <CardDescription className="line-clamp-2">
-                          {agency.description}
-                        </CardDescription>
-                      )}
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <div className="text-2xl font-bold text-primary">{agency.agentCount}</div>
-                          <div className="text-sm text-gray-600">აგენტი</div>
+
+                      <div className="grid grid-cols-3 gap-2 mb-4">
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
+                            <Users className="h-3 w-3" />
+                            {agency.agentCount || 0}
+                          </div>
+                          <div className="text-xs text-gray-500">აგენტი</div>
                         </div>
-                        <div>
-                          <div className="text-2xl font-bold text-primary">{agency.propertyCount}</div>
-                          <div className="text-sm text-gray-600">განცხადება</div>
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
+                            <Building2 className="h-3 w-3" />
+                            {agency.propertyCount || 0}
+                          </div>
+                          <div className="text-xs text-gray-500">უძრავი ქონება</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
+                            <TrendingUp className="h-3 w-3" />
+                            {agency.totalSales || 0}
+                          </div>
+                          <div className="text-xs text-gray-500">გაყიდვა</div>
                         </div>
                       </div>
-                      <Button asChild className="w-full" size="sm">
-                        <Link to={`/agencies/${agency.id}`}>
-                          დეტალები
-                        </Link>
-                      </Button>
+
+                      <div className="flex gap-2">
+                        <Button asChild className="flex-1" size="sm">
+                          <Link to={`/agencies/${agency.id}`}>
+                            დეტალები
+                          </Link>
+                        </Button>
+                      </div>
+
+                      {agency.createdAt && (
+                        <div className="mt-3 pt-3 border-t text-xs text-gray-500">
+                          დაარსდა: {new Date(agency.createdAt).toLocaleDateString('ka-GE')}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
@@ -482,7 +571,7 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Price Statistics */}
+        {/* Districts Carousel */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-8">
@@ -491,60 +580,18 @@ const Home = () => {
                   ფასების სტატისტიკა
                 </h2>
                 <p className="text-gray-600">
-                  იხილეთ უძრავი ქონების ბაზრის ტრენდები და ანალიტიკა
+                  იხილეთ თბილისის რაიონებში უძრავი ქონების საშუალო ფასები
                 </p>
               </div>
               <Button asChild variant="outline">
                 <Link to="/price-statistics">
-                  მეტი ანალიტიკა
+                  ყველას ნახვა
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">საშუალო ფასი</CardTitle>
-                    <TrendingUp className="h-4 w-4 text-primary" />
-                  </div>
-                  <CardDescription>კვ.მ-ზე თბილისში</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">2,450 ₾</div>
-                  <p className="text-xs text-green-600">+5.2% წინა თვესთან</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">აქტიური განცხადებები</CardTitle>
-                    <BarChart3 className="h-4 w-4 text-primary" />
-                  </div>
-                  <CardDescription>ბოლო 30 დღეში</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{properties.length.toLocaleString()}</div>
-                  <p className="text-xs text-blue-600">+12% წინა თვესთან</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">ყველაზე პოპულარული</CardTitle>
-                    <HomeIcon className="h-4 w-4 text-primary" />
-                  </div>
-                  <CardDescription>ქონების ტიპი</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">ბინები</div>
-                  <p className="text-xs text-purple-600">67% ყველა განცხადებიდან</p>
-                </CardContent>
-              </Card>
-            </div>
+            <DistrictCarousel />
           </div>
         </section>
       </div>

@@ -126,13 +126,107 @@ export const propertyApi = {
   getProperties: async (params?: {
     page?: number;
     limit?: number;
+    cityId?: number;
     city?: string;
-    propertyType?: string;
+    propertyType?: string | string[];
     dealType?: string;
+    dailyRentalSubcategory?: string;
     minPrice?: number;
     maxPrice?: number;
+    minArea?: number;
+    maxArea?: number;
+    areaId?: number;
+    rooms?: string | string[];
+    bedrooms?: string | string[];
+    bathrooms?: string | string[];
+    totalFloors?: string;
+    buildingStatus?: string;
+    constructionYearMin?: string;
+    constructionYearMax?: string;
+    condition?: string;
+    projectType?: string;
+    ceilingHeightMin?: number;
+    ceilingHeightMax?: number;
+    heating?: string;
+    parking?: string;
+    hotWater?: string;
+    buildingMaterial?: string;
+    hasBalcony?: boolean;
+    hasPool?: boolean;
+    hasLivingRoom?: boolean;
+    hasLoggia?: boolean;
+    hasVeranda?: boolean;
+    hasYard?: boolean;
+    hasStorage?: boolean;
+    search?: string;
+    location?: string;
+    features?: string[];
+    advantages?: string[];
+    furnitureAppliances?: string[];
+    isFeatured?: boolean;
+    sort?: string;
   }) => {
-    const response = await publicApiClient.get('/properties', { params });
+    // Clean up params - convert arrays to comma-separated strings for query params
+    const cleanParams: any = { ...params };
+    
+    // Convert array parameters to comma-separated strings
+    if (Array.isArray(cleanParams.propertyType)) {
+      cleanParams.propertyType = cleanParams.propertyType.join(',');
+    }
+    if (Array.isArray(cleanParams.rooms)) {
+      cleanParams.rooms = cleanParams.rooms.join(',');
+    }
+    if (Array.isArray(cleanParams.bedrooms)) {
+      cleanParams.bedrooms = cleanParams.bedrooms.join(',');
+    }
+    if (Array.isArray(cleanParams.bathrooms)) {
+      cleanParams.bathrooms = cleanParams.bathrooms.join(',');
+    }
+    if (Array.isArray(cleanParams.features)) {
+      cleanParams.features = cleanParams.features.join(',');
+    }
+    if (Array.isArray(cleanParams.advantages)) {
+      cleanParams.advantages = cleanParams.advantages.join(',');
+    }
+    if (Array.isArray(cleanParams.furnitureAppliances)) {
+      cleanParams.furnitureAppliances = cleanParams.furnitureAppliances.join(',');
+    }
+    
+    // Convert boolean to string
+    if (typeof cleanParams.hasBalcony === 'boolean') {
+      cleanParams.hasBalcony = cleanParams.hasBalcony ? 'true' : undefined;
+    }
+    if (typeof cleanParams.hasPool === 'boolean') {
+      cleanParams.hasPool = cleanParams.hasPool ? 'true' : undefined;
+    }
+    if (typeof cleanParams.hasLivingRoom === 'boolean') {
+      cleanParams.hasLivingRoom = cleanParams.hasLivingRoom ? 'true' : undefined;
+    }
+    if (typeof cleanParams.hasLoggia === 'boolean') {
+      cleanParams.hasLoggia = cleanParams.hasLoggia ? 'true' : undefined;
+    }
+    if (typeof cleanParams.hasVeranda === 'boolean') {
+      cleanParams.hasVeranda = cleanParams.hasVeranda ? 'true' : undefined;
+    }
+    if (typeof cleanParams.hasYard === 'boolean') {
+      cleanParams.hasYard = cleanParams.hasYard ? 'true' : undefined;
+    }
+    if (typeof cleanParams.hasStorage === 'boolean') {
+      cleanParams.hasStorage = cleanParams.hasStorage ? 'true' : undefined;
+    }
+    if (typeof cleanParams.isFeatured === 'boolean') {
+      cleanParams.isFeatured = cleanParams.isFeatured ? 'true' : undefined;
+    }
+
+    // Remove undefined values
+    Object.keys(cleanParams).forEach(key => {
+      if (cleanParams[key] === undefined || cleanParams[key] === '' || cleanParams[key] === 'all') {
+        delete cleanParams[key];
+      }
+    });
+
+    console.log('🚀 Sending API request with params:', cleanParams);
+    const response = await publicApiClient.get('/properties', { params: cleanParams });
     return response.data.data;
   },
   

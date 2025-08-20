@@ -264,29 +264,75 @@ const Properties = () => {
     setCurrentPage(urlPage);
   }, [location.search]);
 
-  // Apply filters when properties are loaded or filters change
-  useEffect(() => {
-    if (properties.length > 0) {
-      applyFiltersAndSort(filters, sortBy);
-    }
-  }, [properties, filters, sortBy]);
-
-  // Fetch properties from API
+  // Fetch properties with filters from API - removed client-side filtering
   useEffect(() => {
     fetchProperties();
-  }, []);
+  }, [filters, sortBy, currentPage]); // Re-fetch when filters, sort, or page changes
 
   const fetchProperties = async () => {
     try {
       setIsLoading(true);
-      console.log('Fetching properties from API...');
+      console.log('🔍 Fetching properties from API with filters:', filters, 'sort:', sortBy, 'page:', currentPage);
       
-      // Get all properties - same as Home page
-      const response = await propertyApi.getProperties({});
-      console.log('API Response:', response); // Debug log
+      // Convert frontend filters to API parameters
+      const apiParams = {
+        page: currentPage,
+        limit: PROPERTIES_PER_PAGE,
+        search: filters.search || undefined,
+        location: filters.location || undefined,
+        city: filters.city !== 'all' ? filters.city : undefined,
+        propertyType: Array.isArray(filters.propertyType) && filters.propertyType.length > 0 
+          ? filters.propertyType.map(type => type === 'ბინები' ? 'apartment' : type === 'სახლები' ? 'house' : type === 'აგარაკები' ? 'cottage' : type === 'მიწის ნაკვეთები' ? 'land' : type === 'კომერციული ფართები' ? 'commercial' : type === 'საოფისე ფართები' ? 'office' : type === 'სასტუმროები' ? 'hotel' : type)
+          : undefined,
+        dealType: filters.transactionType !== 'all' 
+          ? (filters.transactionType === 'იყიდება' ? 'sale' : filters.transactionType === 'ქირავდება' ? 'rent' : filters.transactionType === 'გირავდება' ? 'mortgage' : filters.transactionType === 'გაიცემა იჯარით' ? 'lease' : filters.transactionType === 'ქირავდება დღიურად' ? 'daily' : filters.transactionType === 'ნასყიდობა გამოსყიდობის უფლებით' ? 'rent-to-buy' : filters.transactionType)
+          : undefined,
+        dailyRentalSubcategory: filters.dailyRentalSubcategory !== 'all' ? filters.dailyRentalSubcategory : undefined,
+        minPrice: filters.priceMin ? Number(filters.priceMin) : undefined,
+        maxPrice: filters.priceMax ? Number(filters.priceMax) : undefined,
+        minArea: filters.areaMin ? Number(filters.areaMin) : undefined,
+        maxArea: filters.areaMax ? Number(filters.areaMax) : undefined,
+        bedrooms: Array.isArray(filters.bedrooms) && filters.bedrooms.length > 0 ? filters.bedrooms : undefined,
+        bathrooms: Array.isArray(filters.bathrooms) && filters.bathrooms.length > 0 ? filters.bathrooms : undefined,
+        rooms: Array.isArray(filters.rooms) && filters.rooms.length > 0 ? filters.rooms : undefined,
+        totalFloors: filters.totalFloors !== 'all' ? filters.totalFloors : undefined,
+        buildingStatus: filters.buildingStatus !== 'all' ? filters.buildingStatus : undefined,
+        constructionYearMin: filters.constructionYearMin || undefined,
+        constructionYearMax: filters.constructionYearMax || undefined,
+        condition: filters.condition !== 'all' ? filters.condition : undefined,
+        projectType: filters.projectType !== 'all' ? filters.projectType : undefined,
+        ceilingHeightMin: filters.ceilingHeightMin ? Number(filters.ceilingHeightMin) : undefined,
+        ceilingHeightMax: filters.ceilingHeightMax ? Number(filters.ceilingHeightMax) : undefined,
+        heating: filters.heating !== 'all' ? filters.heating : undefined,
+        parking: filters.parking !== 'all' ? filters.parking : undefined,
+        hotWater: filters.hotWater !== 'all' ? filters.hotWater : undefined,
+        buildingMaterial: filters.buildingMaterial !== 'all' ? filters.buildingMaterial : undefined,
+        hasBalcony: filters.hasBalcony || undefined,
+        hasPool: filters.hasPool || undefined,
+        hasLivingRoom: filters.hasLivingRoom || undefined,
+        hasLoggia: filters.hasLoggia || undefined,
+        hasVeranda: filters.hasVeranda || undefined,
+        hasYard: filters.hasYard || undefined,
+        hasStorage: filters.hasStorage || undefined,
+        features: filters.selectedFeatures && filters.selectedFeatures.length > 0 ? filters.selectedFeatures : undefined,
+        advantages: filters.selectedAdvantages && filters.selectedAdvantages.length > 0 ? filters.selectedAdvantages : undefined,
+        furnitureAppliances: filters.selectedFurnitureAppliances && filters.selectedFurnitureAppliances.length > 0 ? filters.selectedFurnitureAppliances : undefined,
+        sort: sortBy
+      };
+
+      // Remove undefined values
+      Object.keys(apiParams).forEach(key => {
+        if (apiParams[key] === undefined) {
+          delete apiParams[key];
+        }
+      });
+
+      const response = await propertyApi.getProperties(apiParams);
+      console.log('🎯 API Response:', response);
       
-      // The api.ts already extracts .data, so response = {properties: [], pagination: {}}
-      const data = response?.properties || response || [];
+      // Server returns: { properties: [...], pagination: { page, limit, total, pages } }
+      const data = response?.properties || [];
+      const pagination = response?.pagination || {};
       
       if (!Array.isArray(data)) {
         console.warn('Expected array but got:', typeof data, data);
@@ -295,10 +341,10 @@ const Properties = () => {
         return;
       }
       
-      console.log('Properties found:', data.length);
-      console.log('🔍 Sample raw property data:', data[0]);
+      console.log(`✅ Found ${data.length} properties (page ${pagination.page} of ${pagination.pages})`);
+      console.log('🔍 Sample property data:', data[0]);
       
-      // Transform API data to match the Property interface - same as Home page
+      // Transform API data to match frontend interface
       const transformedProperties = data.map((prop: any) => {
         // Build address properly
         const parts = [];
@@ -331,7 +377,7 @@ const Properties = () => {
           transactionType: mapDealTypeToGeorgian(prop.dealType) || 'იყიდება',
           dailyRentalSubcategory: prop.dailyRentalSubcategory,
           image: prop.photos?.[0] || "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop",
-          featured: prop.viewCount > 10 || Math.random() > 0.7, // Featured if popular or randomly
+          featured: prop.isFeatured || prop.viewCount > 10,
           
           // Extended properties from database
           rooms: prop.rooms,
@@ -368,7 +414,7 @@ const Properties = () => {
           storageArea: prop.storageArea,
           storageType: prop.storageType,
           
-          // Many-to-many relationships
+          // Relations (empty from server for performance)
           features: prop.features || [],
           advantages: prop.advantages || [],
           furnitureAppliances: prop.furnitureAppliances || [],
@@ -394,17 +440,17 @@ const Properties = () => {
         };
       });
       
-      console.log('Transformed properties count:', transformedProperties.length);
-      console.log('🔍 Sample transformed property:', transformedProperties[0]);
-      console.log('🏷️ Transaction types in data:', transformedProperties.map(p => p.transactionType));
+      console.log('✨ Transformed properties count:', transformedProperties.length);
+      console.log('🏷️ Transaction types in data:', transformedProperties.slice(0, 3).map(p => p.transactionType));
       
+      // No need for separate properties and filteredProperties since filtering is server-side
       setProperties(transformedProperties);
       setFilteredProperties(transformedProperties);
     } catch (error: any) {
-      console.error('Error fetching properties:', error);
+      console.error('❌ Error fetching properties:', error);
       console.error('Error details:', error.response?.data || error.message);
       
-      // Fallback to empty array on error - same as Home page
+      // Fallback to empty array on error
       setProperties([]);
       setFilteredProperties([]);
 
@@ -424,324 +470,13 @@ const Properties = () => {
     setFilters(newFilters);
     setCurrentPage(1); // Reset to first page when filters change
     updateURLFromFilters(newFilters, sortBy, 1);
-    // Apply filters with a small delay to show loading state
+    // No need for client-side filtering delay - server handles it
     setTimeout(() => {
-      console.log('⚡ Properties: About to apply filters and sort');
-      applyFiltersAndSort(newFilters, sortBy);
-      // Simulate filtering delay for better UX
-      setTimeout(() => {
-        setIsFiltering(false);
-      }, 300);
-    }, 100);
+      setIsFiltering(false);
+    }, 300);
   };
 
-  const applyFiltersAndSort = (currentFilters: FilterState, currentSort: string) => {
-    console.log('🔍 Applying filters:', currentFilters);
-    console.log('📋 Properties to filter:', properties.length);
-    
-    // Apply filters
-    let filtered = properties.filter(property => {
-      // Basic search filters
-      const matchesSearch = !currentFilters.search || currentFilters.search === "" ||
-        property.title.toLowerCase().includes(currentFilters.search.toLowerCase()) ||
-        property.address.toLowerCase().includes(currentFilters.search.toLowerCase());
-
-      // Enhanced location matching for hierarchical search
-      const matchesLocation = !currentFilters.location || currentFilters.location === "" || (() => {
-        const locationQuery = currentFilters.location.toLowerCase();
-        const locationParts = locationQuery.split(',').map(part => part.trim()).filter(Boolean);
-        
-        // Build search fields from property data
-        const searchFields = [
-          property.address?.toLowerCase(),
-          property.city?.toLowerCase(),
-          property.district?.toLowerCase(),
-          property.cityData?.nameGeorgian?.toLowerCase(),
-          property.cityData?.nameEnglish?.toLowerCase(),
-          property.areaData?.nameKa?.toLowerCase(),
-          property.areaData?.nameEn?.toLowerCase()
-        ].filter(Boolean);
-        
-        // If it's a simple single-term search, check all fields
-        if (locationParts.length === 1) {
-          const searchTerm = locationParts[0];
-          return searchFields.some(field => field?.includes(searchTerm));
-        }
-        
-        // For multi-part searches (e.g. "თბილისი, ვაკე, ქუჩა"), check if all parts are found
-        return locationParts.every(part => 
-          searchFields.some(field => field?.includes(part))
-        );
-      })();
-
-      // Property type filtering - handle both arrays and strings
-      const matchesType = (() => {
-        if (!currentFilters.propertyType) return true;
-        
-        if (Array.isArray(currentFilters.propertyType)) {
-          // If array is empty, show all properties
-          if (currentFilters.propertyType.length === 0) return true;
-          
-          // Check if property type matches any of the selected types
-          return currentFilters.propertyType.some(selectedType => 
-            property.type === selectedType || 
-            property.type === mapPropertyTypeToGeorgian(selectedType)
-          );
-        } else {
-          // Handle legacy string format
-          return currentFilters.propertyType === "all" || 
-            property.type === currentFilters.propertyType || 
-            property.type === mapPropertyTypeToGeorgian(currentFilters.propertyType);
-        }
-      })();
-        
-      // Transaction type filtering - handle both English and Georgian values  
-      const matchesTransaction = !currentFilters.transactionType || currentFilters.transactionType === "all" || 
-        property.transactionType === currentFilters.transactionType || 
-        property.transactionType === mapDealTypeToGeorgian(currentFilters.transactionType);
-
-      // Debug transaction type matching
-      if (currentFilters.transactionType && currentFilters.transactionType !== "all") {
-        console.log(`🏷️ Checking transaction type: filter="${currentFilters.transactionType}" vs property="${property.transactionType}" (ID: ${property.id}), matches=${matchesTransaction}`);
-      }
-
-      // Price filters
-      const matchesPriceMin = !currentFilters.priceMin || property.price >= parseInt(currentFilters.priceMin);
-      const matchesPriceMax = !currentFilters.priceMax || property.price <= parseInt(currentFilters.priceMax);
-
-      // Area filters
-      const matchesAreaMin = !currentFilters.areaMin || property.area >= parseInt(currentFilters.areaMin);
-      const matchesAreaMax = !currentFilters.areaMax || property.area <= parseInt(currentFilters.areaMax);
-
-      // Room count filters - handle both arrays and strings
-      const matchesBedrooms = (() => {
-        if (!currentFilters.bedrooms) return true;
-        
-        if (Array.isArray(currentFilters.bedrooms)) {
-          if (currentFilters.bedrooms.length === 0) return true;
-          return currentFilters.bedrooms.some(bedroom => {
-            if (bedroom === '10+') return property.bedrooms >= 10;
-            return property.bedrooms === parseInt(bedroom);
-          });
-        } else {
-          return currentFilters.bedrooms === "all" || property.bedrooms === parseInt(currentFilters.bedrooms);
-        }
-      })();
-
-      const matchesBathrooms = (() => {
-        if (!currentFilters.bathrooms) return true;
-        
-        if (Array.isArray(currentFilters.bathrooms)) {
-          if (currentFilters.bathrooms.length === 0) return true;
-          return currentFilters.bathrooms.some(bathroom => {
-            if (bathroom === '3+') return property.bathrooms >= 3;
-            if (bathroom === 'shared') return property.bathrooms === 0; // Assuming 0 means shared
-            return property.bathrooms === parseInt(bathroom);
-          });
-        } else {
-          return currentFilters.bathrooms === "all" || property.bathrooms === parseInt(currentFilters.bathrooms);
-        }
-      })();
-      
-      // Rooms filter (check both rooms field and bedrooms as fallback)
-      const matchesRooms = (() => {
-        if (!currentFilters.rooms) return true;
-        
-        if (Array.isArray(currentFilters.rooms)) {
-          if (currentFilters.rooms.length === 0) return true;
-          return currentFilters.rooms.some(room => {
-            if (room === '10+') {
-              return property.rooms ? property.rooms >= 10 : property.bedrooms >= 10;
-            }
-            const roomCount = parseInt(room);
-            return property.rooms ? property.rooms === roomCount : property.bedrooms === roomCount;
-          });
-        } else {
-          return currentFilters.rooms === "all" || 
-            (property.rooms ? property.rooms === parseInt(currentFilters.rooms) : property.bedrooms === parseInt(currentFilters.rooms));
-        }
-      })();
-
-      // Building details filters (with defensive checks)
-      const matchesTotalFloors = !currentFilters.totalFloors || currentFilters.totalFloors === "all" || 
-        (property.totalFloors && property.totalFloors === currentFilters.totalFloors);
-
-      const matchesBuildingStatus = !currentFilters.buildingStatus || currentFilters.buildingStatus === "all" || 
-        (property.buildingStatus && property.buildingStatus === currentFilters.buildingStatus);
-
-      const normalizeConditionFilter = (val: string | undefined) => {
-        if (!val) return undefined;
-        const map: Record<string, string> = {
-          'ongoing-renovation': 'under-renovation',
-          'white-plus': 'white-frame'
-        };
-        return map[val] || val;
-      };
-
-      const matchesCondition = !currentFilters.condition || currentFilters.condition === "all" || (() => {
-        const expected = normalizeConditionFilter(currentFilters.condition);
-        return property.condition && property.condition === expected;
-      })();
-
-      const matchesProjectType = !currentFilters.projectType || currentFilters.projectType === "all" || 
-        (property.projectType && property.projectType === currentFilters.projectType);
-
-      const matchesHeating = !currentFilters.heating || currentFilters.heating === "all" || 
-        (property.heating && property.heating === currentFilters.heating);
-
-      const matchesParking = !currentFilters.parking || currentFilters.parking === "all" || 
-        (property.parking && property.parking === currentFilters.parking);
-
-      const matchesHotWater = !currentFilters.hotWater || currentFilters.hotWater === "all" || 
-        (property.hotWater && property.hotWater === currentFilters.hotWater);
-
-      const matchesBuildingMaterial = !currentFilters.buildingMaterial || currentFilters.buildingMaterial === "all" || 
-        (property.buildingMaterial && property.buildingMaterial === currentFilters.buildingMaterial);
-
-      // Construction year filters
-      const matchesConstructionYearMin = !currentFilters.constructionYearMin || !property.constructionYear ||
-        (typeof property.constructionYear === 'number' ? property.constructionYear >= parseInt(currentFilters.constructionYearMin) :
-         parseInt(property.constructionYear) >= parseInt(currentFilters.constructionYearMin));
-
-      const matchesConstructionYearMax = !currentFilters.constructionYearMax || !property.constructionYear ||
-        (typeof property.constructionYear === 'number' ? property.constructionYear <= parseInt(currentFilters.constructionYearMax) :
-         parseInt(property.constructionYear) <= parseInt(currentFilters.constructionYearMax));
-
-      // Ceiling height filters
-      const matchesCeilingHeightMin = !currentFilters.ceilingHeightMin || !property.ceilingHeight ||
-        property.ceilingHeight >= parseFloat(currentFilters.ceilingHeightMin);
-
-      const matchesCeilingHeightMax = !currentFilters.ceilingHeightMax || !property.ceilingHeight ||
-        property.ceilingHeight <= parseFloat(currentFilters.ceilingHeightMax);
-
-      // Boolean amenities filters
-      const matchesBalcony = !currentFilters.hasBalcony || property.hasBalcony === currentFilters.hasBalcony;
-      const matchesPool = !currentFilters.hasPool || property.hasPool === currentFilters.hasPool;
-      const matchesLivingRoom = !currentFilters.hasLivingRoom || property.hasLivingRoom === currentFilters.hasLivingRoom;
-      const matchesLoggia = !currentFilters.hasLoggia || property.hasLoggia === currentFilters.hasLoggia;
-      const matchesVeranda = !currentFilters.hasVeranda || property.hasVeranda === currentFilters.hasVeranda;
-      const matchesYard = !currentFilters.hasYard || property.hasYard === currentFilters.hasYard;
-      const matchesStorage = !currentFilters.hasStorage || property.hasStorage === currentFilters.hasStorage;
-
-      // Array filters (features, advantages, furniture/appliances)
-      const matchesFeatures = !currentFilters.selectedFeatures?.length || 
-        currentFilters.selectedFeatures.every(feature => 
-          property.features?.some((pFeature: any) => {
-            if (typeof pFeature === 'string') return pFeature === feature;
-            const vals = [pFeature.code, pFeature.nameGeorgian, pFeature.nameEnglish].filter(Boolean).map((v: any) => v.toString());
-            return vals.includes(feature);
-          })
-        );
-
-      const matchesAdvantages = !currentFilters.selectedAdvantages?.length || 
-        currentFilters.selectedAdvantages.every(advantage => 
-          property.advantages?.some((pAdvantage: any) => {
-            if (typeof pAdvantage === 'string') return pAdvantage === advantage;
-            const vals = [pAdvantage.code, pAdvantage.nameGeorgian, pAdvantage.nameEnglish].filter(Boolean).map((v: any) => v.toString());
-            return vals.includes(advantage);
-          })
-        );
-
-      const matchesFurnitureAppliances = !currentFilters.selectedFurnitureAppliances?.length || 
-        currentFilters.selectedFurnitureAppliances.every(furniture => {
-          const norm = (val: any) => (val ?? '').toString().trim().toLowerCase();
-          // Bidirectional mapping between common keys and Georgian labels
-          const furnitureMap: Record<string, string> = {
-            'refrigerator': 'მაცივარი',
-            'dishwasher': 'ჭურჭლის სარეცხი',
-            'oven': 'ღუმელი',
-            'bed': 'საწოლი',
-            'sofa': 'დივანი',
-            'gas-stove': 'გაზქურა',
-            'stove-gas': 'გაზქურა',
-            'air-conditioner': 'კონდიციონერი',
-            'washing-machine': 'სარეცხი მანქანა',
-            'chairs': 'სკამები',
-            'furniture': 'ავეჯი',
-            'table': 'მაგიდა',
-            'stove-electric': 'ელექტრო ქურა',
-            'microwave': 'მიკროტალღური',
-            'tv': 'ტელევიზორი',
-            'wardrobe': 'კარადა',
-            'balcony-furniture': 'აივნის ავეჯი',
-            'grill': 'გამწვავი'
-          };
-          const reverseMap: Record<string, string> = Object.keys(furnitureMap).reduce((acc, key) => {
-            const ka = furnitureMap[key];
-            acc[norm(ka)] = key;
-            return acc;
-          }, {} as Record<string, string>);
-
-          const filterAliases = (() => {
-            const base = norm(furniture);
-            const key = reverseMap[base];
-            return key ? [base, norm(key)] : [base];
-          })();
-
-          const hasMatch = property.furnitureAppliances?.some((pFurniture: any) => {
-            const raw = typeof pFurniture === 'string'
-              ? pFurniture
-              : (pFurniture?.code ?? pFurniture?.nameGeorgian ?? pFurniture?.nameEnglish ?? '');
-            const rawNorm = norm(raw);
-            // Include possible Georgian translation of key if item is a known key
-            const translated = furnitureMap[rawNorm];
-            const itemAliases = [rawNorm, translated ? norm(translated) : ''].filter(Boolean);
-            // Compare aliases with flexible equals/contains
-            return filterAliases.some(fa => itemAliases.some(ia => ia === fa || ia.includes(fa) || fa.includes(ia)));
-          });
-
-          // Debug logging for furniture filtering
-          if (currentFilters.selectedFurnitureAppliances.includes('სკამები')) {
-            console.log(`🪑 Furniture Debug for Property ${property.id}:`);
-            console.log(`  - Looking for: "${furniture}" (aliases: ${JSON.stringify(filterAliases)})`);
-            console.log(`  - Property furnitureAppliances:`, property.furnitureAppliances);
-            console.log(`  - Found match: ${hasMatch}`);
-          }
-
-          return hasMatch;
-        });
-
-      // Daily rental subcategory
-      const matchesDailyRentalSubcategory = !currentFilters.dailyRentalSubcategory || 
-        currentFilters.dailyRentalSubcategory === "all" || 
-        property.dailyRentalSubcategory === currentFilters.dailyRentalSubcategory;
-
-      // Return true only if ALL conditions match
-      return matchesSearch && matchesLocation && matchesType && matchesTransaction &&
-        matchesPriceMin && matchesPriceMax && matchesAreaMin && matchesAreaMax &&
-        matchesBedrooms && matchesBathrooms && matchesRooms &&
-        matchesTotalFloors && matchesBuildingStatus && matchesCondition && matchesProjectType &&
-        matchesConstructionYearMin && matchesConstructionYearMax &&
-        matchesCeilingHeightMin && matchesCeilingHeightMax &&
-        matchesHeating && matchesParking && matchesHotWater && matchesBuildingMaterial &&
-        matchesBalcony && matchesPool && matchesLivingRoom && matchesLoggia &&
-        matchesVeranda && matchesYard && matchesStorage &&
-        matchesFeatures && matchesAdvantages && matchesFurnitureAppliances &&
-        matchesDailyRentalSubcategory;
-    });
-
-    // Apply sorting
-    switch (currentSort) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'area-large':
-        filtered.sort((a, b) => b.area - a.area);
-        break;
-      case 'area-small':
-        filtered.sort((a, b) => a.area - b.area);
-        break;
-      case 'newest':
-      default:
-        filtered.sort((a, b) => b.id - a.id);
-        break;
-    }
-
-    setFilteredProperties(filtered);
-  };
+  // Removed applyFiltersAndSort - now handled server-side for better performance
 
   const handleSortChange = (value: string) => {
     console.log('🔄 handleSortChange called with:', value);
@@ -749,12 +484,10 @@ const Properties = () => {
     setSortBy(value);
     setCurrentPage(1); // Reset to first page when sort changes
     updateURLFromFilters(filters, value, 1);
+    // Server handles sorting - just show loading state briefly
     setTimeout(() => {
-      applyFiltersAndSort(filters, value);
-      setTimeout(() => {
-        setIsFiltering(false);
-      }, 200);
-    }, 100);
+      setIsFiltering(false);
+    }, 200);
   };
 
   const getPropertyTypeStats = () => {
