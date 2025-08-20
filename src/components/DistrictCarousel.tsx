@@ -90,14 +90,14 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
   }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative w-full overflow-hidden ${className}`}>
       {/* Navigation Buttons */}
       {totalSlides > 1 && (
         <>
           <Button
             variant="outline"
             size="sm"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 rounded-full w-8 h-8 p-0 shadow-lg bg-white/80 backdrop-blur-sm"
+            className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 rounded-full w-8 h-8 p-0 shadow-lg bg-white/80 backdrop-blur-sm"
             onClick={prevSlide}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -105,7 +105,7 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
           <Button
             variant="outline"
             size="sm"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 rounded-full w-8 h-8 p-0 shadow-lg bg-white/80 backdrop-blur-sm"
+            className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 rounded-full w-8 h-8 p-0 shadow-lg bg-white/80 backdrop-blur-sm"
             onClick={nextSlide}
           >
             <ChevronRight className="h-4 w-4" />
@@ -114,7 +114,7 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
       )}
 
       {/* Cards Container */}
-      <div className="overflow-hidden">
+      <div className="overflow-hidden w-full">
         <div 
           className="flex transition-transform duration-300 ease-in-out gap-6"
           style={{ 

@@ -101,6 +101,8 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
   const [areaPopoverOpen, setAreaPopoverOpen] = useState(false);
   const [transactionTypePopoverOpen, setTransactionTypePopoverOpen] = useState(false);
   const [propertyTypePopoverOpen, setPropertyTypePopoverOpen] = useState(false);
+  const [mobileTransactionTypePopoverOpen, setMobileTransactionTypePopoverOpen] = useState(false);
+  const [mobilePropertyTypePopoverOpen, setMobilePropertyTypePopoverOpen] = useState(false);
 
   const getDefaultFilters = (): PropertySearchFilters => ({
     search: "",
@@ -171,16 +173,19 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
   useEffect(() => {
     const loadAreas = async () => {
       if (!selectedCityId) {
+        console.log('🏙️ No city selected, clearing areas');
         setAreas([]);
         return;
       }
       
       try {
+        console.log('🏙️ Loading areas for city ID:', selectedCityId);
         setIsLoadingAreas(true);
         const areasData = await areasApi.getAreasByCity(selectedCityId);
+        console.log('🏙️ Areas loaded:', areasData?.length || 0, 'areas');
         setAreas(areasData || []);
       } catch (error) {
-        console.error('Failed to load areas:', error);
+        console.error('🚫 Failed to load areas:', error);
         setAreas([]);
       } finally {
         setIsLoadingAreas(false);
@@ -192,12 +197,21 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
   // Update filters when initialFilters prop changes
   useEffect(() => {
     if (initialFilters) {
-      setFilters(prev => ({
+      const newFilters = {
         ...getDefaultFilters(),
         ...initialFilters
-      }));
+      };
+      setFilters(newFilters);
+      
+      // Update city and area selection based on new filters
+      if (initialFilters.city && initialFilters.city !== 'all' && cities.length > 0) {
+        const foundCity = cities.find(c => c.nameGeorgian === initialFilters.city);
+        if (foundCity) {
+          setSelectedCityId(foundCity.id);
+        }
+      }
     }
-  }, [initialFilters]);
+  }, [initialFilters, cities]);
 
   // Expose clearAllFilters function to parent via ref
   useImperativeHandle(ref, () => ({
@@ -221,6 +235,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
     setShowAdditionalFilters(false);
   };
 
+
   // Helper function to build location string from city and area selection
   const buildLocationString = () => {
     const cityName = selectedCityId ? cities.find(c => c.id === selectedCityId)?.nameGeorgian : '';
@@ -240,7 +255,8 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
     
     // Update filters
     const cityName = numericCityId ? cities.find(c => c.id === numericCityId)?.nameGeorgian || value : 'all';
-    setFilters({...filters, city: cityName, search: ''});
+    const updatedFilters = {...filters, city: cityName, search: ''};
+    setFilters(updatedFilters);
   };
 
   // Handle area selection
@@ -254,8 +270,10 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
   // Handle transaction type selection
   const handleTransactionTypeChange = (value: string) => {
     console.log('🆗 Transaction type changed to:', value);
-    setFilters({...filters, transactionType: value});
+    const updatedFilters = {...filters, transactionType: value};
+    setFilters(updatedFilters);
     setTransactionTypePopoverOpen(false);
+    setMobileTransactionTypePopoverOpen(false);
   };
 
   // Handle property type selection  
@@ -272,7 +290,8 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
       newPropertyTypes = [...currentPropertyTypes, value];
     }
     
-    setFilters({...filters, propertyType: newPropertyTypes});
+    const updatedFilters = {...filters, propertyType: newPropertyTypes};
+    setFilters(updatedFilters);
     // Don't close popover to allow multiple selections
   };
 
@@ -334,6 +353,8 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
     setAreaPopoverOpen(false);
     setTransactionTypePopoverOpen(false);
     setPropertyTypePopoverOpen(false);
+    setMobileTransactionTypePopoverOpen(false);
+    setMobilePropertyTypePopoverOpen(false);
     
     setFilters(clearedFilters);
     // Apply cleared filters immediately
@@ -378,27 +399,188 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
 
   // Dynamic styling based on variant
   const sectionClasses = variant === 'minimal' 
-    ? "py-8" 
-    : "bg-gradient-to-br from-primary/5 via-background to-secondary/10 py-8";
+    ? "py-4 sm:py-6 lg:py-8" 
+    : "bg-gradient-to-br from-primary/5 via-background to-secondary/10 py-4 sm:py-6 lg:py-8";
     
   const containerClasses = variant === 'minimal'
-    ? "bg-white/95 backdrop-blur-sm rounded-3xl p-6 border border-gray-200 mx-auto"
-    : "bg-white/95 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20 mx-auto";
+    ? "bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-3 sm:p-4 lg:p-6 border border-gray-200 mx-auto"
+    : "bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-3 sm:p-4 lg:p-6 shadow-2xl border border-white/20 mx-auto";
 
   const buttonClasses = variant === 'minimal'
-    ? "group h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl transition-all duration-300 text-base"
-    : "group h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base";
+    ? "group h-10 sm:h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl transition-all duration-300"
+    : "group h-10 sm:h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300";
 
   return (
     <section className={sectionClasses}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
         <div className={containerClasses}>
-          <div className="flex gap-4 items-end">
-            {/* Transaction Type */}
-            <div className="w-2/12 flex flex-col gap-2">
+          <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 items-stretch lg:items-end">
+            
+            {/* Mobile: Transaction Type and Property Type side by side */}
+            <div className="flex flex-row gap-2 sm:gap-3 lg:hidden w-full">
+              {/* Transaction Type */}
+              <div className="flex-1 flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-4 w-4 text-primary" />
+                  <label className="text-xs font-semibold text-slate-700">
+                    გარიგების ტიპი
+                  </label>
+                </div>
+                <Popover open={mobileTransactionTypePopoverOpen} onOpenChange={setMobileTransactionTypePopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={mobileTransactionTypePopoverOpen}
+                      className="h-10 w-full justify-between text-xs border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                    >
+                    {filters.transactionType && filters.transactionType !== 'all' ? (
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const getIcon = (value: string) => {
+                            switch(value) {
+                              case 'sale': return <Coins className="h-4 w-4 text-primary" />;
+                              case 'rent': return <Home className="h-4 w-4 text-primary" />;
+                              case 'mortgage': return <CreditCard className="h-4 w-4 text-primary" />;
+                              case 'lease': return <Building2 className="h-4 w-4 text-primary" />;
+                              case 'daily': return <Hotel className="h-4 w-4 text-primary" />;
+                              case 'rent-to-buy': return <CreditCard className="h-4 w-4 text-primary" />;
+                              default: return <CreditCard className="h-4 w-4 text-primary" />;
+                            }
+                          };
+                          return getIcon(filters.transactionType);
+                        })()}
+                        {transactionTypes.find((type) => type.value === filters.transactionType)?.label}
+                      </div>
+                    ) : (
+                      "აირჩიეთ ტიპი"
+                    )}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[240px] p-0 z-50" align="start">
+                  <Command>
+                    <CommandInput placeholder="მოძებნეთ გარიგების ტიპი..." />
+                    <CommandList>
+                      <CommandEmpty>გარიგების ტიპი ვერ მოიძებნა</CommandEmpty>
+                      <CommandGroup>
+                        {transactionTypes.map((type) => {
+                          const getIcon = (value: string) => {
+                            switch(value) {
+                              case 'sale': return <Coins className="h-4 w-4 text-primary" />;
+                              case 'rent': return <Home className="h-4 w-4 text-primary" />;
+                              case 'mortgage': return <CreditCard className="h-4 w-4 text-primary" />;
+                              case 'lease': return <Building2 className="h-4 w-4 text-primary" />;
+                              case 'daily': return <Hotel className="h-4 w-4 text-primary" />;
+                              case 'rent-to-buy': return <CreditCard className="h-4 w-4 text-primary" />;
+                              default: return <CreditCard className="h-4 w-4 text-primary" />;
+                            }
+                          };
+                          return (
+                            <CommandItem
+                              key={type.value}
+                              value={type.label}
+                              onSelect={() => handleTransactionTypeChange(type.value)}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  filters.transactionType === type.value ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {getIcon(type.value)}
+                              <span className="ml-2">{type.label}</span>
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              </div>
+
+              {/* Property Type */}
+              <div className="flex-1 flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Home className="h-4 w-4 text-primary" />
+                  <label className="text-xs font-semibold text-slate-700">
+                    ქონების ტიპი
+                  </label>
+                </div>
+                <Popover open={mobilePropertyTypePopoverOpen} onOpenChange={setMobilePropertyTypePopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={mobilePropertyTypePopoverOpen}
+                      className="h-10 w-full justify-between text-xs border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                    >
+                      {Array.isArray(filters.propertyType) && filters.propertyType.length > 0 ? (
+                        <div className="flex items-center gap-2">
+                          <Home className="h-4 w-4 text-primary" />
+                          {filters.propertyType.length === 1 
+                            ? propertyTypes.find((type) => type.value === filters.propertyType[0])?.label 
+                            : `${filters.propertyType.length} არჩეული`
+                          }
+                        </div>
+                      ) : (
+                        "აირჩიეთ ტიპი"
+                      )}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[240px] p-0 z-50" align="start">
+                    <Command>
+                      <CommandInput placeholder="მოძებნეთ ქონების ტიპი..." />
+                      <CommandList>
+                        <CommandEmpty>ქონების ტიპი ვერ მოიძებნა</CommandEmpty>
+                        <CommandGroup>
+                          {propertyTypes.map((type) => {
+                            const getIcon = (value: string) => {
+                              switch(value) {
+                                case 'apartment': return <Building2 className="h-4 w-4 text-primary" />;
+                                case 'house': return <Home className="h-4 w-4 text-primary" />;
+                                case 'cottage': return <TreePine className="h-4 w-4 text-primary" />;
+                                case 'land': return <MapPin className="h-4 w-4 text-primary" />;
+                                case 'commercial': return <Factory className="h-4 w-4 text-primary" />;
+                                case 'office': return <Building2 className="h-4 w-4 text-primary" />;
+                                case 'hotel': return <Hotel className="h-4 w-4 text-primary" />;
+                                default: return <Home className="h-4 w-4 text-primary" />;
+                              }
+                            };
+                            const isSelected = Array.isArray(filters.propertyType) 
+                              ? filters.propertyType.includes(type.value) 
+                              : filters.propertyType === type.value;
+                            
+                            return (
+                              <CommandItem
+                                key={type.value}
+                                value={type.label}
+                                onSelect={() => handlePropertyTypeChange(type.value)}
+                              >
+                                <Checkbox
+                                  checked={isSelected}
+                                  className="mr-2"
+                                />
+                                {getIcon(type.value)}
+                                <span className="ml-2">{type.label}</span>
+                              </CommandItem>
+                            );
+                          })}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            {/* Desktop: Transaction Type */}
+            <div className="hidden lg:flex w-2/12 flex-col gap-2">
               <div className="flex items-center gap-2">
                 <CreditCard className="h-4 w-4 text-primary" />
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-sm font-semibold text-slate-700">
                   გარიგების ტიპი
                 </label>
               </div>
@@ -434,7 +616,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-full p-0" align="start">
+                <PopoverContent className="w-[240px] p-0 z-50" align="start">
                   <Command>
                     <CommandInput placeholder="მოძებნეთ გარიგების ტიპი..." />
                     <CommandList>
@@ -476,11 +658,11 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
               </Popover>
             </div>
 
-            {/* Property Type */}
-            <div className="w-2/12 flex flex-col gap-2">
+            {/* Desktop: Property Type */}
+            <div className="hidden lg:flex w-2/12 flex-col gap-2">
               <div className="flex items-center gap-2">
                 <Home className="h-4 w-4 text-primary" />
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-sm font-semibold text-slate-700">
                   ქონების ტიპი
                 </label>
               </div>
@@ -490,7 +672,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                     variant="outline"
                     role="combobox"
                     aria-expanded={propertyTypePopoverOpen}
-                    className="h-12 w-full justify-between text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                    className="h-10 sm:h-12 w-full justify-between text-xs sm:text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                   >
                     {Array.isArray(filters.propertyType) && filters.propertyType.length > 0 ? (
                       <div className="flex items-center gap-2">
@@ -506,7 +688,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-full p-0" align="start">
+                <PopoverContent className="w-[240px] p-0 z-50" align="start">
                   <Command>
                     <CommandInput placeholder="მოძებნეთ ქონების ტიპი..." />
                     <CommandList>
@@ -552,14 +734,14 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
             </div>
 
             {/* Location Selection - City and District */}
-            <div className="w-5/12 flex flex-col gap-2">
+            <div className="w-full lg:w-5/12 flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-xs sm:text-sm font-semibold text-slate-700">
                   მდებარეობა
                 </label>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-row gap-2">
                 {/* City Selection */}
                 <div className="flex-1">
                   <Popover open={cityPopoverOpen} onOpenChange={setCityPopoverOpen}>
@@ -568,7 +750,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                         variant="outline"
                         role="combobox"
                         aria-expanded={cityPopoverOpen}
-                        className="h-12 w-full justify-between text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                        className="h-10 sm:h-12 w-full justify-between text-xs sm:text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                         disabled={isLoadingCities}
                       >
                         {isLoadingCities ? (
@@ -584,7 +766,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
+                    <PopoverContent className="w-[200px] p-0 z-50" align="start">
                       <Command>
                         <CommandInput placeholder="მოძებნეთ ქალაქი..." />
                         <CommandList>
@@ -635,7 +817,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                           variant="outline"
                           role="combobox"
                           aria-expanded={areaPopoverOpen}
-                          className="h-12 w-full justify-between text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                          className="h-10 sm:h-12 w-full justify-between text-xs sm:text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                           disabled={isLoadingAreas}
                         >
                           {isLoadingAreas ? (
@@ -651,7 +833,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
+                      <PopoverContent className="w-[200px] p-0 z-50" align="start">
                         <Command>
                           <CommandInput placeholder="მოძებნეთ უბანი..." />
                           <CommandList>
@@ -696,63 +878,63 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
               </div>
             </div>
 
-            <AdvancedFiltersModal
-              filters={{
-                priceMin: filters.priceMin,
-                priceMax: filters.priceMax,
-                areaMin: filters.areaMin,
-                areaMax: filters.areaMax,
-                bedrooms: filters.bedrooms,
-                bathrooms: filters.bathrooms,
-                rooms: filters.rooms,
-                location: filters.location,
-                dailyRentalSubcategory: filters.dailyRentalSubcategory,
-                totalFloors: filters.totalFloors,
-                buildingStatus: filters.buildingStatus,
-                constructionYearMin: filters.constructionYearMin,
-                constructionYearMax: filters.constructionYearMax,
-                condition: filters.condition,
-                projectType: filters.projectType,
-                ceilingHeightMin: filters.ceilingHeightMin,
-                ceilingHeightMax: filters.ceilingHeightMax,
-                buildingMaterial: filters.buildingMaterial,
-                heating: filters.heating,
-                parking: filters.parking,
-                hotWater: filters.hotWater,
-                hasBalcony: filters.hasBalcony,
-                hasPool: filters.hasPool,
-                hasLivingRoom: filters.hasLivingRoom,
-                hasLoggia: filters.hasLoggia,
-                hasVeranda: filters.hasVeranda,
-                hasYard: filters.hasYard,
-                hasStorage: filters.hasStorage,
-                selectedFeatures: filters.selectedFeatures,
-                selectedAdvantages: filters.selectedAdvantages,
-                selectedFurnitureAppliances: filters.selectedFurnitureAppliances
-              }}
-              onApplyFilters={(advancedFilters) => {
-                console.log('🎯 PropertySearchHero: onApplyFilters called', { advancedFilters, currentFilters: filters });
-                const updatedFilters = { ...filters, ...advancedFilters };
-                console.log('📋 PropertySearchHero: updatedFilters', updatedFilters);
-                setFilters(updatedFilters);
-                // Apply advanced filters immediately when Apply button is clicked
-                console.log('🔍 PropertySearchHero: calling onSearch with', updatedFilters);
-                onSearch(updatedFilters);
-              }}
-              onClearFilters={clearAllFilters}
-              totalProperties={totalProperties}
-              filteredCount={filteredCount}
-              transactionType={filters.transactionType}
-            />
+            {/* Search and Advanced Filter Buttons */}
+            <div className="w-full lg:w-auto lg:flex-1 flex flex-row gap-2 justify-end items-end">
+              {/* Advanced Filters Button */}
+              <AdvancedFiltersModal
+                filters={{
+                  priceMin: filters.priceMin,
+                  priceMax: filters.priceMax,
+                  areaMin: filters.areaMin,
+                  areaMax: filters.areaMax,
+                  bedrooms: filters.bedrooms,
+                  bathrooms: filters.bathrooms,
+                  rooms: filters.rooms,
+                  location: filters.location,
+                  dailyRentalSubcategory: filters.dailyRentalSubcategory,
+                  totalFloors: filters.totalFloors,
+                  buildingStatus: filters.buildingStatus,
+                  constructionYearMin: filters.constructionYearMin,
+                  constructionYearMax: filters.constructionYearMax,
+                  condition: filters.condition,
+                  projectType: filters.projectType,
+                  ceilingHeightMin: filters.ceilingHeightMin,
+                  ceilingHeightMax: filters.ceilingHeightMax,
+                  buildingMaterial: filters.buildingMaterial,
+                  heating: filters.heating,
+                  parking: filters.parking,
+                  hotWater: filters.hotWater,
+                  hasBalcony: filters.hasBalcony,
+                  hasPool: filters.hasPool,
+                  hasLivingRoom: filters.hasLivingRoom,
+                  hasLoggia: filters.hasLoggia,
+                  hasVeranda: filters.hasVeranda,
+                  hasYard: filters.hasYard,
+                  hasStorage: filters.hasStorage,
+                  selectedFeatures: filters.selectedFeatures,
+                  selectedAdvantages: filters.selectedAdvantages,
+                  selectedFurnitureAppliances: filters.selectedFurnitureAppliances
+                }}
+                onApplyFilters={(advancedFilters) => {
+                  console.log('🎯 PropertySearchHero: onApplyFilters called', { advancedFilters, currentFilters: filters });
+                  const updatedFilters = { ...filters, ...advancedFilters };
+                  console.log('📋 PropertySearchHero: updatedFilters', updatedFilters);
+                  setFilters(updatedFilters);
+                  // Advanced filters will only update state, navigation happens on search button click
+                }}
+                onClearFilters={clearAllFilters}
+                totalProperties={totalProperties}
+                filteredCount={filteredCount}
+                transactionType={filters.transactionType}
+              />
 
-            {/* Search and Clear Buttons */}
-            <div className={`${selectedCityId && areas.length > 0 ? 'w-2/12' : 'w-3/12'} flex flex-col justify-end`}>
+              {/* Search Button */}
               {hasActiveFilters ? (
-                <div className="w-full">
+                <div className="flex-1">
                   <Button 
                     onClick={handleSearch}
                     size="lg" 
-                    className={`${buttonClasses} w-full`}
+                    className={`${buttonClasses} w-full text-sm sm:text-base h-12`}
                     disabled={isSearching}
                   >
                     {isSearching ? (
@@ -769,24 +951,26 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                   </Button>
                 </div>
               ) : (
-                <Button 
-                  onClick={handleSearch}
-                  size="lg" 
-                  className={`${buttonClasses} w-full`}
-                  disabled={isSearching}
-                >
-                  {isSearching ? (
-                    <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      ძიება...
-                    </>
-                  ) : (
-                    <>
-                      <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                      ძიება
-                    </>
-                  )}
-                </Button>
+                <div className="flex-1">
+                  <Button 
+                    onClick={handleSearch}
+                    size="lg" 
+                    className={`${buttonClasses} w-full text-sm sm:text-base h-12`}
+                    disabled={isSearching}
+                  >
+                    {isSearching ? (
+                      <>
+                        <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                        ძიება...
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+                        ძიება
+                      </>
+                    )}
+                  </Button>
+                </div>
               )}
             </div>
           </div>
