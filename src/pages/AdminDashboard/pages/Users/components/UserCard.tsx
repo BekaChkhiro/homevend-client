@@ -1,21 +1,25 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Edit, Trash2, Eye, Mail, Phone, Calendar, Shield, User, Crown } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, Eye, Mail, Phone, Calendar, Shield, User, Crown, Building2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast";
 
 interface UserCardProps {
   id: number;
   name: string;
   email: string;
   phone?: string;
-  role: "user" | "admin" | "moderator";
+  role: "user" | "admin" | "developer" | "agency";
   status: "active" | "inactive" | "suspended" | "pending";
   avatar?: string;
   joinDate: string;
   lastActive: string;
   propertiesCount: number;
   verified: boolean;
+  onDelete?: (userId: number) => void;
 }
 
 export const UserCard = ({ 
@@ -29,8 +33,11 @@ export const UserCard = ({
   joinDate, 
   lastActive, 
   propertiesCount, 
-  verified 
+  verified,
+  onDelete 
 }: UserCardProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active": return "bg-green-100 text-green-800";
@@ -54,7 +61,8 @@ export const UserCard = ({
   const getRoleColor = (role: string) => {
     switch (role) {
       case "admin": return "bg-purple-100 text-purple-800";
-      case "moderator": return "bg-blue-100 text-blue-800";
+      case "developer": return "bg-blue-100 text-blue-800";
+      case "agency": return "bg-green-100 text-green-800";
       case "user": return "bg-gray-100 text-gray-800";
       default: return "bg-gray-100 text-gray-800";
     }
@@ -63,7 +71,8 @@ export const UserCard = ({
   const getRoleText = (role: string) => {
     switch (role) {
       case "admin": return "ადმინი";
-      case "moderator": return "მოდერატორი";
+      case "developer": return "დეველოპერი";
+      case "agency": return "სააგენტო";
       case "user": return "მომხმარებელი";
       default: return role;
     }
@@ -72,9 +81,24 @@ export const UserCard = ({
   const getRoleIcon = (role: string) => {
     switch (role) {
       case "admin": return <Crown className="h-4 w-4" />;
-      case "moderator": return <Shield className="h-4 w-4" />;
+      case "developer": return <Shield className="h-4 w-4" />;
+      case "agency": return <Building2 className="h-4 w-4" />;
       case "user": return <User className="h-4 w-4" />;
       default: return <User className="h-4 w-4" />;
+    }
+  };
+
+  const handleView = () => {
+    navigate(`/user/${id}`);
+  };
+
+  const handleEdit = () => {
+    navigate(`/admin/edit-user/${id}`);
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(id);
     }
   };
 
@@ -163,22 +187,40 @@ export const UserCard = ({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleView}>
                   <Eye className="mr-2 h-4 w-4" />
                   ნახვა
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleEdit}>
                   <Edit className="mr-2 h-4 w-4" />
                   რედაქტირება
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => window.location.href = `mailto:${email}`}>
                   <Mail className="mr-2 h-4 w-4" />
                   შეტყობინება
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-red-600">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  წაშლა
-                </DropdownMenuItem>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem className="text-red-600" onSelect={(e) => e.preventDefault()}>
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      წაშლა
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>მომხმარებლის წაშლა</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        დარწმუნებული ხართ, რომ გსურთ ამ მომხმარებლის წაშლა? ეს მოქმედება შეუქცევადია.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                        წაშლა
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </DropdownMenuContent>
             </DropdownMenu>
             

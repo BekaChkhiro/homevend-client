@@ -49,64 +49,6 @@ export const EditProject: React.FC = () => {
     totalApartments: "",
     numberOfFloors: "",
     parkingSpaces: "",
-    // Amenities in project area
-    hasGroceryStore: false,
-    hasBikePath: false,
-    hasSportsField: false,
-    hasChildrenArea: false,
-    hasSquare: false,
-    // Within 300 meters
-    pharmacy300m: false,
-    kindergarten300m: false,
-    school300m: false,
-    busStop300m: false,
-    groceryStore300m: false,
-    bikePath300m: false,
-    sportsField300m: false,
-    stadium300m: false,
-    square300m: false,
-    // Within 500 meters
-    pharmacy500m: false,
-    kindergarten500m: false,
-    school500m: false,
-    university500m: false,
-    busStop500m: false,
-    groceryStore500m: false,
-    bikePath500m: false,
-    sportsField500m: false,
-    stadium500m: false,
-    square500m: false,
-    // Within 1 kilometer
-    pharmacy1km: false,
-    kindergarten1km: false,
-    school1km: false,
-    university1km: false,
-    hospital1km: false,
-    clinic1km: false,
-    busStop1km: false,
-    metro1km: false,
-    groceryStore1km: false,
-    supermarket1km: false,
-    mall1km: false,
-    bank1km: false,
-    atm1km: false,
-    restaurant1km: false,
-    cafe1km: false,
-    bakery1km: false,
-    sportsCenter1km: false,
-    stadium1km: false,
-    swimmingPool1km: false,
-    park1km: false,
-    square1km: false,
-    cinema1km: false,
-    theater1km: false,
-    library1km: false,
-    postOffice1km: false,
-    gasStation1km: false,
-    carWash1km: false,
-    veterinary1km: false,
-    beautyCenter1km: false,
-    dentist1km: false,
     // Services
     securityService: false,
     hasLobby: false,
@@ -179,32 +121,7 @@ export const EditProject: React.FC = () => {
         totalApartments: project.totalApartments?.toString() || "",
         numberOfFloors: project.numberOfFloors?.toString() || "",
         parkingSpaces: project.parkingSpaces?.toString() || "",
-        // Copy all boolean amenity fields
-        hasGroceryStore: project.hasGroceryStore || false,
-        hasBikePath: project.hasBikePath || false,
-        hasSportsField: project.hasSportsField || false,
-        hasChildrenArea: project.hasChildrenArea || false,
-        hasSquare: project.hasSquare || false,
-        pharmacy300m: project.pharmacy300m || false,
-        kindergarten300m: project.kindergarten300m || false,
-        school300m: project.school300m || false,
-        busStop300m: project.busStop300m || false,
-        groceryStore300m: project.groceryStore300m || false,
-        bikePath300m: project.bikePath300m || false,
-        sportsField300m: project.sportsField300m || false,
-        stadium300m: project.stadium300m || false,
-        square300m: project.square300m || false,
-        pharmacy500m: project.pharmacy500m || false,
-        kindergarten500m: project.kindergarten500m || false,
-        school500m: project.school500m || false,
-        university500m: project.university500m || false,
-        busStop500m: project.busStop500m || false,
-        groceryStore500m: project.groceryStore500m || false,
-        bikePath500m: project.bikePath500m || false,
-        sportsField500m: project.sportsField500m || false,
-        stadium500m: project.stadium500m || false,
-        square500m: project.square500m || false,
-        hospital1km: project.hospital1km || false,
+        // Services
         securityService: project.securityService || false,
         hasLobby: project.hasLobby || false,
         hasConcierge: project.hasConcierge || false,
@@ -656,43 +573,6 @@ export const EditProject: React.FC = () => {
 
           {/* Amenities Tab */}
           <TabsContent value="amenities" className="space-y-6">
-            {/* On-site amenities */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5" />
-                  პროექტის ტერიტორიაზე
-                </CardTitle>
-                <CardDescription>აირჩიეთ რა არის პირდაპირ პროექტის ტერიტორიაზე</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { key: 'hasGroceryStore', label: '🏪 მაღაზია' },
-                    { key: 'hasBikePath', label: '🚴 ველოსიპედის ბილიკი' },
-                    { key: 'hasSportsField', label: '⚽ სპორტული მოედანი' },
-                    { key: 'hasChildrenArea', label: '🎪 ბავშვთა მოედანი' },
-                    { key: 'hasSquare', label: '🏛️ მოედანი' },
-                    { key: 'hasGym', label: '💪 სპორტული დარბაზი' },
-                    { key: 'hasSwimmingPool', label: '🏊 საცურაო აუზი' },
-                    { key: 'hasGarden', label: '🌳 ბაღი/პარკი' },
-                    { key: 'hasParking', label: '🚗 პარკინგი' },
-                    { key: 'hasRestaurant', label: '🍽️ რესტორანი/კაფე' },
-                    { key: 'hasLaundry', label: '🧺 სამრეცხაო' },
-                    { key: 'hasStorage', label: '📦 საწყობი' }
-                  ].map((amenity) => (
-                    <div key={amenity.key} className="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                      <Checkbox
-                        id={amenity.key}
-                        checked={formData[amenity.key as keyof typeof formData] as boolean}
-                        onCheckedChange={(checked) => handleInputChange(amenity.key, checked)}
-                      />
-                      <Label htmlFor={amenity.key} className="text-sm cursor-pointer">{amenity.label}</Label>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
 
             {/* Distance-based amenities with flexible selection */}
             <Card>
@@ -723,10 +603,18 @@ export const EditProject: React.FC = () => {
                     { key: 'cafe', label: '☕ კაფე' },
                     { key: 'bakery', label: '🥖 საცხობი' },
                     { key: 'sportsCenter', label: '🏋️ სპორტული ცენტრი' },
+                    { key: 'gym', label: '💪 სპორტული დარბაზი' },
                     { key: 'stadium', label: '🏟️ სტადიონი' },
                     { key: 'swimmingPool', label: '🏊 საცურაო აუზი' },
                     { key: 'park', label: '🌳 პარკი' },
+                    { key: 'garden', label: '🌳 ბაღი' },
                     { key: 'square', label: '🏛️ მოედანი' },
+                    { key: 'parking', label: '🚗 პარკინგი' },
+                    { key: 'bikePath', label: '🚴 ველოსიპედის ბილიკი' },
+                    { key: 'sportsField', label: '⚽ სპორტული მოედანი' },
+                    { key: 'childrenArea', label: '🎪 ბავშვთა მოედანი' },
+                    { key: 'laundry', label: '🧺 სამრეცხაო' },
+                    { key: 'storage', label: '📦 საწყობი' },
                     { key: 'cinema', label: '🎬 კინო' },
                     { key: 'theater', label: '🎭 თეატრი' },
                     { key: 'library', label: '📚 ბიბლიოთეკა' },
