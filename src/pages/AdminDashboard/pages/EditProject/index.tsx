@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,9 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar, DollarSign, Bed, Square } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { PhotoGallerySection } from "./AddProject/components/PhotoGallerySection";
+import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar } from "lucide-react";
 
 interface City {
   id: number;
@@ -25,35 +23,15 @@ interface Area {
   nameKa: string;
 }
 
-interface UserProperty {
-  id: number;
-  title: string;
-  propertyType: string;
-  dealType: string;
-  city: string;
-  street: string;
-  streetNumber?: string;
-  area: number;
-  totalPrice: number;
-  rooms?: string;
-  viewCount: number;
-  createdAt: string;
-  cityData?: {
-    nameGeorgian: string;
-  };
-  areaData?: {
-    nameKa: string;
-  };
-}
-
-
-export const AddProject: React.FC = () => {
+const AdminEditProject: React.FC = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
-  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
   const [areas, setAreas] = useState<Area[]>([]);
+  const [projectOwner, setProjectOwner] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     projectName: "",
@@ -69,64 +47,6 @@ export const AddProject: React.FC = () => {
     totalApartments: "",
     numberOfFloors: "",
     parkingSpaces: "",
-    // Amenities in project area
-    hasGroceryStore: false,
-    hasBikePath: false,
-    hasSportsField: false,
-    hasChildrenArea: false,
-    hasSquare: false,
-    // Within 300 meters
-    pharmacy300m: false,
-    kindergarten300m: false,
-    school300m: false,
-    busStop300m: false,
-    groceryStore300m: false,
-    bikePath300m: false,
-    sportsField300m: false,
-    stadium300m: false,
-    square300m: false,
-    // Within 500 meters
-    pharmacy500m: false,
-    kindergarten500m: false,
-    school500m: false,
-    university500m: false,
-    busStop500m: false,
-    groceryStore500m: false,
-    bikePath500m: false,
-    sportsField500m: false,
-    stadium500m: false,
-    square500m: false,
-    // Within 1 kilometer
-    pharmacy1km: false,
-    kindergarten1km: false,
-    school1km: false,
-    university1km: false,
-    hospital1km: false,
-    clinic1km: false,
-    busStop1km: false,
-    metro1km: false,
-    groceryStore1km: false,
-    supermarket1km: false,
-    mall1km: false,
-    bank1km: false,
-    atm1km: false,
-    restaurant1km: false,
-    cafe1km: false,
-    bakery1km: false,
-    sportsCenter1km: false,
-    stadium1km: false,
-    swimmingPool1km: false,
-    park1km: false,
-    square1km: false,
-    cinema1km: false,
-    theater1km: false,
-    library1km: false,
-    postOffice1km: false,
-    gasStation1km: false,
-    carWash1km: false,
-    veterinary1km: false,
-    beautyCenter1km: false,
-    dentist1km: false,
     // Services
     securityService: false,
     hasLobby: false,
@@ -139,18 +59,17 @@ export const AddProject: React.FC = () => {
     hasDoorman: false,
     fireSystem: false,
     mainDoorLock: false,
+    maintenance: false,
   });
 
-  const [userProperties, setUserProperties] = useState<UserProperty[]>([]);
-  const [selectedProperties, setSelectedProperties] = useState<number[]>([]);
-  const [propertiesLoading, setPropertiesLoading] = useState(false);
   const [customAmenities, setCustomAmenities] = useState<{[key: string]: string}>({});
-  const [projectImages, setProjectImages] = useState<File[]>([]);
 
   useEffect(() => {
     fetchCities();
-    fetchUserProperties();
-  }, []);
+    if (id) {
+      fetchProject();
+    }
+  }, [id]);
 
   useEffect(() => {
     if (formData.cityId) {
@@ -160,6 +79,123 @@ export const AddProject: React.FC = () => {
       setFormData(prev => ({ ...prev, areaId: "" }));
     }
   }, [formData.cityId]);
+
+  const fetchProject = async () => {
+    try {
+      setIsFetching(true);
+      console.log('Admin fetching project with ID:', id);
+      
+      // Try admin-specific endpoint first
+      let response = await fetch(`/api/admin/projects/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      console.log('Admin project fetch response status:', response.status);
+      
+      // If admin endpoint doesn't work, try regular endpoint
+      if (response.status === 404 || !response.ok) {
+        console.log('Admin endpoint failed, trying regular project endpoint...');
+        response = await fetch(`/api/projects/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        console.log('Regular project fetch response status:', response.status);
+      }
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast({
+            title: "შეცდომა",
+            description: "პროექტი ვერ მოიძებნა",
+            variant: "destructive",
+          });
+          navigate('/admin/projects');
+          return;
+        }
+        throw new Error('Failed to fetch project');
+      }
+
+      const project = await response.json();
+      console.log('Fetched project data:', project);
+      console.log('Project developer/owner:', project.developer || project.user);
+      
+      // Store project owner info
+      setProjectOwner(project.developer || project.user || null);
+      
+      // Convert project data to form format
+      setFormData({
+        projectName: project.projectName || "",
+        description: project.description || "",
+        cityId: project.cityId?.toString() || "",
+        areaId: project.areaId?.toString() || "",
+        street: project.street || "",
+        streetNumber: project.streetNumber || "",
+        projectType: project.projectType || "",
+        deliveryStatus: project.deliveryStatus || "",
+        deliveryDate: project.deliveryDate ? project.deliveryDate.split('T')[0] : "",
+        numberOfBuildings: project.numberOfBuildings?.toString() || "",
+        totalApartments: project.totalApartments?.toString() || "",
+        numberOfFloors: project.numberOfFloors?.toString() || "",
+        parkingSpaces: project.parkingSpaces?.toString() || "",
+        // Services
+        securityService: project.securityService || false,
+        hasLobby: project.hasLobby || false,
+        hasConcierge: project.hasConcierge || false,
+        videoSurveillance: project.videoSurveillance || false,
+        hasLighting: project.hasLighting || false,
+        landscaping: project.landscaping || false,
+        yardCleaning: project.yardCleaning || false,
+        entranceCleaning: project.entranceCleaning || false,
+        hasDoorman: project.hasDoorman || false,
+        fireSystem: project.fireSystem || false,
+        mainDoorLock: project.mainDoorLock || false,
+        maintenance: project.maintenance || false,
+      });
+
+      // Convert amenities array to customAmenities format
+      if (project.amenities && Array.isArray(project.amenities)) {
+        const amenitiesMap: {[key: string]: string} = {};
+        project.amenities.forEach((amenity: any) => {
+          // Convert database distance format to form format
+          let distanceKey: string;
+          switch (amenity.distance) {
+            case 'on_site':
+              distanceKey = 'onSite';
+              break;
+            case 'within_300m':
+              distanceKey = '300m';
+              break;
+            case 'within_500m':
+              distanceKey = '500m';
+              break;
+            case 'within_1km':
+              distanceKey = '1km';
+              break;
+            default:
+              distanceKey = amenity.distance;
+          }
+          amenitiesMap[amenity.amenityType] = distanceKey;
+        });
+        setCustomAmenities(amenitiesMap);
+      } else if (project.customAmenities) {
+        // Fallback for old format
+        setCustomAmenities(project.customAmenities);
+      }
+    } catch (error) {
+      console.error('Error fetching project:', error);
+      toast({
+        title: "შეცდომა",
+        description: "პროექტის ჩატვირთვისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+      navigate('/admin/projects');
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
   const fetchCities = async () => {
     try {
@@ -202,7 +238,6 @@ export const AddProject: React.FC = () => {
     }
   };
 
-
   const handleInputChange = (name: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -214,39 +249,6 @@ export const AddProject: React.FC = () => {
     }));
   };
 
-  const fetchUserProperties = async () => {
-    try {
-      setPropertiesLoading(true);
-      const response = await fetch('/api/properties/my-properties', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        // Only show properties that are not already linked to any project
-        const unlinkedProperties = data.filter((property: any) => !property.projectId);
-        setUserProperties(unlinkedProperties || []);
-      } else {
-        setUserProperties([]);
-      }
-    } catch (error) {
-      console.error('Error fetching user properties:', error);
-      setUserProperties([]);
-    } finally {
-      setPropertiesLoading(false);
-    }
-  };
-
-  const handlePropertySelection = (propertyId: number, selected: boolean) => {
-    if (selected) {
-      setSelectedProperties(prev => [...prev, propertyId]);
-    } else {
-      setSelectedProperties(prev => prev.filter(id => id !== propertyId));
-    }
-  };
-
   const clearCustomAmenity = (amenityType: string) => {
     setCustomAmenities(prev => {
       const newState = { ...prev };
@@ -255,37 +257,65 @@ export const AddProject: React.FC = () => {
     });
   };
 
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (user?.role !== 'developer') {
-      toast({
-        title: "შეცდომა",
-        description: "მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsLoading(true);
 
     try {
+      // Only include fields that actually exist in the Project entity
       const projectData = {
-        ...formData,
+        // Basic Information
+        projectName: formData.projectName,
+        description: formData.description,
+        
+        // Location
         cityId: parseInt(formData.cityId),
         areaId: formData.areaId ? parseInt(formData.areaId) : undefined,
+        street: formData.street,
+        streetNumber: formData.streetNumber,
+        
+        // Project Details  
+        projectType: formData.projectType,
+        deliveryStatus: formData.deliveryStatus,
+        deliveryDate: formData.deliveryDate || undefined,
         numberOfBuildings: parseInt(formData.numberOfBuildings),
         totalApartments: parseInt(formData.totalApartments),
         numberOfFloors: parseInt(formData.numberOfFloors),
         parkingSpaces: formData.parkingSpaces ? parseInt(formData.parkingSpaces) : undefined,
-        deliveryDate: formData.deliveryDate || undefined,
+        
+        
+        // Post-handover services
+        securityService: formData.securityService,
+        hasLobby: formData.hasLobby,
+        hasConcierge: formData.hasConcierge,
+        videoSurveillance: formData.videoSurveillance,
+        hasLighting: formData.hasLighting,
+        landscaping: formData.landscaping,
+        yardCleaning: formData.yardCleaning,
+        entranceCleaning: formData.entranceCleaning,
+        hasDoorman: formData.hasDoorman,
+        fireSystem: formData.fireSystem,
+        mainDoorLock: formData.mainDoorLock,
+        maintenance: formData.maintenance,
+        
+        // Custom amenities for fields not in the entity
         customAmenities: customAmenities,
       };
 
-      const response = await fetch('/api/projects', {
-        method: 'POST',
+      console.log('Updating project with data:', projectData);
+      console.log('Project ID:', id);
+      console.log('Data types:', {
+        cityId: typeof projectData.cityId,
+        areaId: typeof projectData.areaId,
+        numberOfBuildings: typeof projectData.numberOfBuildings,
+        totalApartments: typeof projectData.totalApartments,
+        numberOfFloors: typeof projectData.numberOfFloors
+      });
+
+      // Try admin-specific endpoint first for updates
+      let response = await fetch(`/api/admin/projects/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -293,47 +323,70 @@ export const AddProject: React.FC = () => {
         body: JSON.stringify(projectData),
       });
 
+      console.log('Admin update response status:', response.status);
+      
+      // If admin endpoint doesn't work, try regular endpoint
+      if (response.status === 404 || response.status === 403) {
+        console.log('Admin update endpoint failed, trying regular project endpoint...');
+        response = await fetch(`/api/projects/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(projectData),
+        });
+        console.log('Regular update response status:', response.status);
+      }
+
+      console.log('Update response status:', response.status);
+      console.log('Update response headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
-        throw new Error('Failed to create project');
-      }
-
-      const newProject = await response.json();
-
-      // Link selected properties to the project
-      if (selectedProperties.length > 0) {
-        try {
-          await Promise.all(selectedProperties.map(async (propertyId) => {
-            const linkResponse = await fetch(`/api/properties/${propertyId}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              },
-              body: JSON.stringify({ projectId: newProject.project?.id || newProject.id }),
-            });
-            
-            if (!linkResponse.ok) {
-              console.error(`Failed to link property ${propertyId} to project`);
-            }
-          }));
-        } catch (linkError) {
-          console.error('Error linking properties to project:', linkError);
-          // Don't fail the whole operation if linking fails
+        const errorText = await response.text();
+        console.error('Update error response:', errorText);
+        
+        // Handle specific error cases
+        if (response.status === 404) {
+          toast({
+            title: "პროექტი ვერ მოიძებნა",
+            description: "მითითებული ID-ით პროექტი არ არსებობს.",
+            variant: "destructive",
+          });
+          return;
         }
+        
+        if (response.status === 403) {
+          toast({
+            title: "წვდომა აკრძალულია",
+            description: "თქვენ არ გაქვთ უფლება ამ პროექტის რედაქტირების.",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        throw new Error(`Update failed with status ${response.status}: ${errorText}`);
       }
 
+      const result = await response.json();
+      console.log('Update success response:', result);
 
       toast({
         title: "წარმატება",
-        description: `პროექტი წარმატებით შეიქმნა${selectedProperties.length > 0 ? ` და ${selectedProperties.length} განცხადება მიმაგრდა` : ''}`,
+        description: "პროექტი წარმატებით განახლდა",
       });
 
-      navigate('/dashboard');
+      navigate('/admin/projects');
     } catch (error: any) {
-      console.error('Error creating project:', error);
+      console.error('Error updating project:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack
+      });
+      
       toast({
         title: "შეცდომა",
-        description: "პროექტის შექმნისას მოხდა შეცდომა",
+        description: `პროექტის განახლებისას მოხდა შეცდომა: ${error.message}. შეამოწმეთ კონსოლი დეტალებისთვის.`,
         variant: "destructive",
       });
     } finally {
@@ -341,23 +394,26 @@ export const AddProject: React.FC = () => {
     }
   };
 
-  if (user?.role !== 'developer') {
+  if (isFetching) {
     return (
-      <div className="max-w-2xl mx-auto py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>წვდომა აკრძალულია</CardTitle>
-            <CardDescription>
-              მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => navigate('/dashboard')} variant="outline">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              უკან დაბრუნება
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="max-w-4xl mx-auto py-6">
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/admin/projects')}
+            className="mb-4"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            უკან დაბრუნება
+          </Button>
+          <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება (ადმინი)</h1>
+        </div>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">პროექტის ჩატვირთვა...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -367,24 +423,35 @@ export const AddProject: React.FC = () => {
       <div className="mb-6">
         <Button
           variant="ghost"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/admin/projects')}
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           უკან დაბრუნება
         </Button>
         
-        <h1 className="text-2xl font-bold mb-2">ახალი პროექტის დამატება</h1>
-        <p className="text-gray-600">შეავსეთ პროექტის ინფორმაცია</p>
+        <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება (ადმინი)</h1>
+        <div className="space-y-1">
+          <p className="text-gray-600">პროექტი #{id}</p>
+          {projectOwner && (
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+              <p className="text-sm text-blue-800">
+                <strong>პროექტის მფლობელი:</strong> {projectOwner.fullName || projectOwner.name} ({projectOwner.email})
+              </p>
+              <p className="text-xs text-blue-600 mt-1">
+                შენიშვნა: ადმინისტრატორებს შეუძლიათ ნებისმიერი პროექტის რედაქტირება
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="basic">ძირითადი ინფო</TabsTrigger>
             <TabsTrigger value="amenities">კომფორტი</TabsTrigger>
             <TabsTrigger value="services">სერვისები</TabsTrigger>
-            <TabsTrigger value="properties">განცხადების მიმაგრება</TabsTrigger>
           </TabsList>
 
           {/* Basic Information Tab */}
@@ -598,17 +665,24 @@ export const AddProject: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Photo Gallery Section */}
-            <PhotoGallerySection
-              images={projectImages}
-              onImagesChange={setProjectImages}
-            />
+            {/* Photo Gallery Placeholder */}
+            <Card>
+              <CardHeader>
+                <CardTitle>ფოტო გალერია</CardTitle>
+                <CardDescription>ფოტო ატვირთვის ფუნქციონალი (მოკი)</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <p className="text-gray-500">ფოტო ატვირთვის ფუნქციონალი განხორციელდება მოგვიანებით</p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Amenities Tab */}
           <TabsContent value="amenities" className="space-y-6">
 
-            {/* Distance-based amenities with flexible selection */}
+            {/* Distance-based amenities */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -767,149 +841,23 @@ export const AddProject: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* Properties Tab */}
-          <TabsContent value="properties" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5" />
-                  განცხადების მიმაგრება პროექტზე
-                </CardTitle>
-                <CardDescription>
-                  აირჩიეთ თქვენი არსებული განცხადებები რომლებიც გსურთ ამ პროექტთან დაკავშირება
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {propertiesLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <span className="ml-2">განცხადებების ჩატვირთვა...</span>
-                  </div>
-                ) : userProperties.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>თქვენ არ გაქვთ არსებული განცხადებები რომლებიც შეიძლება მიამაგროთ</p>
-                    <p className="text-sm mt-2">ჯერ შექმენით განცხადება, შემდეგ მოახერხებთ მის მიმაგრებას პროექტზე</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-sm text-gray-600 mb-4">
-                      {selectedProperties.length > 0 
-                        ? `${selectedProperties.length} განცხადება არჩეულია მიმაგრებისთვის`
-                        : 'აირჩიეთ განცხადებები რომლებიც გსურთ პროექტთან მიამაგროთ'
-                      }
-                    </div>
-                    
-                    <div className="grid grid-cols-1 gap-4 max-h-96 overflow-y-auto">
-                      {userProperties.map((property) => (
-                        <div 
-                          key={property.id} 
-                          className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
-                            selectedProperties.includes(property.id) 
-                              ? 'border-primary bg-primary/5 ring-2 ring-primary/20' 
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                          onClick={() => handlePropertySelection(property.id, !selectedProperties.includes(property.id))}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Checkbox
-                                  checked={selectedProperties.includes(property.id)}
-                                  onCheckedChange={() => handlePropertySelection(property.id, !selectedProperties.includes(property.id))}
-                                  className="pointer-events-none"
-                                />
-                                <h4 className="font-semibold text-sm line-clamp-2">{property.title}</h4>
-                              </div>
-                              
-                              <div className="space-y-2 text-sm text-gray-600">
-                                <div className="flex items-center gap-2">
-                                  <MapPin className="h-4 w-4" />
-                                  <span>
-                                    {property.cityData?.nameGeorgian || property.city}
-                                    {property.areaData && `, ${property.areaData.nameKa}`}
-                                    , {property.street}
-                                    {property.streetNumber && ` ${property.streetNumber}`}
-                                  </span>
-                                </div>
-                                
-                                <div className="flex items-center gap-4">
-                                  <div className="flex items-center gap-1">
-                                    <Square className="h-4 w-4" />
-                                    <span>{property.area} მ²</span>
-                                  </div>
-                                  {property.rooms && (
-                                    <div className="flex items-center gap-1">
-                                      <Bed className="h-4 w-4" />
-                                      <span>{property.rooms} ოთახი</span>
-                                    </div>
-                                  )}
-                                  <div className="flex items-center gap-1">
-                                    <DollarSign className="h-4 w-4" />
-                                    <span>
-                                      {new Intl.NumberFormat('ka-GE', {
-                                        style: 'currency',
-                                        currency: 'GEL',
-                                        minimumFractionDigits: 0
-                                      }).format(property.totalPrice)}
-                                    </span>
-                                  </div>
-                                </div>
-                                
-                                <div className="flex items-center justify-between">
-                                  <div className="flex gap-2">
-                                    <Badge variant="outline" className="text-xs">
-                                      {property.propertyType === 'apartment' ? 'ბინა' :
-                                       property.propertyType === 'house' ? 'სახლი' :
-                                       property.propertyType === 'commercial' ? 'კომერციული' :
-                                       property.propertyType}
-                                    </Badge>
-                                    <Badge variant="secondary" className="text-xs">
-                                      {property.dealType === 'sale' ? 'იყიდება' :
-                                       property.dealType === 'rent' ? 'ქირავდება' :
-                                       property.dealType === 'daily' ? 'დღიური' :
-                                       property.dealType}
-                                    </Badge>
-                                  </div>
-                                  <span className="text-xs text-gray-400">
-                                    {new Date(property.createdAt).toLocaleDateString('ka-GE')}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {selectedProperties.length > 0 && (
-                      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-800">
-                          <strong>{selectedProperties.length}</strong> განცხადება მიმაგრდება ამ პროექტზე პროექტის შექმნის შემდეგ
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
         </Tabs>
 
         <div className="flex justify-end space-x-4 pt-6">
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/admin/projects')}
           >
             გაუქმება
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "შენახვა..." : "პროექტის შენახვა"}
+            {isLoading ? "შენახვა..." : "ცვლილებების შენახვა"}
           </Button>
         </div>
       </form>
     </div>
   );
 };
+
+export default AdminEditProject;

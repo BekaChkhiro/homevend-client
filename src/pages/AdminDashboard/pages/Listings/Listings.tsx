@@ -8,9 +8,11 @@ import { useToast } from '@/components/ui/use-toast';
 
 interface Property {
   id: number;
+  title?: string;
   propertyType: string;
   dealType: string;
   city: string;
+  district?: string;
   street: string;
   area: string;
   totalPrice: string;
@@ -39,7 +41,7 @@ const Listings = () => {
     try {
       setIsLoading(true);
       // Fetch all properties regardless of status for admin view
-      const response = await propertyApi.getProperties({ status: '' });
+      const response = await propertyApi.getProperties();
       const data = response?.properties || [];
       setProperties(data);
     } catch (error: any) {
@@ -54,47 +56,52 @@ const Listings = () => {
     }
   };
 
+  const handleDelete = async (propertyId: string) => {
+    try {
+      // Add delete API call here when backend is ready
+      console.log('Deleting property:', propertyId);
+      
+      // For now, just remove from local state
+      setProperties(properties.filter(p => p.id.toString() !== propertyId));
+      
+      toast({
+        title: "წარმატება",
+        description: "განცხადება წაიშალა",
+      });
+    } catch (error: any) {
+      toast({
+        title: "შეცდომა",
+        description: "განცხადების წაშლისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Transform property data for the ApartmentCard component
   const transformedProperties = properties.map((prop) => {
-    // Build address properly
-    const parts = [];
-    if (prop.street && prop.street.trim()) parts.push(prop.street);
-    if (prop.areaData?.nameKa) {
-      parts.push(prop.areaData.nameKa);
-    } else if (prop.district && prop.district.trim()) {
-      parts.push(prop.district);
-    }
-    if (prop.cityData?.nameGeorgian) {
-      parts.push(prop.cityData.nameGeorgian);
-    } else if (prop.city && prop.city.trim()) {
-      parts.push(prop.city);
-    }
-    const address = parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
-    
     return {
-      id: prop.id,
-      title: `${prop.propertyType} ${prop.dealType} ${prop.city}`,
-      price: parseInt(prop.totalPrice) || 0,
-      address: address,
+      id: prop.id.toString(),
+      title: prop.title || `${prop.propertyType} ${prop.city}`,
+      propertyType: prop.propertyType,
+      dealType: prop.dealType,
       city: prop.city,
       district: prop.district,
-      cityData: prop.cityData,
-      areaData: prop.areaData,
-      bedrooms: parseInt(prop.bedrooms || '1'),
-      bathrooms: parseInt(prop.bathrooms || '1'),
-      area: parseInt(prop.area) || 0,
-      type: prop.propertyType,
-      transactionType: prop.dealType,
-      image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
-      featured: Math.random() > 0.5, // Random for now, could be based on viewCount or other criteria
-      status: prop.status as "active" | "pending" | "inactive" | "sold",
-      createdBy: {
+      street: prop.street,
+      area: prop.area,
+      totalPrice: prop.totalPrice,
+      bedrooms: prop.bedrooms,
+      bathrooms: prop.bathrooms,
+      viewCount: 0, // Mock data since not in API
+      createdAt: prop.createdAt,
+      photos: prop.photos,
+      contactName: prop.user.fullName,
+      contactPhone: '', // Mock data since not in API
+      owner: {
         id: prop.user.id,
-        name: prop.user.fullName,
+        fullName: prop.user.fullName,
         email: prop.user.email,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(prop.user.fullName)}&background=random`
       },
-      createdDate: new Date(prop.createdAt).toLocaleDateString('ka-GE')
+      isOwnProperty: false, // Admin view - these are not own properties
     };
   });
   if (isLoading) {
@@ -144,10 +151,11 @@ const Listings = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {transformedProperties.map((apartment) => (
+            {transformedProperties.map((property) => (
               <ApartmentCard
-                key={apartment.id}
-                {...apartment}
+                key={property.id}
+                property={property}
+                onDelete={handleDelete}
               />
             ))}
           </div>

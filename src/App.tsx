@@ -26,7 +26,13 @@ import ProjectDetail from "./pages/ProjectDetail";
 import AdminOverview from "./pages/AdminDashboard/pages/Overview";
 import AdminUsers from "./pages/AdminDashboard/pages/Users";
 import AdminListings from "./pages/AdminDashboard/pages/Listings";
+import AdminProjects from "./pages/AdminDashboard/pages/Projects";
+import AdminEditProject from "./pages/AdminDashboard/pages/EditProject";
+import AdminAgencies from "./pages/AdminDashboard/pages/Agencies";
+import AdminEditProperty from "./pages/AdminDashboard/pages/EditProperty";
+import AdminEditUser from "./pages/AdminDashboard/pages/EditUser";
 import AdminAdvertisements from "./pages/AdminDashboard/pages/Advertisements";
+import { AdminManageProjectProperties } from "./pages/AdminDashboard/components/AdminManageProjectProperties";
 import AdminDistricts from "./pages/AdminDashboard/pages/Districts";
 import AdminSettings from "./pages/AdminDashboard/pages/Settings";
 import { AddProperty } from "./pages/Dashboard/pages/AddProperty";
@@ -98,7 +104,13 @@ const App = () => (
             <Route index element={<AdminOverview />} />
             <Route path="overview" element={<AdminOverview />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="edit-user/:id" element={<AdminEditUser />} />
             <Route path="listings" element={<AdminListings />} />
+            <Route path="edit-property/:id" element={<AdminEditProperty />} />
+            <Route path="projects" element={<AdminProjects />} />
+            <Route path="edit-project/:id" element={<AdminEditProject />} />
+            <Route path="projects/:projectId/manage-properties" element={<AdminManageProjectProperties />} />
+            <Route path="agencies" element={<AdminAgencies />} />
             <Route path="advertisements" element={<AdminAdvertisements />} />
             <Route path="districts" element={<AdminDistricts />} />
             <Route path="settings" element={<AdminSettings />} />
