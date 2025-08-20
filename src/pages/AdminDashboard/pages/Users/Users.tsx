@@ -10,9 +10,11 @@ interface User {
   id: number;
   fullName: string;
   email: string;
-  role: 'user' | 'admin';
+  phone?: string;
+  role: 'user' | 'admin' | 'developer' | 'agency';
   createdAt: string;
   updatedAt: string;
+  propertyCount?: number;
 }
 
 interface UserCardProps {
@@ -58,18 +60,46 @@ const Users = () => {
     }
   };
 
-  // Transform user data for the UserCard component
+  const handleDeleteUser = async (userId: number) => {
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete user: ${response.status}`);
+      }
+
+      setUsers(users.filter(u => u.id !== userId));
+      
+      toast({
+        title: "წარმატება",
+        description: "მომხმარებელი წარმატებით წაიშალა",
+      });
+    } catch (error: any) {
+      toast({
+        title: "შეცდომა",
+        description: "მომხმარებლის წაშლისას მოხდა შეცდომა",
+        variant: "destructive",
+      });
+    }
+  };
+
   const transformedUsers = users.map((user) => ({
     id: user.id,
     name: user.fullName,
     email: user.email,
-    phone: undefined, // Not available in current API response
+    phone: user.phone || undefined,
     role: user.role,
     status: 'active' as const, // Default to active since we don't have this field
     avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`,
     joinDate: new Date(user.createdAt).toLocaleDateString('ka-GE'),
     lastActive: "უცნობია", // Not available in current API response
-    propertiesCount: 0, // Would need separate API call to get property counts
+    propertiesCount: user.propertyCount || 0,
     verified: true // Default to verified
   }));
 
@@ -152,6 +182,7 @@ const Users = () => {
               <UserCard
                 key={user.id}
                 {...user}
+                onDelete={handleDeleteUser}
               />
             ))}
           </div>

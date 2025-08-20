@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart3, Users, Home, Settings, Monitor, MapPin, DollarSign } from "lucide-react";
+import { BarChart3, Users, Home, Settings, Monitor, MapPin, DollarSign, Building, FolderOpen } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -29,6 +29,20 @@ export const AdminSidebarMenu: React.FC = () => {
       path: "/admin/listings", 
       label: "განცხადებები", 
       icon: <Home className="h-5 w-5" />,
+      category: "content"
+    },
+    { 
+      id: "projects", 
+      path: "/admin/projects", 
+      label: "პროექტები", 
+      icon: <FolderOpen className="h-5 w-5" />,
+      category: "content"
+    },
+    { 
+      id: "agencies", 
+      path: "/admin/agencies", 
+      label: "სააგენტოები", 
+      icon: <Building className="h-5 w-5" />,
       category: "content"
     },
     { 
