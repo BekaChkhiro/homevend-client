@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, SlidersHorizontal, MapPin, Home, ChevronLeft, ChevronRight } from "lucide-react";
+import { MobilePagination } from "@/components/MobilePagination";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -715,11 +716,11 @@ const Properties = () => {
         />
 
         {/* Top Ad Banner */}
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <AdBanner type="horizontal" />
         </div>
 
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-20 sm:pb-8">
           {/* Loading skeleton header */}
           {isLoading ? (
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -731,17 +732,18 @@ const Properties = () => {
             </div>
           ) : (
             /* Results Header with Sorting - only show when not loading */
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4">
               <div>
-                <h2 className="text-2xl font-bold mb-2">განცხადებები</h2>
-                <p className="text-muted-foreground">
-                  ნაჩვენებია {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} საერთოდან {totalProperties} განცხადებიდან)
+                <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">განცხადებები</h2>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  <span className="hidden sm:inline">ნაჩვენებია {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} საერთოდან {totalProperties} განცხადებიდან)</span>
+                  <span className="sm:hidden">{filteredProperties.length} განცხადება</span>
                 </p>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
                 <Select value={sortBy} onValueChange={handleSortChange}>
-                  <SelectTrigger className="w-48">
+                  <SelectTrigger className="w-full sm:w-48">
                     <SlidersHorizontal className="h-4 w-4 mr-2" />
                     <SelectValue />
                   </SelectTrigger>
@@ -790,7 +792,7 @@ const Properties = () => {
                   
                   {/* Show more skeletons if there were more properties */}
                   {filteredProperties.length > 8 && (
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                       {Array.from({ length: Math.min(8, filteredProperties.length - 8) }).map((_, index) => (
                         <PropertyCardSkeleton key={`skeleton-more-${index}`} />
                       ))}
@@ -798,7 +800,7 @@ const Properties = () => {
                   )}
                 </div>
               ) : filteredProperties.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="text-center py-8 sm:py-12">
                   <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-semibold mb-2">განცხადებები ვერ მოიძებნა</h3>
                   <p className="text-muted-foreground mb-4">
@@ -857,7 +859,7 @@ const Properties = () => {
                   {/* 4 Column Property Grid with Middle Ad */}
                   <div className="mb-8">
                     {/* First 8 properties */}
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 mb-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                       {paginatedProperties.slice(0, 8).map((property) => (
                         <PropertyCard key={property.id} property={property} />
                       ))}
@@ -872,7 +874,7 @@ const Properties = () => {
                     
                     {/* Remaining properties */}
                     {paginatedProperties.length > 8 && (
-                      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                         {paginatedProperties.slice(8).map((property) => (
                           <PropertyCard key={property.id} property={property} />
                         ))}
@@ -882,56 +884,68 @@ const Properties = () => {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div className="flex justify-center mt-8">
-                      <Pagination>
-                        <PaginationContent>
-                          <PaginationItem>
-                            <PaginationPrevious 
-                              onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                              className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                            />
-                          </PaginationItem>
-                          
-                          {/* Page Numbers */}
-                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                            // Show first page, last page, current page, and pages around current page
-                            if (
-                              page === 1 || 
-                              page === totalPages || 
-                              (page >= currentPage - 1 && page <= currentPage + 1)
-                            ) {
-                              return (
-                                <PaginationItem key={page}>
-                                  <PaginationLink
-                                    onClick={() => handlePageChange(page)}
-                                    isActive={currentPage === page}
-                                    className="cursor-pointer"
-                                  >
-                                    {page}
-                                  </PaginationLink>
-                                </PaginationItem>
-                              );
-                            } else if (
-                              page === currentPage - 2 || 
-                              page === currentPage + 2
-                            ) {
-                              return (
-                                <PaginationItem key={page}>
-                                  <PaginationEllipsis />
-                                </PaginationItem>
-                              );
-                            }
-                            return null;
-                          })}
+                    <div className="mt-6 sm:mt-8">
+                      {/* Mobile Pagination */}
+                      <div className="sm:hidden">
+                        <MobilePagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={handlePageChange}
+                        />
+                      </div>
+                      
+                      {/* Desktop Pagination */}
+                      <div className="hidden sm:flex justify-center px-2 sm:px-0">
+                        <Pagination>
+                          <PaginationContent>
+                            <PaginationItem>
+                              <PaginationPrevious 
+                                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                                className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                              />
+                            </PaginationItem>
+                            
+                            {/* Page Numbers */}
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                              // Show first page, last page, current page, and pages around current page
+                              if (
+                                page === 1 || 
+                                page === totalPages || 
+                                (page >= currentPage - 1 && page <= currentPage + 1)
+                              ) {
+                                return (
+                                  <PaginationItem key={page}>
+                                    <PaginationLink
+                                      onClick={() => handlePageChange(page)}
+                                      isActive={currentPage === page}
+                                      className="cursor-pointer"
+                                    >
+                                      {page}
+                                    </PaginationLink>
+                                  </PaginationItem>
+                                );
+                              } else if (
+                                page === currentPage - 2 || 
+                                page === currentPage + 2
+                              ) {
+                                return (
+                                  <PaginationItem key={page}>
+                                    <PaginationEllipsis />
+                                  </PaginationItem>
+                                );
+                              }
+                              return null;
+                            })}
 
-                          <PaginationItem>
-                            <PaginationNext 
-                              onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-                              className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                            />
-                          </PaginationItem>
-                        </PaginationContent>
-                      </Pagination>
+                            <PaginationItem>
+                              <PaginationNext 
+                                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                                className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                              />
+                            </PaginationItem>
+                          </PaginationContent>
+                        </Pagination>
+                      </div>
                     </div>
                   )}
                 </>
@@ -939,7 +953,7 @@ const Properties = () => {
 
             {/* Bottom Ad Banner */}
             {!isLoading && filteredProperties.length > 0 && (
-              <div className="mt-8 max-w-4xl mx-auto">
+              <div className="mt-6 sm:mt-8 max-w-4xl mx-auto">
                 <AdBanner type="horizontal" />
               </div>
             )}

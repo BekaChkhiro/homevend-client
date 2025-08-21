@@ -14,7 +14,11 @@ interface MenuItem {
   roles?: string[];
 }
 
-export const SidebarMenu: React.FC = () => {
+interface SidebarMenuProps {
+  onNavigate?: () => void;
+}
+
+export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
   const location = useLocation();
   const { user } = useAuth();
   
@@ -125,6 +129,7 @@ export const SidebarMenu: React.FC = () => {
     >
       <Link
         to={item.path}
+        onClick={onNavigate}
         className={cn(
           "flex items-center w-full px-4 py-3 text-sm rounded-lg transition-all duration-200 border border-transparent",
           isActive(item.path)

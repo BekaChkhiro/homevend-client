@@ -418,7 +418,7 @@ const PropertyDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-32">
+      <div className="pt-16 md:pt-32">
 
         {/* Top Ad Banner */}
         <div className="container mx-auto px-4 pt-4">
@@ -426,17 +426,17 @@ const PropertyDetail = () => {
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2">
+            <div className="xl:col-span-2">
               {/* Property Images */}
-              <div className="mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="md:col-span-2">
+              <div className="mb-4 md:mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
+                  <div className="sm:col-span-2">
                     <img
                       src={displayProperty.images[0]}
                       alt={displayProperty.title}
-                      className="w-full h-96 object-cover rounded-lg"
+                      className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-lg"
                     />
                   </div>
                   {displayProperty.images.slice(1).map((image, index) => (
@@ -444,18 +444,18 @@ const PropertyDetail = () => {
                       key={index}
                       src={image}
                       alt={`${displayProperty.title} ${index + 2}`}
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg"
                     />
                   ))}
                 </div>
               </div>
 
               {/* Property Info */}
-              <Card className="mb-6">
-                <CardContent className="p-6">
+              <Card className="mb-4 md:mb-6">
+                <CardContent className="p-4 md:p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h1 className="text-3xl font-bold mb-2">{displayProperty.title}</h1>
+                      <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">{displayProperty.title}</h1>
                       <div className="flex items-center text-muted-foreground mb-2">
                         <MapPin className="h-4 w-4 mr-1" />
                         {displayProperty.address}
@@ -510,7 +510,7 @@ const PropertyDetail = () => {
                     </div>
                   </div>
 
-                  <div className="text-4xl font-bold text-primary mb-2">
+                  <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-2">
                     {formatPrice(displayProperty.price)}
                   </div>
                   {property.pricePerSqm && (
@@ -519,33 +519,33 @@ const PropertyDetail = () => {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-3 gap-4 mb-6">
-                    <div className="flex items-center">
-                      <Bed className="h-5 w-5 mr-2 text-muted-foreground" />
-                      <span className="font-semibold">{displayProperty.bedrooms}</span>
-                      <span className="text-muted-foreground ml-1">საძინებელი</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4 mb-4 md:mb-6">
+                    <div className="flex items-center justify-center sm:justify-start bg-gray-50 rounded-lg p-2 sm:bg-transparent sm:p-0">
+                      <Bed className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-muted-foreground" />
+                      <span className="font-semibold text-sm sm:text-base">{displayProperty.bedrooms}</span>
+                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">საძინებელი</span>
                     </div>
-                    <div className="flex items-center">
-                      <Bath className="h-5 w-5 mr-2 text-muted-foreground" />
-                      <span className="font-semibold">{displayProperty.bathrooms}</span>
-                      <span className="text-muted-foreground ml-1">აბაზანა</span>
+                    <div className="flex items-center justify-center sm:justify-start bg-gray-50 rounded-lg p-2 sm:bg-transparent sm:p-0">
+                      <Bath className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-muted-foreground" />
+                      <span className="font-semibold text-sm sm:text-base">{displayProperty.bathrooms}</span>
+                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">აბაზანა</span>
                     </div>
-                    <div className="flex items-center">
-                      <Square className="h-5 w-5 mr-2 text-muted-foreground" />
-                      <span className="font-semibold">{displayProperty.area}</span>
-                      <span className="text-muted-foreground ml-1">მ²</span>
+                    <div className="flex items-center justify-center sm:justify-start bg-gray-50 rounded-lg p-2 sm:bg-transparent sm:p-0">
+                      <Square className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-muted-foreground" />
+                      <span className="font-semibold text-sm sm:text-base">{displayProperty.area}</span>
+                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">მ²</span>
                     </div>
                   </div>
 
                   {/* Required Fields Section */}
-                  <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                  <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                    <CardContent className="p-4 md:p-6">
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Info className="h-4 w-4" style={{ color: '#0f172a' }} />
                         მთავარი ინფორმაცია
                       </h3>
                       
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                           <div className="flex items-start gap-3">
                             <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
@@ -613,14 +613,14 @@ const PropertyDetail = () => {
                   </Card>
 
                   {/* Property Structure */}
-                  <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                  <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                    <CardContent className="p-4 md:p-6">
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Home className="h-4 w-4" style={{ color: '#0f172a' }} />
                         ქონების სტრუქტურა
                       </h3>
                       
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         {property.rooms && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
@@ -702,14 +702,14 @@ const PropertyDetail = () => {
                   </Card>
 
                   {/* Building Information */}
-                  <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                  <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                    <CardContent className="p-4 md:p-6">
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Building className="h-4 w-4" style={{ color: '#0f172a' }} />
                         შენობის ინფორმაცია
                       </h3>
                       
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         {property.buildingStatus && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
@@ -793,14 +793,14 @@ const PropertyDetail = () => {
                   </Card>
 
                   {/* Infrastructure */}
-                  <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                  <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                    <CardContent className="p-4 md:p-6">
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Settings className="h-4 w-4" style={{ color: '#0f172a' }} />
                         ინფრასტრუქტურა
                       </h3>
                       
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         {property.heating && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
@@ -846,14 +846,14 @@ const PropertyDetail = () => {
 
                   {/* Special Spaces */}
                   {(property.hasBalcony || property.hasPool || property.hasLivingRoom || property.hasLoggia || property.hasVeranda || property.hasYard || property.hasStorage) && (
-                    <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                      <CardContent className="p-6">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                    <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                      <CardContent className="p-4 md:p-6">
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Home className="h-4 w-4" style={{ color: '#0f172a' }} />
                           დამატებითი სივრცეები
                         </h3>
                         
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                           {property.hasBalcony && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
@@ -983,14 +983,14 @@ const PropertyDetail = () => {
 
                   {/* Features Section */}
                   {displayProperty.features && displayProperty.features.length > 0 && (
-                    <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                      <CardContent className="p-6">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                    <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                      <CardContent className="p-4 md:p-6">
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Star className="h-4 w-4" style={{ color: '#0f172a' }} />
                           მახასიათებლები
                         </h3>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.features.map((feature, index) => (
                             <div key={`feature-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
                               <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
@@ -1005,14 +1005,14 @@ const PropertyDetail = () => {
 
                   {/* Advantages Section */}
                   {displayProperty.advantages && displayProperty.advantages.length > 0 && (
-                    <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                      <CardContent className="p-6">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                    <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                      <CardContent className="p-4 md:p-6">
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Trophy className="h-4 w-4" style={{ color: '#0f172a' }} />
                           უპირატესობები
                         </h3>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.advantages.map((advantage, index) => (
                             <div key={`advantage-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
                               <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
@@ -1027,14 +1027,14 @@ const PropertyDetail = () => {
 
                   {/* Furniture & Appliances Section */}
                   {displayProperty.furnitureAppliances && displayProperty.furnitureAppliances.length > 0 && (
-                    <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                      <CardContent className="p-6">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                    <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                      <CardContent className="p-4 md:p-6">
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Sofa className="h-4 w-4" style={{ color: '#0f172a' }} />
                           ავეჯი და ტექნიკა
                         </h3>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.furnitureAppliances.map((item, index) => (
                             <div key={`furniture-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
                               <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
@@ -1049,9 +1049,9 @@ const PropertyDetail = () => {
 
                   {/* Tags Section */}
                   {displayProperty.tags && displayProperty.tags.length > 0 && (
-                    <Card className="mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
-                      <CardContent className="p-6">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
+                    <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
+                      <CardContent className="p-4 md:p-6">
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Tag className="h-4 w-4" style={{ color: '#0f172a' }} />
                           ბეჯები
                         </h3>
@@ -1068,9 +1068,9 @@ const PropertyDetail = () => {
                   )}
 
                   {/* Description Section - Moved to end */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-3">აღწერა</h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                  <div className="mb-4 md:mb-6">
+                    <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3">აღწერა</h3>
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                       {displayProperty.description}
                     </p>
                   </div>
@@ -1083,28 +1083,28 @@ const PropertyDetail = () => {
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-36 space-y-6">
+            <div className="xl:col-span-1">
+              <div className="sticky top-24 md:top-36 space-y-4 md:space-y-6">
               {/* Developer/Agent Info */}
-              <Card className="mb-6 overflow-hidden border border-gray-300 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="bg-gradient-to-r from-primary to-primary/80 p-4 text-white">
-                  <h3 className="text-xl font-bold text-center">{getContactTitle(property.user.role)}</h3>
+              <Card className="mb-4 md:mb-6 overflow-hidden border border-gray-300 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="bg-gradient-to-r from-primary to-primary/80 p-3 md:p-4 text-white">
+                  <h3 className="text-lg md:text-xl font-bold text-center">{getContactTitle(property.user.role)}</h3>
                 </div>
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center mr-4 shadow-md ring-4 ring-white">
-                      <span className="text-white text-2xl font-bold">
+                <CardContent className="p-4 md:p-6">
+                  <div className="flex items-center mb-4 md:mb-6">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center mr-3 md:mr-4 shadow-md ring-2 md:ring-4 ring-white">
+                      <span className="text-white text-xl md:text-2xl font-bold">
                         {displayProperty.agent.name.charAt(0)}
                       </span>
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <Link 
                         to={`/user/${property.user.id}`}
-                        className="font-bold text-lg hover:text-primary transition-colors cursor-pointer"
+                        className="font-bold text-base md:text-lg hover:text-primary transition-colors cursor-pointer block truncate"
                       >
                         {displayProperty.agent.name}
                       </Link>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs md:text-sm text-gray-500">
                         {property.user.role === 'agency' ? 'აგენტი' : 
                          property.user.role === 'developer' ? 'დეველოპერი' : 
                          'მომხმარებელი'}
@@ -1114,16 +1114,16 @@ const PropertyDetail = () => {
                   
                   {/* Project info if linked */}
                   {property.project && (
-                    <div className="mb-6 bg-blue-50 rounded-lg p-4 hover:bg-blue-100 transition-colors border border-blue-200">
-                      <div className="flex items-start gap-3">
-                        <div className="text-white rounded-lg p-2 bg-blue-600">
-                          <Building2 className="h-4 w-4" />
+                    <div className="mb-4 md:mb-6 bg-blue-50 rounded-lg p-3 md:p-4 hover:bg-blue-100 transition-colors border border-blue-200">
+                      <div className="flex items-start gap-2 md:gap-3">
+                        <div className="text-white rounded-lg p-1.5 md:p-2 bg-blue-600">
+                          <Building2 className="h-3 w-3 md:h-4 md:w-4" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <span className="text-xs font-medium block mb-1 text-blue-800">დაკავშირებული პროექტი</span>
                           <Link 
                             to={`/projects/${property.project.id}`}
-                            className="font-semibold text-sm leading-tight break-words text-blue-900 hover:text-blue-700 hover:underline transition-colors"
+                            className="font-semibold text-xs md:text-sm leading-tight break-words text-blue-900 hover:text-blue-700 hover:underline transition-colors"
                           >
                             {property.project.projectName}
                           </Link>
@@ -1135,13 +1135,13 @@ const PropertyDetail = () => {
                     </div>
                   )}
                   
-                  <div className="space-y-4">
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 py-5 font-medium" variant="default">
-                      <Phone className="h-5 w-5 mr-3" />
-                      {displayProperty.agent.phone}
+                  <div className="space-y-3 md:space-y-4">
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 py-3 md:py-5 font-medium text-sm md:text-base" variant="default">
+                      <Phone className="h-4 w-4 md:h-5 md:w-5 mr-2 md:mr-3" />
+                      <span className="truncate">{displayProperty.agent.phone}</span>
                     </Button>
-                    <Button className="w-full border-gray-300 text-primary hover:bg-primary/5 transition-all duration-200 py-5 font-medium" variant="outline">
-                      <Mail className="h-5 w-5 mr-3" />
+                    <Button className="w-full border-gray-300 text-primary hover:bg-primary/5 transition-all duration-200 py-3 md:py-5 font-medium text-sm md:text-base" variant="outline">
+                      <Mail className="h-4 w-4 md:h-5 md:w-5 mr-2 md:mr-3" />
                       ელფოსტა
                     </Button>
                   </div>
@@ -1157,9 +1157,9 @@ const PropertyDetail = () => {
         </div>
 
         {/* Similar Properties Section */}
-        <div className="container mx-auto px-4 py-8">
-          <h2 className="text-2xl font-bold mb-6">მსგავსი განცხადებები</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="container mx-auto px-4 py-6 md:py-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">მსგავსი განცხადებები</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {similarProperties.map((prop) => {
               const similarProperty = {
                 id: prop.id,
@@ -1189,13 +1189,13 @@ const PropertyDetail = () => {
                         />
                       </div>
                     </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-bold truncate mb-1">{similarProperty.title}</h3>
-                      <div className="flex items-center text-muted-foreground text-sm mb-2">
-                        <MapPin className="h-3 w-3 mr-1" />
-                        {similarProperty.address}
+                    <CardContent className="p-3 md:p-4">
+                      <h3 className="font-bold text-sm md:text-base truncate mb-1">{similarProperty.title}</h3>
+                      <div className="flex items-center text-muted-foreground text-xs md:text-sm mb-2">
+                        <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
+                        <span className="truncate">{similarProperty.address}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3">
+                      <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm text-muted-foreground mb-2 md:mb-3">
                         <div className="flex items-center">
                           <Bed className="h-3 w-3 mr-1" />
                           {similarProperty.bedrooms}
@@ -1210,10 +1210,10 @@ const PropertyDetail = () => {
                         </div>
                       </div>
                       <div className="flex justify-between items-center">
-                        <div className="font-bold text-primary">
+                        <div className="font-bold text-primary text-sm md:text-base">
                           {formatPrice(similarProperty.price)}
                         </div>
-                        <Badge variant="secondary">{similarProperty.type}</Badge>
+                        <Badge variant="secondary" className="text-xs">{similarProperty.type}</Badge>
                       </div>
                     </CardContent>
                   </Card>

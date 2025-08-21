@@ -43,35 +43,35 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-medium">VIP სტატუსი</h3>
+      <h3 className="text-base sm:text-lg font-medium">VIP სტატუსი</h3>
       <Card>
-        <CardHeader>
-          <CardTitle>VIP სტატუსის შერჩევა</CardTitle>
+        <CardHeader className="p-3 sm:p-4 md:p-6">
+          <CardTitle className="text-base sm:text-lg">VIP სტატუსის შერჩევა</CardTitle>
         </CardHeader>
         
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-3 sm:space-y-4 md:space-y-6 p-3 sm:p-4 md:p-6">
           {/* Balance Display */}
-          <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-            <span className="text-sm text-gray-600">თქვენი ბალანსი:</span>
-            <span className="font-semibold text-lg">{userBalance.toFixed(2)}₾</span>
+          <div className="flex justify-between items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
+            <span className="text-xs sm:text-sm text-gray-600">თქვენი ბალანსი:</span>
+            <span className="font-semibold text-base sm:text-lg">{userBalance.toFixed(2)}₾</span>
           </div>
 
           {/* VIP Package Selection */}
           <div>
-            <Label className="text-base font-medium">აირჩიეთ VIP პაკეტი</Label>
+            <Label className="text-sm sm:text-base font-medium">აირჩიეთ VIP პაკეტი</Label>
             <RadioGroup value={selectedVipType} onValueChange={onVipTypeChange} className="mt-3">
-              <div className="grid gap-4">
+              <div className="grid gap-2 sm:gap-3 md:gap-4">
                 {/* Free Option */}
                 <Card 
-                  className={`cursor-pointer transition-all ${
+                  className={`cursor-pointer transition-all touch-manipulation ${
                     selectedVipType === 'free' ? `ring-2 ring-offset-2 ${VIP_COLORS.free.split(' ').pop()}` : 'hover:shadow-md'
                   }`}
                   onClick={() => onVipTypeChange('free')}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-start space-x-4">
+                  <CardContent className="p-2 sm:p-3 md:p-4">
+                    <div className="flex items-start space-x-3 sm:space-x-4">
                       <RadioGroupItem value="free" id="free" />
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-3">
                           <Crown className={`h-5 w-5 ${selectedVipType === 'free' ? VIP_COLORS.free.split(' ')[0] : 'text-gray-400'}`} />
                           <Badge variant="outline" className={selectedVipType === 'free' ? VIP_COLORS.free : ''}>
@@ -94,15 +94,15 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
                   return (
                     <Card 
                       key={pricing.id} 
-                      className={`cursor-pointer transition-all ${
+                      className={`cursor-pointer transition-all touch-manipulation ${
                         isSelected ? `ring-2 ring-offset-2 ${colorClass.split(' ').pop()}` : 'hover:shadow-md'
                       }`}
                       onClick={() => onVipTypeChange(pricing.vipType)}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-start space-x-4">
+                      <CardContent className="p-2 sm:p-3 md:p-4">
+                        <div className="flex items-start space-x-3 sm:space-x-4">
                           <RadioGroupItem value={pricing.vipType} id={pricing.vipType} />
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-3">
                               <Crown className={`h-5 w-5 ${isSelected ? colorClass.split(' ')[0] : 'text-gray-400'}`} />
                               <Badge variant="outline" className={isSelected ? colorClass : ''}>
@@ -133,7 +133,7 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
           {/* Duration Selection - only show if not 'free' */}
           {selectedVipType !== 'free' && (
             <div>
-              <Label htmlFor="days" className="text-base font-medium">
+              <Label htmlFor="days" className="text-sm sm:text-base font-medium">
                 რამდენი დღით გსურთ VIP სტატუსი?
               </Label>
               <Input
@@ -143,7 +143,7 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
                 max="30"
                 value={selectedDays}
                 onChange={(e) => onDaysChange(e.target.value)}
-                className="mt-2"
+                className="mt-2 h-11 sm:h-12 text-sm sm:text-base"
                 placeholder="მაქსიმუმ 30 დღე"
               />
               <p className="text-xs text-gray-500 mt-1">მინიმუმ 1 დღე, მაქსიმუმ 30 დღე</p>

@@ -98,12 +98,12 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
   return (
     <Link to={`/property/${property.id}`} className="block w-full min-w-0 max-w-full">
-      <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full min-w-0 max-w-full">
+      <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:sm:-translate-y-1 cursor-pointer w-full min-w-0 max-w-full">
         <div className="relative">
           <img
             src={property.image}
             alt={property.title}
-            className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-40 sm:h-32 object-cover group-hover:scale-105 transition-transform duration-300"
           />
 
           {(() => {
@@ -131,14 +131,14 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           )}
         </div>
         
-        <CardContent className="p-3 sm:p-4">
-          <div className="mb-2 sm:mb-3">
-            <h3 className="font-semibold text-base sm:text-lg line-clamp-2 group-hover:text-primary transition-colors h-12 sm:h-14 flex items-start">
+        <CardContent className="p-2 sm:p-3">
+          <div className="mb-1 sm:mb-2">
+            <h3 className="font-semibold text-sm sm:text-base line-clamp-2 group-hover:text-primary transition-colors h-8 sm:h-10 flex items-start">
               <span className="line-clamp-2">
                 {property.title || 'სათაური არ არის მითითებული'}
               </span>
             </h3>
-            <div className="flex items-start text-muted-foreground text-xs sm:text-sm mt-1">
+            <div className="flex items-start text-muted-foreground text-xs sm:text-sm mt-0.5">
               <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0 mt-0.5" />
               <span className="line-clamp-2">{getDistrictAndStreet()}</span>
             </div>
@@ -149,37 +149,27 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             )}
           </div>
           
-          <div className="mb-3 sm:mb-4">
-            {/* Mobile layout - price and type on separate lines */}
-            <div className="sm:hidden">
-              <div className="text-lg font-bold text-primary truncate mb-2">
+          <div className="mb-1 sm:mb-2">
+            {/* Price and type layout - always on same line for cleaner mobile look */}
+            <div className="flex items-center justify-between">
+              <div className="text-base sm:text-lg font-bold text-primary truncate">
                 {formatPrice(property.price)}
               </div>
-              <div className="flex">
-                <Badge variant="secondary" className="text-xs">{property.type}</Badge>
-              </div>
-            </div>
-            
-            {/* Desktop layout - price and type on same line */}
-            <div className="hidden sm:flex items-center justify-between">
-              <div className="text-lg sm:text-2xl font-bold text-primary truncate">
-                {formatPrice(property.price)}
-              </div>
-              <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">{property.type}</Badge>
+              <Badge variant="secondary" className="text-[10px] sm:text-xs ml-1 flex-shrink-0">{property.type}</Badge>
             </div>
           </div>
           
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <div className="flex items-center">
-              <Bed className="h-4 w-4 mr-1" />
+          <div className="flex items-center justify-between text-[10px] sm:text-xs text-muted-foreground">
+            <div className="flex items-center space-x-0.5">
+              <Bed className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>{property.bedrooms}</span>
             </div>
-            <div className="flex items-center">
-              <Bath className="h-4 w-4 mr-1" />
+            <div className="flex items-center space-x-0.5">
+              <Bath className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>{property.bathrooms}</span>
             </div>
-            <div className="flex items-center">
-              <Square className="h-4 w-4 mr-1" />
+            <div className="flex items-center space-x-0.5">
+              <Square className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>{property.area} მ²</span>
             </div>
           </div>

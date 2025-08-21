@@ -136,7 +136,7 @@ export const MyProperties: React.FC = () => {
 
   return (
     <>
-      <h2 className="text-xl font-medium mb-4">ჩემი განცხადებები</h2>
+      <h2 className="text-lg md:text-xl font-medium mb-4">ჩემი განცხადებები</h2>
       
       {hasProperties ? (
         <div className="space-y-4">
@@ -151,21 +151,21 @@ export const MyProperties: React.FC = () => {
         </div>
 
       ) : (
-        <div className="bg-white p-8 rounded-lg border text-center">
+        <div className="bg-white p-4 md:p-8 rounded-lg border text-center">
           <div className="max-w-xs mx-auto">
             <div className="mb-4">
               <img 
                 src="/placeholder.svg" 
                 alt="No properties" 
-                className="mx-auto w-32 h-32 opacity-50"
+                className="mx-auto w-24 h-24 md:w-32 md:h-32 opacity-50"
               />
             </div>
-            <h3 className="text-lg font-medium mb-2">თქვენ არ გაქვთ განცხადებები დამატებული</h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <h3 className="text-base md:text-lg font-medium mb-2">თქვენ არ გაქვთ განცხადებები დამატებული</h3>
+            <p className="text-xs md:text-sm text-gray-500 mb-4">
               დაამატეთ თქვენი პირველი განცხადება და გაზარდეთ გაყიდვების შანსები
             </p>
             <Button 
-              className="flex items-center mx-auto"
+              className="flex items-center mx-auto text-sm"
               onClick={() => navigate('/dashboard/add-property')}
             >
               <Plus className="h-4 w-4 mr-1" />

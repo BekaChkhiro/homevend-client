@@ -188,6 +188,7 @@ interface AdvancedFiltersModalProps {
     propertyType?: string;
     city?: string;
   };
+  onSearch?: (filters: AdvancedFilterState) => void; // Direct search callback for mobile UX
 }
 
 interface SavedFilter {
@@ -204,7 +205,8 @@ export const AdvancedFiltersModal = ({
   totalProperties = 0,
   filteredCount = 0,
   transactionType,
-  basicFilters
+  basicFilters,
+  onSearch
 }: AdvancedFiltersModalProps) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -271,6 +273,25 @@ export const AdvancedFiltersModal = ({
       // If onApplyFilters prop exists, use it (for backward compatibility)
       console.log('🎯 AdvancedFiltersModal: Using onApplyFilters prop');
       onApplyFilters(filters);
+      
+      // On mobile/tablet, also trigger search automatically to provide better UX
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+      if (isMobile && onSearch) {
+        console.log('📱 Mobile detected: Calling onSearch directly for better UX');
+        // If onSearch prop is available, use it directly
+        onSearch(filters);
+      } else if (isMobile) {
+        console.log('📱 Mobile detected: Auto-triggering search button click');
+        // Fallback to clicking search button
+        setTimeout(() => {
+          const searchButton = document.querySelector('[data-search-button="true"]') as HTMLButtonElement;
+          if (searchButton && !searchButton.disabled) {
+            console.log('🔍 Auto-clicking search button for mobile UX');
+            searchButton.click();
+          }
+        }, 100);
+      }
+      
       setOpen(false);
       return;
     }
@@ -439,67 +460,73 @@ export const AdvancedFiltersModal = ({
       
       <DialogPortal>
         <DialogOverlay className="bg-transparent backdrop-blur-[2px]" />
-        <DialogContent className="max-w-[1368px] mx-auto max-h-[85vh] p-0 left-1/2 right-auto -translate-x-1/2 bottom-0 top-auto data-[state=open]:translate-y-0 data-[state=closed]:translate-y-full data-[state=open]:-translate-x-1/2 data-[state=closed]:-translate-x-1/2 duration-300 ease-out transition-transform shadow-2xl overflow-hidden" style={{ borderRadius: '20px 20px 0px 0px' }}>
-        <DialogHeader className="p-6 pb-4 bg-gradient-to-r from-slate-50 to-blue-50/30 border-b border-slate-100">
-          <DialogTitle className="flex items-center justify-between text-2xl">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Filter className="h-6 w-6 text-primary" />
+        <DialogContent className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[1200px] xl:max-w-[1368px] mx-auto max-h-[90vh] sm:max-h-[85vh] p-0 left-1/2 right-auto -translate-x-1/2 bottom-0 top-auto data-[state=open]:translate-y-0 data-[state=closed]:translate-y-full data-[state=open]:-translate-x-1/2 data-[state=closed]:-translate-x-1/2 duration-300 ease-out transition-transform shadow-2xl overflow-hidden" style={{ borderRadius: '20px 20px 0px 0px' }}>
+        <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4 bg-gradient-to-r from-slate-50 to-blue-50/30 border-b border-slate-100">
+          <DialogTitle className="flex items-center justify-between text-xl sm:text-2xl">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg">
+                <Filter className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">გაფართოებული ფილტრები</h2>
-                <p className="text-sm text-slate-600 font-normal">მოძებნეთ იდეალური უძრავი ქონება</p>
+                <h2 className="text-lg sm:text-2xl font-bold text-slate-900">გაფართოებული ფილტრები</h2>
+                <p className="text-xs sm:text-sm text-slate-600 font-normal hidden sm:block">მოძებნეთ იდეალური უძრავი ქონება</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-base font-normal">
-              <Badge variant="outline" className="px-4 py-2 bg-white border-slate-200 text-slate-700 font-medium">
-                {filteredCount} / {totalProperties} განცხადება
+            <div className="flex items-center gap-2 text-sm sm:text-base font-normal">
+              <Badge variant="outline" className="px-2 sm:px-4 py-1 sm:py-2 bg-white border-slate-200 text-slate-700 font-medium text-xs sm:text-sm">
+                <span className="hidden sm:inline">{filteredCount} / {totalProperties} განცხადება</span>
+                <span className="sm:hidden">{filteredCount}/{totalProperties}</span>
               </Badge>
             </div>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 px-6 bg-white">
+        <div className="flex-1 px-3 sm:px-6 bg-white">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8 bg-slate-100/80 p-1 rounded-xl h-12">
-              <TabsTrigger value="basic" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg">
-                <Search className="h-4 w-4 mr-2" />
-                ძირითადი
+            <TabsList className="grid w-full grid-cols-5 mb-4 sm:mb-8 bg-slate-100/80 p-1 rounded-xl h-10 sm:h-12 overflow-x-auto">
+              <TabsTrigger value="basic" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg text-xs sm:text-sm px-2 sm:px-4">
+                <Search className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">ძირითადი</span>
+                <span className="sm:hidden">ძირ.</span>
               </TabsTrigger>
-              <TabsTrigger value="building" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg">
-                <Building2 className="h-4 w-4 mr-2" />
-                შენობა
+              <TabsTrigger value="building" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg text-xs sm:text-sm px-2 sm:px-4">
+                <Building2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">შენობა</span>
+                <span className="sm:hidden">შენ.</span>
               </TabsTrigger>
-              <TabsTrigger value="amenities" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg">
-                <Home className="h-4 w-4 mr-2" />
-                კომფორტი
+              <TabsTrigger value="amenities" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg text-xs sm:text-sm px-2 sm:px-4">
+                <Home className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">კომფორტი</span>
+                <span className="sm:hidden">კომფ.</span>
               </TabsTrigger>
-              <TabsTrigger value="features" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg">
-                <SlidersHorizontal className="h-4 w-4 mr-2" />
-                მახასიათებლები
+              <TabsTrigger value="features" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg text-xs sm:text-sm px-2 sm:px-4">
+                <SlidersHorizontal className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">მახასიათებლები</span>
+                <span className="sm:hidden">მახ.</span>
               </TabsTrigger>
-              <TabsTrigger value="saved" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg">
-                <Bookmark className="h-4 w-4 mr-2" />
-                შენახული
+              <TabsTrigger value="saved" className="relative data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary font-medium transition-all duration-200 rounded-lg text-xs sm:text-sm px-2 sm:px-4">
+                <Bookmark className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">შენახული</span>
+                <span className="sm:hidden">შენ.</span>
               </TabsTrigger>
             </TabsList>
             
-            <ScrollArea className="h-[420px] w-full pr-4">
+            <ScrollArea className="h-[280px] sm:h-[420px] w-full pr-2 sm:pr-4 touch-pan-y overscroll-contain">
               {/* Basic Tab */}
               <TabsContent value="basic" className="space-y-8 mt-0">
                 {/* Price Range */}
-                <div className="group bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 p-8 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2.5 bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl">
-                      <svg className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="group bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 p-4 sm:p-8 rounded-xl sm:rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                    <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/10 to-primary/20 rounded-lg sm:rounded-xl">
+                      <svg className="h-5 w-5 sm:h-6 sm:w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                       </svg>
                     </div>
-                    <Label className="text-xl font-bold text-slate-900">
+                    <Label className="text-lg sm:text-xl font-bold text-slate-900">
                       ფასი (ლარი)
                     </Label>
                   </div>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-3">
                       <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
                         <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
@@ -536,18 +563,18 @@ export const AdvancedFiltersModal = ({
                 </div>
 
                 {/* Area */}
-                <div className="group bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/20 p-8 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-lg hover:border-emerald-400/30 transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2.5 bg-gradient-to-br from-emerald-500/10 to-emerald-600/20 rounded-xl">
-                      <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="group bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/20 p-4 sm:p-8 rounded-xl sm:rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-lg hover:border-emerald-400/30 transition-all duration-300">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                    <div className="p-2 sm:p-2.5 bg-gradient-to-br from-emerald-500/10 to-emerald-600/20 rounded-lg sm:rounded-xl">
+                      <svg className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                       </svg>
                     </div>
-                    <Label className="text-xl font-bold text-slate-900">
+                    <Label className="text-lg sm:text-xl font-bold text-slate-900">
                       ფართობი (მ²)
                     </Label>
                   </div>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-3">
                       <Label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
                         <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full"></div>
@@ -583,11 +610,11 @@ export const AdvancedFiltersModal = ({
                   </div>
                 </div>
 
-                <div className="bg-slate-50/50 p-6 rounded-xl border border-slate-100">
-                  <Label className="text-lg font-bold mb-6 block text-slate-900">
+                <div className="bg-slate-50/50 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-slate-100">
+                  <Label className="text-base sm:text-lg font-bold mb-4 sm:mb-6 block text-slate-900">
                     ოთახების რაოდენობა
                   </Label>
-                  <div className="grid grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                     <div className="space-y-3">
                       <Label className="text-sm font-medium text-slate-700">ოთახები</Label>
                       <Popover>
@@ -595,11 +622,11 @@ export const AdvancedFiltersModal = ({
                           <Button
                             variant="outline"
                             role="combobox"
-                            className="h-12 w-full justify-between text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                            className="h-10 sm:h-12 w-full justify-between text-xs sm:text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-lg sm:rounded-xl transition-colors font-normal"
                           >
                             {Array.isArray(filters.rooms) && filters.rooms.length > 0 ? (
-                              <div className="flex items-center gap-2">
-                                <Home className="h-4 w-4 text-primary" />
+                              <div className="flex items-center gap-1 sm:gap-2">
+                                <Home className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                                 {filters.rooms.length === 1 
                                   ? filters.rooms[0] 
                                   : `${filters.rooms.length} არჩეული`
@@ -659,11 +686,11 @@ export const AdvancedFiltersModal = ({
                           <Button
                             variant="outline"
                             role="combobox"
-                            className="h-12 w-full justify-between text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                            className="h-10 sm:h-12 w-full justify-between text-xs sm:text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-lg sm:rounded-xl transition-colors font-normal"
                           >
                             {Array.isArray(filters.bedrooms) && filters.bedrooms.length > 0 ? (
-                              <div className="flex items-center gap-2">
-                                <Building2 className="h-4 w-4 text-primary" />
+                              <div className="flex items-center gap-1 sm:gap-2">
+                                <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                                 {filters.bedrooms.length === 1 
                                   ? filters.bedrooms[0] 
                                   : `${filters.bedrooms.length} არჩეული`
@@ -723,11 +750,11 @@ export const AdvancedFiltersModal = ({
                           <Button
                             variant="outline"
                             role="combobox"
-                            className="h-12 w-full justify-between text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
+                            className="h-10 sm:h-12 w-full justify-between text-xs sm:text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-lg sm:rounded-xl transition-colors font-normal"
                           >
                             {Array.isArray(filters.bathrooms) && filters.bathrooms.length > 0 ? (
-                              <div className="flex items-center gap-2">
-                                <Droplets className="h-4 w-4 text-primary" />
+                              <div className="flex items-center gap-1 sm:gap-2">
+                                <Droplets className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                                 {filters.bathrooms.length === 1 
                                   ? (filters.bathrooms[0] === 'shared' ? 'საერთო' : filters.bathrooms[0])
                                   : `${filters.bathrooms.length} არჩეული`
@@ -791,7 +818,7 @@ export const AdvancedFiltersModal = ({
                     </Label>
                     <div className="space-y-2">
                       <Select value={filters.dailyRentalSubcategory || "all"} onValueChange={(value) => setFilters({...filters, dailyRentalSubcategory: value})}>
-                        <SelectTrigger className="h-12 bg-white border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-200">
+                        <SelectTrigger className="h-10 sm:h-12 bg-white border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all duration-200 text-xs sm:text-sm">
                           <SelectValue placeholder="აირჩიეთ ტიპი" />
                         </SelectTrigger>
                         <SelectContent>
@@ -809,13 +836,13 @@ export const AdvancedFiltersModal = ({
               </TabsContent>
 
               {/* Building Tab */}
-              <TabsContent value="building" className="space-y-6 mt-0">
-                <div className="grid grid-cols-2 gap-6">
+              <TabsContent value="building" className="space-y-4 sm:space-y-6 mt-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   {/* Total Floors */}
                   <div>
                     <Label className="text-base font-semibold mb-3 block text-slate-800">სულ სართული</Label>
                     <Select value={filters.totalFloors} onValueChange={(value) => setFilters({...filters, totalFloors: value})}>
-                      <SelectTrigger className="h-11">
+                      <SelectTrigger className="h-10 sm:h-11 text-xs sm:text-sm">
                         <SelectValue placeholder="არჩევა" />
                       </SelectTrigger>
                       <SelectContent>
@@ -832,7 +859,7 @@ export const AdvancedFiltersModal = ({
                   <div>
                     <Label className="text-base font-semibold mb-3 block text-slate-800">შენობის სტატუსი</Label>
                     <Select value={filters.buildingStatus} onValueChange={(value) => setFilters({...filters, buildingStatus: value})}>
-                      <SelectTrigger className="h-11">
+                      <SelectTrigger className="h-10 sm:h-11 text-xs sm:text-sm">
                         <SelectValue placeholder="არჩევა" />
                       </SelectTrigger>
                       <SelectContent>
@@ -847,7 +874,7 @@ export const AdvancedFiltersModal = ({
                 {/* Construction Year */}
                 <div>
                   <Label className="text-base font-semibold mb-3 block text-slate-800">მშენებლობის წელი</Label>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <Label className="text-sm text-slate-600 mb-1 block">დან</Label>
                       <Input
@@ -855,7 +882,7 @@ export const AdvancedFiltersModal = ({
                         placeholder="1950"
                         value={filters.constructionYearMin}
                         onChange={(e) => setFilters({...filters, constructionYearMin: e.target.value})}
-                        className="h-11"
+                        className="h-10 sm:h-11 text-sm"
                       />
                     </div>
                     <div>
@@ -865,18 +892,18 @@ export const AdvancedFiltersModal = ({
                         placeholder="2024"
                         value={filters.constructionYearMax}
                         onChange={(e) => setFilters({...filters, constructionYearMax: e.target.value})}
-                        className="h-11"
+                        className="h-10 sm:h-11 text-sm"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   {/* Condition */}
                   <div>
                     <Label className="text-base font-semibold mb-3 block text-slate-800">მდგომარეობა</Label>
                     <Select value={filters.condition} onValueChange={(value) => setFilters({...filters, condition: value})}>
-                      <SelectTrigger className="h-11">
+                      <SelectTrigger className="h-10 sm:h-11 text-xs sm:text-sm">
                         <SelectValue placeholder="არჩევა" />
                       </SelectTrigger>
                       <SelectContent>
@@ -891,7 +918,7 @@ export const AdvancedFiltersModal = ({
                   <div>
                     <Label className="text-base font-semibold mb-3 block text-slate-800">პროექტის ტიპი</Label>
                     <Select value={filters.projectType} onValueChange={(value) => setFilters({...filters, projectType: value})}>
-                      <SelectTrigger className="h-11">
+                      <SelectTrigger className="h-10 sm:h-11 text-xs sm:text-sm">
                         <SelectValue placeholder="არჩევა" />
                       </SelectTrigger>
                       <SelectContent>
@@ -906,7 +933,7 @@ export const AdvancedFiltersModal = ({
                 {/* Ceiling Height */}
                 <div>
                   <Label className="text-base font-semibold mb-3 block text-slate-800">ჭერის სიმაღლე (მ)</Label>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <Label className="text-sm text-slate-600 mb-1 block">მინიმუმ</Label>
                       <Input
@@ -915,7 +942,7 @@ export const AdvancedFiltersModal = ({
                         step="0.1"
                         value={filters.ceilingHeightMin}
                         onChange={(e) => setFilters({...filters, ceilingHeightMin: e.target.value})}
-                        className="h-11"
+                        className="h-10 sm:h-11 text-sm"
                       />
                     </div>
                     <div>
@@ -926,7 +953,7 @@ export const AdvancedFiltersModal = ({
                         step="0.1"
                         value={filters.ceilingHeightMax}
                         onChange={(e) => setFilters({...filters, ceilingHeightMax: e.target.value})}
-                        className="h-11"
+                        className="h-10 sm:h-11 text-sm"
                       />
                     </div>
                   </div>
@@ -949,12 +976,12 @@ export const AdvancedFiltersModal = ({
               </TabsContent>
 
               {/* Amenities Tab */}
-              <TabsContent value="amenities" className="space-y-8 mt-0">
-                <div className="bg-slate-50/50 p-6 rounded-xl border border-slate-100">
-                  <Label className="text-lg font-bold mb-6 block text-slate-900">
+              <TabsContent value="amenities" className="space-y-4 sm:space-y-8 mt-0">
+                <div className="bg-slate-50/50 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-slate-100">
+                  <Label className="text-base sm:text-lg font-bold mb-4 sm:mb-6 block text-slate-900">
                     სისტემები და საკომუნიკაციო
                   </Label>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-3">
                       <Label className="text-sm font-medium text-slate-700 flex items-center gap-2">
                         <Thermometer className="h-4 w-4 text-primary" />
@@ -992,9 +1019,9 @@ export const AdvancedFiltersModal = ({
                 </div>
 
                 {/* Hot Water */}
-                <div className="bg-slate-50/50 p-6 rounded-xl border border-slate-100">
-                  <Label className="text-lg font-bold mb-4 block text-slate-900 flex items-center gap-2">
-                    <Droplets className="h-5 w-5 text-primary" />
+                <div className="bg-slate-50/50 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-slate-100">
+                  <Label className="text-base sm:text-lg font-bold mb-3 sm:mb-4 block text-slate-900 flex items-center gap-2">
+                    <Droplets className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                     ცხელი წყალი
                   </Label>
                   <div className="space-y-2">
@@ -1012,13 +1039,13 @@ export const AdvancedFiltersModal = ({
                 </div>
 
                 {/* Boolean Amenities */}
-                <div className="bg-slate-50/50 p-6 rounded-xl border border-slate-100">
-                  <Label className="text-lg font-bold mb-6 block text-slate-900">
+                <div className="bg-slate-50/50 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-slate-100">
+                  <Label className="text-base sm:text-lg font-bold mb-4 sm:mb-6 block text-slate-900">
                     დამატებითი კომფორტი
                   </Label>
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-slate-100 hover:border-slate-200 transition-colors">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="flex items-center space-x-3 p-2 sm:p-3 bg-white rounded-lg border border-slate-100 hover:border-slate-200 transition-colors">
                         <Checkbox
                           id="hasBalcony"
                           checked={filters.hasBalcony}
@@ -1055,8 +1082,8 @@ export const AdvancedFiltersModal = ({
                         <Label htmlFor="hasLoggia" className="text-sm font-medium cursor-pointer">ლოჯია</Label>
                       </div>
                     </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-slate-100 hover:border-slate-200 transition-colors">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="flex items-center space-x-3 p-2 sm:p-3 bg-white rounded-lg border border-slate-100 hover:border-slate-200 transition-colors">
                         <Checkbox
                           id="hasVeranda"
                           checked={filters.hasVeranda}
@@ -1089,13 +1116,13 @@ export const AdvancedFiltersModal = ({
               </TabsContent>
 
               {/* Features Tab */}
-              <TabsContent value="features" className="space-y-6 mt-0">
+              <TabsContent value="features" className="space-y-4 sm:space-y-6 mt-0">
                 {/* Features */}
                 <div>
                   <Label className="text-base font-semibold mb-4 block text-slate-800">მახასიათებლები</Label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                     {commonFeatures.map(feature => (
-                      <div key={feature} className="flex items-center space-x-3">
+                      <div key={feature} className="flex items-center space-x-2 sm:space-x-3">
                         <Checkbox
                           id={`feature-${feature}`}
                           checked={filters.selectedFeatures.includes(feature)}
@@ -1106,7 +1133,7 @@ export const AdvancedFiltersModal = ({
                             setFilters({...filters, selectedFeatures: newFeatures});
                           }}
                         />
-                        <Label htmlFor={`feature-${feature}`} className="text-sm font-medium">{feature}</Label>
+                        <Label htmlFor={`feature-${feature}`} className="text-xs sm:text-sm font-medium cursor-pointer">{feature}</Label>
                       </div>
                     ))}
                   </div>
@@ -1130,7 +1157,7 @@ export const AdvancedFiltersModal = ({
                             setFilters({...filters, selectedAdvantages: newAdvantages});
                           }}
                         />
-                        <Label htmlFor={`advantage-${advantage}`} className="text-sm font-medium">{advantage}</Label>
+                        <Label htmlFor={`advantage-${advantage}`} className="text-xs sm:text-sm font-medium cursor-pointer">{advantage}</Label>
                       </div>
                     ))}
                   </div>
@@ -1154,7 +1181,7 @@ export const AdvancedFiltersModal = ({
                             setFilters({...filters, selectedFurnitureAppliances: newFurniture});
                           }}
                         />
-                        <Label htmlFor={`furniture-${furniture}`} className="text-sm font-medium">{furniture}</Label>
+                        <Label htmlFor={`furniture-${furniture}`} className="text-xs sm:text-sm font-medium cursor-pointer">{furniture}</Label>
                       </div>
                     ))}
                   </div>
@@ -1162,7 +1189,7 @@ export const AdvancedFiltersModal = ({
               </TabsContent>
 
               {/* Saved Filters Tab */}
-              <TabsContent value="saved" className="space-y-6 mt-0">
+              <TabsContent value="saved" className="space-y-4 sm:space-y-6 mt-0">
                 <div className="space-y-4">
                   {/* Save Current Filter */}
                   {activeFiltersCount > 0 && (
@@ -1250,30 +1277,32 @@ export const AdvancedFiltersModal = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between gap-4 p-6 border-t bg-gradient-to-r from-slate-50 to-slate-100/50 backdrop-blur-sm">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-t bg-gradient-to-r from-slate-50 to-slate-100/50 backdrop-blur-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 order-2 sm:order-1">
             <Button 
               variant="outline"
               onClick={handleClearAllFilters}
-              className="flex items-center gap-2 h-11 px-4 border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+              className="flex items-center justify-center gap-2 h-10 sm:h-11 px-3 sm:px-4 w-full sm:w-auto border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 text-sm sm:text-base"
             >
-              <RotateCcw className="h-4 w-4" />
-              ყველას გასუფთავება
+              <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">ყველას გასუფთავება</span>
+              <span className="sm:hidden">გასუფთავება</span>
             </Button>
             {activeFiltersCount > 0 && (
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 font-medium">
-                  {activeFiltersCount} ფილტრი გამოყენებულია
+                <Badge variant="secondary" className="px-2 sm:px-4 py-1 sm:py-2 bg-primary/10 text-primary border-primary/20 font-medium text-xs sm:text-sm">
+                  <span className="hidden sm:inline">{activeFiltersCount} ფილტრი გამოყენებულია</span>
+                  <span className="sm:hidden">{activeFiltersCount} ფილტრი</span>
                 </Badge>
               </div>
             )}
           </div>
           
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3 order-1 sm:order-2">
             <Button 
               variant="outline" 
               onClick={() => setOpen(false)}
-              className="h-11 px-6 border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+              className="flex-1 sm:flex-none h-10 sm:h-11 px-4 sm:px-6 border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 text-sm sm:text-base"
             >
               გაუქმება
             </Button>
@@ -1282,9 +1311,9 @@ export const AdvancedFiltersModal = ({
                 console.log('🚀 BUTTON CLICKED! Starting handleApplyFilters...');
                 handleApplyFilters();
               }}
-              className="h-11 px-6 bg-primary hover:bg-primary/90 text-white font-medium shadow-lg shadow-primary/20 transition-all duration-200 min-w-48"
+              className="flex-1 sm:flex-none h-10 sm:h-11 px-4 sm:px-6 bg-primary hover:bg-primary/90 text-white font-medium shadow-lg shadow-primary/20 transition-all duration-200 sm:min-w-48 text-sm sm:text-base"
             >
-              <Search className="h-4 w-4 mr-2" />
+              <Search className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               ძიება
             </Button>
           </div>
