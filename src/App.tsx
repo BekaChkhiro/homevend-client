@@ -22,6 +22,8 @@ import UserProfile from "./pages/UserProfile";
 import { Services } from "./pages/Services";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
+import Developers from "./pages/Developers";
+import DeveloperDetail from "./pages/DeveloperDetail";
 import AdminOverview from "./pages/AdminDashboard/pages/Overview";
 import AdminUsers from "./pages/AdminDashboard/pages/Users";
 import AdminListings from "./pages/AdminDashboard/pages/Listings";
@@ -76,6 +78,8 @@ const App = () => (
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/agencies" element={<Agencies />} />
           <Route path="/agencies/:id" element={<AgencyDetail />} />
+          <Route path="/developers" element={<Developers />} />
+          <Route path="/developers/:id" element={<DeveloperDetail />} />
           <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<Contact />} />

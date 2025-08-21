@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -207,7 +208,7 @@ const Projects = () => {
       <Header />
       
       <div className="container mx-auto py-10 px-4 pt-48">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full mx-auto">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -438,6 +439,7 @@ const Projects = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

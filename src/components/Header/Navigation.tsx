@@ -49,12 +49,12 @@ export const Navigation = ({ isMobile = false, onItemClick }: NavigationProps) =
           </Link>
           
           <Link 
-            to="/projects" 
+            to="/agencies?role=developer" 
             onClick={onItemClick}
             className="flex items-center space-x-2 px-4 py-3 text-sm rounded-md hover:bg-gray-50 text-foreground hover:text-primary transition-all"
           >
             <Building className="h-4 w-4" />
-            <span>პროექტები</span>
+            <span>დეველოპერები</span>
           </Link>
           
           <Link 

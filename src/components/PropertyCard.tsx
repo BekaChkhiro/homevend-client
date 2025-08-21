@@ -103,7 +103,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           <img
             src={property.image}
             alt={property.title}
-            className="w-full h-40 sm:h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-40 sm:h-44 object-cover group-hover:scale-105 transition-transform duration-300"
           />
 
           {(() => {
