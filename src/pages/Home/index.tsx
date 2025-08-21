@@ -87,9 +87,12 @@ const Home = () => {
       setIsLoading(true);
       
       // Fetch all data in parallel
-      const [propertiesResponse, agenciesResponse] = await Promise.allSettled([
-        propertyApi.getProperties({ status: '', limit: 20 }),
-        agencyApi.getAgencies({ limit: 4 })
+
+      const [propertiesResponse, agenciesResponse, projectsResponse] = await Promise.allSettled([
+        propertyApi.getProperties({ limit: 20 }),
+        agencyApi.getAgencies({ limit: 4 }),
+        projectApi.getProjects({ limit: 6 })
+
       ]);
 
       // Process properties
@@ -126,7 +129,10 @@ const Home = () => {
             type: prop.propertyType || 'ბინა',
             transactionType: prop.dealType || 'იყიდება',
             image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
-            featured: prop.viewCount > 10 || Math.random() > 0.7
+            featured: prop.viewCount > 10 || Math.random() > 0.7,
+            // VIP status fields
+            vipStatus: prop.vipStatus || 'none',
+            vipExpiresAt: prop.vipExpiresAt
           };
         });
         
@@ -382,12 +388,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Second Advertisement - After Agencies Section */}
-        <section className="py-4 md:py-6 lg:py-8 bg-gray-50">
-          <div className="container mx-auto px-3 sm:px-4">
-            <AdBanner type="horizontal" />
-          </div>
-        </section>
 
         {/* Services Section */}
         <section className="py-8 md:py-12 lg:py-16">

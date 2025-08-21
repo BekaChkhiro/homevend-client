@@ -15,9 +15,9 @@ import { PriceAreaSection } from "../AddProperty/components/PriceAreaSection";
 import { ContactInfoSection } from "../AddProperty/components/ContactInfoSection";
 import { DescriptionSection } from "../AddProperty/components/DescriptionSection";
 import { PhotoGallerySection } from "../AddProperty/components/PhotoGallerySection";
-import { FormActions } from "../AddProperty/components/FormActions";
+import { VipPurchaseSection } from "./components/VipPurchaseSection";
 import { propertyFormSchema, type PropertyFormData } from "../AddProperty/types/propertyForm";
-import { propertyApi, citiesApi } from "@/lib/api";
+import { propertyApi, citiesApi, vipApi, balanceApi } from "@/lib/api";
 
 interface City {
   id: number;
@@ -30,9 +30,12 @@ interface City {
 
 export const EditProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isDraftSaving, setIsDraftSaving] = useState(false);
   const [isPropertyLoading, setIsPropertyLoading] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
+  const [selectedVipType, setSelectedVipType] = useState<string>('free');
+  const [selectedDays, setSelectedDays] = useState<string>('7');
+  const [userBalance, setUserBalance] = useState<number>(0);
+  const [vipPricing, setVipPricing] = useState<any[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
@@ -55,7 +58,7 @@ export const EditProperty = () => {
     },
   });
 
-  // Fetch cities on component mount
+  // Fetch cities and VIP data on component mount
   useEffect(() => {
     let isMounted = true;
     
@@ -89,7 +92,26 @@ export const EditProperty = () => {
       }
     };
 
+    const fetchVipData = async () => {
+      if (!isMounted) return;
+      
+      try {
+        const [pricingData, balanceData] = await Promise.all([
+          vipApi.getPricing(),
+          balanceApi.getBalance()
+        ]);
+        
+        if (isMounted) {
+          setVipPricing(pricingData.filter((p: any) => p.vipType !== 'none'));
+          setUserBalance(balanceData.balance);
+        }
+      } catch (error) {
+        console.error('Error fetching VIP data:', error);
+      }
+    };
+
     fetchCities();
+    fetchVipData();
     
     return () => {
       isMounted = false;
@@ -196,6 +218,40 @@ export const EditProperty = () => {
       });
       return;
     }
+
+    // VIP purchase validation
+    if (selectedVipType !== 'free') {
+      if (!selectedDays) {
+        toast({
+          title: "შეცდომა",
+          description: "გთხოვთ მიუთითოთ VIP დღეების რაოდენობა",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const daysNum = parseInt(selectedDays);
+      if (daysNum < 1 || daysNum > 30) {
+        toast({
+          title: "შეცდომა",
+          description: "დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const selectedPricing = vipPricing.find(p => p.vipType === selectedVipType);
+      const totalCost = selectedPricing ? selectedPricing.pricePerDay * daysNum : 0;
+      
+      if (userBalance < totalCost) {
+        toast({
+          title: "არასაკმარისი ბალანსი",
+          description: `საჭიროა ${totalCost.toFixed(2)}₾, ხელმისაწვდომია ${userBalance.toFixed(2)}₾`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
     
     setIsLoading(true);
     try {
@@ -286,12 +342,24 @@ export const EditProperty = () => {
         photos: []
       };
 
+      // Update property first
       await propertyApi.updateProperty(id, propertyData);
       
-      toast({
-        title: "წარმატება!",
-        description: "განცხადება წარმატებით განახლდა",
-      });
+      // Handle VIP purchase if not free
+      if (selectedVipType !== 'free') {
+        const daysNum = parseInt(selectedDays);
+        await vipApi.purchaseVipStatus(parseInt(id), selectedVipType, daysNum);
+        
+        toast({
+          title: "წარმატება!",
+          description: `განცხადება წარმატებით განახლდა და VIP სტატუსი შეძენილია ${daysNum} დღით`,
+        });
+      } else {
+        toast({
+          title: "წარმატება!",
+          description: "განცხადება წარმატებით განახლდა",
+        });
+      }
       
       navigate('/dashboard/my-properties');
     } catch (error: any) {
@@ -308,28 +376,6 @@ export const EditProperty = () => {
     }
   };
 
-  const handleSaveDraft = async () => {
-    setIsDraftSaving(true);
-    try {
-      const formData = form.getValues();
-      // Save to localStorage as draft with property ID
-      localStorage.setItem(`property_draft_${id}`, JSON.stringify(formData));
-      
-      toast({
-        title: "დრაფთი შენახულია",
-        description: "შეგიძლიათ მოგვიანებით განაგრძოთ განცხადების რედაქტირება",
-      });
-    } catch (error) {
-      console.error("Draft save error:", error);
-      toast({
-        title: "შეცდომა",
-        description: "შეცდომა მოხდა დრაფთის შენახვისას",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDraftSaving(false);
-    }
-  };
 
   if (isPropertyLoading) {
     return (
@@ -351,10 +397,10 @@ export const EditProperty = () => {
   
   return (
     <div className="w-full h-screen overflow-hidden flex flex-col relative">
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6 pb-32">
         <h2 className="text-2xl font-bold mb-6">განცხადების რედაქტირება</h2>
       
-      <Card className="p-6 mb-20">
+      <Card className="p-6 mb-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Basic Information Section */}
@@ -387,19 +433,47 @@ export const EditProperty = () => {
           {/* Photo Gallery Section */}
           <PhotoGallerySection />
           
-          
           </form>
         </Form>
       </Card>
+      
+      {/* VIP Purchase Section */}
+      {id && (
+        <div className="mb-6">
+          <VipPurchaseSection
+            propertyId={parseInt(id)}
+            propertyTitle={form.watch('title') || 'განცხადება'}
+            selectedVipType={selectedVipType}
+            selectedDays={selectedDays}
+            onVipTypeChange={setSelectedVipType}
+            onDaysChange={setSelectedDays}
+            userBalance={userBalance}
+            vipPricing={vipPricing}
+          />
+        </div>
+      )}
+      
       </div>
       
-      <FormActions
-        onSaveDraft={handleSaveDraft}
-        onSubmit={form.handleSubmit(onSubmit)}
-        isLoading={isLoading}
-        isDraftSaving={isDraftSaving}
-        isEdit={true}
-      />
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-50">
+        <div className="max-w-7xl mx-auto flex justify-end">
+          <button
+            type="button"
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={isLoading}
+            className="bg-primary hover:bg-primary/90 disabled:bg-gray-400 text-white px-8 py-3 rounded-lg font-medium transition-colors flex items-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                განახლება...
+              </>
+            ) : (
+              'განცხადების განახლება'
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

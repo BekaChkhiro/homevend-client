@@ -53,6 +53,9 @@ interface Property {
     email: string;
   };
   isOwnProperty?: boolean;
+  // VIP status fields
+  vipStatus?: 'none' | 'vip' | 'vip_plus' | 'super_vip';
+  vipExpiresAt?: string;
 }
 
 export const MyProperties: React.FC = () => {
@@ -137,11 +140,12 @@ export const MyProperties: React.FC = () => {
       
       {hasProperties ? (
         <div className="space-y-4">
-          {properties.map((property) => (
+          {paginatedProperties.map((property) => (
             <UserPropertyCard
               key={property.id}
               property={property}
               onDelete={handleDeleteProperty}
+              onVipPurchased={fetchUserProperties}
             />
           ))}
         </div>

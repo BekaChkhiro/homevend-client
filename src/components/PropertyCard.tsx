@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Bed, Bath, Square } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Crown } from "lucide-react";
 import type { Property } from "@/pages/Index";
 import { Link } from "react-router-dom";
 import { FavoriteButton } from "./FavoriteButton";
@@ -11,9 +11,19 @@ interface PropertyCardProps {
   property: Property;
 }
 
+const VIP_BG_COLORS = {
+  vip: 'bg-blue-500 text-white border-blue-600',
+  vip_plus: 'bg-purple-500 text-white border-purple-600', 
+  super_vip: 'bg-yellow-500 text-black border-yellow-600'
+};
+
+const VIP_LABELS = {
+  vip: 'VIP',
+  vip_plus: 'VIP+',
+  super_vip: 'SUPER VIP'
+};
+
 export const PropertyCard = ({ property }: PropertyCardProps) => {
-  // Debug logging
-  console.log('PropertyCard received property:', property);
   
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('ka-GE', {
@@ -21,6 +31,20 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       currency: 'GEL',
       minimumFractionDigits: 0,
     }).format(price);
+  };
+
+  const isVipActive = () => {
+    if (!property.vipStatus || property.vipStatus === 'none') return false;
+    if (!property.vipExpiresAt) return false;
+    return new Date(property.vipExpiresAt) > new Date();
+  };
+
+  const getVipInfo = () => {
+    if (!isVipActive()) return null;
+    const vipType = property.vipStatus!;
+    const colorClass = VIP_BG_COLORS[vipType as keyof typeof VIP_BG_COLORS];
+    const label = VIP_LABELS[vipType as keyof typeof VIP_LABELS];
+    return { colorClass, label };
   };
 
   // Get city name for badge
@@ -81,11 +105,19 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             alt={property.title}
             className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          {property.featured && (
-            <Badge className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-primary text-primary-foreground text-xs">
-              ტოპ ქონება
-            </Badge>
-          )}
+
+          {(() => {
+            const vipInfo = getVipInfo();
+            if (!vipInfo) return null;
+            const { colorClass, label } = vipInfo;
+            return (
+              <Badge className={`absolute top-3 left-3 ${colorClass} z-10 shadow-lg border-2 font-bold px-2 py-1 text-xs`}>
+                <Crown className="h-4 w-4 mr-1" />
+                {label}
+              </Badge>
+            );
+          })()}
+
           <div onClick={(e) => e.preventDefault()}>
             <FavoriteButton
               propertyId={property.id}
