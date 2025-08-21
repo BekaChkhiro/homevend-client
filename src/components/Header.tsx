@@ -1,5 +1,6 @@
 
 import { Logo, UserMenu, FavoritesButton, AddPropertyButton, Navigation } from "./Header/index";
+import { TabbedMobileMenu } from "./Header/TabbedMobileMenu";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -58,8 +59,8 @@ export const Header = () => {
       
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
-          <Navigation isMobile={true} onItemClick={() => setIsMobileMenuOpen(false)} />
+        <div className="lg:hidden">
+          <TabbedMobileMenu onItemClick={() => setIsMobileMenuOpen(false)} />
         </div>
       )}
     </header>

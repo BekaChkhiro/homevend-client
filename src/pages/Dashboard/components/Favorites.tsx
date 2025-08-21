@@ -142,10 +142,10 @@ export const Favorites: React.FC = () => {
   
   return (
     <>
-      <h2 className="text-xl font-medium mb-4">ფავორიტები</h2>
+      <h2 className="text-lg md:text-xl font-medium mb-4">ფავორიტები</h2>
 
       {favorites.length > 0 ? (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {favorites.map((property) => {
             const transformedProperty = {
               id: property.id,
@@ -174,15 +174,15 @@ export const Favorites: React.FC = () => {
           })}
         </div>
       ) : (
-        <div className="bg-white p-8 rounded-lg border text-center">
+        <div className="bg-white p-4 md:p-8 rounded-lg border text-center">
           <div className="max-w-xs mx-auto">
-            <Heart className="mx-auto h-16 w-16 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium mb-2">თქვენ არ გაქვთ ფავორიტებში დამატებული განცხადებები</h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <Heart className="mx-auto h-12 w-12 md:h-16 md:w-16 text-gray-300 mb-4" />
+            <h3 className="text-base md:text-lg font-medium mb-2">თქვენ არ გაქვთ ფავორიტებში დამატებული განცხადებები</h3>
+            <p className="text-xs md:text-sm text-gray-500 mb-4">
               მოძებნეთ სასურველი განცხადებები და დაამატეთ ფავორიტებში მომავალი განხილვისთვის
             </p>
             <Button 
-              className="flex items-center mx-auto"
+              className="flex items-center mx-auto text-sm"
               onClick={() => navigate('/properties')}
             >
               <Search className="h-4 w-4 mr-1" />

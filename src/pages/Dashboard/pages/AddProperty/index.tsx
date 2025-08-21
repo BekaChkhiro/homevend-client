@@ -331,13 +331,13 @@ export const AddProperty = () => {
   };
 
   return (
-    <div className="w-full h-screen overflow-hidden flex flex-col relative">
-      <div className="flex-1 overflow-auto p-6 pb-32">
-        <h2 className="text-2xl font-bold mb-6">განცხადების დამატება</h2>
+    <div className="w-full min-h-screen flex flex-col relative">
+      <div className="flex-1 overflow-auto p-2 sm:p-4 md:p-6 pb-16 sm:pb-24 md:pb-32">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">განცხადების დამატება</h2>
       
-        <Card className="p-6 mb-6">
+        <Card className="p-2 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
             {/* Basic Information Section */}
             <BasicInfoSection />
             
@@ -386,13 +386,13 @@ export const AddProperty = () => {
         />
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-50">
-        <div className="max-w-7xl mx-auto flex justify-end">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-3 sm:p-4 z-50">
+        <div className="max-w-7xl mx-auto flex justify-center sm:justify-end">
           <button
             type="button"
             onClick={form.handleSubmit(onSubmit)}
             disabled={isLoading}
-            className="bg-primary hover:bg-primary/90 disabled:bg-gray-400 text-white px-8 py-3 rounded-lg font-medium transition-colors flex items-center gap-2"
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90 disabled:bg-gray-400 text-white px-6 sm:px-8 py-3 sm:py-3 text-sm sm:text-base rounded-lg font-medium transition-colors flex items-center justify-center gap-2 min-h-[48px] touch-manipulation"
           >
             {isLoading ? (
               <>

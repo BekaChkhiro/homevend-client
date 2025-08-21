@@ -23,15 +23,15 @@ export const PropertyDetailsSection = () => {
 
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center space-x-2 border-b pb-3 mb-2">
-        <Home className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">განცხადების დეტალები</h3>
+    <div className="space-y-4 sm:space-y-6 md:space-y-8">
+      <div className="flex items-center space-x-2 border-b pb-2 sm:pb-3 mb-2">
+        <Home className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />
+        <h3 className="text-lg sm:text-xl font-semibold">განცხადების დეტალები</h3>
       </div>
 
       {/* Rooms */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">ოთახები</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">ოთახები</Label>
         <FormField
           control={form.control}
           name="rooms"
@@ -41,7 +41,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-5 md:grid-cols-10 gap-3"
+                  className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-2 sm:gap-3"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, "10+"].map((num) => {
                     const isSelected = field.value === num.toString();
@@ -50,7 +50,7 @@ export const PropertyDetailsSection = () => {
                         <button
                           type="button"
                           onClick={() => field.onChange(num.toString())}
-                          className={`flex items-center justify-center border rounded-md p-3 cursor-pointer transition-colors min-w-[45px] ${isSelected
+                          className={`flex items-center justify-center border rounded-md p-2 sm:p-3 cursor-pointer transition-colors min-w-[40px] sm:min-w-[45px] min-h-[40px] sm:min-h-[45px] text-sm sm:text-base touch-manipulation ${isSelected
                             ? 'border-primary bg-accent font-medium'
                             : 'border-input bg-background hover:bg-accent hover:border-ring'
                             }`}
@@ -68,8 +68,8 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Bedrooms */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">საძინებელი</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">საძინებელი</Label>
         <FormField
           control={form.control}
           name="bedrooms"
@@ -79,7 +79,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-5 md:grid-cols-10 gap-3"
+                  className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-2 sm:gap-3"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, "10+"].map((num) => {
                     const isSelected = field.value === num.toString();
@@ -88,7 +88,7 @@ export const PropertyDetailsSection = () => {
                         <button
                           type="button"
                           onClick={() => field.onChange(num.toString())}
-                          className={`flex items-center justify-center border rounded-md p-3 cursor-pointer transition-colors min-w-[45px] ${isSelected
+                          className={`flex items-center justify-center border rounded-md p-2 sm:p-3 cursor-pointer transition-colors min-w-[40px] sm:min-w-[45px] min-h-[40px] sm:min-h-[45px] text-sm sm:text-base touch-manipulation ${isSelected
                             ? 'border-primary bg-accent font-medium'
                             : 'border-input bg-background hover:bg-accent hover:border-ring'
                             }`}
@@ -106,7 +106,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Bathrooms */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Droplets className="h-4 w-4 text-muted-foreground" />
           <span>სველი წერტილი</span>
@@ -120,7 +120,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-2 md:grid-cols-4 gap-3"
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
                 >
                   {[
                     { value: "1", label: "1" },
@@ -134,7 +134,7 @@ export const PropertyDetailsSection = () => {
                         <button
                           type="button"
                           onClick={() => field.onChange(option.value)}
-                          className={`flex items-center justify-center border rounded-md p-3 cursor-pointer transition-colors min-w-[60px] ${isSelected
+                          className={`flex items-center justify-center border rounded-md p-2 sm:p-3 cursor-pointer transition-colors min-w-[50px] sm:min-w-[60px] min-h-[40px] sm:min-h-[45px] text-sm sm:text-base touch-manipulation ${isSelected
                             ? 'border-primary bg-accent font-medium'
                             : 'border-input bg-background hover:bg-accent hover:border-ring'
                             }`}
@@ -152,8 +152,8 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Total Floors */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">სართულები სულ</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">სართულები სულ</Label>
         <FormField
           control={form.control}
           name="totalFloors"
@@ -163,8 +163,8 @@ export const PropertyDetailsSection = () => {
                 <Input
                   {...field}
                   type="number"
-                  placeholder="მთლიანი სართულების რაოდენობა"
-                  className="border-input focus:ring-ring focus:ring-1"
+                  placeholder="სართულები"
+                  className="h-11 sm:h-12 text-sm sm:text-base border-input focus:ring-ring focus:ring-1"
                 />
               </FormControl>
             </FormItem>
@@ -173,7 +173,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Building Status */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Building className="h-4 w-4 text-muted-foreground" />
           <span>სტატუსი</span>
@@ -187,7 +187,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                   {[
                     { value: "old-built", label: "ძველი აშენებული" },
@@ -197,7 +197,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`status-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`status-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium">{option.label}</span>
@@ -211,8 +211,8 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Construction Year */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">აშენების წელი</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">აშენების წელი</Label>
         <FormField
           control={form.control}
           name="constructionYear"
@@ -222,7 +222,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                   {[
                     { value: "before-1955", label: "<1955" },
@@ -232,7 +232,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`year-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`year-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium">{option.label}</span>
@@ -246,8 +246,8 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Condition */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">მდგომარეობა</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">მდგომარეობა</Label>
         <FormField
           control={form.control}
           name="condition"
@@ -257,7 +257,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-2 md:grid-cols-4 gap-3"
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
                 >
                   {[
                     { value: "newly-renovated", label: "ახალი გარემონტებული" },
@@ -272,7 +272,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`condition-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`condition-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium text-sm">{option.label}</span>
@@ -286,8 +286,8 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Project Type */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">პროექტის ტიპი</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">პროექტის ტიპი</Label>
         <FormField
           control={form.control}
           name="projectType"
@@ -297,7 +297,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                   {[
                     { value: "non-standard", label: "არასტანდარტული" },
@@ -307,7 +307,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`project-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`project-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium">{option.label}</span>
@@ -321,8 +321,8 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Ceiling Height */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">ჭერის სიმაღლე</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">ჭერის სიმაღლე</Label>
         <FormField
           control={form.control}
           name="ceilingHeight"
@@ -334,7 +334,7 @@ export const PropertyDetailsSection = () => {
                   type="number"
                   step="0.1"
                   placeholder="მეტრი"
-                  className="border-input focus:ring-ring focus:ring-1"
+                  className="h-11 sm:h-12 text-sm sm:text-base border-input focus:ring-ring focus:ring-1"
                 />
               </FormControl>
             </FormItem>
@@ -343,7 +343,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Heating */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Thermometer className="h-4 w-4 text-muted-foreground" />
           <span>გათბობა</span>
@@ -357,7 +357,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
                     { value: "central-heating", label: "ცენტრალური გათბობა" },
@@ -371,7 +371,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`heating-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`heating-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium text-sm">{option.label}</span>
@@ -385,7 +385,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Parking */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Car className="h-4 w-4 text-muted-foreground" />
           <span>პარკირება</span>
@@ -399,7 +399,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
                     { value: "garage", label: "ავტოფარეხი" },
@@ -412,7 +412,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`parking-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`parking-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium text-sm">{option.label}</span>
@@ -426,7 +426,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Hot Water */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Droplets className="h-4 w-4 text-muted-foreground" />
           <span>ცხელი წყალი</span>
@@ -440,7 +440,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
                     { value: "gas-water-heater", label: "გაზის გამაცხელებელი" },
@@ -455,7 +455,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`hot-water-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`hot-water-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium text-sm">{option.label}</span>
@@ -469,8 +469,8 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Building Material */}
-      <div className="rounded-md border border-border p-5">
-        <Label className="block mb-3 font-medium">სამშენებლო მასალა</Label>
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
+        <Label className="block mb-3 font-medium text-sm sm:text-base">სამშენებლო მასალა</Label>
         <FormField
           control={form.control}
           name="buildingMaterial"
@@ -480,7 +480,7 @@ export const PropertyDetailsSection = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   value={field.value}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
                     { value: "block", label: "ბლოკი" },
@@ -492,7 +492,7 @@ export const PropertyDetailsSection = () => {
                     <label
                       key={option.value}
                       htmlFor={`material-${option.value}`}
-                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                      className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                     >
                       <RadioGroupItem value={option.value} id={`material-${option.value}`} />
                       <span className="group-data-[state=checked]:font-medium">{option.label}</span>
@@ -506,7 +506,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Balcony */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <FormField
           control={form.control}
           name="hasBalcony"
@@ -535,7 +535,7 @@ export const PropertyDetailsSection = () => {
                 <FormItem>
                   <Label className="text-sm mb-2 block">აივნის რაოდენობა</Label>
                   <FormControl>
-                    <Input {...field} type="number" placeholder="რაოდენობა" className="border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" placeholder="რაოდენობა" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -547,7 +547,7 @@ export const PropertyDetailsSection = () => {
                 <FormItem>
                   <Label className="text-sm mb-2 block">აივნის ფართობი (მ²)</Label>
                   <FormControl>
-                    <Input {...field} type="number" step="0.1" placeholder="ფართობი" className="border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" step="0.1" placeholder="ფართობი" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -557,7 +557,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Pool */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <FormField
           control={form.control}
           name="hasPool"
@@ -590,7 +590,7 @@ export const PropertyDetailsSection = () => {
                   <RadioGroup
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                   >
                     {[
                       { value: "outdoor", label: "ღია" },
@@ -599,7 +599,7 @@ export const PropertyDetailsSection = () => {
                       <label
                         key={option.value}
                         htmlFor={`pool-type-${option.value}`}
-                        className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                        className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                       >
                         <RadioGroupItem value={option.value} id={`pool-type-${option.value}`} />
                         <span className="group-data-[state=checked]:font-medium">{option.label}</span>
@@ -614,7 +614,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Living Room */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <FormField
           control={form.control}
           name="hasLivingRoom"
@@ -645,7 +645,7 @@ export const PropertyDetailsSection = () => {
                 <FormItem>
                   <Label className="text-sm mb-2 block">მისაღების ფართი (მ²)</Label>
                   <FormControl>
-                    <Input {...field} type="number" step="0.1" placeholder="ფართი" className="border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" step="0.1" placeholder="ფართი" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -660,7 +660,7 @@ export const PropertyDetailsSection = () => {
                     <RadioGroup
                       onValueChange={field.onChange}
                       value={field.value}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                     >
                       {[
                         { value: "separate", label: "გამოყოფილი" },
@@ -669,7 +669,7 @@ export const PropertyDetailsSection = () => {
                         <label
                           key={option.value}
                           htmlFor={`living-room-type-${option.value}`}
-                          className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                          className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                         >
                           <RadioGroupItem value={option.value} id={`living-room-type-${option.value}`} />
                           <span className="group-data-[state=checked]:font-medium">{option.label}</span>
@@ -685,7 +685,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Loggia */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <FormField
           control={form.control}
           name="hasLoggia"
@@ -722,7 +722,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Veranda */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <FormField
           control={form.control}
           name="hasVeranda"
@@ -759,7 +759,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Yard */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <FormField
           control={form.control}
           name="hasYard"
@@ -798,7 +798,7 @@ export const PropertyDetailsSection = () => {
       </div>
 
       {/* Storage */}
-      <div className="rounded-md border border-border p-5">
+      <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <FormField
           control={form.control}
           name="hasStorage"
@@ -829,7 +829,7 @@ export const PropertyDetailsSection = () => {
                 <FormItem>
                   <Label className="text-sm mb-2 block">სათავსოს ფართი (მ²)</Label>
                   <FormControl>
-                    <Input {...field} type="number" step="0.1" placeholder="ფართი" className="border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" step="0.1" placeholder="ფართი" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -844,7 +844,7 @@ export const PropertyDetailsSection = () => {
                     <RadioGroup
                       onValueChange={field.onChange}
                       value={field.value}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                     >
                       {[
                         { value: "basement", label: "სარდაფი" },
@@ -857,7 +857,7 @@ export const PropertyDetailsSection = () => {
                         <label
                           key={option.value}
                           htmlFor={`storage-type-${option.value}`}
-                          className="flex items-center space-x-2 border border-input bg-background rounded-md p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent"
+                          className="flex items-center space-x-2 border border-input bg-background rounded-md p-3 sm:p-4 cursor-pointer hover:bg-accent hover:border-ring transition-colors group data-[state=checked]:border-primary data-[state=checked]:bg-accent min-h-[48px] touch-manipulation"
                         >
                           <RadioGroupItem value={option.value} id={`storage-type-${option.value}`} />
                           <span className="group-data-[state=checked]:font-medium text-sm">{option.label}</span>

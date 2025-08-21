@@ -218,15 +218,16 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
     clearAllFilters
   }));
 
-  const handleSearch = () => {
-    console.log('🔍 PropertySearchHero handleSearch called');
-    console.log('🔍 Current filters:', filters);
+  const handleSearch = (customFilters?: Partial<PropertySearchFilters>) => {
+    console.log('🔍 PropertySearchHero handleSearch called', { customFilters });
+    const currentFilters = customFilters ? { ...filters, ...customFilters } : filters;
+    console.log('🔍 Current filters:', currentFilters);
     
     // Build location from selected city and area
     const searchLocation = buildLocationString();
     
     const searchFilters = {
-      ...filters,
+      ...currentFilters,
       location: searchLocation
     };
     
@@ -926,6 +927,10 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                 totalProperties={totalProperties}
                 filteredCount={filteredCount}
                 transactionType={filters.transactionType}
+                onSearch={(advancedFilters) => {
+                  console.log('📱 PropertySearchHero: onSearch from AdvancedFilters called', { advancedFilters });
+                  handleSearch(advancedFilters);
+                }}
               />
 
               {/* Search Button */}
@@ -936,6 +941,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                     size="lg" 
                     className={`${buttonClasses} w-full text-sm sm:text-base h-12`}
                     disabled={isSearching}
+                    data-search-button="true"
                   >
                     {isSearching ? (
                       <>
@@ -957,6 +963,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                     size="lg" 
                     className={`${buttonClasses} w-full text-sm sm:text-base h-12`}
                     disabled={isSearching}
+                    data-search-button="true"
                   >
                     {isSearching ? (
                       <>

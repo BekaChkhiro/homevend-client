@@ -189,27 +189,188 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
   return (
     <Card className="border hover:shadow-sm transition-shadow">
       <CardContent className="p-0">
-        <div className="flex items-center gap-4 p-4">
+        {/* Mobile View - Compact card layout like FavoritePropertyCard */}
+        <div className="sm:hidden p-4">
+          {/* First Row - Main Info */}
+          <div className="flex items-center gap-3 mb-3">
+            {/* Image */}
+            <div className="relative flex-shrink-0">
+              <img 
+                src={getMainImage()} 
+                alt={property.title || `${property.propertyType} ${property.city}-ში`}
+                className="w-16 h-16 object-cover rounded-lg"
+              />
+            </div>
 
-          {/* Image - Reduced size */}
+            {/* Title and Price */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between">
+                <div className="flex-1 min-w-0 pr-2">
+                  <h3 className="font-semibold text-base leading-tight truncate">
+                    {property.title || `${property.propertyType} ${property.city}-ში`}
+                  </h3>
+                  {/* VIP Badge under title */}
+                  {(() => {
+                    const vipInfo = getVipInfo();
+                    if (!vipInfo) return null;
+                    const { colorClass, label } = vipInfo;
+                    return (
+                      <Badge className={`text-xs ${colorClass} mt-1 inline-flex`}>
+                        <Crown className="h-3 w-3 mr-1" />
+                        {label}
+                      </Badge>
+                    );
+                  })()}
+                </div>
+                <span className="text-lg font-bold text-primary whitespace-nowrap">
+                  {formatPrice(property.totalPrice)} ₾
+                </span>
+              </div>
+              <div className="flex items-center text-gray-600 mt-1.5">
+                <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+                <span className="text-sm truncate">
+                  {getLocationString()}
+                </span>
+              </div>
+            </div>
+          </div>
 
+          {/* Second Row - Details */}
+          <div className="flex flex-col gap-2 text-sm text-gray-600 mb-3">
+            <div className="flex items-center gap-3">
+              {property.bedrooms && (
+                <div className="flex items-center">
+                  <Bed className="h-4 w-4 mr-1.5 text-gray-500" />
+                  <span className="font-medium">{property.bedrooms}</span>
+                </div>
+              )}
+              {property.bathrooms && (
+                <div className="flex items-center">
+                  <Bath className="h-4 w-4 mr-1.5 text-gray-500" />
+                  <span className="font-medium">{property.bathrooms}</span>
+                </div>
+              )}
+              <div className="flex items-center">
+                <Square className="h-4 w-4 mr-1.5 text-gray-500" />
+                <span className="font-medium">{property.area}მ²</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between flex-wrap">
+              <div className="flex gap-1.5 flex-wrap">
+                <Badge variant="outline" className="text-xs px-2 py-1 h-6 whitespace-nowrap font-medium">
+                  {property.propertyType}
+                </Badge>
+                <Badge variant="outline" className="text-xs px-2 py-1 h-6 whitespace-nowrap font-medium">
+                  {property.dealType}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-3 text-xs text-gray-500">
+                <div className="flex items-center">
+                  <Eye className="h-3.5 w-3.5 mr-1" />
+                  <span>{property.viewCount}</span>
+                </div>
+                <div className="flex items-center">
+                  <Calendar className="h-3.5 w-3.5 mr-1" />
+                  <span>{formatDate(property.createdAt)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Show owner info if property belongs to an agent */}
+          {property.owner && !property.isOwnProperty && (
+            <div className="flex items-center text-gray-600 mb-3 text-sm bg-gray-50 rounded-lg px-3 py-2">
+              <User className="h-4 w-4 mr-2 flex-shrink-0 text-gray-500" />
+              <span className="truncate font-medium">
+                აგენტი: {property.owner.fullName}
+              </span>
+            </div>
+          )}
+
+          {/* Third Row - Main Actions */}
+          <div className="flex gap-2 mb-3">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate(`/property/${property.id}`)}
+              className="h-10 px-4 py-2 text-sm flex-1 font-medium"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              ნახვა
+            </Button>
+            
+            {property.isOwnProperty !== false && (
+              <>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
+                  className="h-10 px-4 py-2 text-sm flex-1 font-medium"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  რედაქტირება
+                </Button>
+
+              </>
+            )}
+          </div>
+
+          {/* Fourth Row - Delete Action */}
+          {property.isOwnProperty !== false && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="h-9 px-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 w-full font-medium border border-red-200 hover:border-red-300"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  წაშლა
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                    წაშლა
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+
+          {/* VIP expiration info */}
+          {isVipActive() && (
+            <div className="mt-2 text-center">
+              <span className={`text-xs ${getVipButtonStyle().textColor} font-medium`}>
+                {getVipExpirationInfo()}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Desktop/Tablet View - Keep existing horizontal layout */}
+        <div className="hidden sm:flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 p-3 lg:p-4">
           {/* Image */}
-
-          <div className="relative flex-shrink-0">
+          <div className="relative flex-shrink-0 sm:w-full lg:w-auto">
             <img 
               src={getMainImage()} 
               alt={property.title || `${property.propertyType} ${property.city}-ში`}
-
-              className="w-20 h-20 object-cover rounded-lg"
-
+              className="w-full sm:h-32 lg:w-20 lg:h-20 object-cover rounded-lg"
             />
           </div>
 
-          {/* Content - Reduced spacing */}
+          {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-1 sm:gap-0">
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-lg truncate pr-4">
+                <h3 className="font-semibold text-base lg:text-lg truncate sm:pr-4">
                   {property.title || `${property.propertyType} ${property.city}-ში`}
                 </h3>
                 {/* VIP Badge */}
@@ -225,7 +386,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
                   );
                 })()}
               </div>
-              <span className="text-lg font-bold text-primary whitespace-nowrap">
+              <span className="text-base lg:text-lg font-bold text-primary whitespace-nowrap">
                 {formatPrice(property.totalPrice)} ₾
               </span>
             </div>
@@ -247,39 +408,32 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
               </div>
             )}
             
-
-            <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-2">
               {property.bedrooms && (
                 <div className="flex items-center">
                   <Bed className="h-4 w-4 mr-1" />
-
                   <span>{property.bedrooms}</span>
                 </div>
               )}
               {property.bathrooms && (
                 <div className="flex items-center">
-
                   <Bath className="h-4 w-4 mr-1" />
-
                   <span>{property.bathrooms}</span>
                 </div>
               )}
               <div className="flex items-center">
-
                 <Square className="h-4 w-4 mr-1" />
-
                 <span>{property.area} მ²</span>
               </div>
-              <Badge variant="outline" className="text-xs px-2 py-0.5">
+              <Badge variant="outline" className="text-xs">
                 {property.propertyType}
               </Badge>
-
-              <Badge variant="outline" className="text-xs px-2 py-0.5">
+              <Badge variant="outline" className="text-xs">
                 {property.dealType}
               </Badge>
             </div>
 
-            {/* Statistics - Simplified */}
+            {/* Statistics */}
             <div className="flex items-center gap-4 text-xs text-gray-500">
               <div className="flex items-center">
                 <Eye className="h-3 w-3 mr-1" />
@@ -292,9 +446,8 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
             </div>
           </div>
 
-          {/* Actions - Direct buttons */}
-          <div className="flex gap-1 flex-shrink-0">
-            {/* View button */}
+          {/* Actions */}
+          <div className="flex flex-col lg:flex-row gap-1 flex-shrink-0">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -306,7 +459,6 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
               <span className="text-xs">ნახვა</span>
             </Button>
             
-            {/* Edit button - only for own properties */}
             {property.isOwnProperty !== false && (
               <Button 
                 variant="ghost" 
@@ -320,7 +472,6 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
               </Button>
             )}
 
-            {/* VIP Purchase button - only for own properties */}
             {property.isOwnProperty !== false && (
               <div className="flex flex-col items-center space-y-1">
                 <Button 
@@ -333,7 +484,6 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
                   <Crown className={`h-4 w-4 mr-1 ${getVipButtonStyle().textColor}`} />
                   <span className="text-xs">{getVipButtonStyle().text}</span>
                 </Button>
-                {/* Expiration info for active VIP */}
                 {isVipActive() && (
                   <span className={`text-xs ${getVipButtonStyle().textColor} font-medium`}>
                     {getVipExpirationInfo()}
@@ -342,7 +492,6 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
               </div>
             )}
             
-            {/* Delete button with AlertDialog - only for own properties */}
             {property.isOwnProperty !== false && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>

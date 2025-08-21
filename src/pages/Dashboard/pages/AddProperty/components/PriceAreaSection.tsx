@@ -24,31 +24,31 @@ export const PriceAreaSection = () => {
   }, [area, totalPrice, form]);
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center space-x-3 border-b border-border/50 pb-4 mb-6">
-        <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
-          <DollarSign className="h-5 w-5 text-primary" />
+    <div className="space-y-4 sm:space-y-6 md:space-y-8">
+      <div className="flex items-center space-x-3 border-b border-border/50 pb-2 sm:pb-3 md:pb-4 mb-3 sm:mb-4 md:mb-6">
+        <div className="flex items-center justify-center w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg">
+          <DollarSign className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-foreground">ფასი და ფართი</h3>
-          <p className="text-sm text-muted-foreground">მიუთითეთ ქონების ფასი და ფართი</p>
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground">ფასი და ფართი</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">მიუთითეთ ქონების ფასი და ფართი</p>
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border border-border/50 p-6 shadow-sm hover:shadow-md transition-shadow">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="bg-card rounded-xl border border-border/50 p-3 sm:p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {/* Area */}
           <div className="space-y-4">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
-                <Square className="h-4 w-4 text-primary" />
+              <div className="flex items-center justify-center w-6 sm:w-8 h-6 sm:h-8 bg-primary/10 rounded-lg">
+                <Square className="h-3 sm:h-4 w-3 sm:w-4 text-primary" />
               </div>
               <div>
-                <Label htmlFor="property-area" className="text-base font-semibold text-foreground">
+                <Label htmlFor="property-area" className="text-sm sm:text-base font-semibold text-foreground">
                   ფართი (მ²)
                   <span className="text-destructive ml-1">*</span>
                 </Label>
-                <p className="text-sm text-muted-foreground">ქონების საერთო ფართი</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">ქონების საერთო ფართი</p>
               </div>
             </div>
             <FormField
@@ -63,7 +63,7 @@ export const PriceAreaSection = () => {
                         type="number" 
                         step="0.1"
                         placeholder="ფართი კვადრატულ მეტრში" 
-                        className="h-14 text-lg pl-4 pr-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
+                        className="h-12 sm:h-14 text-base sm:text-lg pl-4 pr-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                         {...field}
                       />
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
@@ -80,15 +80,15 @@ export const PriceAreaSection = () => {
           {/* Total Price */}
           <div className="space-y-4">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
-                <DollarSign className="h-4 w-4 text-primary" />
+              <div className="flex items-center justify-center w-6 sm:w-8 h-6 sm:h-8 bg-primary/10 rounded-lg">
+                <DollarSign className="h-3 sm:h-4 w-3 sm:w-4 text-primary" />
               </div>
               <div>
-                <Label htmlFor="total-price" className="text-base font-semibold text-foreground">
+                <Label htmlFor="total-price" className="text-sm sm:text-base font-semibold text-foreground">
                   სრული ფასი ($)
                   <span className="text-destructive ml-1">*</span>
                 </Label>
-                <p className="text-sm text-muted-foreground">ქონების საერთო ღირებულება</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">ქონების საერთო ღირებულება</p>
               </div>
             </div>
             <FormField
@@ -102,10 +102,10 @@ export const PriceAreaSection = () => {
                         id="total-price" 
                         type="number" 
                         placeholder="სრული ფასი დოლარში" 
-                        className="h-14 text-lg pl-12 pr-4 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
+                        className="h-12 sm:h-14 text-base sm:text-lg pl-12 pr-4 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                         {...field}
                       />
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-lg">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-base sm:text-lg">
                         $
                       </div>
                     </div>
@@ -118,16 +118,16 @@ export const PriceAreaSection = () => {
         </div>
 
         {/* Price per Square Meter - Full Width */}
-        <div className="mt-8 pt-6 border-t border-border/30">
+        <div className="mt-4 sm:mt-6 md:mt-8 pt-3 sm:pt-4 md:pt-6 border-t border-border/30">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
-              <Calculator className="h-4 w-4 text-green-600" />
+            <div className="flex items-center justify-center w-6 sm:w-8 h-6 sm:h-8 bg-green-100 rounded-lg">
+              <Calculator className="h-3 sm:h-4 w-3 sm:w-4 text-green-600" />
             </div>
             <div>
-              <Label htmlFor="price-per-sqm" className="text-base font-semibold text-foreground">
+              <Label htmlFor="price-per-sqm" className="text-sm sm:text-base font-semibold text-foreground">
                 კვ. ფასი ($/მ²)
               </Label>
-              <p className="text-sm text-muted-foreground">ავტომატურად გამოითვლება</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">ავტომატურად გამოითვლება</p>
             </div>
           </div>
           
@@ -143,7 +143,7 @@ export const PriceAreaSection = () => {
                       type="number" 
                       step="0.01"
                       placeholder="გამოითვლება ავტომატურად" 
-                      className="h-14 text-lg pl-4 pr-16 bg-green-50/50 border-green-200 text-green-800 font-semibold cursor-not-allowed" 
+                      className="h-12 sm:h-14 text-base sm:text-lg pl-4 pr-16 bg-green-50/50 border-green-200 text-green-800 font-semibold cursor-not-allowed" 
                       readOnly
                       {...field}
                     />
@@ -157,14 +157,13 @@ export const PriceAreaSection = () => {
             )}
           />
           
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="mt-4 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="flex items-start gap-3">
-              <TrendingUp className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <TrendingUp className="h-4 sm:h-5 w-4 sm:w-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="font-medium text-blue-900 text-sm mb-1">ფასის გამოთვლა</h4>
+                <h4 className="font-medium text-blue-900 text-xs sm:text-sm mb-1">ფასის გამოთვლა</h4>
                 <p className="text-xs text-blue-700 leading-relaxed">
-                  კვადრატული მეტრის ფასი გამოითვლება ავტომატურად სრული ფასისა და ფართის მიხედვით. 
-                  ეს დაგეხმარებათ შეადაროთ სხვა ქონებებთან და განსაზღვროთ ბაზრის ღირებულება.
+                  კვადრატული მეტრის ფასი გამოითვლება ავტომატურად სრული ფასისა და ფართის მიხედვით.
                 </p>
               </div>
             </div>

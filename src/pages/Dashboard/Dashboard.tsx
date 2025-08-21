@@ -1,9 +1,11 @@
 import { useEffect, useRef, createContext, useContext } from "react";
+
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
 import { Sidebar, SidebarRef } from "./components/Sidebar";
 import { PropertyFormProvider } from "./contexts/PropertyFormContext";
+import { MobileDashboardNav } from "./components/MobileDashboardNav";
 
 // Context for balance refresh function
 const BalanceRefreshContext = createContext<(() => void) | null>(null);
@@ -59,6 +61,7 @@ const DashboardContent = () => {
       <Header />
 
       {/* მთავარი კონტენტი */}
+
       <div className="flex-1 container mx-auto flex pt-20 md:pt-24 lg:pt-32 pb-6 lg:pb-6 px-3 sm:px-4">
         {/* მენიუ სიდებარი - ფიქსირებული */}
         <div className="flex-shrink-0">
@@ -73,8 +76,12 @@ const DashboardContent = () => {
           }}>
             <Outlet />
           </BalanceRefreshContext.Provider>
+
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileDashboardNav />
     </div>
   );
 };

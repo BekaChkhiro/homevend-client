@@ -77,34 +77,39 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
 
   return (
     <div className="space-y-2">
+
       <h3 className="text-lg font-medium">სერვისები</h3>
       <Card>
         <CardHeader>
           <CardTitle>VIP სტატუსის და დამატებითი სერვისების შერჩევა</CardTitle>
+
         </CardHeader>
         
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-3 sm:space-y-4 md:space-y-6 p-3 sm:p-4 md:p-6">
           {/* Balance Display */}
-          <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-            <span className="text-sm text-gray-600">თქვენი ბალანსი:</span>
-            <span className="font-semibold text-lg">{userBalance.toFixed(2)}₾</span>
+          <div className="flex justify-between items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
+            <span className="text-xs sm:text-sm text-gray-600">თქვენი ბალანსი:</span>
+            <span className="font-semibold text-base sm:text-lg">{userBalance.toFixed(2)}₾</span>
           </div>
 
           {/* VIP Package Selection */}
           <div>
-            <Label className="text-base font-medium">აირჩიეთ VIP პაკეტი</Label>
+            <Label className="text-sm sm:text-base font-medium">აირჩიეთ VIP პაკეტი</Label>
             <RadioGroup value={selectedVipType} onValueChange={onVipTypeChange} className="mt-3">
+
               <div className="grid grid-cols-2 gap-4">
                 {/* Free Option */}
                 <Card 
                   className={`cursor-pointer transition-all min-h-[120px] ${
                     selectedVipType === 'free' ? `ring-2 ring-offset-2 ${SERVICE_COLORS.free.split(' ').pop()}` : 'hover:shadow-md'
+
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
                     onVipTypeChange('free');
                   }}
                 >
+
                   <CardContent className="p-3">
                     <div className="flex items-start space-x-3">
                       <RadioGroupItem value="free" id="free" onClick={(e) => e.stopPropagation()} />
@@ -116,6 +121,7 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
                               {SERVICE_LABELS.free}
                             </Badge>
                           </div>
+
                           <span className="font-semibold text-lg">0₾</span>
                         </div>
                         <p className="text-sm text-gray-600 mt-3">სტანდარტული ხილვადობა</p>
@@ -134,14 +140,17 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
                   return (
                     <Card 
                       key={pricing.id} 
+
                       className={`cursor-pointer transition-all min-h-[120px] ${
                         isSelected ? `ring-2 ring-offset-2 ${colorClass ? colorClass.split(' ').pop() : 'ring-blue-300'}` : 'hover:shadow-md'
+
                       }`}
                       onClick={(e) => {
                         e.preventDefault();
                         onVipTypeChange(pricing.vipType);
                       }}
                     >
+
                       <CardContent className="p-3">
                         <div className="flex items-start space-x-3">
                           <RadioGroupItem value={pricing.vipType} id={pricing.vipType} onClick={(e) => e.stopPropagation()} />
@@ -153,6 +162,7 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
                                   {label}
                                 </Badge>
                               </div>
+
                               <span className="font-semibold text-lg">{pricing.pricePerDay.toFixed(2)}₾/დღე</span>
                             </div>
                             <p className="text-sm text-gray-600 mt-3">
@@ -191,6 +201,7 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
               </div>
             </RadioGroup>
           </div>
+
 
           {/* Additional Services Selection */}
           <div>
@@ -277,6 +288,7 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
                   </Card>
                 );
               })}
+
             </div>
           </div>
 
