@@ -6,12 +6,13 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyCardSkeleton } from "@/components/PropertyCardSkeleton";
 import { FeaturedPropertiesCarousel } from "@/components/FeaturedPropertiesCarousel";
 import { DistrictCarousel } from "@/components/DistrictCarousel";
+import { AdBanner } from "@/components/AdBanner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Building2, MapPin, TrendingUp, Users, BarChart3, Home as HomeIcon, CheckCircle, Phone, Globe, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { propertyApi, agencyApi, projectApi } from "@/lib/api";
+import { propertyApi, agencyApi } from "@/lib/api";
 import type { Property, FilterState } from "@/pages/Index";
 
 interface Agency {
@@ -33,29 +34,12 @@ interface Agency {
   createdAt?: string;
 }
 
-interface Project {
-  id: number;
-  projectName: string;
-  description?: string;
-  numberOfBuildings: number;
-  totalApartments: number;
-  city: {
-    nameGeorgian: string;
-  };
-  photos?: Array<{
-    url: string;
-  }>;
-  pricing: Array<{
-    totalPriceFrom: number;
-  }>;
-}
 
 const Home = () => {
   const navigate = useNavigate();
   const [properties, setProperties] = useState<Property[]>([]);
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
@@ -103,10 +87,12 @@ const Home = () => {
       setIsLoading(true);
       
       // Fetch all data in parallel
+
       const [propertiesResponse, agenciesResponse, projectsResponse] = await Promise.allSettled([
         propertyApi.getProperties({ limit: 20 }),
         agencyApi.getAgencies({ limit: 4 }),
         projectApi.getProjects({ limit: 6 })
+
       ]);
 
       // Process properties
@@ -160,13 +146,6 @@ const Home = () => {
         setAgencies(agenciesResponse.value?.agencies?.slice(0, 4) || []);
       }
 
-      // Process projects
-      if (projectsResponse.status === 'fulfilled') {
-        const projectsData = projectsResponse.value?.projects || [];
-        console.log('Projects data:', projectsData);
-        setProjects(projectsData.slice(0, 6));
-      }
-
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -189,47 +168,52 @@ const Home = () => {
     }).format(price);
   };
 
-  const getMinPrice = (pricing: Project['pricing']) => {
-    if (!pricing || pricing.length === 0) return null;
-    return Math.min(...pricing.map(p => p.totalPriceFrom));
-  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
       
       {/* Hero Section with Search */}
-      <div className="pt-32">
+      <div className="pt-20 md:pt-24 lg:pt-32">
         <PropertySearchHero
           onSearch={handleSearch}
           totalProperties={properties.length}
           filteredCount={properties.length}
           variant="default"
+          initialFilters={filters}
         />
 
+        {/* First Advertisement - After Hero Section */}
+        <section className="py-4 md:py-6 lg:py-8">
+          <div className="container mx-auto px-3 sm:px-4">
+            <AdBanner type="horizontal" />
+          </div>
+        </section>
+
         {/* Latest Properties Carousel */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
+        <section className="py-8 md:py-12 lg:py-16 bg-gray-50">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
                   ბოლოს დამატებული განცხადებები
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   ნახეთ უახლესი უძრავი ქონების განცხადებები
                 </p>
               </div>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to="/properties">
-                  ყველას ნახვა
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <span className="hidden sm:inline">ყველას ნახვა</span>
+                  <span className="sm:hidden">ყველა</span>
+                  <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
             </div>
 
             {isLoading ? (
               <div className="relative">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                   {Array.from({ length: 4 }).map((_, index) => (
                     <PropertyCardSkeleton key={index} />
                   ))}
@@ -249,27 +233,28 @@ const Home = () => {
         </section>
 
         {/* Agencies Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
+        <section className="py-8 md:py-12 lg:py-16">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
                   სააგენტოები
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   იპოვნეთ საუკეთესო უძრავი ქონების სააგენტოები
                 </p>
               </div>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to="/agencies">
-                  ყველას ნახვა
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <span className="hidden sm:inline">ყველას ნახვა</span>
+                  <span className="sm:hidden">ყველა</span>
+                  <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
             </div>
 
             {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {Array.from({ length: 4 }).map((_, index) => (
                   <div key={index} className="bg-white rounded-lg shadow-sm p-6 animate-pulse">
                     <div className="h-12 bg-gray-200 rounded mb-4"></div>
@@ -279,12 +264,12 @@ const Home = () => {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {agencies.map((agency) => (
                   <Card key={agency.id} className="hover:shadow-lg transition-shadow duration-200">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <CardHeader className="p-4 sm:p-6 pb-3">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                           {agency.logoUrl ? (
                             <img
                               src={agency.logoUrl}
@@ -297,7 +282,7 @@ const Home = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <CardTitle className="text-lg truncate">
+                            <CardTitle className="text-base sm:text-lg truncate">
                               {agency.name}
                             </CardTitle>
                             {agency.isVerified && (
@@ -310,7 +295,7 @@ const Home = () => {
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-0">
+                    <CardContent className="px-4 sm:px-6 pt-0 pb-4 sm:pb-6">
                       {agency.description && (
                         <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                           {agency.description}
@@ -358,7 +343,7 @@ const Home = () => {
                         )}
                       </div>
 
-                      <div className="grid grid-cols-3 gap-2 mb-4">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4">
                         <div className="text-center">
                           <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
                             <Users className="h-3 w-3" />
@@ -383,7 +368,7 @@ const Home = () => {
                       </div>
 
                       <div className="flex gap-2">
-                        <Button asChild className="flex-1" size="sm">
+                        <Button asChild className="flex-1 text-xs sm:text-sm" size="sm">
                           <Link to={`/agencies/${agency.id}`}>
                             დეტალები
                           </Link>
@@ -403,39 +388,41 @@ const Home = () => {
           </div>
         </section>
 
+
         {/* Services Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
+        <section className="py-8 md:py-12 lg:py-16">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
                   ჩვენი სერვისები
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   მიიღეთ პროფესიონალური სერვისები უძრავი ქონების სფეროში
                 </p>
               </div>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to="/services">
-                  ყველას ნახვა
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <span className="hidden sm:inline">ყველას ნახვა</span>
+                  <span className="sm:hidden">ყველა</span>
+                  <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                    <HomeIcon className="h-6 w-6 text-primary" />
+                <CardHeader className="p-4 sm:p-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                    <HomeIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle>ქონების შეფასება</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="text-lg sm:text-xl">ქონების შეფასება</CardTitle>
+                  <CardDescription className="text-sm sm:text-base">
                     მიიღეთ ზუსტი შეფასება თქვენი უძრავი ქონებისთვის ბაზრის აქტუალური ფასებით
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button asChild>
+                <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                  <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
                     <Link to="/services">
                       დეტალურად
                     </Link>
@@ -444,17 +431,17 @@ const Home = () => {
               </Card>
 
               <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                    <Users className="h-6 w-6 text-primary" />
+                <CardHeader className="p-4 sm:p-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                    <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle>იურიდიული კონსულტაცია</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="text-lg sm:text-xl">იურიდიული კონსულტაცია</CardTitle>
+                  <CardDescription className="text-sm sm:text-base">
                     პროფესიონალური იურიდიული დახმარება უძრავი ქონების ყიდვა-გაყიდვაში
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button asChild>
+                <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                  <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
                     <Link to="/services">
                       დეტალურად
                     </Link>
@@ -466,26 +453,34 @@ const Home = () => {
         </section>
 
         {/* Districts Carousel */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
+        <section className="py-8 md:py-12 lg:py-16 bg-gray-50">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
                   ფასების სტატისტიკა
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   იხილეთ თბილისის რაიონებში უძრავი ქონების საშუალო ფასები
                 </p>
               </div>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to="/price-statistics">
-                  ყველას ნახვა
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <span className="hidden sm:inline">ყველას ნახვა</span>
+                  <span className="sm:hidden">ყველა</span>
+                  <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
             </div>
 
             <DistrictCarousel />
+          </div>
+        </section>
+
+        {/* Third Advertisement - Before Footer */}
+        <section className="py-4 md:py-6 lg:py-8">
+          <div className="container mx-auto px-3 sm:px-4">
+            <AdBanner type="horizontal" />
           </div>
         </section>
       </div>

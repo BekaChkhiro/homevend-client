@@ -153,20 +153,20 @@ const Agencies = () => {
             </div>
 
             {/* Agencies Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6">
               {agencies.map((agency) => (
                 <Card key={agency.id} className="hover:shadow-lg transition-shadow duration-200">
                   <CardHeader className="pb-3">
-                    <div className="flex items-start gap-3">
-                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="w-8 h-8 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                         {agency.logoUrl ? (
                           <img
                             src={agency.logoUrl}
                             alt={agency.name}
-                            className="w-10 h-10 rounded-lg object-cover"
+                            className="w-6 h-6 sm:w-10 sm:h-10 rounded-lg object-cover"
                           />
                         ) : (
-                          <Building2 className="h-6 w-6 text-primary" />
+                          <Building2 className="h-4 w-4 sm:h-6 sm:w-6 text-primary" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">

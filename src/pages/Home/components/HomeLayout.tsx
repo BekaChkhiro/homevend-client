@@ -26,7 +26,7 @@ export const HomeLayout = ({
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-32">
+      <div className="pt-20 md:pt-24 lg:pt-32">
       <HeroSection onSearch={(heroFilters) => onFilterChange({
         ...filters, 
         search: heroFilters.search,
@@ -35,27 +35,27 @@ export const HomeLayout = ({
       })} />
       
       {/* Top Ad Banner */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 lg:py-4">
         <AdBanner type="horizontal" />
       </div>
       
       <FeaturedPropertiesCarousel properties={properties} isLoading={isLoading} />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-1">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+          <div className="lg:col-span-1 order-2 lg:order-1">
             <FilterPanel filters={filters} onFilterChange={onFilterChange} />
             
             {/* Sidebar Ad Banner */}
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               <AdBanner type="vertical" />
             </div>
           </div>
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 order-1 lg:order-2">
             <PropertyGrid properties={filteredProperties} isLoading={isLoading} />
             
             {/* Bottom Ad Banner */}
-            <div className="mt-8">
+            <div className="mt-4 sm:mt-6 lg:mt-8">
               <AdBanner type="horizontal" />
             </div>
           </div>

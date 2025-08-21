@@ -97,14 +97,15 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   };
 
   return (
-    <Link to={`/property/${property.id}`} className="block">
-      <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+    <Link to={`/property/${property.id}`} className="block w-full min-w-0 max-w-full">
+      <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full min-w-0 max-w-full">
         <div className="relative">
           <img
             src={property.image}
             alt={property.title}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
           />
+
           {(() => {
             const vipInfo = getVipInfo();
             if (!vipInfo) return null;
@@ -116,29 +117,30 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               </Badge>
             );
           })()}
+
           <div onClick={(e) => e.preventDefault()}>
             <FavoriteButton
               propertyId={property.id}
-              className="absolute top-3 right-3"
+              className="absolute top-2 right-2 sm:top-3 sm:right-3"
             />
           </div>
           {getCityName() && (
-            <Badge className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 backdrop-blur-sm">
+            <Badge className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-black/70 text-white text-xs px-2 py-1 backdrop-blur-sm">
               {getCityName()}
             </Badge>
           )}
         </div>
         
-        <CardContent className="p-4">
-          <div className="mb-3">
-            <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors h-14 flex items-start">
+        <CardContent className="p-3 sm:p-4">
+          <div className="mb-2 sm:mb-3">
+            <h3 className="font-semibold text-base sm:text-lg line-clamp-2 group-hover:text-primary transition-colors h-12 sm:h-14 flex items-start">
               <span className="line-clamp-2">
                 {property.title || 'სათაური არ არის მითითებული'}
               </span>
             </h3>
-            <div className="flex items-center text-muted-foreground text-sm mt-1">
-              <MapPin className="h-4 w-4 mr-1" />
-              {getDistrictAndStreet()}
+            <div className="flex items-start text-muted-foreground text-xs sm:text-sm mt-1">
+              <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0 mt-0.5" />
+              <span className="line-clamp-2">{getDistrictAndStreet()}</span>
             </div>
             {property.agentName && (
               <div className="text-xs text-muted-foreground mt-1">
@@ -147,11 +149,24 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             )}
           </div>
           
-          <div className="flex items-center justify-between mb-4">
-            <div className="text-2xl font-bold text-primary">
-              {formatPrice(property.price)}
+          <div className="mb-3 sm:mb-4">
+            {/* Mobile layout - price and type on separate lines */}
+            <div className="sm:hidden">
+              <div className="text-lg font-bold text-primary truncate mb-2">
+                {formatPrice(property.price)}
+              </div>
+              <div className="flex">
+                <Badge variant="secondary" className="text-xs">{property.type}</Badge>
+              </div>
             </div>
-            <Badge variant="secondary">{property.type}</Badge>
+            
+            {/* Desktop layout - price and type on same line */}
+            <div className="hidden sm:flex items-center justify-between">
+              <div className="text-lg sm:text-2xl font-bold text-primary truncate">
+                {formatPrice(property.price)}
+              </div>
+              <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">{property.type}</Badge>
+            </div>
           </div>
           
           <div className="flex items-center justify-between text-sm text-muted-foreground">

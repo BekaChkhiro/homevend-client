@@ -253,16 +253,32 @@ const Properties = () => {
     navigate(newURL, { replace: true });
   };
 
-  // Initialize filters from URL on component mount
+  // Initialize filters from URL and navigation state on component mount
   useEffect(() => {
     const urlFilters = getFiltersFromURL();
     const urlSort = new URLSearchParams(location.search).get('sort') || 'newest';
     const urlPage = parseInt(new URLSearchParams(location.search).get('page') || '1');
     
-    setFilters(urlFilters);
-    setSortBy(urlSort);
-    setCurrentPage(urlPage);
-  }, [location.search]);
+    // Check if we have filters from navigation state (from home page)
+    const stateFilters = location.state?.filters;
+    
+    if (stateFilters) {
+      console.log('🔍 Properties: Received filters from navigation state:', stateFilters);
+      // Use filters from state and update URL
+      setFilters(stateFilters);
+      setSortBy(urlSort);
+      setCurrentPage(urlPage);
+      // Update URL with the filters from state
+      updateURLFromFilters(stateFilters, urlSort, urlPage);
+      // Clear the state after using it to prevent issues on refresh
+      window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    } else {
+      // Use filters from URL
+      setFilters(urlFilters);
+      setSortBy(urlSort);
+      setCurrentPage(urlPage);
+    }
+  }, [location.search, location.state]);
 
   // Fetch properties with filters from API - removed client-side filtering
   useEffect(() => {
@@ -456,11 +472,21 @@ const Properties = () => {
       setProperties([]);
       setFilteredProperties([]);
 
-      toast({
-        title: "შეცდომა",
-        description: "განცხადებების ჩატვირთვისას მოხდა შეცდომა.",
-        variant: "destructive",
-      });
+      // Enhanced error handling for rate limits
+      if (error.response?.status === 429) {
+        const retryAfter = error.response?.data?.retryAfter || 60;
+        toast({
+          title: "მოთხოვნები ლიმიტი",
+          description: `ძალიან ბევრი მოთხოვნა. თუ შეძლება, გაიმეორეთ ${retryAfter} წამის შემდეგ.`,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "შეცდომა",
+          description: "განცხადებების ჩატვირთვისას მოხდა შეცდომა.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -736,7 +762,7 @@ const Properties = () => {
               {isLoading ? (
                 <div className="mb-8">
                   {/* Initial page load skeleton */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 mb-8">
                     {Array.from({ length: 8 }).map((_, index) => (
                       <PropertyCardSkeleton key={`initial-skeleton-${index}`} />
                     ))}
@@ -747,7 +773,7 @@ const Properties = () => {
                     <div className="h-6 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                     {Array.from({ length: 8 }).map((_, index) => (
                       <PropertyCardSkeleton key={`initial-skeleton-second-${index}`} />
                     ))}
@@ -756,7 +782,7 @@ const Properties = () => {
               ) : isFiltering ? (
                 <div className="mb-8">
                   {/* Skeleton loading with actual results count */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 mb-8">
                     {Array.from({ length: Math.min(8, PROPERTIES_PER_PAGE) }).map((_, index) => (
                       <PropertyCardSkeleton key={`skeleton-${index}`} />
                     ))}
@@ -764,7 +790,7 @@ const Properties = () => {
                   
                   {/* Show more skeletons if there were more properties */}
                   {filteredProperties.length > 8 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                       {Array.from({ length: Math.min(8, filteredProperties.length - 8) }).map((_, index) => (
                         <PropertyCardSkeleton key={`skeleton-more-${index}`} />
                       ))}
@@ -831,7 +857,7 @@ const Properties = () => {
                   {/* 4 Column Property Grid with Middle Ad */}
                   <div className="mb-8">
                     {/* First 8 properties */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 mb-8">
                       {paginatedProperties.slice(0, 8).map((property) => (
                         <PropertyCard key={property.id} property={property} />
                       ))}
@@ -846,7 +872,7 @@ const Properties = () => {
                     
                     {/* Remaining properties */}
                     {paginatedProperties.length > 8 && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                         {paginatedProperties.slice(8).map((property) => (
                           <PropertyCard key={property.id} property={property} />
                         ))}

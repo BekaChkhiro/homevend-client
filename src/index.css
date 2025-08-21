@@ -117,5 +117,22 @@
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Mobile bottom navigation spacing */
+  @media (max-width: 1023.98px) {
+    body {
+      padding-bottom: 4rem;
+    }
+  }
+
+  /* Safe area support for mobile devices */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

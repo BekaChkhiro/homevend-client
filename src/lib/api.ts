@@ -2,6 +2,40 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
+// Exponential backoff retry utility
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+const retryWithExponentialBackoff = async <T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> => {
+  let attempt = 0;
+  
+  while (attempt < maxRetries) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      attempt++;
+      
+      // Only retry on rate limit errors
+      if (error.response?.status === 429 && attempt < maxRetries) {
+        const retryAfter = error.response?.data?.retryAfter || 
+                          parseInt(error.response?.headers?.['retry-after']) || 
+                          Math.pow(2, attempt - 1);
+        
+        const delay = Math.max(retryAfter * 1000, baseDelay * Math.pow(2, attempt - 1));
+        console.warn(`Rate limited. Retrying after ${delay}ms (attempt ${attempt}/${maxRetries})`);
+        await sleep(delay);
+      } else {
+        throw error;
+      }
+    }
+  }
+  
+  throw new Error(`Failed after ${maxRetries} retries`);
+};
+
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -226,13 +260,18 @@ export const propertyApi = {
     });
 
     console.log('🚀 Sending API request with params:', cleanParams);
-    const response = await publicApiClient.get('/properties', { params: cleanParams });
-    return response.data.data;
+    
+    return retryWithExponentialBackoff(async () => {
+      const response = await publicApiClient.get('/properties', { params: cleanParams });
+      return response.data.data;
+    });
   },
   
   getPropertyById: async (id: string) => {
-    const response = await publicApiClient.get(`/properties/${id}`);
-    return response.data.data;
+    return retryWithExponentialBackoff(async () => {
+      const response = await publicApiClient.get(`/properties/${id}`);
+      return response.data.data;
+    });
   },
   
   getPropertyByIdForEdit: async (id: string) => {

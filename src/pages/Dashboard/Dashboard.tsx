@@ -50,7 +50,7 @@ const DashboardContent = () => {
       <Header />
 
       {/* მთავარი კონტენტი */}
-      <div className="flex-1 container mx-auto flex pt-32 pb-6 px-4">
+      <div className="flex-1 container mx-auto flex pt-20 md:pt-24 lg:pt-32 pb-6 lg:pb-6 px-3 sm:px-4">
         {/* მენიუ სიდებარი - ფიქსირებული */}
         <div className="flex-shrink-0">
           <Sidebar user={user} />
