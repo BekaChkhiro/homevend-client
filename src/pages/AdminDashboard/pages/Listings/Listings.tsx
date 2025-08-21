@@ -3,7 +3,7 @@ import { ApartmentCard } from './components/ApartmentCard';
 import { Button } from '@/components/ui/button';
 import { Plus, Filter, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { propertyApi } from '@/lib/api';
+import { adminApi } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
 interface Property {
@@ -11,7 +11,8 @@ interface Property {
   title?: string;
   propertyType: string;
   dealType: string;
-  city: string;
+  city: any; // Can be string or object depending on endpoint
+  cityId?: number;
   district?: string;
   street: string;
   area: string;
@@ -19,7 +20,7 @@ interface Property {
   bedrooms?: string;
   bathrooms?: string;
   photos: string[];
-  status: string;
+  status?: string;
   createdAt: string;
   user: {
     id: number;
@@ -40,10 +41,22 @@ const Listings = () => {
   const fetchAllProperties = async () => {
     try {
       setIsLoading(true);
-      // Fetch all properties regardless of status for admin view
-      const response = await propertyApi.getProperties();
-      const data = response?.properties || [];
-      setProperties(data);
+      // Fetch all properties using admin endpoint
+      const response = await adminApi.getAllProperties({ limit: 100 });
+      console.log('Admin API Response:', response);
+      
+      // The admin API returns the data directly as an array
+      const data = Array.isArray(response) ? response : [];
+      console.log('Properties data:', data);
+      
+      // Ensure all properties have user data
+      const validProperties = data.filter((prop: Property) => prop.user && prop.user.fullName);
+      
+      if (data.length !== validProperties.length) {
+        console.warn(`Filtered out ${data.length - validProperties.length} properties without user data`);
+      }
+      
+      setProperties(validProperties);
     } catch (error: any) {
       console.error('Error fetching properties:', error);
       toast({
@@ -79,12 +92,17 @@ const Listings = () => {
 
   // Transform property data for the ApartmentCard component
   const transformedProperties = properties.map((prop) => {
+    // Handle city being either a string or an object
+    const cityName = typeof prop.city === 'string' 
+      ? prop.city 
+      : (prop.city?.nameGeorgian || prop.city?.nameEnglish || 'Unknown');
+    
     return {
       id: prop.id.toString(),
-      title: prop.title || `${prop.propertyType} ${prop.city}`,
+      title: prop.title || `${prop.propertyType} ${cityName}`,
       propertyType: prop.propertyType,
       dealType: prop.dealType,
-      city: prop.city,
+      city: cityName,
       district: prop.district,
       street: prop.street,
       area: prop.area,
@@ -93,7 +111,7 @@ const Listings = () => {
       bathrooms: prop.bathrooms,
       viewCount: 0, // Mock data since not in API
       createdAt: prop.createdAt,
-      photos: prop.photos,
+      photos: prop.photos || [],
       contactName: prop.user.fullName,
       contactPhone: '', // Mock data since not in API
       owner: {

@@ -206,6 +206,10 @@ export interface Property {
   // VIP status fields
   vipStatus?: 'none' | 'vip' | 'vip_plus' | 'super_vip';
   vipExpiresAt?: string;
+  
+  // Additional services
+  colorSeparationEnabled?: boolean;
+  colorSeparationExpiresAt?: string;
 }
 
 export interface FilterState {

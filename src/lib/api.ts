@@ -348,6 +348,11 @@ export const adminApi = {
   deleteUser: async (id: string) => {
     const response = await apiClient.delete(`/admin/users/${id}`);
     return response.data;
+  },
+  
+  getAllProperties: async (params?: { page?: number; limit?: number; developerId?: number }) => {
+    const response = await apiClient.get('/admin/properties', { params });
+    return response.data.data;
   }
 };
 
@@ -531,25 +536,67 @@ export const balanceApi = {
   }
 };
 
-// VIP API
-export const vipApi = {
-  getPricing: async () => {
-    const response = await apiClient.get('/vip/pricing');
+// Services API (VIP + Additional Services)
+export const servicesApi = {
+  getServicePricing: async () => {
+    const response = await publicApiClient.get('/services/pricing');
     return response.data.data;
   },
   
-  purchaseVipStatus: async (propertyId: number, vipType: string, days: number) => {
-    const response = await apiClient.post('/vip/purchase', {
+  purchaseServices: async (propertyId: number, services: Array<{serviceType: string, days: number, colorCode?: string}>) => {
+    const response = await apiClient.post('/services/purchase', {
       propertyId,
-      vipType,
-      days
+      services
     });
     return response.data.data;
   },
   
-  getPropertyVipStatus: async (propertyId: number) => {
-    const response = await apiClient.get(`/vip/property/${propertyId}`);
+  getPropertyServices: async (propertyId: number) => {
+    const response = await apiClient.get(`/services/property/${propertyId}`);
     return response.data.data;
+  },
+  
+  getServiceTransactionHistory: async (params?: { page?: number; limit?: number }) => {
+    const response = await apiClient.get('/services/transactions', { params });
+    return response.data.data;
+  }
+};
+
+// VIP API (Legacy - for backward compatibility)
+export const vipApi = {
+  getPricing: async () => {
+    const pricing = await servicesApi.getServicePricing();
+    // Return only VIP services for compatibility
+    return pricing.vipServices || [];
+  },
+  
+  purchaseVipServices: async (propertyId: number, services: Array<{vipType: string, days: number, colorCode?: string}>) => {
+    // Convert vipType to serviceType for new API
+    const convertedServices = services.map(s => ({
+      serviceType: s.vipType,
+      days: s.days,
+      colorCode: s.colorCode
+    }));
+    return servicesApi.purchaseServices(propertyId, convertedServices);
+  },
+  
+  // Legacy method for backward compatibility
+  purchaseVipStatus: async (propertyId: number, vipType: string, days: number) => {
+    return servicesApi.purchaseServices(propertyId, [{serviceType: vipType, days}]);
+  },
+  
+  getPropertyVipStatus: async (propertyId: number) => {
+    const services = await servicesApi.getPropertyServices(propertyId);
+    // Filter only VIP services for compatibility
+    const vipServices = services.services?.filter((s: any) => 
+      ['vip', 'vip_plus', 'super_vip'].includes(s.serviceType)
+    ) || [];
+    
+    return {
+      propertyId: services.propertyId,
+      hasActiveServices: vipServices.length > 0,
+      services: vipServices
+    };
   }
 };
 

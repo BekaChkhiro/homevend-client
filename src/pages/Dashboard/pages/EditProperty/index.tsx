@@ -17,7 +17,7 @@ import { DescriptionSection } from "../AddProperty/components/DescriptionSection
 import { PhotoGallerySection } from "../AddProperty/components/PhotoGallerySection";
 import { VipPurchaseSection } from "./components/VipPurchaseSection";
 import { propertyFormSchema, type PropertyFormData } from "../AddProperty/types/propertyForm";
-import { propertyApi, citiesApi, vipApi, balanceApi } from "@/lib/api";
+import { propertyApi, citiesApi, vipApi, balanceApi, servicesApi } from "@/lib/api";
 
 interface City {
   id: number;
@@ -33,9 +33,11 @@ export const EditProperty = () => {
   const [isPropertyLoading, setIsPropertyLoading] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
   const [selectedVipType, setSelectedVipType] = useState<string>('free');
-  const [selectedDays, setSelectedDays] = useState<string>('7');
+  const [selectedVipDays, setSelectedVipDays] = useState<number>(7);
+  const [selectedServices, setSelectedServices] = useState<{serviceType: string, days: number}[]>([]);
   const [userBalance, setUserBalance] = useState<number>(0);
   const [vipPricing, setVipPricing] = useState<any[]>([]);
+  const [additionalServices, setAdditionalServices] = useState<any[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
@@ -96,13 +98,36 @@ export const EditProperty = () => {
       if (!isMounted) return;
       
       try {
-        const [pricingData, balanceData] = await Promise.all([
-          vipApi.getPricing(),
+        const [servicesData, balanceData] = await Promise.all([
+          servicesApi.getServicePricing(),
           balanceApi.getBalance()
         ]);
         
         if (isMounted) {
-          setVipPricing(pricingData.filter((p: any) => p.vipType !== 'none'));
+          // Use VIP services from the new API and map to expected structure
+          const vipServices = servicesData.vipServices || [];
+          const additionalSvcs = servicesData.additionalServices || [];
+          
+          const mappedVipPricing = vipServices.map((service: any) => ({
+            id: service.id,
+            vipType: service.serviceType,
+            pricePerDay: service.pricePerDay,
+            descriptionKa: service.descriptionKa,
+            descriptionEn: service.descriptionEn,
+            features: service.features || []
+          }));
+          
+          const mappedAdditionalServices = additionalSvcs.map((service: any) => ({
+            id: service.id,
+            serviceType: service.serviceType,
+            pricePerDay: service.pricePerDay,
+            descriptionKa: service.descriptionKa,
+            descriptionEn: service.descriptionEn,
+            features: service.features || []
+          }));
+          
+          setVipPricing(mappedVipPricing.filter((p: any) => p.vipType !== 'none'));
+          setAdditionalServices(mappedAdditionalServices);
           setUserBalance(balanceData.balance);
         }
       } catch (error) {
@@ -219,38 +244,50 @@ export const EditProperty = () => {
       return;
     }
 
-    // VIP purchase validation
-    if (selectedVipType !== 'free') {
-      if (!selectedDays) {
+    // Services validation and cost calculation
+    const selectedPricing = vipPricing.find(p => p.vipType === selectedVipType);
+    const selectedServicePricing = additionalServices.filter(s => 
+      selectedServices.some(sel => sel.serviceType === s.serviceType)
+    );
+    
+    const vipCost = selectedPricing && selectedVipType !== 'free' 
+      ? selectedPricing.pricePerDay * selectedVipDays : 0;
+    const servicesCost = selectedServicePricing.reduce((total, service) => {
+      const selectedService = selectedServices.find(s => s.serviceType === service.serviceType);
+      return total + (service.pricePerDay * (selectedService?.days || 1));
+    }, 0);
+    const totalCost = vipCost + servicesCost;
+    
+    // Days validation
+    if (selectedVipType !== 'free' && (selectedVipDays < 1 || selectedVipDays > 30)) {
+      toast({
+        title: "შეცდომა",
+        description: "VIP დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate additional services days
+    for (const service of selectedServices) {
+      if (service.days < 1 || service.days > 30) {
         toast({
           title: "შეცდომა",
-          description: "გთხოვთ მიუთითოთ VIP დღეების რაოდენობა",
+          description: "სერვისების დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
           variant: "destructive",
         });
         return;
       }
-
-      const daysNum = parseInt(selectedDays);
-      if (daysNum < 1 || daysNum > 30) {
-        toast({
-          title: "შეცდომა",
-          description: "დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const selectedPricing = vipPricing.find(p => p.vipType === selectedVipType);
-      const totalCost = selectedPricing ? selectedPricing.pricePerDay * daysNum : 0;
-      
-      if (userBalance < totalCost) {
-        toast({
-          title: "არასაკმარისი ბალანსი",
-          description: `საჭიროა ${totalCost.toFixed(2)}₾, ხელმისაწვდომია ${userBalance.toFixed(2)}₾`,
-          variant: "destructive",
-        });
-        return;
-      }
+    }
+    
+    // Balance validation
+    if (totalCost > 0 && userBalance < totalCost) {
+      toast({
+        title: "არასაკმარისი ბალანსი",
+        description: `საჭიროა ${totalCost.toFixed(2)}₾, ხელმისაწვდომია ${userBalance.toFixed(2)}₾`,
+        variant: "destructive",
+      });
+      return;
     }
     
     setIsLoading(true);
@@ -345,14 +382,41 @@ export const EditProperty = () => {
       // Update property first
       await propertyApi.updateProperty(id, propertyData);
       
-      // Handle VIP purchase if not free
+      // Handle services purchase (VIP + additional services)
+      const servicesToPurchase = [];
+      
+      // Add VIP service if not free
       if (selectedVipType !== 'free') {
-        const daysNum = parseInt(selectedDays);
-        await vipApi.purchaseVipStatus(parseInt(id), selectedVipType, daysNum);
+        servicesToPurchase.push({
+          serviceType: selectedVipType,
+          days: selectedVipDays
+        });
+      }
+      
+      // Add additional services
+      selectedServices.forEach(service => {
+        servicesToPurchase.push({
+          serviceType: service.serviceType,
+          days: service.days
+        });
+      });
+      
+      // Purchase all services together if any selected
+      if (servicesToPurchase.length > 0) {
+        await servicesApi.purchaseServices(parseInt(id), servicesToPurchase);
+        
+        const servicesText = [];
+        if (selectedVipType !== 'free') {
+          servicesText.push(`VIP სტატუსი (${selectedVipDays} დღე)`);
+        }
+        selectedServices.forEach(service => {
+          const label = service.serviceType === 'auto_renew' ? 'ავტო განახლება' : 'ფერადი გამოყოფა';
+          servicesText.push(`${label} (${service.days} დღე)`);
+        });
         
         toast({
           title: "წარმატება!",
-          description: `განცხადება წარმატებით განახლდა და VIP სტატუსი შეძენილია ${daysNum} დღით`,
+          description: `განცხადება განახლდა და სერვისები შეძენილია: ${servicesText.join(', ')}`,
         });
       } else {
         toast({
@@ -444,11 +508,14 @@ export const EditProperty = () => {
             propertyId={parseInt(id)}
             propertyTitle={form.watch('title') || 'განცხადება'}
             selectedVipType={selectedVipType}
-            selectedDays={selectedDays}
+            selectedVipDays={selectedVipDays}
+            selectedServices={selectedServices}
             onVipTypeChange={setSelectedVipType}
-            onDaysChange={setSelectedDays}
+            onVipDaysChange={setSelectedVipDays}
+            onServicesChange={setSelectedServices}
             userBalance={userBalance}
             vipPricing={vipPricing}
+            additionalServices={additionalServices}
           />
         </div>
       )}

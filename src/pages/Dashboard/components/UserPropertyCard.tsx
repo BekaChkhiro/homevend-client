@@ -6,6 +6,7 @@ import { useState } from "react";
 import { VipPurchaseModal } from "@/components/VipPurchaseModal";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
+import { useBalanceRefresh } from "../Dashboard";
 
 interface Property {
   id: string;
@@ -52,6 +53,11 @@ interface UserPropertyCardProps {
   property: Property;
   onDelete: (propertyId: string) => void;
   onVipPurchased?: () => void;
+  services?: Array<{
+    serviceType: string;
+    colorCode?: string;
+    expiresAt: string;
+  }>;
 }
 
 const VIP_BG_COLORS = {
@@ -69,6 +75,7 @@ const VIP_LABELS = {
 export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPropertyCardProps) => {
   const navigate = useNavigate();
   const [isVipModalOpen, setIsVipModalOpen] = useState(false);
+  const refreshBalance = useBalanceRefresh();
 
 
   const formatPrice = (price: string) => {
@@ -525,6 +532,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
         propertyId={parseInt(property.id)}
         propertyTitle={property.title || `${property.propertyType} ${property.city}-ში`}
         onSuccess={handleVipSuccess}
+        onBalanceChange={refreshBalance}
       />
     </Card>
   );

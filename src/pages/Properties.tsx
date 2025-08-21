@@ -351,6 +351,7 @@ const Properties = () => {
       const data = response?.properties || [];
       const pagination = response?.pagination || {};
       
+      
       if (!Array.isArray(data)) {
         console.warn('Expected array but got:', typeof data, data);
         setProperties([]);
@@ -457,10 +458,13 @@ const Properties = () => {
           
           // VIP status fields
           vipStatus: prop.vipStatus || 'none',
-          vipExpiresAt: prop.vipExpiresAt
+          vipExpiresAt: prop.vipExpiresAt,
+          
+          // Additional services
+          colorSeparationEnabled: prop.colorSeparationEnabled || false,
+          colorSeparationExpiresAt: prop.colorSeparationExpiresAt
         };
       });
-      
       
       // No need for separate properties and filteredProperties since filtering is server-side
       setProperties(transformedProperties);
