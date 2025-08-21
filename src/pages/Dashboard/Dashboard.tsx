@@ -1,14 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useRef, createContext, useContext } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
-import { Sidebar } from "./components/Sidebar";
+import { Sidebar, SidebarRef } from "./components/Sidebar";
 import { PropertyFormProvider } from "./contexts/PropertyFormContext";
+
+// Context for balance refresh function
+const BalanceRefreshContext = createContext<(() => void) | null>(null);
+
+export const useBalanceRefresh = () => {
+  const context = useContext(BalanceRefreshContext);
+  return context;
+};
 
 const DashboardContent = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const sidebarRef = useRef<SidebarRef>(null);
 
   // თუ მომხმარებელი არ არის ავტორიზებული, გადავამისამართოთ შესვლის გვერდზე
   useEffect(() => {
@@ -53,12 +62,17 @@ const DashboardContent = () => {
       <div className="flex-1 container mx-auto flex pt-20 md:pt-24 lg:pt-32 pb-6 lg:pb-6 px-3 sm:px-4">
         {/* მენიუ სიდებარი - ფიქსირებული */}
         <div className="flex-shrink-0">
-          <Sidebar user={user} />
+          <Sidebar ref={sidebarRef} user={user} />
         </div>
 
         {/* კონტენტის ნაწილი */}
         <div className="flex-1 bg-white rounded-lg border p-6 min-h-0">
-          <Outlet />
+          <BalanceRefreshContext.Provider value={() => {
+            console.log('🏦 Dashboard: refreshBalance called via context');
+            sidebarRef.current?.refreshBalance();
+          }}>
+            <Outlet />
+          </BalanceRefreshContext.Provider>
         </div>
       </div>
     </div>

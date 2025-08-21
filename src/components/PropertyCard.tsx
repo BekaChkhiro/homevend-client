@@ -47,6 +47,25 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     return { colorClass, label };
   };
 
+  const isColorSeparationActive = () => {
+    if (!property.colorSeparationEnabled) return false;
+    if (!property.colorSeparationExpiresAt) return property.colorSeparationEnabled; // No expiry means always active if enabled
+    return new Date(property.colorSeparationExpiresAt) > new Date();
+  };
+
+  const getColorSeparationStyle = () => {
+    if (!isColorSeparationActive()) return {};
+    
+    const colorCode = 'hsl(var(--primary))'; // Use primary color from CSS variables
+    return {
+      borderWidth: '3px',
+      borderStyle: 'solid',
+      borderColor: colorCode,
+      boxShadow: `0 0 15px hsl(var(--primary) / 0.3), 0 0 5px hsl(var(--primary) / 0.2)`,
+      background: `linear-gradient(135deg, hsl(var(--primary) / 0.05) 0%, transparent 100%)`
+    };
+  };
+
   // Get city name for badge
   const getCityName = () => {
     if (property.cityData) {
@@ -98,7 +117,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
   return (
     <Link to={`/property/${property.id}`} className="block w-full min-w-0 max-w-full">
-      <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full min-w-0 max-w-full">
+      <Card 
+        className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full min-w-0 max-w-full"
+        style={getColorSeparationStyle()}
+      >
         <div className="relative">
           <img
             src={property.image}

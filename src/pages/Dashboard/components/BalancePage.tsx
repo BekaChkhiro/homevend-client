@@ -3,8 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CreditCard, Wallet, Building2, History, Loader2 } from "lucide-react";
+import { CreditCard, Wallet, History, Loader2 } from "lucide-react";
 import { balanceApi } from '@/lib/api';
 
 interface BalanceData {
@@ -20,6 +19,7 @@ interface BalanceData {
     description: string;
     paymentMethod: string;
     createdAt: string;
+    metadata?: any;
   }>;
   lastTopUp: {
     amount: number;
@@ -69,6 +69,56 @@ export const BalancePage = () => {
 
   const setQuickAmount = (amount: number) => {
     setTopUpAmount(amount.toString());
+  };
+
+  const getServiceLabel = (serviceType: string) => {
+    const labels: Record<string, string> = {
+      'vip': 'VIP',
+      'vip_plus': 'VIP+',
+      'super_vip': 'SUPER VIP',
+      'auto_renew': 'ავტო განახლება',
+      'color_separation': 'ფერადი გამოყოფა'
+    };
+    return labels[serviceType] || serviceType;
+  };
+  
+  const getTransactionTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      'top_up': 'ბალანსის შევსება',
+      'vip_purchase': 'VIP სერვისი',
+      'service_purchase': 'დამატებითი სერვისი',
+      'property_post': 'განცხადების განთავსება'
+    };
+    return labels[type] || type;
+  };
+
+  const getTransactionDescription = (transaction: any) => {
+    // If we have metadata, create a better description
+    if (transaction.metadata?.purchaseType && transaction.metadata?.propertyTitle) {
+      const services = [];
+      
+      // Add VIP service
+      if (transaction.metadata.vipService) {
+        const vipService = transaction.metadata.vipService;
+        const vipLabel = getServiceLabel(vipService.serviceType);
+        services.push(`${vipLabel} (${vipService.days} დღე)`);
+      }
+      
+      // Add additional services
+      if (transaction.metadata.additionalServices) {
+        transaction.metadata.additionalServices.forEach((service: any) => {
+          const serviceLabel = getServiceLabel(service.serviceType);
+          services.push(`${serviceLabel} (${service.days} დღე)`);
+        });
+      }
+      
+      if (services.length > 0) {
+        return `${services.join(' + ')} - ${transaction.metadata.propertyTitle}`;
+      }
+    }
+    
+    // Fallback to original description
+    return transaction.description;
   };
 
   useEffect(() => {
@@ -122,122 +172,44 @@ export const BalancePage = () => {
         
         {/* შევსების ფორმა */}
         <Card className="mt-6 p-6">
-          <h3 className="text-lg font-medium mb-4">აირჩიეთ შევსების მეთოდი</h3>
+          <h3 className="text-lg font-medium mb-4">ბალანსის შევსება</h3>
           
-          <Tabs defaultValue="card" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="card">ბარათი</TabsTrigger>
-              <TabsTrigger value="bank">ბანკი</TabsTrigger>
-              <TabsTrigger value="terminal">ტერმინალი</TabsTrigger>
-            </TabsList>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="amount">თანხა (₾)</Label>
+              <Input 
+                id="amount" 
+                type="number" 
+                placeholder="100" 
+                min="0.01"
+                max="10000"
+                step="0.01"
+                value={topUpAmount}
+                onChange={(e) => setTopUpAmount(e.target.value)}
+              />
+              <p className="text-xs text-gray-500 mt-1">მინ. 10₾ - მაქს. 10,000₾</p>
+            </div>
             
-            <TabsContent value="card" className="mt-6">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="amount">თანხა (₾)</Label>
-                  <Input 
-                    id="amount" 
-                    type="number" 
-                    placeholder="100" 
-                    min="0.01"
-                    max="10000"
-                    step="0.01"
-                    value={topUpAmount}
-                    onChange={(e) => setTopUpAmount(e.target.value)}
-                  />
-                  <p className="text-xs text-gray-500 mt-1">მინ. 10₾ - მაქს. 10,000₾</p>
-                </div>
-                
-                <div className="grid grid-cols-3 gap-2">
-                  <Button variant="outline" type="button" onClick={() => setQuickAmount(50)}>50₾</Button>
-                  <Button variant="outline" type="button" onClick={() => setQuickAmount(100)}>100₾</Button>
-                  <Button variant="outline" type="button" onClick={() => setQuickAmount(200)}>200₾</Button>
-                </div>
-                
-                <div>
-                  <Label htmlFor="card-number">ბარათის ნომერი</Label>
-                  <Input 
-                    id="card-number" 
-                    placeholder="1234 5678 9012 3456"
-                    maxLength={19}
-                  />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="expiry">ვადა</Label>
-                    <Input 
-                      id="expiry" 
-                      placeholder="MM/YY"
-                      maxLength={5}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="cvv">CVV</Label>
-                    <Input 
-                      id="cvv" 
-                      placeholder="123"
-                      maxLength={3}
-                    />
-                  </div>
-                </div>
-                
-                <Button 
-                  className="w-full" 
-                  size="lg" 
-                  onClick={handleTopUp}
-                  disabled={topUpLoading || !topUpAmount}
-                >
-                  {topUpLoading ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <CreditCard className="h-4 w-4 mr-2" />
-                  )}
-                  {topUpLoading ? 'შევსება...' : 'შევსება (ტესტისთვის)'}
-                </Button>
-              </div>
-            </TabsContent>
+            <div className="grid grid-cols-3 gap-2">
+              <Button variant="outline" type="button" onClick={() => setQuickAmount(50)}>50₾</Button>
+              <Button variant="outline" type="button" onClick={() => setQuickAmount(100)}>100₾</Button>
+              <Button variant="outline" type="button" onClick={() => setQuickAmount(200)}>200₾</Button>
+            </div>
             
-            <TabsContent value="bank" className="mt-6">
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-medium mb-2">საბანკო რეკვიზიტები</h4>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">ბანკი:</span> თიბისი ბანკი</p>
-                    <p><span className="font-medium">ანგარიში:</span> GE12TB1234567890123456</p>
-                    <p><span className="font-medium">მიმღები:</span> შპს Homeland</p>
-                  </div>
-                </div>
-                <div className="bg-yellow-50 p-4 rounded-lg">
-                  <p className="text-sm text-yellow-800">
-                    <strong>დანიშნულება:</strong> მიუთითეთ თქვენი მომხმარებლის ID (#1234)
-                  </p>
-                </div>
-                <Button className="w-full" size="lg">
-                  <Building2 className="h-4 w-4 mr-2" />
-                  კოპირება
-                </Button>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="terminal" className="mt-6">
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-medium mb-2">ტერმინალით შევსება</h4>
-                  <ol className="space-y-2 text-sm list-decimal list-inside">
-                    <li>აირჩიეთ „უძრავი ქონება"</li>
-                    <li>აირჩიეთ „Homeland"</li>
-                    <li>შეიყვანეთ თქვენი ID: <strong>#1234</strong></li>
-                    <li>შეიყვანეთ სასურველი თანხა</li>
-                  </ol>
-                </div>
-                <div className="text-center py-8">
-                  <div className="text-6xl font-bold text-primary">#1234</div>
-                  <p className="text-sm text-gray-500 mt-2">თქვენი მომხმარებლის ID</p>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+            <Button 
+              className="w-full" 
+              size="lg" 
+              onClick={handleTopUp}
+              disabled={topUpLoading || !topUpAmount}
+            >
+              {topUpLoading ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <CreditCard className="h-4 w-4 mr-2" />
+              )}
+              {topUpLoading ? 'შევსება...' : 'შევსება (ტესტისთვის)'}
+            </Button>
+          </div>
         </Card>
         
         {/* ტრანზაქციების ისტორია */}
@@ -248,9 +220,9 @@ export const BalancePage = () => {
               {balanceData.recentTransactions.map((transaction) => (
                 <div key={transaction.id} className="flex justify-between items-center p-3 border rounded-lg">
                   <div>
-                    <div className="font-medium">{transaction.description}</div>
+                    <div className="font-medium">{getTransactionDescription(transaction)}</div>
                     <div className="text-sm text-gray-500">
-                      {new Date(transaction.createdAt).toLocaleDateString('ka-GE')} - {transaction.paymentMethod}
+                      {new Date(transaction.createdAt).toLocaleDateString('ka-GE')} - {getTransactionTypeLabel(transaction.type)}
                     </div>
                   </div>
                   <div className="text-right">

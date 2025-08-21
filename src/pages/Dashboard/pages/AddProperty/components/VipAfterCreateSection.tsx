@@ -1,36 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Crown, Loader2, AlertCircle } from 'lucide-react';
-import { vipApi, balanceApi } from '@/lib/api';
-import { useToast } from '@/components/ui/use-toast';
-
-const VIP_COLORS = {
-  free: 'text-gray-600 bg-gray-50 border-gray-200 ring-gray-300',
-  vip: 'text-blue-600 bg-blue-50 border-blue-200 ring-blue-300',
-  vip_plus: 'text-purple-600 bg-purple-50 border-purple-200 ring-purple-300', 
-  super_vip: 'text-yellow-600 bg-yellow-50 border-yellow-200 ring-yellow-300'
-};
-
-const VIP_LABELS = {
-  free: 'უფასო განცხადება',
-  vip: 'VIP',
-  vip_plus: 'VIP+',
-  super_vip: 'SUPER VIP'
-};
-
-interface VipPricing {
-  id: number;
-  vipType: string;
-  pricePerDay: number;
-  descriptionKa: string;
-  descriptionEn: string;
-  features: string[];
-}
+import { Crown, CreditCard, Sparkles } from 'lucide-react';
+import { VipPurchaseModal } from '@/components/VipPurchaseModal';
+import { useBalanceRefresh } from '../../Dashboard';
 
 interface VipAfterCreateSectionProps {
   propertyId?: number;
@@ -43,296 +16,94 @@ export const VipAfterCreateSection: React.FC<VipAfterCreateSectionProps> = ({
   propertyTitle,
   onVipPurchased
 }) => {
-  const [vipPricing, setVipPricing] = useState<VipPricing[]>([]);
-  const [selectedVipType, setSelectedVipType] = useState<string>('none');
-  const [days, setDays] = useState<string>('7');
-  const [loading, setLoading] = useState(false);
-  const [fetchingPricing, setFetchingPricing] = useState(true);
-  const [userBalance, setUserBalance] = useState<number>(0);
-  const { toast } = useToast();
-
-  const selectedPricing = vipPricing.find(p => p.vipType === selectedVipType);
-  const totalCost = selectedPricing ? selectedPricing.pricePerDay * parseInt(days || '1') : 0;
-  const canAfford = userBalance >= totalCost;
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      setFetchingPricing(true);
-      const [pricingData, balanceData] = await Promise.all([
-        vipApi.getPricing(),
-        balanceApi.getBalance()
-      ]);
-      
-      setVipPricing(pricingData.filter((p: VipPricing) => p.vipType !== 'none'));
-      setUserBalance(balanceData.balance);
-      
-      if (pricingData.length > 0) {
-        setSelectedVipType('free'); // Default to free for AddProperty
-      }
-    } catch (error) {
-      console.error('Error fetching VIP data:', error);
-      toast({
-        title: "შეცდომა",
-        description: "VIP ინფორმაციის მიღება ვერ მოხერხდა",
-        variant: "destructive",
-      });
-    } finally {
-      setFetchingPricing(false);
-    }
-  };
-
-  const handlePurchase = async () => {
-    if (!propertyId) return;
-
-    if (selectedVipType === 'free') {
-      toast({
-        title: "შეინახა!",
-        description: "თქვენი განცხადება გამოქვეყნდა უფასო სტატუსით",
-      });
-      onVipPurchased?.(); // Continue to My Properties
-      return;
-    }
-
-    if (!days) {
-      toast({
-        title: "შეცდომა",
-        description: "გთხოვთ მიუთითოთ დღეების რაოდენობა",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const daysNum = parseInt(days);
-    if (daysNum < 1 || daysNum > 30) {
-      toast({
-        title: "შეცდომა",
-        description: "დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!canAfford) {
-      toast({
-        title: "არასაკმარისი ბალანსი",
-        description: `საჭიროა ${totalCost.toFixed(2)}₾, ხელმისაწვდომია ${userBalance.toFixed(2)}₾`,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await vipApi.purchaseVipStatus(propertyId, selectedVipType, daysNum);
-      
-      toast({
-        title: "წარმატება!",
-        description: `VIP სტატუსი წარმატებით შეძენილია ${daysNum} დღით`,
-      });
-
-      onVipPurchased?.();
-    } catch (error: any) {
-      console.error('VIP purchase error:', error);
-      const errorMessage = error.response?.data?.message || 'VIP სტატუსის შეძენა ვერ მოხერხდა';
-      toast({
-        title: "შეცდომა",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [showVipModal, setShowVipModal] = useState(false);
+  const refreshBalance = useBalanceRefresh();
 
   if (!propertyId) return null;
 
-  if (fetchingPricing) {
-    return (
-      <div className="space-y-2">
-        <h3 className="text-lg font-medium">VIP სტატუსის შეძენა</h3>
+  const handleVipSuccess = () => {
+    setShowVipModal(false);
+    onVipPurchased?.();
+  };
+
+  const handleSkip = () => {
+    onVipPurchased?.();
+  };
+
+  return (
+    <>
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">გაზარდეთ თქვენი განცხადების ხილვადობა</h3>
+        
         <Card>
-          <CardContent className="p-6">
-            <div className="flex justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin" />
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-yellow-500" />
+              VIP სტატუსი და დამატებითი სერვისები
+            </CardTitle>
+            <CardDescription>
+              განცხადება: {propertyTitle}
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent className="space-y-4">
+            <div className="grid gap-4">
+              {/* VIP Benefits */}
+              <div className="space-y-2">
+                <h4 className="font-medium flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-blue-500" />
+                  VIP უპირატესობები:
+                </h4>
+                <ul className="text-sm text-gray-600 space-y-1 ml-6">
+                  <li>• პრიორიტეტული ჩვენება ძებნის შედეგებში</li>
+                  <li>• VIP ნიშნით გამოყოფა</li>
+                  <li>• მეტი ნახვა და კონტაქტი</li>
+                </ul>
+              </div>
+
+              {/* Additional Services */}
+              <div className="space-y-2">
+                <h4 className="font-medium flex items-center gap-2">
+                  <CreditCard className="h-4 w-4 text-green-500" />
+                  დამატებითი სერვისები:
+                </h4>
+                <ul className="text-sm text-gray-600 space-y-1 ml-6">
+                  <li>• ავტო განახლება - ყოველდღიური ავტომატური განახლება</li>
+                  <li>• ფერადი გამოყოფა - ფერადი ბორდერით გამოყოფა</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-4">
+              <Button 
+                variant="outline"
+                onClick={handleSkip}
+                className="flex-1"
+              >
+                უფასო სტატუსით გაგრძელება
+              </Button>
+              <Button 
+                onClick={() => setShowVipModal(true)}
+                className="flex-1"
+              >
+                <Crown className="h-4 w-4 mr-2" />
+                სერვისების არჩევა
+              </Button>
             </div>
           </CardContent>
         </Card>
       </div>
-    );
-  }
 
-  return (
-    <div className="space-y-2">
-      <h3 className="text-lg font-medium">VIP სტატუსის შეძენა</h3>
-      <Card>
-        <CardHeader>
-          <CardTitle>VIP სტატუსის შეძენა</CardTitle>
-          {propertyTitle && (
-            <CardDescription>განცხადება: {propertyTitle}</CardDescription>
-          )}
-        </CardHeader>
-        
-        <CardContent className="space-y-6">
-          {/* Balance Display */}
-          <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-            <span className="text-sm text-gray-600">თქვენი ბალანსი:</span>
-            <span className="font-semibold text-lg">{userBalance.toFixed(2)}₾</span>
-          </div>
-
-          {/* VIP Package Selection */}
-          <div>
-            <Label className="text-base font-medium">აირჩიეთ VIP პაკეტი</Label>
-            <RadioGroup value={selectedVipType} onValueChange={setSelectedVipType} className="mt-3">
-              <div className="grid gap-4">
-                {/* Free Option */}
-                <Card 
-                  className={`cursor-pointer transition-all ${
-                    selectedVipType === 'free' ? `ring-2 ring-offset-2 ${VIP_COLORS.free.split(' ').pop()}` : 'hover:shadow-md'
-                  }`}
-                  onClick={() => setSelectedVipType('free')}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-start space-x-4">
-                      <RadioGroupItem value="free" id="free" />
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3">
-                          <Crown className={`h-5 w-5 ${selectedVipType === 'free' ? VIP_COLORS.free.split(' ')[0] : 'text-gray-400'}`} />
-                          <Badge variant="outline" className={selectedVipType === 'free' ? VIP_COLORS.free : ''}>
-                            {VIP_LABELS.free}
-                          </Badge>
-                          <span className="font-semibold text-lg">0₾</span>
-                        </div>
-                        <p className="text-sm text-gray-600 mt-2">განცხადება იქნება გამოქვეყნებული სტანდარტული ხილვადობით</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* VIP Options */}
-                {vipPricing.map((pricing) => {
-                  const colorClass = VIP_COLORS[pricing.vipType as keyof typeof VIP_COLORS];
-                  const label = VIP_LABELS[pricing.vipType as keyof typeof VIP_LABELS];
-                  const isSelected = selectedVipType === pricing.vipType;
-                  
-                  return (
-                    <Card 
-                      key={pricing.id} 
-                      className={`cursor-pointer transition-all ${
-                        isSelected ? `ring-2 ring-offset-2 ${colorClass.split(' ').pop()}` : 'hover:shadow-md'
-                      }`}
-                      onClick={() => setSelectedVipType(pricing.vipType)}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-start space-x-4">
-                          <RadioGroupItem value={pricing.vipType} id={pricing.vipType} />
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-3">
-                              <Crown className={`h-5 w-5 ${isSelected ? colorClass.split(' ')[0] : 'text-gray-400'}`} />
-                              <Badge variant="outline" className={isSelected ? colorClass : ''}>
-                                {label}
-                              </Badge>
-                              <span className="font-semibold text-lg">{pricing.pricePerDay.toFixed(2)}₾/დღე</span>
-                            </div>
-                            <p className="text-sm text-gray-600 mt-2">{pricing.descriptionKa}</p>
-                            {pricing.features && pricing.features.length > 0 && (
-                              <div className="flex flex-wrap gap-2 mt-3">
-                                {pricing.features.map((feature, index) => (
-                                  <Badge key={index} variant="secondary" className="text-xs">
-                                    {feature}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </RadioGroup>
-          </div>
-
-          {/* Duration Selection - only show if not 'free' */}
-          {selectedVipType !== 'free' && (
-            <div>
-              <Label htmlFor="days" className="text-base font-medium">
-                რამდენი დღით გსურთ VIP სტატუსი?
-              </Label>
-              <Input
-                id="days"
-                type="number"
-                min="1"
-                max="30"
-                value={days}
-                onChange={(e) => setDays(e.target.value)}
-                className="mt-2"
-                placeholder="მაქსიმუმ 30 დღე"
-              />
-              <p className="text-xs text-gray-500 mt-1">მინიმუმ 1 დღე, მაქსიმუმ 30 დღე</p>
-            </div>
-          )}
-
-          {/* Cost Summary - only show if not 'free' */}
-          {selectedPricing && days && selectedVipType !== 'free' && (
-            <Card>
-              <CardContent className="p-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>VIP პაკეტი:</span>
-                    <span>{VIP_LABELS[selectedPricing.vipType as keyof typeof VIP_LABELS]}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>ფასი დღეში:</span>
-                    <span>{selectedPricing.pricePerDay.toFixed(2)}₾</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>დღეების რაოდენობა:</span>
-                    <span>{days} დღე</span>
-                  </div>
-                  <div className="border-t pt-2 flex justify-between font-semibold text-lg">
-                    <span>სულ:</span>
-                    <span className={!canAfford ? 'text-red-600' : 'text-green-600'}>
-                      {totalCost.toFixed(2)}₾
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Insufficient Balance Warning */}
-          {!canAfford && totalCost > 0 && selectedVipType !== 'free' && (
-            <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <AlertCircle className="h-5 w-5 text-red-600" />
-              <span className="text-red-700 text-sm">
-                არასაკმარისი ბალანსი. საჭიროა ბალანსის შევსება.
-              </span>
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex justify-end space-x-3 pt-4">
-            <Button 
-              onClick={handlePurchase} 
-              disabled={loading || (selectedVipType !== 'free' && (!canAfford || !selectedVipType || !days))}
-              className="w-full"
-            >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : null}
-              {selectedVipType === 'free' 
-                ? 'უფასო სტატუსით გაგრძელება' 
-                : `შეძენა ${totalCost > 0 ? `${totalCost.toFixed(2)}₾-ით` : ''}`
-              }
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      {/* VIP Purchase Modal */}
+      <VipPurchaseModal
+        isOpen={showVipModal}
+        onClose={() => setShowVipModal(false)}
+        propertyId={propertyId}
+        propertyTitle={propertyTitle}
+        onSuccess={handleVipSuccess}
+        onBalanceChange={refreshBalance}
+      />
+    </>
   );
 };
