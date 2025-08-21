@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Building2, MapPin, TrendingUp, Users, BarChart3, Home as HomeIcon, CheckCircle, Phone, Globe, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { propertyApi, agencyApi } from "@/lib/api";
+import { propertyApi, agencyApi, projectApi } from "@/lib/api";
 import type { Property, FilterState } from "@/pages/Index";
 
 interface Agency {
