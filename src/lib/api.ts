@@ -489,7 +489,7 @@ export const areasApi = {
 
 // Agency API
 export const agencyApi = {
-  getAgencies: async (params?: { page?: number; limit?: number; search?: string; city?: string; isVerified?: boolean }) => {
+  getAgencies: async (params?: { page?: number; limit?: number; search?: string; city?: string; isVerified?: boolean; role?: string }) => {
     const response = await publicApiClient.get('/agencies', { params });
     return response.data.data;
   },
@@ -512,6 +512,34 @@ export const agencyApi = {
   removeUserFromMyAgency: async (userId: number) => {
     const response = await apiClient.delete(`/agencies/my/users/${userId}`);
     return response.data;
+  }
+};
+
+// Developer API
+export const developerApi = {
+  getDevelopers: async (params?: { page?: number; limit?: number; search?: string; city?: string; isVerified?: boolean }) => {
+    const response = await publicApiClient.get('/developers', { params });
+    return response.data.data;
+  },
+  
+  getDeveloperById: async (id: string) => {
+    const response = await publicApiClient.get(`/developers/${id}`);
+    return response.data.data;
+  },
+
+  createDeveloper: async (data: any) => {
+    const response = await apiClient.post('/developers', data);
+    return response.data.data;
+  },
+
+  updateDeveloper: async (id: string, data: any) => {
+    const response = await apiClient.put(`/developers/${id}`, data);
+    return response.data.data;
+  },
+
+  getMyDeveloper: async () => {
+    const response = await apiClient.get('/developers/my/profile');
+    return response.data.data;
   }
 };
 

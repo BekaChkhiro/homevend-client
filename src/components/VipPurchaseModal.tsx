@@ -80,6 +80,7 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [fetchingPricing, setFetchingPricing] = useState(true);
   const [userBalance, setUserBalance] = useState<number>(0);
+  const [freeServicePrice, setFreeServicePrice] = useState<number>(0);
   const { toast } = useToast();
 
   const selectedPricing = vipPricing.find(p => (p.vipType || p.serviceType) === selectedVipType);
@@ -87,8 +88,9 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
     selectedServices.some(sel => sel.serviceType === s.serviceType)
   );
   
-  const vipCost = selectedPricing && selectedVipType !== 'free' 
-    ? selectedPricing.pricePerDay * selectedVipDays : 0;
+  const vipCost = selectedVipType === 'free' 
+    ? (freeServicePrice === 0 ? 0 : freeServicePrice * selectedVipDays)
+    : selectedPricing ? selectedPricing.pricePerDay * selectedVipDays : 0;
   const servicesCost = selectedServicePricing.reduce((total, service) => {
     const selectedService = selectedServices.find(s => s.serviceType === service.serviceType);
     return total + (service.pricePerDay * (selectedService?.days || 1));
@@ -126,6 +128,11 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
         features: service.features || []
       }));
       
+      // Find free service from VIP services and store its price
+      const freeService = mappedVipPricing.find(p => p.serviceType === 'free');
+      const freePriceValue = freeService?.pricePerDay || 0;
+      setFreeServicePrice(freePriceValue);
+      
       const mappedAdditionalServices = additionalSvcs.map((service: any) => ({
         id: service.id,
         serviceType: service.serviceType,
@@ -138,7 +145,11 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
         features: service.features || []
       }));
       
-      setVipPricing(mappedVipPricing.filter((p: VipPricing) => p.serviceType !== 'none'));
+      // Filter out free service if its price is 0 (we'll show hardcoded free card instead)
+      const filteredVipPricing = mappedVipPricing.filter((p: VipPricing) => 
+        p.serviceType !== 'none' && !(p.serviceType === 'free' && p.pricePerDay === 0)
+      );
+      setVipPricing(filteredVipPricing);
       setAdditionalServices(mappedAdditionalServices);
       setUserBalance(balanceData.balance);
     } catch (error) {
@@ -199,8 +210,8 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
       // Prepare services array for purchase - combine VIP and additional services
       const servicesToPurchase = [];
       
-      // Add VIP service if not free
-      if (selectedVipType !== 'free') {
+      // Add VIP service (including free if it has a price > 0)
+      if (selectedVipType !== 'free' || freeServicePrice > 0) {
         servicesToPurchase.push({
           serviceType: selectedVipType,
           days: selectedVipDays
@@ -293,36 +304,38 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
               <Label className="text-sm font-medium">აირჩიეთ VIP პაკეტი</Label>
               <RadioGroup value={selectedVipType} onValueChange={setSelectedVipType} className="mt-3">
                 <div className="grid grid-cols-2 gap-4">
-                  {/* Free Option */}
-                  <Card 
-                    className={`cursor-pointer transition-all min-h-[120px] ${
-                      selectedVipType === 'free' ? `ring-2 ring-offset-2 ${SERVICE_COLORS.free.split(' ').pop()}` : 'hover:shadow-md'
-                    }`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedVipType('free');
-                    }}
-                  >
-                    <CardContent className="p-3">
-                      <div className="flex items-start space-x-3">
-                        <RadioGroupItem value="free" id="free" onClick={(e) => e.stopPropagation()} />
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <Crown className={`h-4 w-4 ${selectedVipType === 'free' ? SERVICE_COLORS.free.split(' ')[0] : 'text-gray-400'}`} />
-                              <Badge variant="outline" className={`text-sm font-medium ${selectedVipType === 'free' ? SERVICE_COLORS.free : ''}`}>
-                                {SERVICE_LABELS.free}
-                              </Badge>
+                  {/* Show hardcoded free option only if database free service price is 0 */}
+                  {freeServicePrice === 0 && (
+                    <Card 
+                      className={`cursor-pointer transition-all min-h-[120px] ${
+                        selectedVipType === 'free' ? `ring-2 ring-offset-2 ${SERVICE_COLORS.free.split(' ').pop()}` : 'hover:shadow-md'
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSelectedVipType('free');
+                      }}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex items-start space-x-3">
+                          <RadioGroupItem value="free" id="free" onClick={(e) => e.stopPropagation()} />
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <Crown className={`h-4 w-4 ${selectedVipType === 'free' ? SERVICE_COLORS.free.split(' ')[0] : 'text-gray-400'}`} />
+                                <Badge variant="outline" className={`text-sm font-medium ${selectedVipType === 'free' ? SERVICE_COLORS.free : ''}`}>
+                                  {SERVICE_LABELS.free}
+                                </Badge>
+                              </div>
+                              <span className="font-semibold text-base">უფასო</span>
                             </div>
-                            <span className="font-semibold text-base">0₾</span>
+                            <p className="text-xs text-gray-600 mt-2">სტანდარტული ხილვადობა</p>
                           </div>
-                          <p className="text-xs text-gray-600 mt-2">სტანდარტული ხილვადობა</p>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  )}
 
-                  {/* VIP Options */}
+                  {/* VIP Options - including database free service if it has a price > 0 */}
                   {vipPricing.map((pricing) => {
                     const serviceType = pricing.vipType || pricing.serviceType;
                     const colorClass = SERVICE_COLORS[serviceType as keyof typeof SERVICE_COLORS];
@@ -480,22 +493,27 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
               </div>
             </div>
 
-            {/* Cost Summary - show if any paid services selected */}
-            {(selectedPricing && selectedVipType !== 'free' || selectedServices.length > 0) && (
+            {/* Cost Summary - show if any paid services selected or free service has cost */}
+            {((selectedVipType !== 'free' || freeServicePrice > 0) || selectedServices.length > 0) && (
               <Card>
                 <CardContent className="p-4">
                   <div className="space-y-2">
                     <h4 className="font-semibold">ღირებულების ჯამი</h4>
                     
                     {/* VIP Cost */}
-                    {selectedPricing && selectedVipType !== 'free' && (
+                    {(selectedVipType !== 'free' || freeServicePrice > 0) && (
                       <div className="space-y-1">
                         <div className="flex justify-between">
                           <span>VIP პაკეტი:</span>
                           <span>{SERVICE_LABELS[selectedVipType as keyof typeof SERVICE_LABELS]}</span>
                         </div>
                         <div className="flex justify-between text-sm text-gray-600">
-                          <span>{selectedPricing.pricePerDay.toFixed(2)}₾/დღე × {selectedVipDays} დღე:</span>
+                          <span>
+                            {selectedVipType === 'free' 
+                              ? `${freeServicePrice.toFixed(2)}₾/დღე × ${selectedVipDays} დღე:` 
+                              : `${selectedPricing?.pricePerDay.toFixed(2)}₾/დღე × ${selectedVipDays} დღე:`
+                            }
+                          </span>
                           <span>{vipCost.toFixed(2)}₾</span>
                         </div>
                       </div>
@@ -525,8 +543,8 @@ export const VipPurchaseModal: React.FC<VipPurchaseModalProps> = ({
               </Card>
             )}
 
-            {/* Insufficient Balance Warning - only show if not 'free' */}
-            {!canAfford && totalCost > 0 && selectedVipType !== 'free' && (
+            {/* Insufficient Balance Warning - only show if cost > 0 */}
+            {!canAfford && totalCost > 0 && (
               <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <AlertCircle className="h-5 w-5 text-red-600" />
                 <span className="text-red-700 text-sm">

@@ -625,7 +625,7 @@ const ProjectDetail = () => {
                       <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
                         <Users className="h-8 w-8 text-primary" />
                       </div>
-                      <h3 className="font-semibold text-lg">{project.developer.fullName}</h3>
+                      <h3 className="font-semibold text-lg">დეველოპერი #{project.developerId}</h3>
                     </div>
                     
                     <Separator />
@@ -633,12 +633,12 @@ const ProjectDetail = () => {
                     <div className="space-y-3">
                       <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
                         <Mail className="h-4 w-4 text-gray-600 flex-shrink-0" />
-                        <span className="text-sm break-all">{project.developer.email}</span>
+                        <span className="text-sm break-all">დეველოპერი #{project.developerId}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      {project.developer.phone ? (
+                      {false ? (
                         <>
                           {!showPhone ? (
                             <Button
@@ -653,16 +653,16 @@ const ProjectDetail = () => {
                             <div className="space-y-2">
                               <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border">
                                 <Phone className="h-4 w-4 text-gray-600" />
-                                <span className="font-medium">{project.developer.phone}</span>
+                                <span className="font-medium">No phone</span>
                               </div>
                               <Button
                                 variant="default"
                                 className="w-full"
                                 onClick={() => {
-                                  navigator.clipboard.writeText(project.developer.phone!);
+                                  // navigator.clipboard.writeText(project.developer.phone!);
                                   toast({
                                     title: "ნომერი დაკოპირდა",
-                                    description: project.developer.phone,
+                                    description: "Developer contact",
                                   });
                                 }}
                               >

@@ -17,7 +17,7 @@ import {
   Construction
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { agencyApi } from "@/lib/api";
+import { developerApi } from "@/lib/api";
 
 interface Developer {
   id: number;
@@ -31,7 +31,7 @@ interface Developer {
   socialMediaUrl?: string;
   address?: string;
   isVerified: boolean;
-  agentCount: number;
+  projectCount: number;
   propertyCount: number;
   totalSales: number;
   createdAt: string;
@@ -60,17 +60,16 @@ const Developers = () => {
       
       const params: any = {
         page,
-        limit: 12,
-        role: 'developer'
+        limit: 12
       };
       
       if (search && search.trim()) {
         params.search = search.trim();
       }
       
-      const data = await agencyApi.getAgencies(params);
+      const data = await developerApi.getDevelopers(params);
       
-      setDevelopers(data.agencies);
+      setDevelopers(data.developers);
       setPagination(data.pagination);
     } catch (error) {
       console.error('Error fetching developers:', error);
@@ -137,11 +136,11 @@ const Developers = () => {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center space-x-2">
             <Construction className="h-4 w-4 text-muted-foreground" />
-            <span>{developer.propertyCount} პროექტი</span>
+            <span>{developer.projectCount} პროექტი</span>
           </div>
           <div className="flex items-center space-x-2">
             <Building2 className="h-4 w-4 text-muted-foreground" />
-            <span>{developer.totalSales} განცხადება</span>
+            <span>{developer.propertyCount} განცხადება</span>
           </div>
         </div>
         
@@ -181,7 +180,7 @@ const Developers = () => {
             <span>{developer.totalSales.toLocaleString()} ₾</span>
           </div>
           
-          <Link to={`/developers/${developer.uuid}`}>
+          <Link to={`/developers/${developer.id}`}>
             <Button variant="outline" size="sm">
               დეტალურად
             </Button>

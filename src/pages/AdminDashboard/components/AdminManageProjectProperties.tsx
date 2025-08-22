@@ -95,8 +95,8 @@ export const AdminManageProjectProperties: React.FC = () => {
       
       // Get developer ID from project data first
       let developerId = null;
-      if (project && project.developer) {
-        developerId = project.developer.id;
+      if (project && project.developerId) {
+        developerId = project.developerId;
       } else {
         // If we don't have project data yet, try to fetch it first
         const projectResponse = await fetch(`/api/projects/${projectId}`, {

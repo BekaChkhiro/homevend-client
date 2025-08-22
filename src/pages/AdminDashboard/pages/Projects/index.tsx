@@ -24,6 +24,7 @@ interface Project {
     name: string;
     email: string;
   };
+  developerId: number;
   createdAt: string;
   images: string[];
 }
@@ -84,19 +85,20 @@ const AdminProjects = () => {
             id: proj.id,
             title: proj.projectName || proj.title || `პროექტი #${proj.id}`,
             description: proj.description || "",
-            location: `${proj.street || ""} ${proj.cityData?.nameGeorgian || proj.city || ""}`.trim(),
-            status: proj.status || "active",
-            totalUnits: proj.totalApartments || proj.totalUnits || 0,
-            soldUnits: proj.soldUnits || 0,
+            location: proj.fullAddress || proj.location || proj.address || `${proj.street || ""} ${proj.city?.nameGeorgian || proj.city || ""}`.trim(),
+            status: proj.deliveryStatus || proj.status || "active",
+            totalUnits: 0,
+            soldUnits: 0,
             startDate: proj.createdAt || new Date().toISOString(),
             completionDate: proj.deliveryDate,
-            minPrice: proj.minPrice || 0,
-            maxPrice: proj.maxPrice || 0,
+            minPrice: 0,
+            maxPrice: 0,
             developer: {
-              id: proj.developer?.id || proj.user?.id || proj.developerId || 0,
-              name: proj.developer?.fullName || proj.user?.fullName || proj.developerName || "უცნობი დეველოპერი",
-              email: proj.developer?.email || proj.user?.email || proj.developerEmail || ""
+              id: proj.developer?.id || proj.developerId || 0,
+              name: proj.developer?.fullName || "უცნობი დეველოპერი",
+              email: proj.developer?.email || ""
             },
+            developerId: proj.developerId || proj.developer?.id || 0,
             createdAt: proj.createdAt || new Date().toISOString(),
             images: proj.images || []
           }));
@@ -115,17 +117,18 @@ const AdminProjects = () => {
               description: "API-დან ვერ ჩაიტვირთა რეალური პროექტები",
               location: "თბილისი",
               status: "active",
-              totalUnits: 50,
-              soldUnits: 10,
+              totalUnits: 0,
+              soldUnits: 0,
               startDate: new Date().toISOString(),
               completionDate: undefined,
-              minPrice: 100000,
-              maxPrice: 300000,
+              minPrice: 0,
+              maxPrice: 0,
               developer: {
                 id: 1,
                 name: "ტესტ დეველოპერი",
                 email: "test@example.com"
               },
+              developerId: 1,
               createdAt: new Date().toISOString(),
               images: []
             }
@@ -162,6 +165,7 @@ const AdminProjects = () => {
               name: "მოკი დეველოპერი",
               email: "mock@example.com"
             },
+            developerId: 1,
             createdAt: new Date().toISOString(),
             images: []
           }
@@ -201,6 +205,7 @@ const AdminProjects = () => {
             name: "მოკი დეველოპერი",
             email: "mock@example.com"
           },
+          developerId: 1,
           createdAt: new Date().toISOString(),
           images: []
         }
@@ -243,6 +248,10 @@ const AdminProjects = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case "completed_with_renovation": return "bg-green-100 text-green-800";
+      case "green_frame": return "bg-emerald-100 text-emerald-800";
+      case "black_frame": return "bg-gray-100 text-gray-800";
+      case "white_frame": return "bg-blue-100 text-blue-800";
       case "active": return "bg-green-100 text-green-800";
       case "completed": return "bg-blue-100 text-blue-800";
       case "planned": return "bg-yellow-100 text-yellow-800";
@@ -253,6 +262,10 @@ const AdminProjects = () => {
 
   const getStatusText = (status: string) => {
     switch (status) {
+      case "completed_with_renovation": return "ჩაბარება რემონტით";
+      case "green_frame": return "მწვანე კარკასი";
+      case "black_frame": return "შავი კარკასი";
+      case "white_frame": return "თეთრი კარკასი";
       case "active": return "აქტიური";
       case "completed": return "დასრულებული";
       case "planned": return "დაგეგმილი";
@@ -336,9 +349,6 @@ const AdminProjects = () => {
                           {project.title}
                         </h3>
                         <div className="flex items-center gap-2 whitespace-nowrap">
-                          <span className="text-sm text-gray-600">
-                            {formatPrice(project.minPrice)} - {formatPrice(project.maxPrice)} ₾
-                          </span>
                           <Badge className={`${getStatusColor(project.status)} px-2 py-1`}>
                             {getStatusText(project.status)}
                           </Badge>
@@ -347,17 +357,13 @@ const AdminProjects = () => {
 
                       <div className="flex items-center text-gray-600 mb-2">
                         <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-                        <span className="text-sm truncate mr-4">{project.location}</span>
-                        <Building className="h-4 w-4 mr-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          {project.soldUnits}/{project.totalUnits} გაყიდული
-                        </span>
+                        <span className="text-sm truncate">{project.location}</span>
                       </div>
                       
                       <div className="flex items-center text-gray-600 mb-2">
                         <User className="h-4 w-4 mr-1 flex-shrink-0" />
                         <span className="text-sm truncate mr-4">
-                          დეველოპერი: {project.developer.name}
+                          დეველოპერი ID: {project.developerId}
                         </span>
                       </div>
 
