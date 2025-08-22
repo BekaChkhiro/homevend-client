@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User, Crown } from "lucide-react";
+import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User, Crown, Clock } from "lucide-react";
 import { useState } from "react";
 import { VipPurchaseModal } from "@/components/VipPurchaseModal";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -47,6 +47,12 @@ interface Property {
   // VIP status fields
   vipStatus?: 'none' | 'vip' | 'vip_plus' | 'super_vip';
   vipExpiresAt?: string;
+  // Active services
+  services?: Array<{
+    serviceType: string;
+    expiresAt: string;
+    colorCode?: string;
+  }>;
 }
 
 interface UserPropertyCardProps {
@@ -72,7 +78,23 @@ const VIP_LABELS = {
   super_vip: 'SUPER VIP'
 };
 
-export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPropertyCardProps) => {
+const SERVICE_LABELS_GEORGIAN = {
+  vip: 'VIP',
+  vip_plus: 'VIP+',
+  super_vip: 'სუპერ VIP',
+  auto_renew: 'ავტო-განახლება',
+  color_separation: 'ფერადი განცალკევება'
+};
+
+const DEFAULT_SERVICE_COLORS = {
+  vip: '#3b82f6', // Blue
+  vip_plus: '#8b5cf6', // Purple
+  super_vip: '#f59e0b', // Amber/Gold
+  auto_renew: '#10b981', // Green
+  color_separation: '#f97316' // Orange
+};
+
+export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services }: UserPropertyCardProps) => {
   const navigate = useNavigate();
   const [isVipModalOpen, setIsVipModalOpen] = useState(false);
   const refreshBalance = useBalanceRefresh();
@@ -181,6 +203,29 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
     return `${daysLeft} დღე დარჩა`;
   };
 
+  const getDaysRemaining = (expiresAt: string): number => {
+    const now = new Date();
+    const expiry = new Date(expiresAt);
+    const diffTime = expiry.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, diffDays);
+  };
+
+  const getServiceLabel = (serviceType: string): string => {
+    return SERVICE_LABELS_GEORGIAN[serviceType as keyof typeof SERVICE_LABELS_GEORGIAN] || serviceType;
+  };
+
+  const formatDaysRemaining = (days: number): string => {
+    if (days === 0) return 'დღეს იწურება';
+    if (days === 1) return '1 დღე';
+    return `${days} დღე`;
+  };
+
+  const getServiceColor = (serviceType: string, customColor?: string): string => {
+    if (customColor) return customColor;
+    return DEFAULT_SERVICE_COLORS[serviceType as keyof typeof DEFAULT_SERVICE_COLORS] || '#6b7280';
+  };
+
   const handleVipSuccess = () => {
     onVipPurchased?.();
     setIsVipModalOpen(false);
@@ -209,18 +254,30 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
                   <h3 className="font-semibold text-base leading-tight truncate">
                     {property.title || `${property.propertyType} ${property.city}-ში`}
                   </h3>
-                  {/* VIP Badge under title */}
-                  {(() => {
-                    const vipInfo = getVipInfo();
-                    if (!vipInfo) return null;
-                    const { colorClass, label } = vipInfo;
-                    return (
-                      <Badge className={`text-xs ${colorClass} mt-1 inline-flex`}>
-                        <Crown className="h-3 w-3 mr-1" />
-                        {label}
-                      </Badge>
-                    );
-                  })()}
+                  {/* Active Services under title */}
+                  {services && services.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {services.map((service, index) => {
+                        const daysLeft = getDaysRemaining(service.expiresAt);
+                        const serviceColor = getServiceColor(service.serviceType, service.colorCode);
+                        return (
+                          <div 
+                            key={index}
+                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border shadow-sm"
+                            style={{ 
+                              backgroundColor: serviceColor,
+                              borderColor: serviceColor,
+                              color: '#ffffff'
+                            }}
+                          >
+                            <span className="font-semibold">{getServiceLabel(service.serviceType)}</span>
+                            <Clock className="h-3 w-3 mx-1 opacity-80" />
+                            <span className="opacity-90">{formatDaysRemaining(daysLeft)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
                 <span className="text-lg font-bold text-primary whitespace-nowrap">
                   {formatPrice(property.totalPrice)} ₾
@@ -373,18 +430,30 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased }: UserPro
                 <h3 className="font-semibold text-base lg:text-lg truncate sm:pr-4">
                   {property.title || `${property.propertyType} ${property.city}-ში`}
                 </h3>
-                {/* VIP Badge */}
-                {(() => {
-                  const vipInfo = getVipInfo();
-                  if (!vipInfo) return null;
-                  const { colorClass, label } = vipInfo;
-                  return (
-                    <Badge className={`text-xs mt-1 ${colorClass}`}>
-                      <Crown className="h-3 w-3 mr-1" />
-                      {label}
-                    </Badge>
-                  );
-                })()}
+                {/* Active Services */}
+                {services && services.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {services.map((service, index) => {
+                      const daysLeft = getDaysRemaining(service.expiresAt);
+                      const serviceColor = getServiceColor(service.serviceType, service.colorCode);
+                      return (
+                        <div 
+                          key={index}
+                          className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border shadow-sm"
+                          style={{ 
+                            backgroundColor: serviceColor,
+                            borderColor: serviceColor,
+                            color: '#ffffff'
+                          }}
+                        >
+                          <span className="font-semibold">{getServiceLabel(service.serviceType)}</span>
+                          <Clock className="h-3 w-3 mx-1 opacity-80" />
+                          <span className="opacity-90">{formatDaysRemaining(daysLeft)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <span className="text-base lg:text-lg font-bold text-primary whitespace-nowrap">
                 {formatPrice(property.totalPrice)} ₾

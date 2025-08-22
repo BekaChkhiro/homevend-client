@@ -56,6 +56,12 @@ interface Property {
   // VIP status fields
   vipStatus?: 'none' | 'vip' | 'vip_plus' | 'super_vip';
   vipExpiresAt?: string;
+  // Active services
+  services?: Array<{
+    serviceType: string;
+    expiresAt: string;
+    colorCode?: string;
+  }>;
 }
 
 export const MyProperties: React.FC = () => {
@@ -144,6 +150,7 @@ export const MyProperties: React.FC = () => {
             <UserPropertyCard
               key={property.id}
               property={property}
+              services={property.services}
               onDelete={handleDeleteProperty}
               onVipPurchased={fetchUserProperties}
             />

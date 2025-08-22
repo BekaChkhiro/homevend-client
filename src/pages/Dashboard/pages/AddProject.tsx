@@ -226,7 +226,8 @@ export const AddProject: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         // Only show properties that are not already linked to any project
-        const unlinkedProperties = data.filter((property: any) => !property.projectId);
+        const properties = Array.isArray(data) ? data : (data.data || data.properties || []);
+        const unlinkedProperties = properties.filter((property: any) => !property.projectId);
         setUserProperties(unlinkedProperties || []);
       } else {
         setUserProperties([]);

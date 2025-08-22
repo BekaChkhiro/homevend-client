@@ -48,6 +48,7 @@ interface VipSelectionSectionProps {
   userBalance: number;
   vipPricing: any[];
   additionalServices: any[];
+  freeServicePrice: number;
 }
 
 export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
@@ -59,7 +60,8 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
   onServicesChange,
   userBalance,
   vipPricing,
-  additionalServices
+  additionalServices,
+  freeServicePrice
 }) => {
   const selectedPricing = vipPricing.find(p => p.vipType === selectedVipType);
   const selectedServicePricing = additionalServices.filter(s => 
@@ -98,39 +100,38 @@ export const VipSelectionSection: React.FC<VipSelectionSectionProps> = ({
             <RadioGroup value={selectedVipType} onValueChange={onVipTypeChange} className="mt-3">
 
               <div className="grid grid-cols-2 gap-4">
-                {/* Free Option */}
-                <Card 
-                  className={`cursor-pointer transition-all min-h-[120px] ${
-                    selectedVipType === 'free' ? `ring-2 ring-offset-2 ${SERVICE_COLORS.free.split(' ').pop()}` : 'hover:shadow-md'
-
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onVipTypeChange('free');
-                  }}
-                >
-
-                  <CardContent className="p-3">
-                    <div className="flex items-start space-x-3">
-                      <RadioGroupItem value="free" id="free" onClick={(e) => e.stopPropagation()} />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <Crown className={`h-5 w-5 ${selectedVipType === 'free' ? SERVICE_COLORS.free.split(' ')[0] : 'text-gray-400'}`} />
-                            <Badge variant="outline" className={`text-base font-medium ${selectedVipType === 'free' ? SERVICE_COLORS.free : ''}`}>
-                              {SERVICE_LABELS.free}
-                            </Badge>
+                {/* Show hardcoded free option only if database free service price is 0 */}
+                {freeServicePrice === 0 && (
+                  <Card 
+                    className={`cursor-pointer transition-all min-h-[120px] ${
+                      selectedVipType === 'free' ? `ring-2 ring-offset-2 ${SERVICE_COLORS.free.split(' ').pop()}` : 'hover:shadow-md'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onVipTypeChange('free');
+                    }}
+                  >
+                    <CardContent className="p-3">
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem value="free" id="free" onClick={(e) => e.stopPropagation()} />
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <Crown className={`h-5 w-5 ${selectedVipType === 'free' ? SERVICE_COLORS.free.split(' ')[0] : 'text-gray-400'}`} />
+                              <Badge variant="outline" className={`text-base font-medium ${selectedVipType === 'free' ? SERVICE_COLORS.free : ''}`}>
+                                {SERVICE_LABELS.free}
+                              </Badge>
+                            </div>
+                            <span className="font-semibold text-lg">უფასო</span>
                           </div>
-
-                          <span className="font-semibold text-lg">0₾</span>
+                          <p className="text-sm text-gray-600 mt-3">სტანდარტული ხილვადობა</p>
                         </div>
-                        <p className="text-sm text-gray-600 mt-3">სტანდარტული ხილვადობა</p>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                )}
 
-                {/* VIP Options */}
+                {/* VIP Options - including database free service if it has a price > 0 */}
                 {vipPricing.map((pricing) => {
                   const colorClass = SERVICE_COLORS[pricing.vipType as keyof typeof SERVICE_COLORS];
                   const label = SERVICE_LABELS[pricing.vipType as keyof typeof SERVICE_LABELS];

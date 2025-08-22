@@ -62,7 +62,8 @@ const Agencies = () => {
       
       const params: any = {
         page,
-        limit: 12
+        limit: 12,
+        role: 'agency'
       };
       
       if (search && search.trim()) {

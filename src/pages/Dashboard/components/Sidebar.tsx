@@ -15,7 +15,7 @@ export interface SidebarRef {
   refreshBalance: () => void;
 }
 
-export const Sidebar = forwardRef<SidebarRef, SidebarProps>(({ user }, ref) => {
+export const Sidebar = forwardRef<SidebarRef, SidebarProps>(({ user, isMobile = false, onNavigate }, ref) => {
   const balanceSectionRef = useRef<BalanceSectionRef>(null);
 
   useImperativeHandle(ref, () => ({

@@ -90,7 +90,7 @@ const Home = () => {
 
       const [propertiesResponse, agenciesResponse, projectsResponse] = await Promise.allSettled([
         propertyApi.getProperties({ limit: 20 }),
-        agencyApi.getAgencies({ limit: 4 }),
+        agencyApi.getAgencies({ limit: 4, role: 'agency' }),
         projectApi.getProjects({ limit: 6 })
 
       ]);

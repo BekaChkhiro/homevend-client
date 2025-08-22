@@ -38,6 +38,7 @@ export const EditProperty = () => {
   const [userBalance, setUserBalance] = useState<number>(0);
   const [vipPricing, setVipPricing] = useState<any[]>([]);
   const [additionalServices, setAdditionalServices] = useState<any[]>([]);
+  const [freeServicePrice, setFreeServicePrice] = useState<number>(0);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
@@ -117,6 +118,11 @@ export const EditProperty = () => {
             features: service.features || []
           }));
           
+          // Find free service from VIP services and store its price
+          const freeService = mappedVipPricing.find(p => p.vipType === 'free');
+          const freePriceValue = freeService?.pricePerDay || 0;
+          setFreeServicePrice(freePriceValue);
+          
           const mappedAdditionalServices = additionalSvcs.map((service: any) => ({
             id: service.id,
             serviceType: service.serviceType,
@@ -126,7 +132,11 @@ export const EditProperty = () => {
             features: service.features || []
           }));
           
-          setVipPricing(mappedVipPricing.filter((p: any) => p.vipType !== 'none'));
+          // Filter out free service if its price is 0 (we'll show hardcoded free card instead)
+          const filteredVipPricing = mappedVipPricing.filter((p: any) => 
+            p.vipType !== 'none' && !(p.vipType === 'free' && p.pricePerDay === 0)
+          );
+          setVipPricing(filteredVipPricing);
           setAdditionalServices(mappedAdditionalServices);
           setUserBalance(balanceData.balance);
         }
@@ -516,6 +526,7 @@ export const EditProperty = () => {
             userBalance={userBalance}
             vipPricing={vipPricing}
             additionalServices={additionalServices}
+            freeServicePrice={freeServicePrice}
           />
         </div>
       )}

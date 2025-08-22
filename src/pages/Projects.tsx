@@ -384,7 +384,7 @@ const Projects = () => {
 
                       {/* Footer */}
                       <div className="flex items-center justify-between pt-2 border-t text-sm text-gray-500">
-                        <span>დეველოპერი: {project.developer.fullName}</span>
+                        <span>დეველოპერი ID: {project.developerId}</span>
                         <div className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />
                           <span>{project.viewCount}</span>

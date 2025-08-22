@@ -19,7 +19,7 @@ import {
   ExternalLink,
   Bed
 } from "lucide-react";
-import { agencyApi } from "@/lib/api";
+import { developerApi } from "@/lib/api";
 import { PropertyCard } from "@/components/PropertyCard";
 
 interface Developer {
@@ -89,13 +89,13 @@ const DeveloperDetail = () => {
     try {
       setLoading(true);
       
-      // Fetch developer info using agency API
-      const response = await agencyApi.getAgencyById(developerId);
-      const agencyData = response.data || response;
+      // Fetch developer info using developer API
+      const response = await developerApi.getDeveloperById(developerId);
+      const developerData = response.data || response;
       
-      setDeveloper(agencyData);
-      setProjects(agencyData.projects || []);
-      setProperties(agencyData.properties || []);
+      setDeveloper(developerData);
+      setProjects(developerData.projects || []);
+      setProperties(developerData.properties || []);
       
     } catch (error) {
       console.error('Error fetching developer data:', error);
@@ -392,7 +392,7 @@ const DeveloperDetail = () => {
                         )}
 
                         <Button asChild className="w-full" size="sm">
-                          <Link to={`/projects/${project.uuid}`}>
+                          <Link to={`/projects/${project.id}`}>
                             დეტალურად
                           </Link>
                         </Button>
@@ -422,6 +422,7 @@ const DeveloperDetail = () => {
                     title: property.title,
                     price: property.totalPrice,
                     type: property.dealType === 'sale' ? 'იყიდება' : 'ქირავდება',
+                    transactionType: property.dealType === 'sale' ? 'იყიდება' : 'ქირავდება',
                     propertyType: property.propertyType,
                     bedrooms: property.rooms || 0,
                     bathrooms: 1, // Default as we don't have this data
@@ -434,7 +435,8 @@ const DeveloperDetail = () => {
                     district: null,
                     city: null,
                     vipStatus: 'none' as const,
-                    vipExpiresAt: null
+                    vipExpiresAt: null,
+                    featured: false
                   };
 
                   return (

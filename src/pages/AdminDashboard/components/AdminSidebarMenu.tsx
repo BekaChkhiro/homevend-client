@@ -67,6 +67,13 @@ export const AdminSidebarMenu: React.FC = () => {
       category: "data"
     },
     { 
+      id: "service-pricing", 
+      path: "/admin/service-pricing", 
+      label: "სერვისების ფასები", 
+      icon: <DollarSign className="h-5 w-5" />,
+      category: "data"
+    },
+    { 
       id: "settings", 
       path: "/admin/settings", 
       label: "პარამეტრები", 

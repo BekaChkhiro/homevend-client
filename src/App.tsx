@@ -36,6 +36,7 @@ import AdminAdvertisements from "./pages/AdminDashboard/pages/Advertisements";
 import { AdminManageProjectProperties } from "./pages/AdminDashboard/components/AdminManageProjectProperties";
 import AdminDistricts from "./pages/AdminDashboard/pages/Districts";
 import AdminSettings from "./pages/AdminDashboard/pages/Settings";
+import AdminServicePricing from "./pages/AdminDashboard/pages/ServicePricing";
 import { AddProperty } from "./pages/Dashboard/pages/AddProperty";
 import { EditProperty } from "./pages/Dashboard/pages/EditProperty";
 import { AddProject } from "./pages/Dashboard/pages/AddProject";
@@ -118,6 +119,7 @@ const App = () => (
             <Route path="agencies" element={<AdminAgencies />} />
             <Route path="advertisements" element={<AdminAdvertisements />} />
             <Route path="districts" element={<AdminDistricts />} />
+            <Route path="service-pricing" element={<AdminServicePricing />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
