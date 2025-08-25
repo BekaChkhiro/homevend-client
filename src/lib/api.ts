@@ -658,7 +658,7 @@ export const projectApi = {
     deliveryStatus?: string 
   }) => {
     const response = await publicApiClient.get('/projects', { params });
-    return response.data.data;
+    return response.data;
   },
   
   getProjectById: async (id: string) => {

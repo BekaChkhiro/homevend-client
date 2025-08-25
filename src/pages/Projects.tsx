@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Building2, Eye, Filter, Search } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { projectApi } from "@/lib/api";
 
 interface Project {
   id: number;
@@ -92,21 +93,16 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      const queryParams = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: '12',
+      const params = {
+        page: currentPage,
+        limit: 12,
         ...(filters.city && { city: filters.city }),
         ...(filters.area && { area: filters.area }),
         ...(filters.projectType && filters.projectType !== 'all' && { projectType: filters.projectType }),
         ...(filters.deliveryStatus && filters.deliveryStatus !== 'all' && { deliveryStatus: filters.deliveryStatus })
-      });
+      };
 
-      const response = await fetch(`/api/projects?${queryParams}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch projects: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await projectApi.getProjects(params);
       console.log('Projects API response:', data); // Debug log
       
       // Add mock photos to each project
