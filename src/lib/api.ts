@@ -550,6 +550,20 @@ export const balanceApi = {
     return response.data.data;
   },
   
+  getPaymentProviders: async () => {
+    const response = await apiClient.get('/balance/providers');
+    return response.data.data;
+  },
+  
+  initiateTopUp: async (amount: number, provider: string = 'test') => {
+    const response = await apiClient.post('/balance/initiate', {
+      amount,
+      provider
+    });
+    return response.data;
+  },
+  
+  // Legacy method for backward compatibility
   topUp: async (amount: number, paymentMethod: string = 'test') => {
     const response = await apiClient.post('/balance/top-up', {
       amount,

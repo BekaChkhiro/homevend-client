@@ -3,8 +3,20 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Wallet, History, Loader2 } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { CreditCard, Wallet, History, Loader2, ExternalLink } from "lucide-react";
 import { balanceApi } from '@/lib/api';
+
+interface PaymentProvider {
+  id: string;
+  name: string;
+  displayName: string;
+  isEnabled: boolean;
+  minAmount: number;
+  maxAmount: number;
+  currency: string;
+  description?: string;
+}
 
 interface BalanceData {
   balance: number;
@@ -30,7 +42,10 @@ interface BalanceData {
 
 export const BalancePage = () => {
   const [balanceData, setBalanceData] = useState<BalanceData | null>(null);
+  const [paymentProviders, setPaymentProviders] = useState<PaymentProvider[]>([]);
+  const [selectedProvider, setSelectedProvider] = useState<string>('test');
   const [loading, setLoading] = useState(true);
+  const [providersLoading, setProvidersLoading] = useState(true);
   const [topUpAmount, setTopUpAmount] = useState('');
   const [topUpLoading, setTopUpLoading] = useState(false);
 
@@ -45,19 +60,52 @@ export const BalancePage = () => {
     }
   };
 
+  const fetchPaymentProviders = async () => {
+    try {
+      const providers = await balanceApi.getPaymentProviders();
+      setPaymentProviders(providers);
+      if (providers.length > 0) {
+        setSelectedProvider(providers[0].id);
+      }
+    } catch (error) {
+      console.error('Error fetching payment providers:', error);
+    } finally {
+      setProvidersLoading(false);
+    }
+  };
+
   const handleTopUp = async () => {
     const amount = parseFloat(topUpAmount);
-    if (!amount || amount <= 0 || amount > 10000) {
-      alert('გთხოვთ შეიყვანოთ სწორი თანხა (0.01-10,000₾)');
+    const provider = paymentProviders.find(p => p.id === selectedProvider);
+    
+    if (!provider) {
+      alert('გთხოვთ აირჩიოთ გადახდის მეთოდი');
+      return;
+    }
+
+    if (!amount || amount < provider.minAmount || amount > provider.maxAmount) {
+      alert(`გთხოვთ შეიყვანოთ სწორი თანხა (${provider.minAmount}-${provider.maxAmount}₾)`);
       return;
     }
 
     setTopUpLoading(true);
     try {
-      const result = await balanceApi.topUp(amount, 'test');
-      alert(`შევსება წარმატებით შესრულდა! ახალი ბალანსი: ${result.newBalance}₾`);
-      setTopUpAmount('');
-      fetchBalance(); // Refresh balance data
+      const result = await balanceApi.initiateTopUp(amount, selectedProvider);
+      
+      if (result.provider === 'test') {
+        // Test payment completed immediately
+        alert(`შევსება წარმატებით შესრულდა! ახალი ბალანსი: ${result.data.newBalance}₾`);
+        setTopUpAmount('');
+        fetchBalance();
+      } else if (result.provider === 'flitt') {
+        // Redirect to Flitt payment page
+        if (result.data.checkoutUrl) {
+          window.open(result.data.checkoutUrl, '_blank');
+          alert('გადახდის გვერდი გაიხსნა ახალ ტაბში. გადახდის შემდეგ ბალანსი ავტომატურად განახლდება.');
+        } else {
+          alert('გადახდის ლინკის შექმნა ვერ მოხერხდა');
+        }
+      }
     } catch (error: any) {
       console.error('Error during top-up:', error);
       const errorMessage = error.response?.data?.message || 'შეცდომა შევსების დროს';
@@ -123,9 +171,21 @@ export const BalancePage = () => {
 
   useEffect(() => {
     fetchBalance();
+    fetchPaymentProviders();
   }, []);
 
-  if (loading) {
+  // Check URL for payment success and refresh balance
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+      setTimeout(() => {
+        fetchBalance();
+        window.history.replaceState({}, '', window.location.pathname);
+      }, 1000);
+    }
+  }, []);
+
+  if (loading || providersLoading) {
     return (
       <div className="w-full flex justify-center items-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -174,20 +234,55 @@ export const BalancePage = () => {
         <Card className="mt-6 p-6">
           <h3 className="text-lg font-medium mb-4">ბალანსის შევსება</h3>
           
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Payment Provider Selection */}
+            <div>
+              <Label className="text-base font-medium">გადახდის მეთოდი</Label>
+              <RadioGroup 
+                value={selectedProvider} 
+                onValueChange={setSelectedProvider}
+                className="mt-2"
+              >
+                {paymentProviders.map((provider) => (
+                  <div key={provider.id} className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-gray-50">
+                    <RadioGroupItem value={provider.id} id={provider.id} />
+                    <div className="flex-1">
+                      <Label htmlFor={provider.id} className="cursor-pointer font-medium">
+                        {provider.displayName}
+                      </Label>
+                      {provider.description && (
+                        <p className="text-sm text-gray-500 mt-1">{provider.description}</p>
+                      )}
+                      <p className="text-xs text-gray-400">
+                        ლიმიტი: {provider.minAmount}₾ - {provider.maxAmount}₾
+                      </p>
+                    </div>
+                    {provider.id === 'flitt' && (
+                      <ExternalLink className="h-4 w-4 text-gray-400" />
+                    )}
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+
             <div>
               <Label htmlFor="amount">თანხა (₾)</Label>
               <Input 
                 id="amount" 
                 type="number" 
                 placeholder="100" 
-                min="0.01"
-                max="10000"
+                min={paymentProviders.find(p => p.id === selectedProvider)?.minAmount || 1}
+                max={paymentProviders.find(p => p.id === selectedProvider)?.maxAmount || 10000}
                 step="0.01"
                 value={topUpAmount}
                 onChange={(e) => setTopUpAmount(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">მინ. 10₾ - მაქს. 10,000₾</p>
+              {paymentProviders.find(p => p.id === selectedProvider) && (
+                <p className="text-xs text-gray-500 mt-1">
+                  მინ. {paymentProviders.find(p => p.id === selectedProvider)!.minAmount}₾ - 
+                  მაქს. {paymentProviders.find(p => p.id === selectedProvider)!.maxAmount}₾
+                </p>
+              )}
             </div>
             
             <div className="grid grid-cols-3 gap-2">
@@ -200,14 +295,15 @@ export const BalancePage = () => {
               className="w-full" 
               size="lg" 
               onClick={handleTopUp}
-              disabled={topUpLoading || !topUpAmount}
+              disabled={topUpLoading || !topUpAmount || !selectedProvider}
             >
               {topUpLoading ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : (
                 <CreditCard className="h-4 w-4 mr-2" />
               )}
-              {topUpLoading ? 'შევსება...' : 'შევსება (ტესტისთვის)'}
+              {topUpLoading ? 'შევსება...' : 
+               selectedProvider === 'flitt' ? 'ბანკის ბარათით გადახდა' : 'შევსება (ტესტისთვის)'}
             </Button>
           </div>
         </Card>
