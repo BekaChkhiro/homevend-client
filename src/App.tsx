@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import AboutUs from "./pages/AboutUs";
 import Contact from "./pages/Contact";
 import Advertising from "./pages/Advertising";
+import TermsAndConditions from "./pages/TermsAndConditions";
 import Properties from "./pages/Properties";
 import PriceStatistics from "./pages/PriceStatistics";
 import Dashboard from "./pages/Dashboard";
@@ -85,6 +86,7 @@ const App = () => (
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/advertise" element={<Advertising />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />}>
