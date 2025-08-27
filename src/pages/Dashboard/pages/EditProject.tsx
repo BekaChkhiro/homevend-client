@@ -61,6 +61,7 @@ export const EditProject: React.FC = () => {
     hasDoorman: false,
     fireSystem: false,
     mainDoorLock: false,
+    maintenance: false,
   });
 
   const [customAmenities, setCustomAmenities] = useState<{[key: string]: string}>({});
@@ -133,6 +134,7 @@ export const EditProject: React.FC = () => {
         hasDoorman: project.hasDoorman || false,
         fireSystem: project.fireSystem || false,
         mainDoorLock: project.mainDoorLock || false,
+        maintenance: project.maintenance || false,
       });
 
       // Convert amenities array to customAmenities format

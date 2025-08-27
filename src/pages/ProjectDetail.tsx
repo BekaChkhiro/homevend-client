@@ -41,6 +41,7 @@ interface ProjectDetail {
   parkingSpaces?: number;
   viewCount: number;
   createdAt: string;
+  developerId: number;
   city: {
     id: number;
     nameGeorgian: string;
@@ -80,6 +81,7 @@ interface ProjectDetail {
   hasDoorman: boolean;
   fireSystem: boolean;
   mainDoorLock: boolean;
+  maintenance: boolean;
   linkedProperties?: Array<{
     id: number;
     uuid?: string;
@@ -483,13 +485,15 @@ const ProjectDetail = () => {
                       // Amenity labels in Georgian
                       const amenityLabels: {[key: string]: string} = {
                         pharmacy: '💊 აფთიაქი',
-                        kindergarten: '👶 საბავშო ბაღი',
+                        kindergarten: '👶 საბავშვო ბაღი',
                         school: '🎒 სკოლა',
                         university: '🎓 უნივერსიტეტი',
                         hospital: '🏥 საავადმყოფო',
                         clinic: '🩺 კლინიკა',
+                        busStop: '🚌 ავტობუსის გაჩერება',
                         bus_stop: '🚌 ავტობუსის გაჩერება',
                         metro: '🚇 მეტრო',
+                        groceryStore: '🛒 საყიდლების მაღაზია',
                         grocery_store: '🛒 საყიდლების მაღაზია',
                         supermarket: '🏬 სუპერმარკეტი',
                         mall: '🏢 სავაჭრო ცენტრი',
@@ -498,27 +502,36 @@ const ProjectDetail = () => {
                         restaurant: '🍽️ რესტორანი',
                         cafe: '☕ კაფე',
                         bakery: '🥖 საცხობი',
+                        sportsCenter: '🏋️ სპორტული ცენტრი',
                         sports_center: '🏋️ სპორტული ცენტრი',
                         stadium: '🏟️ სტადიონი',
+                        swimmingPool: '🏊 საცურაო აუზი',
                         swimming_pool: '🏊 საცურაო აუზი',
                         park: '🌳 პარკი',
                         square: '🏛️ მოედანი',
                         cinema: '🎬 კინო',
                         theater: '🎭 თეატრი',
                         library: '📚 ბიბლიოთეკა',
+                        postOffice: '📫 ფოსტის განყოფილება',
                         post_office: '📫 ფოსტის განყოფილება',
+                        gasStation: '⛽ ბენზინგასამართი სადგური',
                         gas_station: '⛽ ბენზინგასამართი სადგური',
+                        carWash: '🚗 ავტორეცხვა',
                         car_wash: '🚗 ავტორეცხვა',
                         veterinary: '🐕 ვეტერინარული კლინიკა',
+                        beautyCenter: '💄 სილამაზის სალონი',
                         beauty_center: '💄 სილამაზის სალონი',
                         dentist: '🦷 სტომატოლოგია',
                         gym: '💪 სპორტული დარბაზი',
-                        garden: '🌳 ბაღი/პარკი',
+                        garden: '🌳 ბაღი',
                         parking: '🚗 პარკინგი',
                         laundry: '🧺 სამრეცხაო',
                         storage: '📦 საწყობი',
+                        childrenArea: '🎪 ბავშვთა მოედანი',
                         children_area: '🎪 ბავშვთა მოედანი',
+                        bikePath: '🚴 ველოსიპედის ბილიკი',
                         bike_path: '🚴 ველოსიპედის ბილიკი',
+                        sportsField: '⚽ სპორტული მოედანი',
                         sports_field: '⚽ სპორტული მოედანი'
                       };
 
@@ -584,7 +597,8 @@ const ProjectDetail = () => {
                   { key: 'entranceCleaning', label: 'შესასვლელის დალაგება', value: project.entranceCleaning },
                   { key: 'hasDoorman', label: 'კარისკაცი', value: project.hasDoorman },
                   { key: 'fireSystem', label: 'ხანძრის ჩაქრობის სისტემა', value: project.fireSystem },
-                  { key: 'mainDoorLock', label: 'მთავარი კარის საკეტი', value: project.mainDoorLock }
+                  { key: 'mainDoorLock', label: 'მთავარი კარის საკეტი', value: project.mainDoorLock },
+                  { key: 'maintenance', label: 'ტექნიკური მომსახურება', value: project.maintenance }
                 ].filter(service => service.value === true);
 
                 return availableServices.length > 0 ? (
@@ -625,7 +639,7 @@ const ProjectDetail = () => {
                       <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
                         <Users className="h-8 w-8 text-primary" />
                       </div>
-                      <h3 className="font-semibold text-lg">დეველოპერი #{project.developerId}</h3>
+                      <h3 className="font-semibold text-lg">{project.developer.fullName}</h3>
                     </div>
                     
                     <Separator />
@@ -633,12 +647,12 @@ const ProjectDetail = () => {
                     <div className="space-y-3">
                       <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
                         <Mail className="h-4 w-4 text-gray-600 flex-shrink-0" />
-                        <span className="text-sm break-all">დეველოპერი #{project.developerId}</span>
+                        <span className="text-sm break-all">{project.developer.email}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      {false ? (
+                      {project.developer.phone ? (
                         <>
                           {!showPhone ? (
                             <Button
@@ -653,16 +667,16 @@ const ProjectDetail = () => {
                             <div className="space-y-2">
                               <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border">
                                 <Phone className="h-4 w-4 text-gray-600" />
-                                <span className="font-medium">No phone</span>
+                                <span className="font-medium">{project.developer.phone}</span>
                               </div>
                               <Button
                                 variant="default"
                                 className="w-full"
                                 onClick={() => {
-                                  // navigator.clipboard.writeText(project.developer.phone!);
+                                  navigator.clipboard.writeText(project.developer.phone!);
                                   toast({
                                     title: "ნომერი დაკოპირდა",
-                                    description: "Developer contact",
+                                    description: project.developer.phone,
                                   });
                                 }}
                               >
