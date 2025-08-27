@@ -52,7 +52,7 @@ export const Footer = () => {
             <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-                <span className="text-muted-foreground">+995 555 123 456</span>
+                <span className="text-muted-foreground">საკონტაქტო ნომერი</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
@@ -60,7 +60,7 @@ export const Footer = () => {
               </div>
               <div className="flex items-start space-x-2">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                <span className="text-muted-foreground leading-relaxed">თბილისი, საქართველო<br />რუსთაველის გამზირი 12</span>
+                <span className="text-muted-foreground leading-relaxed">თბილისი, ბერბუკის ქ. N7<br />მე-2 სადარბაზო, სართული 11, ბინა N54</span>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ export const Footer = () => {
             <p>&copy; 2024 HOMEVEND.ge. ყველა უფლება დაცულია.</p>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-center">
               <a href="#" className="hover:text-primary transition-colors">კონფიდენციალურობა</a>
-              <a href="#" className="hover:text-primary transition-colors">გამოყენების წესები</a>
+              <a href="/terms" className="hover:text-primary transition-colors">წესები და პირობები</a>
               <a href="#" className="hover:text-primary transition-colors">კუკის პოლიტიკა</a>
             </div>
           </div>
