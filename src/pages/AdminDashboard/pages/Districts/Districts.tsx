@@ -49,7 +49,7 @@ const Districts = () => {
   const fetchDistricts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/districts', {
+      const response = await fetch('http://localhost:5000/api/districts', {
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',
         }
@@ -78,7 +78,7 @@ const Districts = () => {
 
     try {
       const method = editingDistrict ? 'PUT' : 'POST';
-      const url = editingDistrict ? `http://localhost:3000/api/districts/${editingDistrict.id}` : 'http://localhost:3000/api/districts';
+      const url = editingDistrict ? `http://localhost:5000/api/districts/${editingDistrict.id}` : 'http://localhost:5000/api/districts';
       
       const token = localStorage.getItem('token');
       const response = await fetch(url, {
@@ -116,7 +116,7 @@ const Districts = () => {
   const handleDelete = async (district: District) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/districts/${district.id}`, {
+      const response = await fetch(`http://localhost:5000/api/districts/${district.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',
