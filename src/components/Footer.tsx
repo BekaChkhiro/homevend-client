@@ -60,9 +60,7 @@ export const Footer = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-muted-foreground space-y-4 sm:space-y-0">
             <p>&copy; 2024 HOMEVEND.ge. ყველა უფლება დაცულია.</p>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-center">
-              <a href="#" className="hover:text-primary transition-colors">კონფიდენციალურობა</a>
               <a href="/terms" className="hover:text-primary transition-colors">წესები და პირობები</a>
-              <a href="#" className="hover:text-primary transition-colors">კუკის პოლიტიკა</a>
             </div>
           </div>
         </div>
