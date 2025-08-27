@@ -5,7 +5,7 @@ export const Footer = () => {
   return (
     <footer className="bg-muted/50 border-t border-border mt-8 sm:mt-12 lg:mt-16">
       <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-10 lg:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Company Info */}
           <div className="space-y-3 sm:space-y-4 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center space-x-2">
@@ -35,16 +35,6 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Services */}
-          <div className="space-y-3 sm:space-y-4">
-            <h3 className="font-semibold text-foreground text-sm sm:text-base">სერვისები</h3>
-            <ul className="space-y-2 text-xs sm:text-sm">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">ქონების შეფასება</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">იურიდიული კონსულტაცია</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">იპოთეკური დაფინანსება</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">ქონების მართვა</a></li>
-            </ul>
-          </div>
 
           {/* Contact Info */}
           <div className="space-y-3 sm:space-y-4">
@@ -70,9 +60,7 @@ export const Footer = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-muted-foreground space-y-4 sm:space-y-0">
             <p>&copy; 2024 HOMEVEND.ge. ყველა უფლება დაცულია.</p>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-center">
-              <a href="#" className="hover:text-primary transition-colors">კონფიდენციალურობა</a>
               <a href="/terms" className="hover:text-primary transition-colors">წესები და პირობები</a>
-              <a href="#" className="hover:text-primary transition-colors">კუკის პოლიტიკა</a>
             </div>
           </div>
         </div>
