@@ -5,6 +5,7 @@ import { Plus, Filter, Loader2, Eye, Edit, Trash2, MapPin, Calendar, User, Build
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
+import { adminApi } from '@/lib/api';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Project {
@@ -43,174 +44,85 @@ const AdminProjects = () => {
     try {
       setIsLoading(true);
       
-      console.log('Fetching projects from /api/admin/projects...');
-      const token = localStorage.getItem('token');
-      console.log('Using token:', token ? 'Present' : 'Missing');
+      console.group('🏗️ Projects - Fetching Data');
+      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
+      console.log('🔐 Auth token available:', !!localStorage.getItem('token'));
+      console.log('⏰ Request timestamp:', new Date().toISOString());
       
-      const response = await fetch('/api/admin/projects', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const result = await adminApi.getProjects();
+      
+      console.log('✅ Projects API Response:', {
+        success: true,
+        dataReceived: !!result,
+        projectsCount: Array.isArray(result) ? result.length : 0,
+        responseStructure: Object.keys(result || {}),
+        sampleProject: Array.isArray(result) ? result[0] : null
       });
+      console.groupEnd();
       
-      console.log('Projects API response status:', response.status);
-      console.log('Projects API response headers:', Object.fromEntries(response.headers.entries()));
+      // Handle different response formats
+      let projectsData = [];
       
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Projects full response:', result);
+      if (result && result.projects) {
+        projectsData = result.projects;
+      } else if (Array.isArray(result)) {
+        projectsData = result;
+      } else if (result) {
+        projectsData = [result]; // Single project
+      }
+      
+      if (Array.isArray(projectsData) && projectsData.length > 0) {
+        // Transform API data to match our interface
+        const transformedProjects = projectsData.map((proj: any) => ({
+          id: proj.id,
+          title: proj.projectName || proj.title || `პროექტი #${proj.id}`,
+          description: proj.description || "",
+          location: proj.fullAddress || proj.location || proj.address || `${proj.street || ""} ${proj.city?.nameGeorgian || proj.city || ""}`.trim(),
+          status: proj.deliveryStatus || proj.status || "active",
+          totalUnits: proj.totalUnits || 0,
+          soldUnits: proj.soldUnits || 0,
+          startDate: proj.createdAt || new Date().toISOString(),
+          completionDate: proj.deliveryDate,
+          minPrice: proj.minPrice || 0,
+          maxPrice: proj.maxPrice || 0,
+          developer: {
+            id: proj.developer?.id || proj.developerId || 0,
+            name: proj.developer?.fullName || "უცნობი დეველოპერი",
+            email: proj.developer?.email || ""
+          },
+          developerId: proj.developerId || proj.developer?.id || 0,
+          createdAt: proj.createdAt || new Date().toISOString(),
+          images: proj.images || []
+        }));
         
-        // Handle admin API response format
-        let projectsData = [];
-        
-        if (result.success && result.data && result.data.projects) {
-          projectsData = result.data.projects;
-        } else if (result.success && result.data && Array.isArray(result.data)) {
-          projectsData = result.data;
-        } else if (result.projects) {
-          projectsData = result.projects;
-        } else if (Array.isArray(result)) {
-          projectsData = result;
-        }
-        
-        console.log('Extracted projects data:', projectsData);
-        console.log('Projects data type:', typeof projectsData, 'Is array:', Array.isArray(projectsData));
-        
-        if (Array.isArray(projectsData) && projectsData.length > 0) {
-          console.log('First project sample:', projectsData[0]);
-          
-          // Transform API data to match our interface
-          const transformedProjects = projectsData.map((proj: any) => ({
-            id: proj.id,
-            title: proj.projectName || proj.title || `პროექტი #${proj.id}`,
-            description: proj.description || "",
-            location: proj.fullAddress || proj.location || proj.address || `${proj.street || ""} ${proj.city?.nameGeorgian || proj.city || ""}`.trim(),
-            status: proj.deliveryStatus || proj.status || "active",
-            totalUnits: 0,
-            soldUnits: 0,
-            startDate: proj.createdAt || new Date().toISOString(),
-            completionDate: proj.deliveryDate,
-            minPrice: 0,
-            maxPrice: 0,
-            developer: {
-              id: proj.developer?.id || proj.developerId || 0,
-              name: proj.developer?.fullName || "უცნობი დეველოპერი",
-              email: proj.developer?.email || ""
-            },
-            developerId: proj.developerId || proj.developer?.id || 0,
-            createdAt: proj.createdAt || new Date().toISOString(),
-            images: proj.images || []
-          }));
-          
-          console.log('Transformed projects:', transformedProjects);
-          setProjects(transformedProjects);
-        } else {
-          console.log('No projects found or invalid data format');
-          setProjects([]);
-          
-          // Show fallback mock data for testing
-          const mockProjects: Project[] = [
-            {
-              id: 999,
-              title: "ტესტ პროექტი (API არ მუშაობს)",
-              description: "API-დან ვერ ჩაიტვირთა რეალური პროექტები",
-              location: "თბილისი",
-              status: "active",
-              totalUnits: 0,
-              soldUnits: 0,
-              startDate: new Date().toISOString(),
-              completionDate: undefined,
-              minPrice: 0,
-              maxPrice: 0,
-              developer: {
-                id: 1,
-                name: "ტესტ დეველოპერი",
-                email: "test@example.com"
-              },
-              developerId: 1,
-              createdAt: new Date().toISOString(),
-              images: []
-            }
-          ];
-          setProjects(mockProjects);
-        }
+        setProjects(transformedProjects);
       } else {
-        const errorText = await response.text();
-        console.error('API Error - Status:', response.status);
-        console.error('API Error - Body:', errorText);
-        
-        toast({
-          title: "API შეცდომა",
-          description: `სტატუსი: ${response.status}. შეამოწმეთ კონსოლი დეტალებისთვის.`,
-          variant: "destructive",
-        });
-        
-        // Show mock data when API fails
-        const mockProjects: Project[] = [
-          {
-            id: 998,
-            title: "მოკი პროექტი (API შეცდომა)",
-            description: `API დააბრუნა შეცდომა: ${response.status}`,
-            location: "თბილისი",
-            status: "inactive",
-            totalUnits: 0,
-            soldUnits: 0,
-            startDate: new Date().toISOString(),
-            completionDate: undefined,
-            minPrice: 0,
-            maxPrice: 0,
-            developer: {
-              id: 1,
-              name: "მოკი დეველოპერი",
-              email: "mock@example.com"
-            },
-            developerId: 1,
-            createdAt: new Date().toISOString(),
-            images: []
-          }
-        ];
-        setProjects(mockProjects);
+        console.log('No projects found or invalid data format');
+        setProjects([]);
       }
     } catch (error: any) {
-      console.error('Network/Parse Error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      });
+      console.group('❌ Projects - Error Details');
+      console.error('Raw error object:', error);
+      console.error('Error type:', error?.constructor?.name);
+      console.error('HTTP status:', error?.response?.status);
+      console.error('Response data:', error?.response?.data);
+      console.error('Network error:', error?.code);
+      console.error('Request URL:', error?.config?.url);
+      console.error('Request method:', error?.config?.method);
+      console.groupEnd();
+      
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "პროექტების ჩატვირთვისას მოხდა შეცდომა";
       
       toast({
-        title: "ქსელის შეცდომა",
-        description: `${error.message}. შეამოწმეთ კონსოლი დეტალებისთვის.`,
+        title: "შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
       
-      // Show mock data on network error
-      const mockProjects: Project[] = [
-        {
-          id: 997,
-          title: "მოკი პროექტი (ქსელის შეცდომა)",
-          description: `ქსელის შეცდომა: ${error.message}`,
-          location: "თბილისი",
-          status: "inactive",
-          totalUnits: 0,
-          soldUnits: 0,
-          startDate: new Date().toISOString(),
-          completionDate: undefined,
-          minPrice: 0,
-          maxPrice: 0,
-          developer: {
-            id: 1,
-            name: "მოკი დეველოპერი",
-            email: "mock@example.com"
-          },
-          developerId: 1,
-          createdAt: new Date().toISOString(),
-          images: []
-        }
-      ];
-      setProjects(mockProjects);
+      // Set empty array on error
+      setProjects([]);
     } finally {
       setIsLoading(false);
     }
@@ -218,29 +130,24 @@ const AdminProjects = () => {
 
   const handleDelete = async (projectId: number) => {
     try {
-      const response = await fetch(`/api/admin/projects/${projectId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      console.log('🗑️ Deleting project:', projectId);
+      await adminApi.deleteProject(projectId.toString());
       
-      if (response.ok) {
-        // Remove from local state on successful delete
-        setProjects(projects.filter(p => p.id !== projectId));
-        
-        toast({
-          title: "წარმატება",
-          description: "პროექტი წარმატებით წაიშალა",
-        });
-      } else {
-        throw new Error('Delete failed');
-      }
+      // Remove from local state on successful delete
+      setProjects(projects.filter(p => p.id !== projectId));
+      
+      toast({
+        title: "წარმატება",
+        description: "პროექტი წარმატებით წაიშალა",
+      });
     } catch (error: any) {
-      console.error('Error deleting project:', error);
+      console.error('❌ Error deleting project:', error);
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "პროექტის წაშლისას მოხდა შეცდომა";
       toast({
         title: "შეცდომა",
-        description: "პროექტის წაშლისას მოხდა შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
     }

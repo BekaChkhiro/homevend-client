@@ -5,6 +5,7 @@ import { Plus, Filter, Loader2, Eye, Edit, Trash2, MapPin, Calendar, User, Phone
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
+import { agencyApi } from '@/lib/api';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Agency {
@@ -42,24 +43,41 @@ const AdminAgencies = () => {
   const fetchAgencies = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/admin/agencies', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
+      
+      console.group('🏪 Agencies - Fetching Data');
+      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
+      console.log('🔐 Auth token available:', !!localStorage.getItem('token'));
+      console.log('⏰ Request timestamp:', new Date().toISOString());
+      
+      const data = await agencyApi.getAgencies();
+      
+      console.log('✅ Agencies API Response:', {
+        success: true,
+        dataReceived: !!data,
+        agenciesCount: data?.agencies?.length || 0,
+        responseStructure: Object.keys(data || {}),
+        sampleAgency: data?.agencies?.[0] || null
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch agencies: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setAgencies(data.data || []);
+      console.groupEnd();
+      
+      setAgencies(data.agencies || []);
     } catch (error: any) {
-      console.error('Error fetching agencies:', error);
+      console.group('❌ Agencies - Error Details');
+      console.error('Raw error object:', error);
+      console.error('Error type:', error?.constructor?.name);
+      console.error('HTTP status:', error?.response?.status);
+      console.error('Response data:', error?.response?.data);
+      console.error('Network error:', error?.code);
+      console.error('Request URL:', error?.config?.url);
+      console.error('Request method:', error?.config?.method);
+      console.groupEnd();
+      
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "სააგენტოების ჩატვირთვისას მოხდა შეცდომა";
       toast({
         title: "შეცდომა",
-        description: "სააგენტოების ჩატვირთვისას მოხდა შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -69,7 +87,9 @@ const AdminAgencies = () => {
 
   const handleDelete = async (agencyId: number) => {
     try {
-      const response = await fetch(`/api/admin/agencies/${agencyId}`, {
+      // Note: This endpoint would need to be implemented in adminApi
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const response = await fetch(`${API_BASE_URL}/admin/agencies/${agencyId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -78,7 +98,8 @@ const AdminAgencies = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to delete agency: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `სახეები: HTTP ${response.status}`);
       }
 
       setAgencies(agencies.filter(a => a.id !== agencyId));
@@ -88,9 +109,12 @@ const AdminAgencies = () => {
         description: "სააგენტო წარმატებით წაიშალა",
       });
     } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "სააგენტოს წაშლისას მოხდა შეცდომა";
       toast({
         title: "შეცდომა",
-        description: "სააგენტოს წაშლისას მოხდა შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -103,7 +127,8 @@ const AdminAgencies = () => {
         isVerified: newStatus === 'active' ? true : undefined
       };
 
-      const response = await fetch(`/api/admin/agencies/${agencyId}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const response = await fetch(`${API_BASE_URL}/admin/agencies/${agencyId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -113,7 +138,8 @@ const AdminAgencies = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to update agency status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `სტატუსი: HTTP ${response.status}`);
       }
 
       // Update local state
@@ -128,9 +154,12 @@ const AdminAgencies = () => {
         description: `სააგენტოს სტატუსი შეიცვალა: ${getStatusText(newStatus)}`,
       });
     } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "სააგენტოს სტატუსის შეცვლისას მოხდა შეცდომა";
       toast({
         title: "შეცდომა",
-        description: "სააგენტოს სტატუსის შეცვლისას მოხდა შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
     }

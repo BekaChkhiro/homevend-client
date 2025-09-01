@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Save, DollarSign, Settings, CheckCircle, XCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { adminApi } from '@/lib/api';
 
 interface ServicePricing {
   id: number;
@@ -196,24 +197,38 @@ const AdminServicePricing = () => {
     try {
       setIsLoading(true);
       
-      const response = await fetch('/api/admin/service-pricing', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      console.group('💰 Service Pricing - Fetching Data');
+      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
+      console.log('🔐 Auth available:', !!localStorage.getItem('token'));
+      console.log('⏰ Request timestamp:', new Date().toISOString());
       
-      if (response.ok) {
-        const result = await response.json();
-        setServices(result.data || []);
-      } else {
-        throw new Error('Failed to fetch service pricing');
-      }
+      const data = await adminApi.getServicePricing();
+      
+      console.log('✅ Service Pricing API Response:', {
+        success: true,
+        dataReceived: !!data,
+        servicesCount: Array.isArray(data) ? data.length : 0,
+        vipServices: Array.isArray(data) ? data.filter(s => s.category === 'vip').length : 0,
+        additionalServices: Array.isArray(data) ? data.filter(s => s.category === 'service').length : 0,
+        sampleService: Array.isArray(data) ? data[0] : null
+      });
+      console.groupEnd();
+      
+      setServices(data || []);
     } catch (error: any) {
-      console.error('Error fetching service pricing:', error);
+      console.group('❌ Service Pricing - Error Details');
+      console.error('Full error object:', error);
+      console.error('Error response:', error?.response);
+      console.error('Status code:', error?.response?.status);
+      console.error('Error data:', error?.response?.data);
+      console.groupEnd();
+      
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "ფასების ჩატვირთვისას მოხდა შეცდომა";
       toast({
         title: "შეცდომა",
-        description: "ფასების ჩატვირთვისას მოხდა შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -243,20 +258,8 @@ const AdminServicePricing = () => {
       // Update all changed prices in parallel
       const updatePromises = Object.entries(priceChanges).map(async ([serviceId, newPriceStr]) => {
         const newPrice = parseFloat(newPriceStr) || 0;
-        const response = await fetch(`/api/admin/service-pricing/${serviceId}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ pricePerDay: newPrice })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to update service ${serviceId}`);
-        }
-        
-        return { serviceId: parseInt(serviceId), newPrice, data: await response.json() };
+        const data = await adminApi.updateServicePricing(serviceId, { pricePerDay: newPrice });
+        return { serviceId: parseInt(serviceId), newPrice, data };
       });
       
       const results = await Promise.all(updatePromises);
@@ -265,7 +268,7 @@ const AdminServicePricing = () => {
       setServices(prev => 
         prev.map(service => {
           const result = results.find(r => r.serviceId === service.id);
-          return result ? { ...service, pricePerDay: result.data.data.pricePerDay } : service;
+          return result ? { ...service, pricePerDay: result.data.pricePerDay || result.newPrice } : service;
         })
       );
       
@@ -278,9 +281,12 @@ const AdminServicePricing = () => {
       });
     } catch (error: any) {
       console.error('Error updating service pricing:', error);
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "ფასების განახლებისას მოხდა შეცდომა";
       toast({
         title: "შეცდომა",
-        description: "ფასების განახლებისას მოხდა შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
