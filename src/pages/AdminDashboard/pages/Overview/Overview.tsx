@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { adminApi } from '@/lib/api';
 
 interface DashboardStats {
   totalUsers: number;
@@ -57,31 +58,52 @@ const Overview = () => {
   const fetchDashboardData = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/admin/dashboard', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
+      
+      // Debug logging for environment and API configuration
+      console.group('🏢 Admin Dashboard - Fetching Data');
+      console.log('🌍 Environment:', {
+        NODE_ENV: import.meta.env.MODE,
+        API_URL: import.meta.env.VITE_API_URL,
+        isDevelopment: import.meta.env.DEV,
+        isProduction: import.meta.env.PROD
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch dashboard data: ${response.status}`);
-      }
-
-      const result = await response.json();
+      console.log('📍 Current location:', window.location.href);
+      console.log('⏰ Request timestamp:', new Date().toISOString());
       
-      console.log('Dashboard data received:', result.data);
-      console.log('Recent users count:', result.data.recentUsers?.length);
-      console.log('Recent properties count:', result.data.recentProperties?.length);
+      const result = await adminApi.getDashboardStats();
       
-      setStats(result.data.stats);
-      setRecentListings(result.data.recentProperties || []);
-      setRecentUsers(result.data.recentUsers || []);
+      console.log('✅ Dashboard API Response:', {
+        success: true,
+        dataReceived: !!result,
+        stats: result?.stats,
+        recentUsersCount: result?.recentUsers?.length || 0,
+        recentPropertiesCount: result?.recentProperties?.length || 0,
+        responseStructure: Object.keys(result || {})
+      });
+      console.groupEnd();
+      
+      setStats(result.stats);
+      setRecentListings(result.recentProperties || []);
+      setRecentUsers(result.recentUsers || []);
     } catch (error: any) {
-      console.error('Error fetching dashboard data:', error);
+      console.group('❌ Admin Dashboard - Error Details');
+      console.error('Raw error object:', error);
+      console.error('Error name:', error?.name);
+      console.error('Error message:', error?.message);
+      console.error('Error stack:', error?.stack);
+      console.error('HTTP status:', error?.response?.status);
+      console.error('Response data:', error?.response?.data);
+      console.error('Response headers:', error?.response?.headers);
+      console.error('Request config:', error?.config);
+      console.groupEnd();
+      
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "მონაცემების ჩატვირთვისას მოხდა შეცდომა";
+      
       toast({
         title: "შეცდომა",
-        description: "მონაცემების ჩატვირთვისას მოხდა შეცდომა",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

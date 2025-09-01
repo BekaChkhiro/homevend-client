@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Plus, Edit, Trash2, MapPin, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { adminApi } from "@/lib/api";
 
 interface District {
   id: number;
@@ -48,23 +49,37 @@ const Districts = () => {
 
   const fetchDistricts = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/districts', {
-        headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
-        }
+      console.group('🏙️ Districts - Fetching Data');
+      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
+      console.log('🔐 Auth token:', localStorage.getItem('token')?.substring(0, 20) + '...');
+      console.log('⏰ Request timestamp:', new Date().toISOString());
+      
+      const data = await adminApi.getDistricts();
+      
+      console.log('✅ Districts API Response:', {
+        success: true,
+        dataReceived: !!data,
+        districtsCount: Array.isArray(data) ? data.length : 0,
+        sampleDistrict: Array.isArray(data) ? data[0] : null,
+        dataType: typeof data
       });
-      if (response.ok) {
-        const data = await response.json();
-        setDistricts(data.data || []);
-      } else {
-        throw new Error('Failed to fetch districts');
-      }
-    } catch (error) {
-      console.error('Error fetching districts:', error);
+      console.groupEnd();
+      
+      setDistricts(data || []);
+    } catch (error: any) {
+      console.group('❌ Districts - Error Details');
+      console.error('Raw error:', error);
+      console.error('Error response:', error?.response);
+      console.error('Network error code:', error?.code);
+      console.error('Request that failed:', error?.config);
+      console.groupEnd();
+      
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "რაიონების ჩატვირთვა ვერ მოხერხდა";
       toast({
         title: "შეცდომა",
-        description: "რაიონების ჩატვირთვა ვერ მოხერხდა",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -77,35 +92,26 @@ const Districts = () => {
     setSubmitting(true);
 
     try {
-      const method = editingDistrict ? 'PUT' : 'POST';
-      const url = editingDistrict ? `http://localhost:5000/api/districts/${editingDistrict.id}` : 'http://localhost:5000/api/districts';
-      
-      const token = localStorage.getItem('token');
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token ? `Bearer ${token}` : '',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        toast({
-          title: "წარმატება",
-          description: editingDistrict ? "რაიონი წარმატებით განახლდა" : "რაიონი წარმატებით შეიქმნა"
-        });
-        resetForm();
-        fetchDistricts();
+      if (editingDistrict) {
+        await adminApi.updateDistrict(editingDistrict.id.toString(), formData);
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Unknown error');
+        await adminApi.createDistrict(formData);
       }
-    } catch (error) {
+
+      toast({
+        title: "წარმატება",
+        description: editingDistrict ? "რაიონი წარმატებით განახლდა" : "რაიონი წარმატებით შეიქმნა"
+      });
+      resetForm();
+      fetchDistricts();
+    } catch (error: any) {
       console.error('Error saving district:', error);
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "რაიონის შენახვა ვერ მოხერხდა";
       toast({
         title: "შეცდომა",
-        description: error instanceof Error ? error.message : "რაიონის შენახვა ვერ მოხერხდა",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -115,29 +121,20 @@ const Districts = () => {
 
   const handleDelete = async (district: District) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/districts/${district.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
-        }
+      await adminApi.deleteDistrict(district.id.toString());
+      toast({
+        title: "წარმატება",
+        description: "რაიონი წარმატებით წაიშალა"
       });
-
-      if (response.ok) {
-        toast({
-          title: "წარმატება",
-          description: "რაიონი წარმატებით წაიშალა"
-        });
-        fetchDistricts();
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Unknown error');
-      }
-    } catch (error) {
+      fetchDistricts();
+    } catch (error: any) {
       console.error('Error deleting district:', error);
+      const errorMessage = error?.response?.data?.message || 
+                          error?.message || 
+                          "რაიონის წაშლა ვერ მოხერხდა";
       toast({
         title: "შეცდომა",
-        description: error instanceof Error ? error.message : "რაიონის წაშლა ვერ მოხერხდა",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
