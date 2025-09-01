@@ -171,13 +171,16 @@ export const EditProperty = () => {
         const property = await propertyApi.getPropertyByIdForEdit(id);
         
         // Populate form with property data
+        // Store district value to set it after city is set
+        const districtValue = property.areaData?.id?.toString() || "";
+        
         form.reset({
           title: property.title || "",
           propertyType: property.propertyType || "",
           dealType: property.dealType || "",
           dailyRentalSubcategory: property.dailyRentalSubcategory || "",
           city: property.cityData?.code || property.city || "",
-          district: property.areaData?.id?.toString() || "",
+          district: "", // Set empty initially
           street: property.street || "",
           streetNumber: property.streetNumber || "",
           cadastralCode: property.cadastralCode || "",
@@ -225,6 +228,18 @@ export const EditProperty = () => {
           descriptionRussian: property.descriptionRussian || "",
           photos: []
         });
+        
+        // Set district value after form is reset and when areas are loaded
+        // We need to wait a bit for the city to trigger area loading
+        if (districtValue && property.cityData?.code) {
+          setTimeout(() => {
+            form.setValue("district", districtValue, { 
+              shouldValidate: false, 
+              shouldDirty: false,
+              shouldTouch: false 
+            });
+          }, 1000); // Wait for areas to load
+        }
       } catch (error: any) {
         console.error("Property loading error:", error);
         toast({

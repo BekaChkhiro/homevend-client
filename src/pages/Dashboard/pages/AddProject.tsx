@@ -139,6 +139,7 @@ export const AddProject: React.FC = () => {
     hasDoorman: false,
     fireSystem: false,
     mainDoorLock: false,
+    maintenance: false,
   });
 
   const [userProperties, setUserProperties] = useState<UserProperty[]>([]);

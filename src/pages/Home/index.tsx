@@ -132,7 +132,10 @@ const Home = () => {
             featured: prop.viewCount > 10 || Math.random() > 0.7,
             // VIP status fields
             vipStatus: prop.vipStatus || 'none',
-            vipExpiresAt: prop.vipExpiresAt
+            vipExpiresAt: prop.vipExpiresAt,
+            // Color separation service fields
+            colorSeparationEnabled: prop.colorSeparationEnabled || false,
+            colorSeparationExpiresAt: prop.colorSeparationExpiresAt
           };
         });
         
