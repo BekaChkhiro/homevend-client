@@ -304,7 +304,7 @@ export const AddProperty = () => {
       
       // Handle VIP purchase if not free
       if (selectedVipType !== 'free') {
-        const daysNum = parseInt(selectedDays);
+        const daysNum = selectedVipDays;
         await vipApi.purchaseVipStatus(result.id, selectedVipType, daysNum);
         
         toast({

@@ -62,7 +62,6 @@ const Users = () => {
 
   const handleDeleteUser = async (userId: number) => {
     try {
-      console.log('👤 Deleting user:', userId);
       await adminApi.deleteUser(userId.toString());
       
       setUsers(users.filter(u => u.id !== userId));
@@ -72,7 +71,6 @@ const Users = () => {
         description: "მომხმარებელი წარმატებით წაიშალა",
       });
     } catch (error: any) {
-      console.error('❌ Error deleting user:', error);
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
                           "მომხმარებლის წაშლისას მოხდა შეცდომა";
