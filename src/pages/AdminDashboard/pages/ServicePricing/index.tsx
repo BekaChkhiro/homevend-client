@@ -196,33 +196,9 @@ const AdminServicePricing = () => {
   const fetchServicePricing = async () => {
     try {
       setIsLoading(true);
-      
-      console.group('💰 Service Pricing - Fetching Data');
-      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
-      console.log('🔐 Auth available:', !!localStorage.getItem('token'));
-      console.log('⏰ Request timestamp:', new Date().toISOString());
-      
       const data = await adminApi.getServicePricing();
-      
-      console.log('✅ Service Pricing API Response:', {
-        success: true,
-        dataReceived: !!data,
-        servicesCount: Array.isArray(data) ? data.length : 0,
-        vipServices: Array.isArray(data) ? data.filter(s => s.category === 'vip').length : 0,
-        additionalServices: Array.isArray(data) ? data.filter(s => s.category === 'service').length : 0,
-        sampleService: Array.isArray(data) ? data[0] : null
-      });
-      console.groupEnd();
-      
       setServices(data || []);
     } catch (error: any) {
-      console.group('❌ Service Pricing - Error Details');
-      console.error('Full error object:', error);
-      console.error('Error response:', error?.response);
-      console.error('Status code:', error?.response?.status);
-      console.error('Error data:', error?.response?.data);
-      console.groupEnd();
-      
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
                           "ფასების ჩატვირთვისას მოხდა შეცდომა";
