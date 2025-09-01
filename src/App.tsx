@@ -9,6 +9,10 @@ import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import ResendVerification from "./pages/ResendVerification";
 import AboutUs from "./pages/AboutUs";
 import Contact from "./pages/Contact";
 import Advertising from "./pages/Advertising";
@@ -91,6 +95,10 @@ const App = () => (
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/resend-verification" element={<ResendVerification />} />
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<MyProperties />} />
             <Route path="test" element={<TestComponent />} />

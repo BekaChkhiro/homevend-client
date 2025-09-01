@@ -152,9 +152,9 @@ const Register = () => {
       if (success) {
         toast({
           title: "რეგისტრაცია წარმატებით დასრულდა!",
-          description: "მოგესალმებით HOMEVEND.ge-ზე!",
+          description: "შეამოწმეთ თქვენი ელ.ფოსტა ანგარიშის გასააქტიურებლად",
         });
-        navigate('/dashboard');
+        navigate('/login?message=check-email');
       }
     } catch (error) {
       console.error('Registration error:', error);
