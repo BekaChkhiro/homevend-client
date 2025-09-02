@@ -55,6 +55,10 @@ jobs:
     if: success()
     
     steps:
+      - name: Get commit message
+        id: commit
+        run: echo "message=$(git log --format=%B -n 1 HEAD | head -1)" >> $GITHUB_OUTPUT
+        
       - name: Send Success Notification
         uses: slackapi/slack-github-action@v1.24.0
         with:
@@ -94,7 +98,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*📝 Commit Message:*\n```${{ github.event.head_commit.message }}```"
+                    "text": "*📝 Commit Message:*\n```${{ steps.commit.outputs.message }}```"
                   }
                 },
                 {
@@ -130,6 +134,10 @@ jobs:
     if: failure()
     
     steps:
+      - name: Get commit message
+        id: commit
+        run: echo "message=$(git log --format=%B -n 1 HEAD | head -1)" >> $GITHUB_OUTPUT
+        
       - name: Send Failure Notification
         uses: slackapi/slack-github-action@v1.24.0
         with:
@@ -169,7 +177,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*📝 Commit Message:*\n```${{ github.event.head_commit.message }}```"
+                    "text": "*📝 Commit Message:*\n```${{ steps.commit.outputs.message }}```"
                   }
                 },
                 {
