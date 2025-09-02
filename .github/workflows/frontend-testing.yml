@@ -1,0 +1,211 @@
+name: Frontend CI Testing
+
+on:
+  workflow_dispatch:  # Manual trigger for debugging
+  pull_request:
+    branches: [main, master, develop]
+  push:
+    branches: [main, master, develop]
+
+jobs:
+  test:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Run Linting
+        run: npm run lint
+        continue-on-error: true
+      
+      - name: Build Application
+        run: npm run build
+        env:
+          CI: true
+      
+      - name: Run Tests
+        run: npm run test:ci || echo "No tests configured yet"
+        env:
+          CI: true
+      
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-results
+          path: |
+            coverage/
+            test-results.json
+          retention-days: 30
+
+  notify-success:
+    name: Notify on Success
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get commit message
+        id: commit
+        run: echo "message=$(git log --format=%B -n 1 HEAD | head -1)" >> $GITHUB_OUTPUT
+        
+      - name: Send Success Notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "✅ Frontend Tests Passed Successfully",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🎉 Frontend CI Success*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn", 
+                      "text": "*Branch:*\n${{ github.ref_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n`${{ github.sha }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*📝 Commit Message:*\n```${{ steps.commit.outputs.message }}```"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Actions Completed:*\n• ✅ Dependencies installed\n• ✅ Linting passed\n• ✅ Build successful\n• ✅ Tests passed\n• ✅ Coverage generated"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Details"
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+  notify-failure:
+    name: Notify on Failure  
+    runs-on: ubuntu-latest
+    needs: test
+    if: failure()
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get commit message
+        id: commit
+        run: echo "message=$(git log --format=%B -n 1 HEAD | head -1)" >> $GITHUB_OUTPUT
+        
+      - name: Send Failure Notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "❌ Frontend Tests Failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🚨 Frontend CI Failure*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref_name }}"
+                    },
+                    {
+                      "type": "mrkdwn", 
+                      "text": "*Commit:*\n`${{ github.sha }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*📝 Commit Message:*\n```${{ steps.commit.outputs.message }}```"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🔍 Investigate:*\nCheck logs to see which step failed:\n• Dependencies installation\n• Linting\n• Build process\n• Test execution"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Error Logs"
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true

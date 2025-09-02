@@ -36,17 +36,6 @@ const retryWithExponentialBackoff = async <T>(
   throw new Error(`Failed after ${maxRetries} retries`);
 };
 
-// Debug logging for API configuration
-console.group('🔧 API Client Configuration');
-console.log('📍 Base URL:', API_BASE_URL);
-console.log('🌍 Environment:', {
-  mode: import.meta.env.MODE,
-  dev: import.meta.env.DEV,
-  prod: import.meta.env.PROD,
-  viteApiUrl: import.meta.env.VITE_API_URL
-});
-console.log('🕒 Initialization time:', new Date().toISOString());
-console.groupEnd();
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -63,66 +52,24 @@ const publicApiClient = axios.create({
   },
 });
 
-// Request interceptor to add auth token and logging
+// Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Debug logging for outgoing requests
-    console.group(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
-    console.log('📍 Full URL:', `${config.baseURL}${config.url}`);
-    console.log('🔐 Has Auth Token:', !!token);
-    console.log('📋 Headers:', config.headers);
-    console.log('📦 Payload:', config.data);
-    console.log('🔍 Params:', config.params);
-    console.log('⏰ Timestamp:', new Date().toISOString());
-    console.groupEnd();
-    
     return config;
   },
   (error) => {
-    console.error('❌ Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor to handle token refresh and logging
+// Response interceptor to handle token refresh
 apiClient.interceptors.response.use(
-  (response) => {
-    // Log successful responses
-    console.group(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url}`);
-    console.log('📊 Status:', response.status, response.statusText);
-    console.log('📋 Headers:', response.headers);
-    console.log('📦 Data:', response.data);
-    console.log('⏱️ Duration:', response.config.metadata?.requestTimestamp ? 
-      `${Date.now() - response.config.metadata.requestTimestamp}ms` : 'N/A');
-    console.groupEnd();
-    
-    return response;
-  },
+  (response) => response,
   async (error) => {
-    // Log error responses
-    console.group(`❌ API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`);
-    console.error('🔴 Error type:', error.constructor.name);
-    console.error('📊 Status:', error.response?.status);
-    console.error('💬 Status text:', error.response?.statusText);
-    console.error('📋 Response headers:', error.response?.headers);
-    console.error('📦 Response data:', error.response?.data);
-    console.error('🌐 Network error:', error.code);
-    console.error('📡 Request config:', error.config);
-    console.error('🔍 Full error:', error);
-    
-    // Check if response is HTML instead of JSON
-    if (error.response?.data && typeof error.response.data === 'string' && error.response.data.includes('<!DOCTYPE')) {
-      console.error('🚨 CRITICAL: Received HTML response instead of JSON - likely a 404 or routing issue');
-      console.error('🔗 This usually means the API endpoint doesn\'t exist or there\'s a server routing problem');
-    }
-    
-    console.groupEnd();
-    
     const originalRequest = error.config;
     
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -133,7 +80,6 @@ apiClient.interceptors.response.use(
       
       if (refreshToken && userId) {
         try {
-          console.log('🔄 Attempting token refresh...');
           const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
             userId,
             refreshToken
@@ -143,10 +89,8 @@ apiClient.interceptors.response.use(
           localStorage.setItem('token', accessToken);
           
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          console.log('✅ Token refreshed successfully, retrying request');
           return apiClient(originalRequest);
         } catch (refreshError) {
-          console.error('❌ Token refresh failed:', refreshError);
           // Refresh failed, redirect to login
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');

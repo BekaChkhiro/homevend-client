@@ -43,35 +43,9 @@ const AdminAgencies = () => {
   const fetchAgencies = async () => {
     try {
       setIsLoading(true);
-      
-      console.group('🏪 Agencies - Fetching Data');
-      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
-      console.log('🔐 Auth token available:', !!localStorage.getItem('token'));
-      console.log('⏰ Request timestamp:', new Date().toISOString());
-      
       const data = await agencyApi.getAgencies();
-      
-      console.log('✅ Agencies API Response:', {
-        success: true,
-        dataReceived: !!data,
-        agenciesCount: data?.agencies?.length || 0,
-        responseStructure: Object.keys(data || {}),
-        sampleAgency: data?.agencies?.[0] || null
-      });
-      console.groupEnd();
-      
       setAgencies(data.agencies || []);
     } catch (error: any) {
-      console.group('❌ Agencies - Error Details');
-      console.error('Raw error object:', error);
-      console.error('Error type:', error?.constructor?.name);
-      console.error('HTTP status:', error?.response?.status);
-      console.error('Response data:', error?.response?.data);
-      console.error('Network error:', error?.code);
-      console.error('Request URL:', error?.config?.url);
-      console.error('Request method:', error?.config?.method);
-      console.groupEnd();
-      
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
                           "სააგენტოების ჩატვირთვისას მოხდა შეცდომა";

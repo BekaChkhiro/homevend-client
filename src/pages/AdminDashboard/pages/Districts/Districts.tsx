@@ -49,31 +49,9 @@ const Districts = () => {
 
   const fetchDistricts = async () => {
     try {
-      console.group('🏙️ Districts - Fetching Data');
-      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
-      console.log('🔐 Auth token:', localStorage.getItem('token')?.substring(0, 20) + '...');
-      console.log('⏰ Request timestamp:', new Date().toISOString());
-      
       const data = await adminApi.getDistricts();
-      
-      console.log('✅ Districts API Response:', {
-        success: true,
-        dataReceived: !!data,
-        districtsCount: Array.isArray(data) ? data.length : 0,
-        sampleDistrict: Array.isArray(data) ? data[0] : null,
-        dataType: typeof data
-      });
-      console.groupEnd();
-      
       setDistricts(data || []);
     } catch (error: any) {
-      console.group('❌ Districts - Error Details');
-      console.error('Raw error:', error);
-      console.error('Error response:', error?.response);
-      console.error('Network error code:', error?.code);
-      console.error('Request that failed:', error?.config);
-      console.groupEnd();
-      
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
                           "რაიონების ჩატვირთვა ვერ მოხერხდა";

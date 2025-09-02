@@ -61,7 +61,6 @@ import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { MobileBottomNav } from "./components/MobileBottomNav";
-import DebugInfo from "./components/DebugInfo";
 
 const queryClient = new QueryClient();
 
@@ -70,7 +69,6 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <FavoritesProvider>
-        <DebugInfo />
         <Toaster />
         <Sonner />
         <BrowserRouter>

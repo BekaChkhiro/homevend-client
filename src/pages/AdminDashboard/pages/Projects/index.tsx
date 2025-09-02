@@ -43,22 +43,7 @@ const AdminProjects = () => {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      
-      console.group('🏗️ Projects - Fetching Data');
-      console.log('🌍 Environment:', import.meta.env.VITE_API_URL);
-      console.log('🔐 Auth token available:', !!localStorage.getItem('token'));
-      console.log('⏰ Request timestamp:', new Date().toISOString());
-      
       const result = await adminApi.getProjects();
-      
-      console.log('✅ Projects API Response:', {
-        success: true,
-        dataReceived: !!result,
-        projectsCount: Array.isArray(result) ? result.length : 0,
-        responseStructure: Object.keys(result || {}),
-        sampleProject: Array.isArray(result) ? result[0] : null
-      });
-      console.groupEnd();
       
       // Handle different response formats
       let projectsData = [];
@@ -97,20 +82,9 @@ const AdminProjects = () => {
         
         setProjects(transformedProjects);
       } else {
-        console.log('No projects found or invalid data format');
         setProjects([]);
       }
     } catch (error: any) {
-      console.group('❌ Projects - Error Details');
-      console.error('Raw error object:', error);
-      console.error('Error type:', error?.constructor?.name);
-      console.error('HTTP status:', error?.response?.status);
-      console.error('Response data:', error?.response?.data);
-      console.error('Network error:', error?.code);
-      console.error('Request URL:', error?.config?.url);
-      console.error('Request method:', error?.config?.method);
-      console.groupEnd();
-      
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
                           "პროექტების ჩატვირთვისას მოხდა შეცდომა";
@@ -121,7 +95,6 @@ const AdminProjects = () => {
         variant: "destructive",
       });
       
-      // Set empty array on error
       setProjects([]);
     } finally {
       setIsLoading(false);
@@ -130,7 +103,6 @@ const AdminProjects = () => {
 
   const handleDelete = async (projectId: number) => {
     try {
-      console.log('🗑️ Deleting project:', projectId);
       await adminApi.deleteProject(projectId.toString());
       
       // Remove from local state on successful delete
@@ -141,7 +113,6 @@ const AdminProjects = () => {
         description: "პროექტი წარმატებით წაიშალა",
       });
     } catch (error: any) {
-      console.error('❌ Error deleting project:', error);
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
                           "პროექტის წაშლისას მოხდა შეცდომა";
