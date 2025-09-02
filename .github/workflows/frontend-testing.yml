@@ -55,6 +55,8 @@ jobs:
     if: success()
     
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Get commit message
         id: commit
         run: echo "message=$(git log --format=%B -n 1 HEAD | head -1)" >> $GITHUB_OUTPUT
@@ -134,6 +136,8 @@ jobs:
     if: failure()
     
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Get commit message
         id: commit
         run: echo "message=$(git log --format=%B -n 1 HEAD | head -1)" >> $GITHUB_OUTPUT
