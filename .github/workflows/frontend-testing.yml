@@ -82,13 +82,20 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit:*\n${{ github.sha }}"
+                      "text": "*Commit:*\n`${{ github.sha }}`"
                     },
                     {
                       "type": "mrkdwn",
                       "text": "*Author:*\n${{ github.actor }}"
                     }
                   ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*📝 Commit Message:*\n```${{ github.event.head_commit.message }}```"
+                  }
                 },
                 {
                   "type": "section",
@@ -150,13 +157,20 @@ jobs:
                     },
                     {
                       "type": "mrkdwn", 
-                      "text": "*Commit:*\n${{ github.sha }}"
+                      "text": "*Commit:*\n`${{ github.sha }}`"
                     },
                     {
                       "type": "mrkdwn",
                       "text": "*Author:*\n${{ github.actor }}"
                     }
                   ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*📝 Commit Message:*\n```${{ github.event.head_commit.message }}```"
+                  }
                 },
                 {
                   "type": "section",
