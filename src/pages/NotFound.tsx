@@ -9,6 +9,10 @@ const NotFound = () => {
       "404 Error: User attempted to access non-existent route:",
       location.pathname
     );
+    console.log("All available routes should include:", [
+      "/", "/login", "/register", "/forgot-password", "/reset-password/:token", 
+      "/verify-email", "/resend-verification"
+    ]);
   }, [location.pathname]);
 
   return (
