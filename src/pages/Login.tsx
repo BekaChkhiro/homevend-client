@@ -1,6 +1,6 @@
 import React from "react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,12 +13,21 @@ const Login = () => {
   const { toast } = useToast();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const [showEmailVerificationAlert, setShowEmailVerificationAlert] = useState(false);
+
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message === 'check-email') {
+      setShowEmailVerificationAlert(true);
+    }
+  }, [searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -65,9 +74,30 @@ const Login = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {showEmailVerificationAlert && (
+                <Alert className="mb-4 border-green-200 bg-green-50">
+                  <AlertDescription className="text-green-800">
+                    რეგისტრაცია წარმატებით დასრულდა! შეამოწმეთ თქვენი ელ.ფოსტა და დააჭირეთ 
+                    ვერიფიკაციის ბმულს ანგარიშის გასააქტიურებლად.
+                    <Link to="/resend-verification" className="ml-2 underline">
+                      ხელახლა გაგზავნა
+                    </Link>
+                  </AlertDescription>
+                </Alert>
+              )}
+              
               {error && (
                 <Alert variant="destructive" className="mb-4">
-                  <AlertDescription>{error}</AlertDescription>
+                  <AlertDescription>
+                    {error}
+                    {error.includes('verification') && (
+                      <div className="mt-2">
+                        <Link to="/resend-verification" className="underline">
+                          ახალი ვერიფიკაციის ბმულის მოთხოვნა
+                        </Link>
+                      </div>
+                    )}
+                  </AlertDescription>
                 </Alert>
               )}
               

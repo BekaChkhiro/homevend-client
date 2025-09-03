@@ -153,6 +153,35 @@ export const authApi = {
   getMe: async () => {
     const response = await apiClient.get('/auth/profile');
     return response.data.data;
+  },
+
+  // Email verification endpoints
+  verifyEmail: async (token: string) => {
+    const response = await apiClient.get(`/auth/verify-email/${token}`);
+    return response.data;
+  },
+
+  resendVerification: async (email: string) => {
+    const response = await apiClient.post('/auth/resend-verification', { email });
+    return response.data;
+  },
+
+  forgotPassword: async (email: string) => {
+    const response = await apiClient.post('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  resetPassword: async (token: string, password: string, confirmPassword: string) => {
+    const response = await apiClient.post(`/auth/reset-password/${token}`, { 
+      password, 
+      confirmPassword 
+    });
+    return response.data;
+  },
+
+  validateResetToken: async (token: string) => {
+    const response = await apiClient.get(`/auth/validate-reset-token/${token}`);
+    return response.data;
   }
 };
 
