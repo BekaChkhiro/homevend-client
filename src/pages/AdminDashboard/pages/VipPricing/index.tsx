@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Loader2, Crown, Save, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { adminVipApi } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -35,6 +36,7 @@ const VIP_LABELS = {
 };
 
 export const VipPricingPage = () => {
+  const { t } = useTranslation();
   const [vipPricing, setVipPricing] = useState<VipPricing[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<number | null>(null);
@@ -53,8 +55,8 @@ export const VipPricingPage = () => {
     } catch (error) {
       console.error('Error fetching VIP pricing:', error);
       toast({
-        title: "შეცდომა",
-        description: "VIP ფასების მიღება ვერ მოხერხდა",
+        title: t('common.error'),
+        description: t('vipPricing.messages.errorLoading'),
         variant: "destructive",
       });
     } finally {
@@ -110,14 +112,14 @@ export const VipPricingPage = () => {
       });
 
       toast({
-        title: "წარმატება",
-        description: "VIP ფასი წარმატებით განახლდა",
+        title: t('common.success'),
+        description: t('vipPricing.messages.updated'),
       });
     } catch (error: any) {
       console.error('Error saving VIP pricing:', error);
-      const errorMessage = error.response?.data?.message || 'VIP ფასის განახლება ვერ მოხერხდა';
+      const errorMessage = error.response?.data?.message || t('vipPricing.messages.errorUpdating');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -145,9 +147,9 @@ export const VipPricingPage = () => {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">VIP ფასების მართვა</h1>
+        <h1 className="text-2xl font-bold">{t('vipPricing.title')}</h1>
         <p className="text-gray-600 mt-2">
-          აქ შეგიძლიათ მართოთ VIP სტატუსების ფასები და აღწერები
+          {t('vipPricing.subtitle')}
         </p>
       </div>
 
@@ -175,7 +177,7 @@ export const VipPricingPage = () => {
                       onCheckedChange={(checked) => handleInputChange(pricing.id, 'isActive', checked)}
                     />
                     <span className="text-sm text-gray-500">
-                      {getCurrentValue(pricing, 'isActive') ? 'აქტიური' : 'გათიშული'}
+                      {getCurrentValue(pricing, 'isActive') ? t('vipPricing.status.active') : t('vipPricing.status.inactive')}
                     </span>
                   </div>
                 </div>
@@ -184,7 +186,7 @@ export const VipPricingPage = () => {
               <CardContent className="space-y-4">
                 {/* Price */}
                 <div>
-                  <Label htmlFor={`price-${pricing.id}`}>ფასი დღეში (₾)</Label>
+                  <Label htmlFor={`price-${pricing.id}`}>{t('vipPricing.labels.pricePerDay')}</Label>
                   <Input
                     id={`price-${pricing.id}`}
                     type="number"
@@ -198,7 +200,7 @@ export const VipPricingPage = () => {
 
                 {/* Georgian Description */}
                 <div>
-                  <Label htmlFor={`desc-ka-${pricing.id}`}>აღწერა (ქართული)</Label>
+                  <Label htmlFor={`desc-ka-${pricing.id}`}>{t('vipPricing.labels.descriptionKa')}</Label>
                   <Textarea
                     id={`desc-ka-${pricing.id}`}
                     value={getCurrentValue(pricing, 'descriptionKa') as string || ''}
@@ -210,7 +212,7 @@ export const VipPricingPage = () => {
 
                 {/* English Description */}
                 <div>
-                  <Label htmlFor={`desc-en-${pricing.id}`}>აღწერა (English)</Label>
+                  <Label htmlFor={`desc-en-${pricing.id}`}>{t('vipPricing.labels.descriptionEn')}</Label>
                   <Textarea
                     id={`desc-en-${pricing.id}`}
                     value={getCurrentValue(pricing, 'descriptionEn') as string || ''}
@@ -222,16 +224,16 @@ export const VipPricingPage = () => {
 
                 {/* Features */}
                 <div>
-                  <Label htmlFor={`features-${pricing.id}`}>თვისებები (მძიმეებით გამოყოფილი)</Label>
+                  <Label htmlFor={`features-${pricing.id}`}>{t('vipPricing.labels.features')}</Label>
                   <Input
                     id={`features-${pricing.id}`}
                     value={(getCurrentValue(pricing, 'features') as string[] || []).join(', ')}
                     onChange={(e) => handleFeaturesChange(pricing.id, e.target.value)}
                     className="mt-1"
-                    placeholder="თვისება 1, თვისება 2, თვისება 3"
+                    placeholder={t('vipPricing.placeholders.features')}
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    მაგალითი: პრიორიტეტული ძიება, VIP ნიშანი, ფერადი ფრეიმი
+                    {t('vipPricing.labels.example')}
                   </p>
                 </div>
 
@@ -245,7 +247,7 @@ export const VipPricingPage = () => {
                         onClick={() => handleReset(pricing.id)}
                         disabled={isSaving}
                       >
-                        გაუქმება
+{t('common.cancel')}
                       </Button>
                       <Button
                         size="sm"
@@ -257,7 +259,7 @@ export const VipPricingPage = () => {
                         ) : (
                           <Save className="h-4 w-4 mr-2" />
                         )}
-                        შენახვა
+{t('common.save')}
                       </Button>
                     </>
                   )}
@@ -267,13 +269,13 @@ export const VipPricingPage = () => {
                 {isEdited && (
                   <div className="flex items-center space-x-2 text-sm text-blue-600 bg-blue-50 p-2 rounded">
                     <AlertCircle className="h-4 w-4" />
-                    <span>ცვლილებები არ არის შენახული</span>
+                    <span>{t('vipPricing.messages.unsaved')}</span>
                   </div>
                 )}
 
                 {/* Last Updated */}
                 <div className="text-xs text-gray-500 border-t pt-2">
-                  ბოლო განახლება: {new Date(pricing.updatedAt).toLocaleString('ka-GE')}
+                  {t('vipPricing.labels.lastUpdated')}: {new Date(pricing.updatedAt).toLocaleString('ka-GE')}
                 </div>
               </CardContent>
             </Card>

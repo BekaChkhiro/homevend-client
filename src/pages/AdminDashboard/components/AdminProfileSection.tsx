@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { User } from "@/contexts/AuthContext";
 import { Shield } from "lucide-react";
 
@@ -7,6 +8,8 @@ interface AdminProfileSectionProps {
 }
 
 export const AdminProfileSection: React.FC<AdminProfileSectionProps> = ({ user }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="p-4 border-b">
       <div className="flex items-center space-x-3">
@@ -18,7 +21,7 @@ export const AdminProfileSection: React.FC<AdminProfileSectionProps> = ({ user }
             {user.fullName}
           </p>
           <p className="text-xs text-gray-500 truncate">
-            ადმინისტრატორი
+            {t('navigation.administrator')}
           </p>
         </div>
       </div>

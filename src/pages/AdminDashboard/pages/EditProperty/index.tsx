@@ -20,6 +20,7 @@ import { PhotoGallerySection } from "../../../Dashboard/pages/AddProperty/compon
 import { FormActions } from "../../../Dashboard/pages/AddProperty/components/FormActions";
 import { propertyFormSchema, type PropertyFormData } from "../../../Dashboard/pages/AddProperty/types/propertyForm";
 import { propertyApi, citiesApi } from "@/lib/api";
+import { useTranslation } from "react-i18next";
 
 interface City {
   id: number;
@@ -38,6 +39,7 @@ const AdminEditProperty = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
@@ -103,8 +105,8 @@ const AdminEditProperty = () => {
     const loadProperty = async () => {
       if (!id) {
         toast({
-          title: "შეცდომა",
-          description: "უძრავი ქონების ID არ არის მითითებული",
+          title: t('common.error'),
+          description: t('editProperty.messages.noId'),
           variant: "destructive",
         });
         navigate('/admin/listings');
@@ -188,8 +190,8 @@ const AdminEditProperty = () => {
       } catch (error: any) {
         console.error("Property loading error:", error);
         toast({
-          title: "შეცდომა",
-          description: "შეცდომა მოხდა უძრავი ქონების ჩატვირთვისას",
+          title: t('common.error'),
+          description: t('editProperty.messages.loadError'),
           variant: "destructive",
         });
         navigate('/admin/listings');
@@ -207,8 +209,8 @@ const AdminEditProperty = () => {
     // Ensure cities are loaded before submission
     if (cities.length === 0) {
       toast({
-        title: "შეცდომა",
-        description: "ქალაქები ჯერ არ ჩაიტვირთა. გთხოვთ მოიცადოთ.",
+        title: t('common.error'),
+        description: t('editProperty.messages.citiesNotLoaded'),
         variant: "destructive",
       });
       return;
@@ -238,8 +240,8 @@ const AdminEditProperty = () => {
       const cityId = getCityId(data.city);
       if (!cityId) {
         toast({
-          title: "შეცდომა",
-          description: `ქალაქი "${data.city}" ვერ მოიძებნა. გთხოვთ აირჩიოთ სწორი ქალაქი.`,
+          title: t('common.error'),
+          description: t('editProperty.messages.cityNotFound', { city: data.city }),
           variant: "destructive",
         });
         return;
@@ -306,8 +308,8 @@ const AdminEditProperty = () => {
       await propertyApi.updateProperty(id, propertyData);
       
       toast({
-        title: "წარმატება!",
-        description: "განცხადება წარმატებით განახლდა",
+        title: t('common.success'),
+        description: t('editProperty.messages.updated'),
       });
       
       navigate('/admin/listings');
@@ -317,7 +319,7 @@ const AdminEditProperty = () => {
       console.error("Error status:", error.response?.status);
       toast({
         title: "შეცდომა",
-        description: error.response?.data?.message || error.response?.data?.errors?.join(', ') || "შეცდომა მოხდა განცხადების განახლებისას",
+        description: error.response?.data?.message || error.response?.data?.errors?.join(', ') || t('editProperty.messages.updateError'),
         variant: "destructive",
       });
     } finally {
@@ -333,14 +335,14 @@ const AdminEditProperty = () => {
       localStorage.setItem(`admin_property_draft_${id}`, JSON.stringify(formData));
       
       toast({
-        title: "დრაფთი შენახულია",
-        description: "შეგიძლიათ მოგვიანებით განაგრძოთ განცხადების რედაქტირება",
+        title: t('editProperty.messages.draftSaved'),
+        description: t('editProperty.messages.draftDescription'),
       });
     } catch (error) {
       console.error("Draft save error:", error);
       toast({
-        title: "შეცდომა",
-        description: "შეცდომა მოხდა დრაფთის შენახვისას",
+        title: t('common.error'),
+        description: t('editProperty.messages.draftError'),
         variant: "destructive",
       });
     } finally {
@@ -359,15 +361,15 @@ const AdminEditProperty = () => {
               className="mb-4"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              უკან დაბრუნება
+              {t('common.back')}
             </Button>
-            <h2 className="text-2xl font-bold mb-6">განცხადების რედაქტირება (ადმინი)</h2>
+            <h2 className="text-2xl font-bold mb-6">{t('editProperty.title')}</h2>
           </div>
           <Card className="p-6">
             <div className="flex items-center justify-center h-64">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                <p className="text-gray-600">მონაცემების ჩატვირთვა...</p>
+                <p className="text-gray-600">{t('common.loading')}</p>
               </div>
             </div>
           </Card>
@@ -386,10 +388,10 @@ const AdminEditProperty = () => {
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            უკან დაბრუნება
+            {t('common.back')}
           </Button>
-          <h2 className="text-2xl font-bold mb-6">განცხადების რედაქტირება (ადმინი)</h2>
-          <p className="text-gray-600">განცხადება #{id}</p>
+          <h2 className="text-2xl font-bold mb-6">{t('editProperty.title')}</h2>
+          <p className="text-gray-600">{t('editProperty.propertyNumber', { id })}</p>
         </div>
       
       <Card className="p-6 mb-20">

@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Building2, MapPin, Square, Bed, DollarSign, Eye, Link, Unlink } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface UserProperty {
   id: number;
@@ -55,6 +56,7 @@ export const AdminManageProjectProperties: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const [project, setProject] = useState<Project | null>(null);
   const [allProperties, setAllProperties] = useState<UserProperty[]>([]);
@@ -186,11 +188,11 @@ export const AdminManageProjectProperties: React.FC = () => {
         const mockProperties: UserProperty[] = [
           {
             id: 999,
-            title: "ტესტ განცხადება (API არ მუშაობს)",
+            title: t('manageProperties.mockData.testListing'),
             propertyType: "apartment",
             dealType: "sale",
-            cityName: "თბილისი",
-            street: "რუსთაველის",
+            cityName: t('manageProperties.mockData.city'),
+            street: t('manageProperties.mockData.street1'),
             area: 85,
             totalPrice: 150000,
             rooms: "3",
@@ -199,7 +201,7 @@ export const AdminManageProjectProperties: React.FC = () => {
             projectId: undefined,
             user: {
               id: 1,
-              fullName: "ტესტ მომხმარებელი",
+              fullName: t('manageProperties.mockData.testUser'),
               email: "test@example.com"
             }
           }
@@ -215,11 +217,11 @@ export const AdminManageProjectProperties: React.FC = () => {
       const mockProperties: UserProperty[] = [
         {
           id: 998,
-          title: "მოკი განცხადება (ქსელის შეცდომა)",
+          title: t('manageProperties.mockData.mockListing'),
           propertyType: "apartment", 
           dealType: "sale",
-          cityName: "თბილისი",
-          street: "აღმაშენებლის",
+          cityName: t('manageProperties.mockData.city'),
+          street: t('manageProperties.mockData.street2'),
           area: 75,
           totalPrice: 120000,
           rooms: "2",
@@ -228,7 +230,7 @@ export const AdminManageProjectProperties: React.FC = () => {
           projectId: undefined,
           user: {
             id: 1,
-            fullName: "მოკი მომხმარებელი",
+            fullName: t('manageProperties.mockData.mockUser'),
             email: "mock@example.com"
           }
         }
@@ -260,8 +262,8 @@ export const AdminManageProjectProperties: React.FC = () => {
   const handleSaveChanges = async () => {
     if (selectedToLink.length === 0 && selectedToUnlink.length === 0) {
       toast({
-        title: "შეტყობინება",
-        description: "არანაირი ცვლილება არ არის შერჩეული",
+        title: t('common.info'),
+        description: t('manageProperties.messages.noChanges'),
       });
       return;
     }
@@ -327,8 +329,8 @@ export const AdminManageProjectProperties: React.FC = () => {
       }));
 
       toast({
-        title: "წარმატება",
-        description: `${selectedToLink.length} განცხადება მიმაგრდა${selectedToUnlink.length > 0 ? ` და ${selectedToUnlink.length} მოხსნილია` : ''}`,
+        title: t('common.success'),
+        description: t('manageProperties.messages.changesSaved', { linked: selectedToLink.length, unlinked: selectedToUnlink.length }),
       });
 
       // Reset selections and refresh data
@@ -338,8 +340,8 @@ export const AdminManageProjectProperties: React.FC = () => {
     } catch (error) {
       console.error('Error updating property links:', error);
       toast({
-        title: "შეცდომა",
-        description: "ცვლილებების შენახვისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('manageProperties.messages.errorSaving'),
         variant: "destructive",
       });
     } finally {
@@ -390,12 +392,12 @@ export const AdminManageProjectProperties: React.FC = () => {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <Square className="h-4 w-4" />
-                <span>{property.area} მ²</span>
+                <span>{property.area} {t('common.squareMeters')}</span>
               </div>
               {property.rooms && (
                 <div className="flex items-center gap-1">
                   <Bed className="h-4 w-4" />
-                  <span>{property.rooms} ოთახი</span>
+                  <span>{property.rooms} {t('common.rooms')}</span>
                 </div>
               )}
               <div className="flex items-center gap-1">
@@ -413,16 +415,10 @@ export const AdminManageProjectProperties: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex gap-2">
                 <Badge variant="outline" className="text-xs">
-                  {property.propertyType === 'apartment' ? 'ბინა' :
-                   property.propertyType === 'house' ? 'სახლი' :
-                   property.propertyType === 'commercial' ? 'კომერციული' :
-                   property.propertyType}
+                  {t(`listings.propertyTypes.${property.propertyType}`, { defaultValue: property.propertyType })}
                 </Badge>
                 <Badge variant="secondary" className="text-xs">
-                  {property.dealType === 'sale' ? 'იყიდება' :
-                   property.dealType === 'rent' ? 'ქირავდება' :
-                   property.dealType === 'daily' ? 'დღიური' :
-                   property.dealType}
+                  {t(`listings.dealTypes.${property.dealType}`, { defaultValue: property.dealType })}
                 </Badge>
               </div>
               <div className="flex items-center gap-2">
@@ -439,7 +435,7 @@ export const AdminManageProjectProperties: React.FC = () => {
             {/* Show property owner for admin */}
             {property.user && (
               <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded">
-                მფლობელი: {property.user.fullName} ({property.user.email})
+                {t('manageProperties.labels.owner')}: {property.user.fullName} ({property.user.email})
               </div>
             )}
           </div>
@@ -452,7 +448,7 @@ export const AdminManageProjectProperties: React.FC = () => {
     return (
       <div className="text-center py-8">
         <Building2 className="mx-auto w-16 h-16 opacity-50 text-gray-400 mb-4" />
-        <p>მხოლოდ ადმინისტრატორებს შეუძლიათ განცხადებების მართვა</p>
+        <p>{t('manageProperties.messages.adminOnly')}</p>
       </div>
     );
   }
@@ -462,7 +458,7 @@ export const AdminManageProjectProperties: React.FC = () => {
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center space-x-2">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-          <span>მონაცემების ჩატვირთვა...</span>
+          <span>{t('common.loading')}</span>
         </div>
       </div>
     );
@@ -477,12 +473,12 @@ export const AdminManageProjectProperties: React.FC = () => {
           onClick={() => navigate('/admin/projects')}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          უკან
+          {t('common.back')}
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">განცხადების მართვა (ადმინი)</h1>
+          <h1 className="text-2xl font-bold">{t('manageProperties.title')}</h1>
           {project && (
-            <p className="text-gray-600">პროექტი: {project.projectName}</p>
+            <p className="text-gray-600">{t('manageProperties.labels.project')}: {project.projectName}</p>
           )}
         </div>
       </div>
@@ -493,25 +489,25 @@ export const AdminManageProjectProperties: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Link className="h-5 w-5" />
-              მიმაგრების ხელმისაწვდომი განცხადებები
+              {t('manageProperties.labels.availableToLink')}
             </CardTitle>
             <CardDescription>
-              აირჩიეთ განცხადებები რომლებიც გსურთ ამ პროექტთან მიამაგროთ
+              {t('manageProperties.descriptions.selectToLink')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {allProperties.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>არ არის ხელმისაწვდომი განცხადებები მიმაგრებისთვის</p>
-                <p className="text-sm mt-2">ყველა განცხადება უკვე მიმაგრებულია პროექტებზე</p>
+                <p>{t('manageProperties.messages.noAvailable')}</p>
+                <p className="text-sm mt-2">{t('manageProperties.messages.allLinked')}</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {selectedToLink.length > 0 && (
                   <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <p className="text-sm text-blue-800">
-                      <strong>{selectedToLink.length}</strong> განცხადება არჩეულია მიმაგრებისთვის
+                      {t('manageProperties.messages.selectedToLink', { count: selectedToLink.length })}
                     </p>
                   </div>
                 )}
@@ -526,25 +522,25 @@ export const AdminManageProjectProperties: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Unlink className="h-5 w-5" />
-              მიმაგრებული განცხადებები ({linkedProperties.length})
+              {t('manageProperties.labels.linkedProperties', { count: linkedProperties.length })}
             </CardTitle>
             <CardDescription>
-              აირჩიეთ განცხადებები რომლებიც გსურთ ამ პროექტისგან მოხსნათ
+              {t('manageProperties.descriptions.selectToUnlink')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {linkedProperties.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>არ არის მიმაგრებული განცხადებები</p>
-                <p className="text-sm mt-2">ამ პროექტზე ჯერ არ არის მიმაგრებული განცხადებები</p>
+                <p>{t('manageProperties.messages.noLinked')}</p>
+                <p className="text-sm mt-2">{t('manageProperties.messages.noneLinked')}</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {selectedToUnlink.length > 0 && (
                   <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-sm text-red-800">
-                      <strong>{selectedToUnlink.length}</strong> განცხადება არჩეულია მოსახსნელად
+                      {t('manageProperties.messages.selectedToUnlink', { count: selectedToUnlink.length })}
                     </p>
                   </div>
                 )}
@@ -565,10 +561,10 @@ export const AdminManageProjectProperties: React.FC = () => {
               setSelectedToUnlink([]);
             }}
           >
-            გაუქმება
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleSaveChanges} disabled={saving}>
-            {saving ? "შენახვა..." : "ცვლილებების შენახვა"}
+            {saving ? t('common.saving') : t('manageProperties.buttons.saveChanges')}
           </Button>
         </div>
       )}

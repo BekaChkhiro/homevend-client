@@ -1,0 +1,449 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "unknown": "Unknown",
+    "notSpecified": "Not specified",
+    "menu": "Menu",
+    "close": "Close",
+    "back": "Back",
+    "info": "Info",
+    "saving": "Saving...",
+    "squareMeters": "sq.m",
+    "rooms": "rooms"
+  },
+  "navigation": {
+    "administrator": "Administrator",
+    "categories": {
+      "analytics": "Analytics",
+      "content": "Content",
+      "data": "Data",
+      "system": "System"
+    },
+    "menu": {
+      "overview": "Overview",
+      "listings": "Listings",
+      "projects": "Projects",
+      "agencies": "Agencies",
+      "users": "Users",
+      "advertisements": "Advertisements",
+      "districts": "Districts and Prices",
+      "servicePricing": "Service Prices",
+      "settings": "Settings"
+    }
+  },
+  "overview": {
+    "title": "Administrator Panel",
+    "subtitle": "Manage platform and monitor activities",
+    "stats": {
+      "totalUsers": "Total Users",
+      "activeListings": "Active Listings",
+      "projects": "Projects",
+      "administrators": "Administrators",
+      "thisMonth": "+{{count}} this month",
+      "totalProjects": "Total projects",
+      "systemAdmins": "System administrators"
+    },
+    "recent": {
+      "listings": "Recent Listings",
+      "users": "New Users",
+      "listingsSubtitle": "Last 5 added listings ({{count}} shown)",
+      "usersSubtitle": "Last 5 registered users ({{count}} shown)"
+    },
+    "labels": {
+      "user": "User:",
+      "location": "Location:"
+    },
+    "messages": {
+      "noListings": "No listings found",
+      "noUsers": "No users found",
+      "loadingData": "Loading data...",
+      "errorLoadingData": "Error loading data"
+    },
+    "roles": {
+      "admin": "Admin",
+      "developer": "Developer",
+      "agency": "Agency", 
+      "user": "User"
+    }
+  },
+  "users": {
+    "title": "User Management",
+    "subtitle": "User list and management",
+    "subtitleWithCount": "User list and management ({{count}} users)",
+    "list": {
+      "title": "Users List",
+      "description": "View and manage all registered users"
+    },
+    "stats": {
+      "totalUsers": "Total Users",
+      "activeUsers": "Active Users",
+      "totalListings": "Total Listings"
+    },
+    "messages": {
+      "loadingUsers": "Loading users...",
+      "errorLoadingUsers": "Error loading users",
+      "userDeleted": "User successfully deleted",
+      "errorDeletingUser": "Error deleting user",
+      "noUsersFound": "No users found"
+    }
+  },
+  "listings": {
+    "title": "Listings Management",
+    "subtitle": "View and manage all listings",
+    "subtitleWithCount": "View and manage all listings ({{count}} listings)",
+    "list": {
+      "title": "Listings List",
+      "description": "View, approve and reject all listings"
+    },
+    "propertyTypes": {
+      "apartment": "Apartment",
+      "house": "House",
+      "commercial": "Commercial"
+    },
+    "dealTypes": {
+      "sale": "For Sale",
+      "rent": "For Rent",
+      "daily": "Daily Rental"
+    },
+    "messages": {
+      "loadingListings": "Loading listings...",
+      "errorLoadingListings": "Error loading listings",
+      "listingDeleted": "Listing deleted",
+      "errorDeletingListing": "Error deleting listing",
+      "noListingsFound": "No listings found"
+    }
+  },
+  "settings": {
+    "title": "System Settings",
+    "subtitle": "Platform configuration and settings",
+    "configuration": {
+      "title": "Configuration",
+      "description": "System basic settings configuration"
+    },
+    "buttons": {
+      "general": "General Settings",
+      "users": "User Settings",
+      "listings": "Listing Settings"
+    }
+  },
+  "districts": {
+    "title": "Districts and Prices",
+    "subtitle": "Add, edit and manage districts and square meter prices in Tbilisi",
+    "buttons": {
+      "newDistrict": "New District",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "update": "Update",
+      "saving": "Saving...",
+      "addNew": "Add New District"
+    },
+    "form": {
+      "editTitle": "Edit District",
+      "addTitle": "Add New District",
+      "description": "Enter district information in Georgian and English languages.",
+      "nameKa": "Name (Georgian)",
+      "nameEn": "Name (English)",  
+      "nameRu": "Name (Russian)",
+      "descriptionField": "Description",
+      "pricePerSqm": "Price per sq/m (USD)",
+      "isActive": "Active District",
+      "placeholders": {
+        "nameKa": "e.g: Vake",
+        "nameEn": "e.g: Vake", 
+        "nameRu": "e.g: Ваке",
+        "description": "District description (optional)",
+        "price": "e.g: 2500"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "labels": {
+      "pricePerSqm": "Price per sq/m:",
+      "created": "Created:",
+      "updated": "Updated:"
+    },
+    "empty": {
+      "title": "No Districts",
+      "description": "Add new districts to the system"
+    },
+    "deleteDialog": {
+      "title": "Delete District",
+      "description": "Are you sure you want to delete district \"{{name}}\"? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "messages": {
+      "errorLoading": "Failed to load districts",
+      "errorSaving": "Failed to save district",
+      "errorDeleting": "Failed to delete district",
+      "created": "District successfully created",
+      "updated": "District successfully updated",
+      "deleted": "District successfully deleted"
+    }
+  },
+  "advertisements": {
+    "title": "Advertisement Management",
+    "subtitle": "Manage advertisement placements and monitor performance",
+    "stats": {
+      "totalPlacements": "Total Placements",
+      "activeCount": "Active",
+      "totalViews": "Total Views",
+      "totalClicks": "Total Clicks",
+      "ctrIndicator": "CTR Indicator",
+      "thisMonth": "This Month",
+      "averageCtr": "Average Click Rate"
+    },
+    "buttons": {
+      "addNew": "Add New Advertisement",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "delete": "Delete"
+    },
+    "types": {
+      "banner": "Banner",
+      "sidebar": "Sidebar",
+      "popup": "Popup",
+      "footer": "Footer"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "labels": {
+      "dimensions": "Dimensions",
+      "performance": "Performance",
+      "views": "Views",
+      "clicks": "Clicks",
+      "expires": "Expires:",
+      "until": " until"
+    },
+    "messages": {
+      "adAdded": "Advertisement successfully added!"
+    }
+  },
+  "projects": {
+    "title": "Project Management",
+    "subtitle": "View and manage all projects",
+    "subtitleWithCount": "View and manage all projects ({{count}} projects)",
+    "list": {
+      "title": "Projects List",
+      "description": "View, approve and manage all projects"
+    },
+    "buttons": {
+      "filter": "Filter",
+      "refresh": "Refresh",
+      "view": "View",
+      "edit": "Edit",
+      "manageProperties": "Manage Properties",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "status": {
+      "completed_with_renovation": "Completed with Renovation",
+      "green_frame": "Green Frame",
+      "black_frame": "Black Frame",
+      "white_frame": "White Frame",
+      "active": "Active",
+      "completed": "Completed",
+      "planned": "Planned",
+      "inactive": "Inactive"
+    },
+    "labels": {
+      "developer": "Developer ID:",
+      "started": "Started:",
+      "completion": "Completion:",
+      "unknownDeveloper": "Unknown Developer"
+    },
+    "loading": {
+      "text": "Loading projects..."
+    },
+    "empty": {
+      "text": "No projects found"
+    },
+    "deleteDialog": {
+      "title": "Delete Project",
+      "description": "Are you sure you want to delete this project? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "messages": {
+      "errorLoading": "Error loading projects",
+      "errorDeleting": "Error deleting project",
+      "deleted": "Project successfully deleted"
+    }
+  },
+  "agencies": {
+    "title": "Agency Management",
+    "subtitle": "View and manage all agencies",
+    "subtitleWithCount": "View and manage all agencies ({{count}} agencies)",
+    "list": {
+      "title": "Agencies List",
+      "description": "View, approve and manage all agencies"
+    },
+    "buttons": {
+      "filter": "Filter",
+      "refresh": "Refresh",
+      "view": "View",
+      "changeStatus": "Change Status",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "inactive": "Inactive"
+    },
+    "labels": {
+      "owner": "Owner:",
+      "agents": "agents",
+      "activeListings": "active listings",
+      "registration": "Registration:",
+      "totalListings": "Total {{count}} listings"
+    },
+    "loading": {
+      "text": "Loading agencies..."
+    },
+    "empty": {
+      "text": "No agencies found"
+    },
+    "deleteDialog": {
+      "title": "Delete Agency",
+      "description": "Are you sure you want to delete this agency? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "messages": {
+      "errorLoading": "Error loading agencies",
+      "errorDeleting": "Error deleting agency",
+      "errorChangingStatus": "Error changing agency status",
+      "deleted": "Agency successfully deleted",
+      "statusChanged": "Agency status changed: {{status}}",
+      "deleteError": "Error: HTTP {{status}}",
+      "statusError": "Status: HTTP {{status}}"
+    }
+  },
+  "vipPricing": {
+    "title": "VIP Pricing Management",
+    "subtitle": "Manage VIP status prices and descriptions",
+    "status": {
+      "active": "Active",
+      "inactive": "Disabled"
+    },
+    "labels": {
+      "pricePerDay": "Price per day (₾)",
+      "descriptionKa": "Description (Georgian)",
+      "descriptionEn": "Description (English)",
+      "features": "Features (comma separated)",
+      "example": "Example: Priority search, VIP badge, colored frame",
+      "lastUpdated": "Last updated"
+    },
+    "placeholders": {
+      "features": "Feature 1, Feature 2, Feature 3"
+    },
+    "messages": {
+      "errorLoading": "Failed to load VIP prices",
+      "errorUpdating": "Failed to update VIP price",
+      "updated": "VIP price successfully updated",
+      "unsaved": "Changes are not saved"
+    }
+  },
+  "servicePricing": {
+    "title": "Service Pricing Management",
+    "subtitle": "Manage service prices and conditions"
+  },
+  "editUser": {
+    "title": "Edit User",
+    "messages": {
+      "errorLoading": "Error loading user",
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required", 
+      "emailInvalid": "Email format is invalid",
+      "updated": "User successfully updated"
+    },
+    "buttons": {
+      "back": "Back",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "editProperty": {
+    "title": "Edit Property (Admin)",
+    "propertyNumber": "Property #{id}",
+    "messages": {
+      "noId": "Property ID is not specified",
+      "loadError": "Error occurred while loading property",
+      "citiesNotLoaded": "Cities have not loaded yet. Please wait.",
+      "cityNotFound": "City \"{{city}}\" was not found. Please select the correct city.",
+      "updated": "Property updated successfully",
+      "updateError": "Error occurred while updating property",
+      "draftSaved": "Draft saved",
+      "draftDescription": "You can continue editing the property later",
+      "draftError": "Error occurred while saving draft"
+    }
+  },
+  "editProject": {
+    "title": "Edit Project (Admin)",
+    "projectNumber": "Project #{id}",
+    "buttons": {
+      "saveChanges": "Save Changes"
+    },
+    "messages": {
+      "notFound": "Project not found",
+      "loadError": "Error occurred while loading project",
+      "noProjectWithId": "Project with specified ID does not exist.",
+      "accessDenied": "Access denied",
+      "noEditPermission": "You do not have permission to edit this project.",
+      "updated": "Project updated successfully",
+      "updateError": "Error occurred while updating project: {{error}}. Check console for details."
+    }
+  },
+  "manageProperties": {
+    "title": "Property Management (Admin)",
+    "labels": {
+      "project": "Project",
+      "owner": "Owner",
+      "availableToLink": "Available Properties for Linking",
+      "linkedProperties": "Linked Properties ({{count}})"
+    },
+    "descriptions": {
+      "selectToLink": "Select properties you want to link to this project",
+      "selectToUnlink": "Select properties you want to unlink from this project"
+    },
+    "messages": {
+      "adminOnly": "Only administrators can manage properties",
+      "noChanges": "No changes have been selected",
+      "changesSaved": "{{linked}} properties linked{{unlinked, plural, =0 {} other { and {{unlinked}} removed}}}",
+      "errorSaving": "Error occurred while saving changes",
+      "noAvailable": "No available properties for linking",
+      "allLinked": "All properties are already linked to projects",
+      "selectedToLink": "<strong>{{count}}</strong> properties selected for linking",
+      "noLinked": "No linked properties",
+      "noneLinked": "No properties are linked to this project yet",
+      "selectedToUnlink": "<strong>{{count}}</strong> properties selected for removal"
+    },
+    "buttons": {
+      "saveChanges": "Save Changes"
+    },
+    "mockData": {
+      "testListing": "Test Listing (API not working)",
+      "mockListing": "Mock Listing (Network Error)",
+      "city": "Tbilisi",
+      "street1": "Rustaveli",
+      "street2": "Agmashenebeli",
+      "testUser": "Test User",
+      "mockUser": "Mock User"
+    }
+  }
+}

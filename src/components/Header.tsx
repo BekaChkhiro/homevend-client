@@ -1,12 +1,15 @@
 
 import { Logo, UserMenu, FavoritesButton, AddPropertyButton, Navigation } from "./Header/index";
 import { TabbedMobileMenu } from "./Header/TabbedMobileMenu";
+import LanguageSelector from "./LanguageSelector";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <header className="bg-white border-b border-border shadow-sm fixed top-0 left-0 right-0 z-50 overflow-hidden">
@@ -19,6 +22,7 @@ export const Header = () => {
           
           {/* Desktop controls */}
           <div className="hidden md:flex items-center space-x-2 lg:space-x-4 flex-shrink-0">
+            <LanguageSelector />
             <FavoritesButton />
             <AddPropertyButton />
             <UserMenu />
@@ -39,12 +43,12 @@ export const Header = () => {
               {isMobileMenuOpen ? (
                 <>
                   <X className="h-4 w-4" />
-                  <span className="text-xs font-medium">დახურვა</span>
+                  <span className="text-xs font-medium">{t('common.close')}</span>
                 </>
               ) : (
                 <>
                   <Menu className="h-4 w-4" />
-                  <span className="text-xs font-medium">მენიუ</span>
+                  <span className="text-xs font-medium">{t('common.menu')}</span>
                 </>
               )}
             </Button>

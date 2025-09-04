@@ -1,82 +1,85 @@
 import React from "react";
 import { BarChart3, Users, Home, Settings, Monitor, MapPin, DollarSign, Building, FolderOpen } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface AdminMenuItem {
   id: string;
   path: string;
-  label: string;
+  labelKey: string;
   icon: React.ReactNode;
   category?: string; // Optional category for grouping
 }
 
 export const AdminSidebarMenu: React.FC = () => {
   const location = useLocation();
+  const { t, i18n } = useTranslation();
   
-  // Define menu items with categories
+  // Define menu items with categories (paths without language prefix)
   const menuItems: AdminMenuItem[] = [
     { 
       id: "overview", 
-      path: "/admin/overview", 
-      label: "მიმოხილვა", 
+      path: "admin/overview", 
+      labelKey: "navigation.menu.overview", 
       icon: <BarChart3 className="h-5 w-5" />,
       category: "analytics"
     },
     { 
       id: "listings", 
-      path: "/admin/listings", 
-      label: "განცხადებები", 
+      path: "admin/listings", 
+      labelKey: "navigation.menu.listings", 
       icon: <Home className="h-5 w-5" />,
       category: "content"
     },
     { 
       id: "projects", 
-      path: "/admin/projects", 
-      label: "პროექტები", 
+      path: "admin/projects", 
+      labelKey: "navigation.menu.projects", 
       icon: <FolderOpen className="h-5 w-5" />,
       category: "content"
     },
     { 
       id: "agencies", 
-      path: "/admin/agencies", 
-      label: "სააგენტოები", 
+      path: "admin/agencies", 
+      labelKey: "navigation.menu.agencies", 
       icon: <Building className="h-5 w-5" />,
       category: "content"
     },
     { 
       id: "users", 
-      path: "/admin/users", 
-      label: "მომხმარებლები", 
+      path: "admin/users", 
+      labelKey: "navigation.menu.users", 
       icon: <Users className="h-5 w-5" />,
       category: "content"
     },
     { 
       id: "advertisements", 
-      path: "/admin/advertisements", 
-      label: "რეკლამები", 
+      path: "admin/advertisements", 
+      labelKey: "navigation.menu.advertisements", 
       icon: <Monitor className="h-5 w-5" />,
       category: "content"
     },
     { 
       id: "districts", 
-      path: "/admin/districts", 
-      label: "რაიონები და ფასები", 
+      path: "admin/districts", 
+      labelKey: "navigation.menu.districts", 
       icon: <MapPin className="h-5 w-5" />,
       category: "data"
     },
     { 
       id: "service-pricing", 
-      path: "/admin/service-pricing", 
-      label: "სერვისების ფასები", 
+      path: "admin/service-pricing", 
+      labelKey: "navigation.menu.servicePricing", 
       icon: <DollarSign className="h-5 w-5" />,
       category: "data"
     },
     { 
       id: "settings", 
-      path: "/admin/settings", 
-      label: "პარამეტრები", 
+      path: "admin/settings", 
+      labelKey: "navigation.menu.settings", 
       icon: <Settings className="h-5 w-5" />,
       category: "system"
     },
@@ -89,9 +92,10 @@ export const AdminSidebarMenu: React.FC = () => {
   const systemItems = menuItems.filter(item => item.category === "system");
   const uncategorizedItems = menuItems.filter(item => !item.category);
 
-  // Check if path is active or is a sub-path
+  // Check if path is active or is a sub-path (considering language prefix)
   const isActive = (path: string) => {
-    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+    const fullPath = getLanguageUrl(path, i18n.language);
+    return location.pathname === fullPath || location.pathname.startsWith(`${fullPath}/`);
   };
 
   // Render a single menu item with animations
@@ -104,7 +108,7 @@ export const AdminSidebarMenu: React.FC = () => {
       className="mb-1"
     >
       <Link
-        to={item.path}
+        to={getLanguageUrl(item.path, i18n.language)}
         className={cn(
           "flex items-center w-full px-4 py-3 text-sm rounded-lg transition-all duration-200 border border-transparent",
           isActive(item.path)
@@ -120,7 +124,7 @@ export const AdminSidebarMenu: React.FC = () => {
         )}>
           {item.icon}
         </div>
-        <span className="font-medium">{item.label}</span>
+        <span className="font-medium">{t(item.labelKey)}</span>
         
         {/* Active indicator */}
         {isActive(item.path) && (
@@ -137,10 +141,10 @@ export const AdminSidebarMenu: React.FC = () => {
   );
 
   // Render a category section with title
-  const renderCategory = (title: string, items: AdminMenuItem[]) => (
+  const renderCategory = (titleKey: string, items: AdminMenuItem[]) => (
     <div className="mb-3">
       <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-        {title}
+        {t(titleKey)}
       </div>
       {items.map(renderMenuItem)}
     </div>
@@ -148,10 +152,10 @@ export const AdminSidebarMenu: React.FC = () => {
 
   return (
     <div className="p-3">
-      {analyticsItems.length > 0 && renderCategory("ანალიტიკა", analyticsItems)}
-      {contentItems.length > 0 && renderCategory("კონტენტი", contentItems)}
-      {dataItems.length > 0 && renderCategory("მონაცემები", dataItems)}
-      {systemItems.length > 0 && renderCategory("სისტემა", systemItems)}
+      {analyticsItems.length > 0 && renderCategory("navigation.categories.analytics", analyticsItems)}
+      {contentItems.length > 0 && renderCategory("navigation.categories.content", contentItems)}
+      {dataItems.length > 0 && renderCategory("navigation.categories.data", dataItems)}
+      {systemItems.length > 0 && renderCategory("navigation.categories.system", systemItems)}
       {uncategorizedItems.length > 0 && uncategorizedItems.map(renderMenuItem)}
     </div>
   );

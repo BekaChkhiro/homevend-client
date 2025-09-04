@@ -3,6 +3,7 @@ import { UserCard } from './components/UserCard';
 import { Button } from '@/components/ui/button';
 import { Plus, Filter, Users as UsersIcon, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { adminApi } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -35,6 +36,7 @@ const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchAllUsers();
@@ -51,8 +53,8 @@ const Users = () => {
     } catch (error: any) {
       console.error('Error fetching users:', error);
       toast({
-        title: "შეცდომა",
-        description: "მომხმარებლების ჩატვირთვისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('users.messages.errorLoadingUsers'),
         variant: "destructive",
       });
     } finally {
@@ -67,15 +69,15 @@ const Users = () => {
       setUsers(users.filter(u => u.id !== userId));
       
       toast({
-        title: "წარმატება",
-        description: "მომხმარებელი წარმატებით წაიშალა",
+        title: t('common.success'),
+        description: t('users.messages.userDeleted'),
       });
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "მომხმარებლის წაშლისას მოხდა შეცდომა";
+                          t('users.messages.errorDeletingUser');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -91,7 +93,7 @@ const Users = () => {
     status: 'active' as const, // Default to active since we don't have this field
     avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`,
     joinDate: new Date(user.createdAt).toLocaleDateString('ka-GE'),
-    lastActive: "უცნობია", // Not available in current API response
+    lastActive: t('common.unknown'), // Not available in current API response
     propertiesCount: user.propertyCount || 0,
     verified: true // Default to verified
   }));
@@ -103,14 +105,14 @@ const Users = () => {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">მომხმარებლების მართვა</h1>
-          <p className="text-gray-600">მომხმარებლების სია და მართვა</p>
+          <h1 className="text-3xl font-bold mb-2">{t('users.title')}</h1>
+          <p className="text-gray-600">{t('users.subtitle')}</p>
         </div>
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="flex items-center space-x-2">
               <Loader2 className="h-6 w-6 animate-spin" />
-              <span>მომხმარებლების ჩატვირთვა...</span>
+              <span>{t('users.messages.loadingUsers')}</span>
             </div>
           </CardContent>
         </Card>
@@ -121,29 +123,29 @@ const Users = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">მომხმარებლების მართვა</h1>
-        <p className="text-gray-600">მომხმარებლების სია და მართვა ({transformedUsers.length} მომხმარებელი)</p>
+        <h1 className="text-3xl font-bold mb-2">{t('users.title')}</h1>
+        <p className="text-gray-600">{t('users.subtitleWithCount', { count: transformedUsers.length })}</p>
         
         {/* Quick Stats */}
         <div className="flex gap-4 mt-6">
           <div className="bg-blue-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <UsersIcon className="h-5 w-5 text-blue-600" />
-              <span className="text-sm text-blue-600">სულ მომხმარებლები</span>
+              <span className="text-sm text-blue-600">{t('users.stats.totalUsers')}</span>
             </div>
             <div className="text-2xl font-bold text-blue-900">{transformedUsers.length}</div>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <UsersIcon className="h-5 w-5 text-green-600" />
-              <span className="text-sm text-green-600">აქტიური მომხმარებლები</span>
+              <span className="text-sm text-green-600">{t('users.stats.activeUsers')}</span>
             </div>
             <div className="text-2xl font-bold text-green-900">{activeUsers}</div>
           </div>
           <div className="bg-purple-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <UsersIcon className="h-5 w-5 text-purple-600" />
-              <span className="text-sm text-purple-600">სულ განცხადებები</span>
+              <span className="text-sm text-purple-600">{t('users.stats.totalListings')}</span>
             </div>
             <div className="text-2xl font-bold text-purple-900">{totalProperties}</div>
           </div>
@@ -154,17 +156,17 @@ const Users = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>მომხმარებლების სია</CardTitle>
-              <CardDescription>ყველა რეგისტრირებული მომხმარებლის ნახვა და მართვა</CardDescription>
+              <CardTitle>{t('users.list.title')}</CardTitle>
+              <CardDescription>{t('users.list.description')}</CardDescription>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
-                ფილტრი
+                {t('common.filter')}
               </Button>
               <Button size="sm" onClick={fetchAllUsers}>
                 <Plus className="h-4 w-4 mr-2" />
-                განახლება
+                {t('common.refresh')}
               </Button>
             </div>
           </div>
@@ -182,10 +184,10 @@ const Users = () => {
           
           {transformedUsers.length === 0 && !isLoading && (
             <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">მომხმარებლები ვერ მოიძებნა</p>
+              <p className="text-gray-500 mb-4">{t('users.messages.noUsersFound')}</p>
               <Button onClick={fetchAllUsers}>
                 <Plus className="h-4 w-4 mr-2" />
-                განახლება
+                {t('common.refresh')}
               </Button>
             </div>
           )}

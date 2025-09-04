@@ -1,28 +1,34 @@
 import { useEffect } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
 import { AdminSidebar } from "./components/AdminSidebar";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 const AdminDashboard = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (!isLoading) {
       if (!user) {
-        navigate("/login");
+        navigate(getLanguageUrl("login", i18n.language));
         return;
       }
 
       if (user.role !== 'admin') {
-        navigate("/dashboard");
+        navigate(getLanguageUrl("dashboard", i18n.language));
         return;
       }
 
-      if (location.pathname === "/admin" || location.pathname === "/admin/") {
-        navigate("/admin/overview", { replace: true });
+      // Check if we're at the admin root path (with language prefix)
+      const currentPath = location.pathname;
+      const adminPath = getLanguageUrl("admin", i18n.language);
+      if (currentPath === adminPath || currentPath === `${adminPath}/`) {
+        navigate(getLanguageUrl("admin/overview", i18n.language), { replace: true });
       }
     }
   }, [user, isLoading, location.pathname, navigate]);
@@ -32,7 +38,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-          <p className="mt-2">იტვირთება...</p>
+          <p className="mt-2">{t('common.loading')}</p>
         </div>
       </div>
     );

@@ -5,6 +5,7 @@ import { Plus, Filter, Loader2, Eye, Edit, Trash2, MapPin, Calendar, User, Build
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 import { adminApi } from '@/lib/api';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
@@ -31,6 +32,7 @@ interface Project {
 }
 
 const AdminProjects = () => {
+  const { t } = useTranslation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -60,7 +62,7 @@ const AdminProjects = () => {
         // Transform API data to match our interface
         const transformedProjects = projectsData.map((proj: any) => ({
           id: proj.id,
-          title: proj.projectName || proj.title || `პროექტი #${proj.id}`,
+          title: proj.projectName || proj.title || `${t('projects.title')} #${proj.id}`,
           description: proj.description || "",
           location: proj.fullAddress || proj.location || proj.address || `${proj.street || ""} ${proj.city?.nameGeorgian || proj.city || ""}`.trim(),
           status: proj.deliveryStatus || proj.status || "active",
@@ -72,7 +74,7 @@ const AdminProjects = () => {
           maxPrice: proj.maxPrice || 0,
           developer: {
             id: proj.developer?.id || proj.developerId || 0,
-            name: proj.developer?.fullName || "უცნობი დეველოპერი",
+            name: proj.developer?.fullName || t('projects.labels.unknownDeveloper'),
             email: proj.developer?.email || ""
           },
           developerId: proj.developerId || proj.developer?.id || 0,
@@ -87,10 +89,10 @@ const AdminProjects = () => {
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "პროექტების ჩატვირთვისას მოხდა შეცდომა";
+                          t('projects.messages.errorLoading');
       
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -109,15 +111,15 @@ const AdminProjects = () => {
       setProjects(projects.filter(p => p.id !== projectId));
       
       toast({
-        title: "წარმატება",
-        description: "პროექტი წარმატებით წაიშალა",
+        title: t('common.success'),
+        description: t('projects.messages.deleted'),
       });
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "პროექტის წაშლისას მოხდა შეცდომა";
+                          t('projects.messages.errorDeleting');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -140,14 +142,14 @@ const AdminProjects = () => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "completed_with_renovation": return "ჩაბარება რემონტით";
-      case "green_frame": return "მწვანე კარკასი";
-      case "black_frame": return "შავი კარკასი";
-      case "white_frame": return "თეთრი კარკასი";
-      case "active": return "აქტიური";
-      case "completed": return "დასრულებული";
-      case "planned": return "დაგეგმილი";
-      case "inactive": return "არააქტიური";
+      case "completed_with_renovation": return t('projects.status.completed_with_renovation');
+      case "green_frame": return t('projects.status.green_frame');
+      case "black_frame": return t('projects.status.black_frame');
+      case "white_frame": return t('projects.status.white_frame');
+      case "active": return t('projects.status.active');
+      case "completed": return t('projects.status.completed');
+      case "planned": return t('projects.status.planned');
+      case "inactive": return t('projects.status.inactive');
       default: return status;
     }
   };
@@ -164,14 +166,14 @@ const AdminProjects = () => {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">პროექტების მართვა</h1>
-          <p className="text-gray-600">ყველა პროექტის ნახვა და მართვა</p>
+          <h1 className="text-3xl font-bold mb-2">{t('projects.title')}</h1>
+          <p className="text-gray-600">{t('projects.subtitle')}</p>
         </div>
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="flex items-center space-x-2">
               <Loader2 className="h-6 w-6 animate-spin" />
-              <span>პროექტების ჩატვირთვა...</span>
+              <span>{t('projects.loading.text')}</span>
             </div>
           </CardContent>
         </Card>
@@ -182,25 +184,25 @@ const AdminProjects = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">პროექტების მართვა</h1>
-        <p className="text-gray-600">ყველა პროექტის ნახვა და მართვა ({projects.length} პროექტი)</p>
+        <h1 className="text-3xl font-bold mb-2">{t('projects.title')}</h1>
+        <p className="text-gray-600">{t('projects.subtitleWithCount', { count: projects.length })}</p>
       </div>
 
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>პროექტების სია</CardTitle>
-              <CardDescription>ყველა პროექტის ნახვა, დამტკიცება და მართვა</CardDescription>
+              <CardTitle>{t('projects.list.title')}</CardTitle>
+              <CardDescription>{t('projects.list.description')}</CardDescription>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
-                ფილტრი
+                {t('projects.buttons.filter')}
               </Button>
               <Button size="sm" onClick={fetchProjects}>
                 <Plus className="h-4 w-4 mr-2" />
-                განახლება
+                {t('projects.buttons.refresh')}
               </Button>
             </div>
           </div>
@@ -241,19 +243,19 @@ const AdminProjects = () => {
                       <div className="flex items-center text-gray-600 mb-2">
                         <User className="h-4 w-4 mr-1 flex-shrink-0" />
                         <span className="text-sm truncate mr-4">
-                          დეველოპერი ID: {project.developerId}
+                          {t('projects.labels.developer')} {project.developerId}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-4 text-xs text-gray-500">
                         <div className="flex items-center">
                           <Calendar className="h-3 w-3 mr-1" />
-                          <span>დაიწყო: {formatDate(project.startDate)}</span>
+                          <span>{t('projects.labels.started')} {formatDate(project.startDate)}</span>
                         </div>
                         {project.completionDate && (
                           <div className="flex items-center">
                             <Calendar className="h-3 w-3 mr-1" />
-                            <span>დასრულება: {formatDate(project.completionDate)}</span>
+                            <span>{t('projects.labels.completion')} {formatDate(project.completionDate)}</span>
                           </div>
                         )}
                       </div>
@@ -266,10 +268,10 @@ const AdminProjects = () => {
                         size="sm" 
                         className="h-8 px-2"
                         onClick={() => navigate(`/projects/${project.id}`)}
-                        title="ნახვა"
+                        title={t('projects.buttons.view')}
                       >
                         <Eye className="h-4 w-4 mr-1" />
-                        <span className="text-xs">ნახვა</span>
+                        <span className="text-xs">{t('projects.buttons.view')}</span>
                       </Button>
                       
                       <Button 
@@ -277,10 +279,10 @@ const AdminProjects = () => {
                         size="sm" 
                         className="h-8 px-2"
                         onClick={() => navigate(`/admin/edit-project/${project.id}`)}
-                        title="რედაქტირება"
+                        title={t('projects.buttons.edit')}
                       >
                         <Edit className="h-4 w-4 mr-1" />
-                        <span className="text-xs">რედაქტირება</span>
+                        <span className="text-xs">{t('projects.buttons.edit')}</span>
                       </Button>
 
                       <Button 
@@ -288,10 +290,10 @@ const AdminProjects = () => {
                         size="sm" 
                         className="h-8 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                         onClick={() => navigate(`/admin/projects/${project.id}/manage-properties`)}
-                        title="განცხადების მართვა"
+                        title={t('projects.buttons.manageProperties')}
                       >
                         <Settings className="h-4 w-4 mr-1" />
-                        <span className="text-xs">განცხადების მართვა</span>
+                        <span className="text-xs">{t('projects.buttons.manageProperties')}</span>
                       </Button>
                       
                       <AlertDialog>
@@ -300,26 +302,26 @@ const AdminProjects = () => {
                             variant="ghost" 
                             size="sm" 
                             className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            title="წაშლა"
+                            title={t('projects.buttons.delete')}
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
-                            <span className="text-xs">წაშლა</span>
+                            <span className="text-xs">{t('projects.buttons.delete')}</span>
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>პროექტის წაშლა</AlertDialogTitle>
+                            <AlertDialogTitle>{t('projects.deleteDialog.title')}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              დარწმუნებული ხართ, რომ გსურთ ამ პროექტის წაშლა? ეს მოქმედება შეუქცევადია.
+                              {t('projects.deleteDialog.description')}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                            <AlertDialogCancel>{t('projects.deleteDialog.cancel')}</AlertDialogCancel>
                             <AlertDialogAction 
                               onClick={() => handleDelete(project.id)} 
                               className="bg-red-600 hover:bg-red-700"
                             >
-                              წაშლა
+                              {t('projects.deleteDialog.confirm')}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -333,10 +335,10 @@ const AdminProjects = () => {
           
           {projects.length === 0 && !isLoading && (
             <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">პროექტები ვერ მოიძებნა</p>
+              <p className="text-gray-500 mb-4">{t('projects.empty.text')}</p>
               <Button onClick={fetchProjects}>
                 <Plus className="h-4 w-4 mr-2" />
-                განახლება
+                {t('projects.buttons.refresh')}
               </Button>
             </div>
           )}

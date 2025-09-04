@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface City {
   id: number;
@@ -27,6 +28,7 @@ const AdminEditProject: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
@@ -108,8 +110,8 @@ const AdminEditProject: React.FC = () => {
       if (!response.ok) {
         if (response.status === 404) {
           toast({
-            title: "შეცდომა",
-            description: "პროექტი ვერ მოიძებნა",
+            title: t('common.error'),
+            description: t('editProject.messages.notFound'),
             variant: "destructive",
           });
           navigate('/admin/projects');
@@ -187,8 +189,8 @@ const AdminEditProject: React.FC = () => {
     } catch (error) {
       console.error('Error fetching project:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტის ჩატვირთვისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('editProject.messages.loadError'),
         variant: "destructive",
       });
       navigate('/admin/projects');
@@ -349,8 +351,8 @@ const AdminEditProject: React.FC = () => {
         // Handle specific error cases
         if (response.status === 404) {
           toast({
-            title: "პროექტი ვერ მოიძებნა",
-            description: "მითითებული ID-ით პროექტი არ არსებობს.",
+            title: t('editProject.messages.notFound'),
+            description: t('editProject.messages.noProjectWithId'),
             variant: "destructive",
           });
           return;
@@ -358,8 +360,8 @@ const AdminEditProject: React.FC = () => {
         
         if (response.status === 403) {
           toast({
-            title: "წვდომა აკრძალულია",
-            description: "თქვენ არ გაქვთ უფლება ამ პროექტის რედაქტირების.",
+            title: t('editProject.messages.accessDenied'),
+            description: t('editProject.messages.noEditPermission'),
             variant: "destructive",
           });
           return;
@@ -372,8 +374,8 @@ const AdminEditProject: React.FC = () => {
       console.log('Update success response:', result);
 
       toast({
-        title: "წარმატება",
-        description: "პროექტი წარმატებით განახლდა",
+        title: t('common.success'),
+        description: t('editProject.messages.updated'),
       });
 
       navigate('/admin/projects');
@@ -386,7 +388,7 @@ const AdminEditProject: React.FC = () => {
       
       toast({
         title: "შეცდომა",
-        description: `პროექტის განახლებისას მოხდა შეცდომა: ${error.message}. შეამოწმეთ კონსოლი დეტალებისთვის.`,
+        description: t('editProject.messages.updateError', { error: error.message }),
         variant: "destructive",
       });
     } finally {
@@ -404,14 +406,14 @@ const AdminEditProject: React.FC = () => {
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            უკან დაბრუნება
+            {t('common.back')}
           </Button>
           <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება (ადმინი)</h1>
         </div>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">პროექტის ჩატვირთვა...</p>
+            <p className="text-gray-600">{t('common.loading')}</p>
           </div>
         </div>
       </div>
@@ -427,12 +429,12 @@ const AdminEditProject: React.FC = () => {
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          უკან დაბრუნება
+          {t('common.back')}
         </Button>
         
         <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება (ადმინი)</h1>
         <div className="space-y-1">
-          <p className="text-gray-600">პროექტი #{id}</p>
+          <p className="text-gray-600">{t('editProject.projectNumber', { id })}</p>
           {projectOwner && (
             <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
               <p className="text-sm text-blue-800">
@@ -849,10 +851,10 @@ const AdminEditProject: React.FC = () => {
             variant="outline"
             onClick={() => navigate('/admin/projects')}
           >
-            გაუქმება
+            {t('common.cancel')}
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "შენახვა..." : "ცვლილებების შენახვა"}
+            {isLoading ? t('common.saving') : t('editProject.buttons.saveChanges')}
           </Button>
         </div>
       </form>

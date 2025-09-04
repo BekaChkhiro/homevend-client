@@ -1,0 +1,41 @@
+{
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успех",
+    "filter": "Фильтр",
+    "refresh": "Обновить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "unknown": "Неизвестно",
+    "notSpecified": "Не указано",
+    "menu": "Меню",
+    "close": "Закрыть"
+  },
+  "navigation": {
+    "administrator": "Администратор",
+    "categories": {
+      "analytics": "Аналитика",
+      "content": "Контент",
+      "data": "Данные",
+      "system": "Система"
+    },
+    "menu": {
+      "overview": "Обзор",
+      "listings": "Объявления",
+      "projects": "Проекты",
+      "agencies": "Агентства",
+      "users": "Пользователи",
+      "advertisements": "Реклама",
+      "districts": "Районы и цены",
+      "servicePricing": "Цены на услуги",
+      "settings": "Настройки"
+    }
+  },
+  "overview": {
+    "title": "Панель администратора",
+    "subtitle": "Управляйте платформой и отслеживайте активность"
+  }
+}
