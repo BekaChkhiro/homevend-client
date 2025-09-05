@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface Property {
   id: string;
@@ -49,6 +51,7 @@ interface ApartmentCardProps {
 
 export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   
   if (!property) {
     return null;
@@ -68,7 +71,7 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   };
 
   const getLocationString = () => {
-    if (!property) return 'მდებარეობა არ არის მითითებული';
+    if (!property) return t('apartmentCard.labels.locationNotSpecified');
     
     const parts = [];
     
@@ -84,7 +87,7 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
       parts.push(property.city);
     }
     
-    return parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
+    return parts.length > 0 ? parts.join(', ') : t('apartmentCard.labels.locationNotSpecified');
   };
 
   const handleDelete = () => {
@@ -92,11 +95,11 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   };
 
   const handleView = () => {
-    navigate(`/property/${property.id}`);
+    navigate(getLanguageUrl(`property/${property.id}`, i18n.language));
   };
 
   const handleEdit = () => {
-    navigate(`/admin/edit-property/${property.id}`);
+    navigate(getLanguageUrl(`admin/edit-property/${property.id}`, i18n.language));
   };
 
   return (
@@ -135,7 +138,7 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
               <div className="flex items-center text-gray-600 mb-2">
                 <User className="h-4 w-4 mr-1 flex-shrink-0" />
                 <span className="text-sm truncate">
-                  აგენტი: {property.owner.fullName}
+                  {t('apartmentCard.labels.agent')} {property.owner.fullName}
                 </span>
               </div>
             )}
@@ -155,7 +158,7 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
               )}
               <div className="flex items-center">
                 <Square className="h-4 w-4 mr-1" />
-                <span>{property.area} მ²</span>
+                <span>{property.area} {t('apartmentCard.labels.squareMeters')}</span>
               </div>
               <Badge variant="outline" className="text-xs px-2 py-0.5">
                 {property.propertyType}
@@ -169,7 +172,7 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
             <div className="flex items-center gap-4 text-xs text-gray-500">
               <div className="flex items-center">
                 <Eye className="h-3 w-3 mr-1" />
-                <span>{property.viewCount} ნახვა</span>
+                <span>{property.viewCount} {t('apartmentCard.labels.views')}</span>
               </div>
               <div className="flex items-center">
                 <Calendar className="h-3 w-3 mr-1" />
@@ -186,10 +189,10 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
               size="sm" 
               className="h-8 px-2"
               onClick={handleView}
-              title="ნახვა"
+              title={t('apartmentCard.buttons.view')}
             >
               <Eye className="h-4 w-4 mr-1" />
-              <span className="text-xs">ნახვა</span>
+              <span className="text-xs">{t('apartmentCard.buttons.view')}</span>
             </Button>
             
             {/* Edit button */}
@@ -198,10 +201,10 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
               size="sm" 
               className="h-8 px-2"
               onClick={handleEdit}
-              title="რედაქტირება"
+              title={t('apartmentCard.buttons.edit')}
             >
               <Edit className="h-4 w-4 mr-1" />
-              <span className="text-xs">რედაქტირება</span>
+              <span className="text-xs">{t('apartmentCard.buttons.edit')}</span>
             </Button>
             
             {/* Delete button with AlertDialog */}
@@ -211,23 +214,23 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
                   variant="ghost" 
                   size="sm" 
                   className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                  title="წაშლა"
+                  title={t('apartmentCard.buttons.delete')}
                 >
                   <Trash2 className="h-4 w-4 mr-1" />
-                  <span className="text-xs">წაშლა</span>
+                  <span className="text-xs">{t('apartmentCard.buttons.delete')}</span>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                  <AlertDialogTitle>{t('apartmentCard.deleteDialog.title')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                    {t('apartmentCard.deleteDialog.description')}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                  <AlertDialogCancel>{t('apartmentCard.deleteDialog.cancel')}</AlertDialogCancel>
                   <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                    წაშლა
+                    {t('apartmentCard.deleteDialog.confirm')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

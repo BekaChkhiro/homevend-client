@@ -9,15 +9,18 @@ import { Loader2, Save, DollarSign, Settings, CheckCircle, XCircle } from 'lucid
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { adminApi } from '@/lib/api';
+import { useTranslation } from 'react-i18next';
 
 interface ServicePricing {
   id: number;
   serviceType: string;
   nameKa: string;
   nameEn: string;
+  nameRu?: string;
   pricePerDay: number;
   descriptionKa?: string;
   descriptionEn?: string;
+  descriptionRu?: string;
   features?: string[];
   category: string;
   isActive: boolean;
@@ -29,9 +32,6 @@ interface ServiceCardProps {
   service: ServicePricing;
   priceChanges: Record<number, string>;
   onPriceChange: (serviceId: number, value: string) => void;
-  getServiceTypeLabel: (serviceType: string) => string;
-  getCategoryLabel: (category: string) => string;
-  getCategoryColor: (category: string) => string;
   formatPrice: (price: number) => string;
 }
 
@@ -39,13 +39,51 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   service,
   priceChanges,
   onPriceChange,
-  getServiceTypeLabel,
-  getCategoryLabel,
-  getCategoryColor,
   formatPrice
 }) => {
+  const { t, i18n } = useTranslation('admin');
   const currentPrice = priceChanges[service.id] ?? service.pricePerDay.toString();
   const hasChanges = priceChanges[service.id] !== undefined && parseFloat(priceChanges[service.id] || '0') !== service.pricePerDay;
+  
+  // Helper function to get service name from translations (for better localization)
+  const getServiceName = (service: ServicePricing): string => {
+    // Try to get translated name first, fallback to database names
+    const translatedName = t(`servicePricing.serviceTypes.${service.serviceType}`, '');
+    if (translatedName) {
+      return translatedName;
+    }
+    
+    // Fallback to database names if no translation exists
+    const lang = i18n.language;
+    switch (lang) {
+      case 'ka':
+        return service.nameKa;
+      case 'ru':
+        return service.nameRu || service.nameEn || service.nameKa;
+      case 'en':
+      default:
+        return service.nameEn || service.nameKa;
+    }
+  };
+  
+  // Helper function to get service description from translations
+  const getServiceDescription = (service: ServicePricing): string => {
+    // Get static translated description based on service type
+    const descriptionKey = `servicePricing.serviceDescriptions.${service.serviceType}`;
+    return t(descriptionKey, ''); // Empty string as fallback if no translation exists
+  };
+
+  const getServiceTypeLabel = (serviceType: string): string => {
+    return t(`servicePricing.serviceTypes.${serviceType}`, serviceType);
+  };
+
+  const getCategoryLabel = (category: string): string => {
+    return t(`servicePricing.categories.${category}`, category === 'vip' ? 'VIP Services' : 'Additional Services');
+  };
+
+  const getCategoryColor = (category: string): string => {
+    return category === 'vip' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
+  };
 
   const handleInputChange = (value: string) => {
     onPriceChange(service.id, value);
@@ -119,7 +157,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className={`text-lg ${cardColors.accent} font-semibold`}>{getServiceTypeLabel(service.serviceType)}</CardTitle>
-            <CardDescription className="text-gray-600">{service.nameKa}</CardDescription>
           </div>
           <div className="flex items-center gap-2">
             <Badge className={getCategoryColor(service.category)}>
@@ -134,18 +171,18 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 p-2">
         {/* Current price display */}
         <div className={`p-4 rounded-lg ${cardColors.header} border ${cardColors.border.split(' ').slice(-1)[0].replace('border-l-', 'border-')}`}>
-          <div className="text-sm text-gray-600 mb-1">მიმდინარე ფასი</div>
+          <div className="text-sm text-gray-600 mb-1">{t('servicePricing.labels.currentPrice')}</div>
           <div className={`text-2xl font-bold ${cardColors.accent}`}>
-            {formatPrice(service.pricePerDay)} ₾ / დღეში
+            {formatPrice(service.pricePerDay)} {t('servicePricing.labels.pricePerDay')}
           </div>
         </div>
 
         {/* Price editing */}
         <div>
-          <Label htmlFor={`price-${service.id}`}>ახალი ღირებულება (დღეში)</Label>
+          <Label htmlFor={`price-${service.id}`}>{t('servicePricing.labels.newPrice')}</Label>
           <div className="relative">
             <DollarSign className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${cardColors.accent}`} />
             <Input
@@ -162,9 +199,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         </div>
 
         {/* Description (read-only) */}
-        {service.descriptionKa && (
+        {getServiceDescription(service) && (
           <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded">
-            {service.descriptionKa}
+            {getServiceDescription(service)}
           </div>
         )}
 
@@ -173,7 +210,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           <div className="pt-4 border-t">
             <div className="flex items-center text-sm text-orange-600">
               <Save className="h-4 w-4 mr-2" />
-              <span>ფასი შეცვლილია - შენახვისთვის გამოიყენეთ "ყველა ფასის შენახვა" ღილაკი</span>
+              <span>{t('servicePricing.messages.priceChanged')}</span>
             </div>
           </div>
         )}
@@ -183,6 +220,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 };
 
 const AdminServicePricing = () => {
+  const { t } = useTranslation('admin');
   const [services, setServices] = useState<ServicePricing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -201,9 +239,9 @@ const AdminServicePricing = () => {
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "ფასების ჩატვირთვისას მოხდა შეცდომა";
+                          t('servicePricing.messages.errorLoading');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -222,8 +260,8 @@ const AdminServicePricing = () => {
   const handleSaveAllPrices = async () => {
     if (Object.keys(priceChanges).length === 0) {
       toast({
-        title: "ინფორმაცია",
-        description: "ცვლილებები არ არის შესანახად",
+        title: t('common.info'),
+        description: t('servicePricing.messages.noChanges'),
       });
       return;
     }
@@ -252,42 +290,22 @@ const AdminServicePricing = () => {
       setPriceChanges({});
       
       toast({
-        title: "წარმატება",
-        description: `${results.length} სერვისის ფასი წარმატებით განახლდა`,
+        title: t('common.success'),
+        description: t('servicePricing.messages.updated', { count: results.length }),
       });
     } catch (error: any) {
       console.error('Error updating service pricing:', error);
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "ფასების განახლებისას მოხდა შეცდომა";
+                          t('servicePricing.messages.errorUpdating');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
     } finally {
       setSaving(false);
     }
-  };
-
-  const getServiceTypeLabel = (serviceType: string): string => {
-    const labels: Record<string, string> = {
-      free: 'უფასო განცხადება',
-      vip: 'VIP',
-      vip_plus: 'VIP+',
-      super_vip: 'სუპერ VIP',
-      auto_renew: 'ავტო-განახლება',
-      color_separation: 'ფერადი განცალკევება'
-    };
-    return labels[serviceType] || serviceType;
-  };
-
-  const getCategoryLabel = (category: string): string => {
-    return category === 'vip' ? 'VIP სერვისები' : 'დამატებითი სერვისები';
-  };
-
-  const getCategoryColor = (category: string): string => {
-    return category === 'vip' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
   };
 
   const formatPrice = (price: number) => {
@@ -298,14 +316,14 @@ const AdminServicePricing = () => {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">ფასების მართვა</h1>
-          <p className="text-gray-600">VIP და დამატებითი სერვისების ფასების მართვა</p>
+          <h1 className="text-3xl font-bold mb-2">{t('servicePricing.title')}</h1>
+          <p className="text-gray-600">{t('servicePricing.subtitle')}</p>
         </div>
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="flex items-center space-x-2">
               <Loader2 className="h-6 w-6 animate-spin" />
-              <span>ფასების ჩატვირთვა...</span>
+              <span>{t('servicePricing.messages.loadingPrices')}</span>
             </div>
           </CardContent>
         </Card>
@@ -322,8 +340,8 @@ const AdminServicePricing = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">ფასების მართვა</h1>
-        <p className="text-gray-600">VIP და დამატებითი სერვისების ფასების მართვა ({services.length} სერვისი)</p>
+        <h1 className="text-3xl font-bold mb-2">{t('servicePricing.title')}</h1>
+        <p className="text-gray-600">{t('servicePricing.subtitleWithCount', { count: services.length })}</p>
       </div>
 
       {/* VIP Services */}
@@ -331,9 +349,9 @@ const AdminServicePricing = () => {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
             <Settings className="h-5 w-5 text-purple-600" />
-            <h2 className="text-xl font-semibold">VIP სერვისები</h2>
+            <h2 className="text-xl font-semibold">{t('servicePricing.categories.vip')}</h2>
             <Badge variant="outline" className="bg-purple-50 text-purple-700">
-              {vipServices.length} სერვისი
+              {vipServices.length} {t('servicePricing.labels.services')}
             </Badge>
           </div>
           
@@ -344,9 +362,6 @@ const AdminServicePricing = () => {
                 service={service}
                 priceChanges={priceChanges}
                 onPriceChange={handlePriceChange}
-                getServiceTypeLabel={getServiceTypeLabel}
-                getCategoryLabel={getCategoryLabel}
-                getCategoryColor={getCategoryColor}
                 formatPrice={formatPrice}
               />
             ))}
@@ -359,9 +374,9 @@ const AdminServicePricing = () => {
         <div>
           <div className="flex items-center gap-2 mb-4">
             <Settings className="h-5 w-5 text-blue-600" />
-            <h2 className="text-xl font-semibold">დამატებითი სერვისები</h2>
+            <h2 className="text-xl font-semibold">{t('servicePricing.categories.service')}</h2>
             <Badge variant="outline" className="bg-blue-50 text-blue-700">
-              {additionalServices.length} სერვისი
+              {additionalServices.length} {t('servicePricing.labels.services')}
             </Badge>
           </div>
           
@@ -372,9 +387,6 @@ const AdminServicePricing = () => {
                 service={service}
                 priceChanges={priceChanges}
                 onPriceChange={handlePriceChange}
-                getServiceTypeLabel={getServiceTypeLabel}
-                getCategoryLabel={getCategoryLabel}
-                getCategoryColor={getCategoryColor}
                 formatPrice={formatPrice}
               />
             ))}
@@ -386,12 +398,12 @@ const AdminServicePricing = () => {
         <Card>
           <CardContent className="text-center py-12">
             <Settings className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">სერვისები ვერ მოიძებნა</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('servicePricing.messages.noServicesFound')}</h3>
             <p className="text-gray-500 mb-4">
-              ამჟამად არ არის ხელმისაწვდომი სერვისების ფასები
+              {t('servicePricing.messages.noServicesAvailable')}
             </p>
             <Button onClick={fetchServicePricing}>
-              განახლება
+              {t('servicePricing.buttons.refresh')}
             </Button>
           </CardContent>
         </Card>
@@ -409,12 +421,12 @@ const AdminServicePricing = () => {
             {saving ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                შენახვა...
+                {t('common.saving')}
               </>
             ) : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                ყველა ფასის შენახვა ({Object.keys(priceChanges).length})
+                {t('servicePricing.buttons.saveAllPrices')} ({Object.keys(priceChanges).length})
               </>
             )}
           </Button>

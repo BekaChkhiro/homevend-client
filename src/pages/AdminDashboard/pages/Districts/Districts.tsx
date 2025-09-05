@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Plus, Edit, Trash2, MapPin, Eye, EyeOff } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { adminApi } from "@/lib/api";
 
@@ -19,6 +20,9 @@ interface District {
   nameEn: string;
   nameRu?: string;
   description?: string;
+  descriptionKa?: string;
+  descriptionEn?: string;
+  descriptionRu?: string;
   pricePerSqm: number;
   isActive: boolean;
   createdAt: string;
@@ -37,11 +41,43 @@ const Districts = () => {
     nameEn: '',
     nameRu: '',
     description: '',
+    descriptionKa: '',
+    descriptionEn: '',
+    descriptionRu: '',
     isActive: true,
     pricePerSqm: ''
   });
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t, i18n } = useTranslation('admin');
+  
+  // Helper function to get district name based on current language
+  const getDistrictName = (district: District): string => {
+    const lang = i18n.language;
+    switch (lang) {
+      case 'ka':
+        return district.nameKa;
+      case 'ru':
+        return district.nameRu || district.nameEn; // Fallback to English if Russian not available
+      case 'en':
+      default:
+        return district.nameEn;
+    }
+  };
+  
+  // Helper function to get district description based on current language
+  const getDistrictDescription = (district: District): string => {
+    const lang = i18n.language;
+    switch (lang) {
+      case 'ka':
+        return district.descriptionKa || district.description || district.descriptionEn || '';
+      case 'ru':
+        return district.descriptionRu || district.description || district.descriptionEn || district.descriptionKa || '';
+      case 'en':
+      default:
+        return district.descriptionEn || district.description || district.descriptionKa || '';
+    }
+  };
 
   useEffect(() => {
     fetchDistricts();
@@ -54,9 +90,9 @@ const Districts = () => {
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "რაიონების ჩატვირთვა ვერ მოხერხდა";
+                          t('districts.messages.errorLoading');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive"
       });
@@ -77,8 +113,8 @@ const Districts = () => {
       }
 
       toast({
-        title: "წარმატება",
-        description: editingDistrict ? "რაიონი წარმატებით განახლდა" : "რაიონი წარმატებით შეიქმნა"
+        title: t('common.success'),
+        description: editingDistrict ? t('districts.messages.updated') : t('districts.messages.created')
       });
       resetForm();
       fetchDistricts();
@@ -86,9 +122,9 @@ const Districts = () => {
       console.error('Error saving district:', error);
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "რაიონის შენახვა ვერ მოხერხდა";
+                          t('districts.messages.errorSaving');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive"
       });
@@ -101,17 +137,17 @@ const Districts = () => {
     try {
       await adminApi.deleteDistrict(district.id.toString());
       toast({
-        title: "წარმატება",
-        description: "რაიონი წარმატებით წაიშალა"
+        title: t('common.success'),
+        description: t('districts.messages.deleted')
       });
       fetchDistricts();
     } catch (error: any) {
       console.error('Error deleting district:', error);
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "რაიონის წაშლა ვერ მოხერხდა";
+                          t('districts.messages.errorDeleting');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive"
       });
@@ -126,6 +162,9 @@ const Districts = () => {
       nameEn: '',
       nameRu: '',
       description: '',
+      descriptionKa: '',
+      descriptionEn: '',
+      descriptionRu: '',
       isActive: true,
       pricePerSqm: ''
     });
@@ -139,6 +178,9 @@ const Districts = () => {
       nameEn: district.nameEn,
       nameRu: district.nameRu || '',
       description: district.description || '',
+      descriptionKa: district.descriptionKa || '',
+      descriptionEn: district.descriptionEn || '',
+      descriptionRu: district.descriptionRu || '',
       isActive: district.isActive,
       pricePerSqm: district.pricePerSqm ? district.pricePerSqm.toString() : ''
     });
@@ -171,9 +213,9 @@ const Districts = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">რაიონები და ფასები</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('districts.title')}</h1>
           <p className="text-gray-600 mt-1">
-            თბილისის რაიონების დამატება, რედაქტირება და კვადრატული მეტრის ფასების მართვა
+            {t('districts.subtitle')}
           </p>
         </div>
         
@@ -181,7 +223,7 @@ const Districts = () => {
           <DialogTrigger asChild>
             <Button onClick={openAddDialog} className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              ახალი რაიონი
+              {t('districts.buttons.newDistrict')}
             </Button>
           </DialogTrigger>
           
@@ -189,59 +231,81 @@ const Districts = () => {
             <form onSubmit={handleSubmit}>
               <DialogHeader>
                 <DialogTitle>
-                  {editingDistrict ? 'რაიონის რედაქტირება' : 'ახალი რაიონის დამატება'}
+                  {editingDistrict ? t('districts.form.editTitle') : t('districts.form.addTitle')}
                 </DialogTitle>
                 <DialogDescription>
-                  შეიყვანეთ რაიონის ინფორმაცია ქართულ და ინგლისურ ენებზე.
+                  {t('districts.form.description')}
                 </DialogDescription>
               </DialogHeader>
 
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="nameKa">დასახელება (ქართული) *</Label>
+                  <Label htmlFor="nameKa">{t('districts.form.nameKa')} *</Label>
                   <Input
                     id="nameKa"
                     value={formData.nameKa}
                     onChange={(e) => setFormData({ ...formData, nameKa: e.target.value })}
-                    placeholder="მაგ: ვაკე"
+                    placeholder={t('districts.form.placeholders.nameKa')}
                     required
                   />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="nameEn">დასახელება (ინგლისური) *</Label>
+                  <Label htmlFor="nameEn">{t('districts.form.nameEn')} *</Label>
                   <Input
                     id="nameEn"
                     value={formData.nameEn}
                     onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
-                    placeholder="e.g: Vake"
+                    placeholder={t('districts.form.placeholders.nameEn')}
                     required
                   />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="nameRu">დასახელება (რუსული)</Label>
+                  <Label htmlFor="nameRu">{t('districts.form.nameRu')}</Label>
                   <Input
                     id="nameRu"
                     value={formData.nameRu}
                     onChange={(e) => setFormData({ ...formData, nameRu: e.target.value })}
-                    placeholder="მაგ: Ваке"
+                    placeholder={t('districts.form.placeholders.nameRu')}
                   />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="description">აღწერა</Label>
+                  <Label htmlFor="descriptionKa">{t('districts.form.descriptionField')} (ქართული)</Label>
                   <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="რაიონის აღწერა (არ არის სავალდებულო)"
-                    rows={3}
+                    id="descriptionKa"
+                    value={formData.descriptionKa}
+                    onChange={(e) => setFormData({ ...formData, descriptionKa: e.target.value })}
+                    placeholder="აღწერა ქართულ ენაზე"
+                    rows={2}
                   />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="pricePerSqm">ფასი 1 კვ/მ (USD) *</Label>
+                  <Label htmlFor="descriptionEn">{t('districts.form.descriptionField')} (English)</Label>
+                  <Textarea
+                    id="descriptionEn"
+                    value={formData.descriptionEn}
+                    onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
+                    placeholder="Description in English"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="descriptionRu">{t('districts.form.descriptionField')} (Русский)</Label>
+                  <Textarea
+                    id="descriptionRu"
+                    value={formData.descriptionRu}
+                    onChange={(e) => setFormData({ ...formData, descriptionRu: e.target.value })}
+                    placeholder="Описание на русском языке"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="pricePerSqm">{t('districts.form.pricePerSqm')} *</Label>
                   <Input
                     id="pricePerSqm"
                     type="number"
@@ -249,7 +313,7 @@ const Districts = () => {
                     min="0"
                     value={formData.pricePerSqm}
                     onChange={(e) => setFormData({ ...formData, pricePerSqm: e.target.value })}
-                    placeholder="მაგ: 2500"
+                    placeholder={t('districts.form.placeholders.price')}
                     required
                   />
                 </div>
@@ -260,16 +324,16 @@ const Districts = () => {
                     checked={formData.isActive}
                     onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
                   />
-                  <Label htmlFor="isActive">აქტიური რაიონი</Label>
+                  <Label htmlFor="isActive">{t('districts.form.isActive')}</Label>
                 </div>
               </div>
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={resetForm}>
-                  გაუქმება
+                  {t('districts.buttons.cancel')}
                 </Button>
                 <Button type="submit" disabled={submitting}>
-                  {submitting ? 'შენახვა...' : editingDistrict ? 'განახლება' : 'შენახვა'}
+                  {submitting ? t('districts.buttons.saving') : editingDistrict ? t('districts.buttons.update') : t('districts.buttons.save')}
                 </Button>
               </DialogFooter>
             </form>
@@ -285,23 +349,20 @@ const Districts = () => {
                 <div className="flex-1">
                   <CardTitle className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-gray-500" />
-                    <span>{district.nameKa}</span>
+                    <span>{getDistrictName(district)}</span>
                   </CardTitle>
-                  <CardDescription className="mt-1">
-                    {district.nameEn}
-                  </CardDescription>
                 </div>
                 <div className="flex items-center gap-1">
                   <Badge variant={district.isActive ? 'default' : 'secondary'} className="text-xs">
                     {district.isActive ? (
                       <>
                         <Eye className="h-3 w-3 mr-1" />
-                        აქტიური
+                        {t('districts.status.active')}
                       </>
                     ) : (
                       <>
                         <EyeOff className="h-3 w-3 mr-1" />
-                        არააქტიური
+                        {t('districts.status.inactive')}
                       </>
                     )}
                   </Badge>
@@ -310,16 +371,16 @@ const Districts = () => {
             </CardHeader>
 
             <CardContent>
-              {district.description && (
+              {getDistrictDescription(district) && (
                 <p className="text-sm text-gray-600 mb-4">
-                  {district.description}
+                  {getDistrictDescription(district)}
                 </p>
               )}
 
               {district.pricePerSqm && (
                 <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-green-700">ფასი 1 კვ/მ:</span>
+                    <span className="text-sm font-medium text-green-700">{t('districts.labels.pricePerSqm')}</span>
                     <span className="text-lg font-bold text-green-600">
                       ${district.pricePerSqm.toLocaleString()} USD
                     </span>
@@ -328,8 +389,8 @@ const Districts = () => {
               )}
 
               <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                <span>შექმნილია: {new Date(district.createdAt).toLocaleDateString('ka-GE')}</span>
-                <span>განახლებულია: {new Date(district.updatedAt).toLocaleDateString('ka-GE')}</span>
+                <span>{t('districts.labels.created')} {new Date(district.createdAt).toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : i18n.language === 'ru' ? 'ru-RU' : 'en-US')}</span>
+                <span>{t('districts.labels.updated')} {new Date(district.updatedAt).toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : i18n.language === 'ru' ? 'ru-RU' : 'en-US')}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -340,7 +401,7 @@ const Districts = () => {
                   className="flex-1"
                 >
                   <Edit className="h-3 w-3 mr-1" />
-                  რედაქტირება
+                  {t('districts.buttons.edit')}
                 </Button>
                 
                 <Button
@@ -360,13 +421,13 @@ const Districts = () => {
       {districts.length === 0 && (
         <div className="text-center py-12">
           <MapPin className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">რაიონები არ არის</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{t('districts.empty.title')}</h3>
           <p className="text-gray-500 mb-4">
-            დაამატეთ ახალი რაიონები სისტემაში
+            {t('districts.empty.description')}
           </p>
           <Button onClick={openAddDialog}>
             <Plus className="h-4 w-4 mr-2" />
-            ახალი რაიონის დამატება
+            {t('districts.buttons.addNew')}
           </Button>
         </div>
       )}
@@ -375,19 +436,18 @@ const Districts = () => {
       <AlertDialog open={!!deletingDistrict} onOpenChange={() => setDeletingDistrict(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>რაიონის წაშლა</AlertDialogTitle>
+            <AlertDialogTitle>{t('districts.deleteDialog.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              დარწმუნებული ხართ, რომ გსურთ "{deletingDistrict?.nameKa}" რაიონის წაშლა?
-              ეს მოქმედება შეუქცევადია.
+              {t('districts.deleteDialog.description', { name: deletingDistrict ? getDistrictName(deletingDistrict) : '' })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+            <AlertDialogCancel>{t('districts.deleteDialog.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deletingDistrict && handleDelete(deletingDistrict)}
               className="bg-red-600 hover:bg-red-700"
             >
-              წაშლა
+              {t('districts.deleteDialog.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

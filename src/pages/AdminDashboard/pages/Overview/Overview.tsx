@@ -8,6 +8,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '@/components/ui/use-toast';
 import { adminApi } from '@/lib/api';
 
@@ -50,6 +51,7 @@ const Overview = () => {
   const [recentUsers, setRecentUsers] = useState<RecentUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchDashboardData();
@@ -66,10 +68,10 @@ const Overview = () => {
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "მონაცემების ჩატვირთვისას მოხდა შეცდომა";
+                          t('overview.messages.errorLoadingData');
       
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -91,27 +93,22 @@ const Overview = () => {
   };
 
   const getRoleText = (role: string) => {
-    switch (role) {
-      case "admin": return "ადმინი";
-      case "developer": return "დეველოპერი";
-      case "agency": return "სააგენტო";
-      case "user": return "მომხმარებელი";
-      default: return role;
-    }
+    const roleKey = `overview.roles.${role}` as const;
+    return t(roleKey, { defaultValue: role });
   };
 
   if (isLoading) {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">ადმინისტრატორის პანელი</h1>
-          <p className="text-gray-600">მართეთ პლატფორმა და მონიტორინგი გაუწიეთ აქტივობებს</p>
+          <h1 className="text-3xl font-bold mb-2">{t('overview.title')}</h1>
+          <p className="text-gray-600">{t('overview.subtitle')}</p>
         </div>
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="flex items-center space-x-2">
               <Loader2 className="h-6 w-6 animate-spin" />
-              <span>მონაცემების ჩატვირთვა...</span>
+              <span>{t('overview.messages.loadingData')}</span>
             </div>
           </CardContent>
         </Card>
@@ -120,17 +117,17 @@ const Overview = () => {
   }
 
   const statsCards = stats ? [
-    { title: 'სულ მომხმარებლები', value: stats.totalUsers.toString(), icon: Users, change: `+${stats.monthlyUsers} ამ თვეში` },
-    { title: 'აქტიური განცხადებები', value: stats.totalProperties.toString(), icon: Home, change: `+${stats.monthlyProperties} ამ თვეში` },
-    { title: 'პროექტები', value: stats.totalProjects.toString(), icon: Building2, change: 'სულ პროექტები' },
-    { title: 'ადმინისტრატორები', value: stats.totalAdmins.toString(), icon: FileText, change: 'სისტემის ადმინები' },
+    { title: t('overview.stats.totalUsers'), value: stats.totalUsers.toString(), icon: Users, change: t('overview.stats.thisMonth', { count: stats.monthlyUsers }) },
+    { title: t('overview.stats.activeListings'), value: stats.totalProperties.toString(), icon: Home, change: t('overview.stats.thisMonth', { count: stats.monthlyProperties }) },
+    { title: t('overview.stats.projects'), value: stats.totalProjects.toString(), icon: Building2, change: t('overview.stats.totalProjects') },
+    { title: t('overview.stats.administrators'), value: stats.totalAdmins.toString(), icon: FileText, change: t('overview.stats.systemAdmins') },
   ] : [];
 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">ადმინისტრატორის პანელი</h1>
-        <p className="text-gray-600">მართეთ პლატფორმა და მონიტორინგი გაუწიეთ აქტივობებს</p>
+        <h1 className="text-3xl font-bold mb-2">{t('overview.title')}</h1>
+        <p className="text-gray-600">{t('overview.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -154,8 +151,8 @@ const Overview = () => {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>უახლესი განცხადებები</CardTitle>
-            <CardDescription>ბოლოს დამატებული 5 განცხადება ({recentListings.length} ნაჩვენებია)</CardDescription>
+            <CardTitle>{t('overview.recent.listings')}</CardTitle>
+            <CardDescription>{t('overview.recent.listingsSubtitle', { count: recentListings.length })}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -164,8 +161,8 @@ const Overview = () => {
                   <div key={listing.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex-1">
                       <h4 className="font-semibold">{listing.title}</h4>
-                      <p className="text-sm text-gray-600">მომხმარებელი: {listing.user.fullName}</p>
-                      <p className="text-sm text-gray-600">მდებარეობა: {listing.location || 'მითითებული არ არის'}</p>
+                      <p className="text-sm text-gray-600">{t('overview.labels.user')} {listing.user.fullName}</p>
+                      <p className="text-sm text-gray-600">{t('overview.labels.location')} {listing.location || t('common.notSpecified')}</p>
                       <div className="flex items-center gap-4 mt-1">
                         <p className="text-sm font-medium text-primary">{formatPrice(listing.price)}</p>
                         <p className="text-xs text-gray-500">{formatDate(listing.createdAt)}</p>
@@ -175,7 +172,7 @@ const Overview = () => {
                 ))
               ) : (
                 <div className="text-center py-8 text-gray-500">
-                  განცხადებები ვერ მოიძებნა
+                  {t('overview.messages.noListings')}
                 </div>
               )}
             </div>
@@ -184,8 +181,8 @@ const Overview = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>ახალი მომხმარებლები</CardTitle>
-            <CardDescription>ბოლოს დარეგისტრირებული 5 მომხმარებელი ({recentUsers.length} ნაჩვენებია)</CardDescription>
+            <CardTitle>{t('overview.recent.users')}</CardTitle>
+            <CardDescription>{t('overview.recent.usersSubtitle', { count: recentUsers.length })}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -206,7 +203,7 @@ const Overview = () => {
                 ))
               ) : (
                 <div className="text-center py-8 text-gray-500">
-                  მომხმარებლები ვერ მოიძებნა
+                  {t('overview.messages.noUsers')}
                 </div>
               )}
             </div>

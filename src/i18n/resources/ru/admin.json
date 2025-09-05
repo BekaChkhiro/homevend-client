@@ -1,0 +1,743 @@
+{
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успех",
+    "filter": "Фильтр",
+    "refresh": "Обновить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "unknown": "Неизвестно",
+    "notSpecified": "Не указано",
+    "menu": "Меню",
+    "close": "Закрыть",
+    "back": "Назад",
+    "info": "Информация",
+    "saving": "Сохранение...",
+    "squareMeters": "кв.м",
+    "rooms": "комнаты"
+  },
+  "navigation": {
+    "administrator": "Администратор",
+    "categories": {
+      "analytics": "Аналитика",
+      "content": "Контент",
+      "data": "Данные",
+      "system": "Система"
+    },
+    "menu": {
+      "overview": "Обзор",
+      "listings": "Объявления",
+      "projects": "Проекты",
+      "agencies": "Агентства",
+      "users": "Пользователи",
+      "advertisements": "Реклама",
+      "districts": "Районы и цены",
+      "servicePricing": "Цены на услуги",
+      "settings": "Настройки"
+    }
+  },
+  "overview": {
+    "title": "Панель администратора",
+    "subtitle": "Управляйте платформой и отслеживайте активность",
+    "stats": {
+      "totalUsers": "Всего пользователей",
+      "activeListings": "Активные объявления",
+      "projects": "Проекты",
+      "administrators": "Администраторы",
+      "thisMonth": "+{{count}} в этом месяце",
+      "totalProjects": "Всего проектов",
+      "systemAdmins": "Системные администраторы"
+    },
+    "recent": {
+      "listings": "Последние объявления",
+      "users": "Новые пользователи",
+      "listingsSubtitle": "Последние 5 добавленных объявлений (показано {{count}})",
+      "usersSubtitle": "Последние 5 зарегистрированных пользователей (показано {{count}})"
+    },
+    "labels": {
+      "user": "Пользователь:",
+      "location": "Местоположение:"
+    },
+    "messages": {
+      "noListings": "Объявления не найдены",
+      "noUsers": "Пользователи не найдены",
+      "loadingData": "Загрузка данных...",
+      "errorLoadingData": "Ошибка загрузки данных"
+    },
+    "roles": {
+      "admin": "Админ",
+      "developer": "Застройщик",
+      "agency": "Агентство",
+      "user": "Пользователь"
+    }
+  },
+  "users": {
+    "title": "Управление пользователями",
+    "subtitle": "Список и управление пользователями",
+    "subtitleWithCount": "Список и управление пользователями ({{count}} пользователей)",
+    "list": {
+      "title": "Список пользователей",
+      "description": "Просмотр и управление всеми зарегистрированными пользователями"
+    },
+    "stats": {
+      "totalUsers": "Всего пользователей",
+      "activeUsers": "Активные пользователи",
+      "totalListings": "Всего объявлений"
+    },
+    "messages": {
+      "loadingUsers": "Загрузка пользователей...",
+      "errorLoadingUsers": "Ошибка загрузки пользователей",
+      "userDeleted": "Пользователь успешно удален",
+      "errorDeletingUser": "Ошибка удаления пользователя",
+      "noUsersFound": "Пользователи не найдены"
+    }
+  },
+  "listings": {
+    "title": "Управление объявлениями",
+    "subtitle": "Просмотр и управление всеми объявлениями",
+    "subtitleWithCount": "Просмотр и управление всеми объявлениями ({{count}} объявлений)",
+    "list": {
+      "title": "Список объявлений",
+      "description": "Просмотр, одобрение и отклонение всех объявлений"
+    },
+    "propertyTypes": {
+      "apartment": "Квартира",
+      "house": "Дом",
+      "commercial": "Коммерческая"
+    },
+    "dealTypes": {
+      "sale": "Продажа",
+      "rent": "Аренда",
+      "daily": "Посуточно"
+    },
+    "messages": {
+      "loadingListings": "Загрузка объявлений...",
+      "errorLoadingListings": "Ошибка загрузки объявлений",
+      "listingDeleted": "Объявление удалено",
+      "errorDeletingListing": "Ошибка удаления объявления",
+      "noListingsFound": "Объявления не найдены"
+    }
+  },
+  "settings": {
+    "title": "Системные настройки",
+    "subtitle": "Конфигурация и настройки платформы",
+    "configuration": {
+      "title": "Конфигурация",
+      "description": "Конфигурация основных параметров системы"
+    },
+    "buttons": {
+      "general": "Общие настройки",
+      "users": "Настройки пользователей",
+      "listings": "Настройки объявлений"
+    }
+  },
+  "districts": {
+    "title": "Районы и цены",
+    "subtitle": "Добавление, редактирование и управление районами и ценами за квадратный метр в Тбилиси",
+    "buttons": {
+      "newDistrict": "Новый район",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "cancel": "Отмена",
+      "save": "Сохранить",
+      "update": "Обновить",
+      "saving": "Сохранение...",
+      "addNew": "Добавить новый район"
+    },
+    "form": {
+      "editTitle": "Редактировать район",
+      "addTitle": "Добавить новый район",
+      "description": "Введите информацию о районе на грузинском и английском языках.",
+      "nameKa": "Название (грузинский)",
+      "nameEn": "Название (английский)",
+      "nameRu": "Название (русский)",
+      "descriptionField": "Описание",
+      "pricePerSqm": "Цена за кв.м (USD)",
+      "isActive": "Активный район",
+      "placeholders": {
+        "nameKa": "напр: ვაკე",
+        "nameEn": "напр: Vake",
+        "nameRu": "напр: Ваке",
+        "description": "Описание района (необязательно)",
+        "price": "напр: 2500"
+      }
+    },
+    "status": {
+      "active": "Активный",
+      "inactive": "Неактивный"
+    },
+    "labels": {
+      "pricePerSqm": "Цена за кв.м:",
+      "created": "Создано:",
+      "updated": "Обновлено:"
+    },
+    "empty": {
+      "title": "Нет районов",
+      "description": "Добавьте новые районы в систему"
+    },
+    "deleteDialog": {
+      "title": "Удалить район",
+      "description": "Вы уверены, что хотите удалить район \"{{name}}\"? Это действие нельзя отменить.",
+      "confirm": "Удалить",
+      "cancel": "Отмена"
+    },
+    "messages": {
+      "errorLoading": "Не удалось загрузить районы",
+      "errorSaving": "Не удалось сохранить район",
+      "errorDeleting": "Не удалось удалить район",
+      "created": "Район успешно создан",
+      "updated": "Район успешно обновлен",
+      "deleted": "Район успешно удален"
+    }
+  },
+  "advertisements": {
+    "title": "Управление рекламой",
+    "subtitle": "Управляйте рекламными размещениями и отслеживайте эффективность",
+    "stats": {
+      "totalPlacements": "Всего размещений",
+      "activeCount": "Активные",
+      "totalViews": "Всего просмотров",
+      "totalClicks": "Всего кликов",
+      "ctrIndicator": "Показатель CTR",
+      "thisMonth": "В этом месяце",
+      "averageCtr": "Средний CTR"
+    },
+    "buttons": {
+      "addNew": "Добавить новую рекламу",
+      "activate": "Активировать",
+      "deactivate": "Деактивировать",
+      "delete": "Удалить"
+    },
+    "types": {
+      "banner": "Баннер",
+      "sidebar": "Боковая панель",
+      "popup": "Всплывающее окно",
+      "footer": "Нижний колонтитул"
+    },
+    "status": {
+      "active": "Активная",
+      "inactive": "Неактивная"
+    },
+    "labels": {
+      "dimensions": "Размеры",
+      "performance": "Эффективность",
+      "views": "Просмотры",
+      "clicks": "Клики",
+      "expires": "Истекает:",
+      "until": " до"
+    },
+    "messages": {
+      "adAdded": "Реклама успешно добавлена!"
+    }
+  },
+  "projects": {
+    "title": "Управление проектами",
+    "subtitle": "Просмотр и управление всеми проектами",
+    "subtitleWithCount": "Просмотр и управление всеми проектами ({{count}} проектов)",
+    "list": {
+      "title": "Список проектов",
+      "description": "Просмотр, одобрение и управление всеми проектами"
+    },
+    "buttons": {
+      "filter": "Фильтр",
+      "refresh": "Обновить",
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "manageProperties": "Управление недвижимостью",
+      "delete": "Удалить",
+      "cancel": "Отмена"
+    },
+    "status": {
+      "completed_with_renovation": "Сдача с ремонтом",
+      "green_frame": "Зеленый каркас",
+      "black_frame": "Черный каркас",
+      "white_frame": "Белый каркас",
+      "active": "Активный",
+      "completed": "Завершенный",
+      "planned": "Запланированный",
+      "inactive": "Неактивный"
+    },
+    "labels": {
+      "developer": "ID застройщика:",
+      "started": "Начало:",
+      "completion": "Завершение:",
+      "unknownDeveloper": "Неизвестный застройщик"
+    },
+    "loading": {
+      "text": "Загрузка проектов..."
+    },
+    "empty": {
+      "text": "Проекты не найдены"
+    },
+    "deleteDialog": {
+      "title": "Удалить проект",
+      "description": "Вы уверены, что хотите удалить этот проект? Это действие нельзя отменить.",
+      "confirm": "Удалить",
+      "cancel": "Отмена"
+    },
+    "messages": {
+      "errorLoading": "Ошибка загрузки проектов",
+      "errorDeleting": "Ошибка удаления проекта",
+      "deleted": "Проект успешно удален"
+    }
+  },
+  "agencies": {
+    "title": "Управление агентствами",
+    "subtitle": "Просмотр и управление всеми агентствами",
+    "subtitleWithCount": "Просмотр и управление всеми агентствами ({{count}} агентств)",
+    "list": {
+      "title": "Список агентств",
+      "description": "Просмотр, одобрение и управление всеми агентствами"
+    },
+    "buttons": {
+      "filter": "Фильтр",
+      "refresh": "Обновить",
+      "view": "Просмотр",
+      "changeStatus": "Изменить статус",
+      "delete": "Удалить",
+      "cancel": "Отмена"
+    },
+    "status": {
+      "active": "Активное",
+      "pending": "На рассмотрении",
+      "inactive": "Неактивное"
+    },
+    "labels": {
+      "owner": "Владелец:",
+      "agents": "агентов",
+      "activeListings": "активных объявлений",
+      "registration": "Регистрация:",
+      "totalListings": "Всего {{count}} объявлений"
+    },
+    "loading": {
+      "text": "Загрузка агентств..."
+    },
+    "empty": {
+      "text": "Агентства не найдены"
+    },
+    "deleteDialog": {
+      "title": "Удалить агентство",
+      "description": "Вы уверены, что хотите удалить это агентство? Это действие нельзя отменить.",
+      "confirm": "Удалить",
+      "cancel": "Отмена"
+    },
+    "messages": {
+      "errorLoading": "Ошибка загрузки агентств",
+      "errorDeleting": "Ошибка удаления агентства",
+      "errorChangingStatus": "Ошибка изменения статуса агентства",
+      "deleted": "Агентство успешно удалено",
+      "statusChanged": "Статус агентства изменен: {{status}}",
+      "deleteError": "Ошибка: HTTP {{status}}",
+      "statusError": "Статус: HTTP {{status}}"
+    }
+  },
+  "vipPricing": {
+    "title": "Управление VIP тарифами",
+    "subtitle": "Управляйте ценами и описаниями VIP статусов",
+    "status": {
+      "active": "Активный",
+      "inactive": "Отключен"
+    },
+    "labels": {
+      "pricePerDay": "Цена за день (₾)",
+      "descriptionKa": "Описание (грузинский)",
+      "descriptionEn": "Описание (английский)",
+      "features": "Функции (через запятую)",
+      "example": "Пример: Приоритетный поиск, VIP значок, цветная рамка",
+      "lastUpdated": "Последнее обновление"
+    },
+    "placeholders": {
+      "features": "Функция 1, Функция 2, Функция 3"
+    },
+    "messages": {
+      "errorLoading": "Не удалось загрузить VIP цены",
+      "errorUpdating": "Не удалось обновить VIP цену",
+      "updated": "VIP цена успешно обновлена",
+      "unsaved": "Изменения не сохранены"
+    }
+  },
+  "servicePricing": {
+    "title": "Управление ценами на услуги",
+    "subtitle": "Управление ценами на VIP и дополнительные услуги",
+    "subtitleWithCount": "Управление ценами на VIP и дополнительные услуги ({{count}} услуг)",
+    "categories": {
+      "vip": "VIP услуги",
+      "service": "Дополнительные услуги"
+    },
+    "serviceTypes": {
+      "free": "Бесплатное объявление",
+      "vip": "VIP",
+      "vip_plus": "VIP+",
+      "super_vip": "SUPER VIP",
+      "auto_renew": "Авто-обновление",
+      "color_separation": "Цветное выделение"
+    },
+    "serviceDescriptions": {
+      "free": "Бесплатное объявление - базовая видимость",
+      "vip": "VIP статус - улучшенная видимость",
+      "vip_plus": "VIP+ статус - усиленная видимость",
+      "super_vip": "SUPER VIP статус - максимальная видимость",
+      "auto_renew": "Авто-обновление - автоматическое продление срока",
+      "color_separation": "Цветное выделение - отличительная цветная рамка"
+    },
+    "labels": {
+      "currentPrice": "Текущая цена",
+      "newPrice": "Новая цена (за день)",
+      "pricePerDay": "₾ / день",
+      "services": "услуг",
+      "service": "услуга"
+    },
+    "buttons": {
+      "saveAllPrices": "Сохранить все цены",
+      "refresh": "Обновить"
+    },
+    "messages": {
+      "errorLoading": "Произошла ошибка при загрузке цен",
+      "errorUpdating": "Произошла ошибка при обновлении цен",
+      "priceChanged": "Цена изменена - используйте кнопку \"Сохранить все цены\" для сохранения",
+      "noChanges": "Нет изменений для сохранения",
+      "updated": "{{count}} цен на услуги успешно обновлено",
+      "noServicesFound": "Услуги не найдены",
+      "noServicesAvailable": "В настоящее время цены на услуги недоступны",
+      "loadingPrices": "Загрузка цен..."
+    }
+  },
+  "apartmentCard": {
+    "labels": {
+      "locationNotSpecified": "Местоположение не указано",
+      "agent": "Агент:",
+      "views": "просмотров",
+      "squareMeters": "кв.м"
+    },
+    "buttons": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "deleteDialog": {
+      "title": "Удалить объявление",
+      "description": "Вы уверены, что хотите удалить это объявление? Это действие нельзя отменить.",
+      "cancel": "Отмена",
+      "confirm": "Удалить"
+    }
+  },
+  "userCard": {
+    "labels": {
+      "verified": "Подтвержден",
+      "listings": "Объявления",
+      "joinDate": "Регистрация:",
+      "lastActive": "Последняя активность:",
+      "userId": "ID:"
+    },
+    "status": {
+      "active": "Активный",
+      "inactive": "Неактивный",
+      "suspended": "Приостановлен",
+      "pending": "В ожидании"
+    },
+    "roles": {
+      "admin": "Админ",
+      "developer": "Застройщик",
+      "agency": "Агентство",
+      "user": "Пользователь"
+    },
+    "buttons": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "message": "Сообщение",
+      "delete": "Удалить"
+    },
+    "deleteDialog": {
+      "title": "Удалить пользователя",
+      "description": "Вы уверены, что хотите удалить этого пользователя? Это действие нельзя отменить.",
+      "cancel": "Отмена",
+      "confirm": "Удалить"
+    }
+  },
+  "editUser": {
+    "title": "Редактировать пользователя",
+    "subtitle": "Пользователь #{id}",
+    "sections": {
+      "basicInfo": {
+        "title": "Основная информация",
+        "description": "Редактирование основных данных пользователя"
+      },
+      "accountInfo": {
+        "title": "Информация об аккаунте",
+        "description": "Дополнительная информация о пользователе"
+      }
+    },
+    "fields": {
+      "fullName": "Полное имя",
+      "email": "Электронная почта",
+      "phone": "Телефон",
+      "role": "Роль",
+      "selectRole": "Выберите роль"
+    },
+    "placeholders": {
+      "fullName": "Полное имя",
+      "email": "Электронная почта",
+      "phone": "+995 555 123 456"
+    },
+    "roles": {
+      "user": "Пользователь",
+      "admin": "Админ",
+      "developer": "Застройщик",
+      "agency": "Агентство"
+    },
+    "stats": {
+      "registrationDate": "Дата регистрации",
+      "listings": "Объявления",
+      "lastActivity": "Последняя активность",
+      "unknown": "Неизвестно"
+    },
+    "messages": {
+      "errorLoading": "Ошибка загрузки пользователя",
+      "loadingUser": "Загрузка пользователя...",
+      "nameRequired": "Имя обязательно",
+      "emailRequired": "Электронная почта обязательна",
+      "emailInvalid": "Неверный формат электронной почты",
+      "updated": "Пользователь успешно обновлен",
+      "saveError": "Ошибка сохранения пользователя"
+    },
+    "buttons": {
+      "back": "Назад",
+      "save": "Сохранить изменения",
+      "cancel": "Отмена",
+      "saving": "Сохранение..."
+    }
+  },
+  "editProperty": {
+    "title": "Редактировать недвижимость (Админ)",
+    "propertyNumber": "Недвижимость #{id}",
+    "messages": {
+      "noId": "ID недвижимости не указан",
+      "loadError": "Произошла ошибка при загрузке недвижимости",
+      "citiesNotLoaded": "Города еще не загружены. Пожалуйста, подождите.",
+      "cityNotFound": "Город \"{{city}}\" не найден. Пожалуйста, выберите правильный город.",
+      "updated": "Недвижимость успешно обновлена",
+      "updateError": "Произошла ошибка при обновлении недвижимости",
+      "draftSaved": "Черновик сохранен",
+      "draftDescription": "Вы можете продолжить редактирование недвижимости позже",
+      "draftError": "Произошла ошибка при сохранении черновика"
+    }
+  },
+  "editProject": {
+    "title": "Редактировать проект (Админ)",
+    "projectNumber": "Проект #{id}",
+    "tabs": {
+      "basic": "Основная информация",
+      "amenities": "Удобства",
+      "services": "Услуги"
+    },
+    "sections": {
+      "projectInfo": {
+        "title": "Информация о проекте"
+      },
+      "location": {
+        "title": "Местоположение"
+      },
+      "details": {
+        "title": "Детали проекта"
+      },
+      "gallery": {
+        "title": "Фотогалерея",
+        "description": "Загрузите изображения проекта",
+        "placeholder": "Функция загрузки фото будет реализована позже"
+      },
+      "amenitiesByDistance": {
+        "title": "Близлежащие удобства",
+        "description": "Выберите удобства и их расстояние от проекта"
+      },
+      "services": {
+        "title": "Услуги после сдачи",
+        "description": "Выберите услуги, которые будут доступны после завершения проекта"
+      }
+    },
+    "fields": {
+      "projectName": "Название проекта",
+      "description": "Описание",
+      "city": "Город",
+      "area": "Район",
+      "street": "Улица",
+      "streetNumber": "Номер дома",
+      "projectType": "Тип проекта",
+      "deliveryStatus": "Статус сдачи",
+      "deliveryDate": "Дата сдачи",
+      "numberOfBuildings": "Количество корпусов",
+      "totalApartments": "Всего квартир",
+      "numberOfFloors": "Количество этажей",
+      "parkingSpaces": "Парковочные места"
+    },
+    "placeholders": {
+      "selectType": "Выберите тип проекта",
+      "selectCity": "Выберите город",
+      "selectArea": "Выберите район",
+      "selectStatus": "Выберите статус сдачи"
+    },
+    "projectTypes": {
+      "privateHouse": "Частный дом",
+      "apartmentBuilding": "Многоквартирный дом"
+    },
+    "deliveryStatuses": {
+      "completedWithRenovation": "Сдача с ремонтом",
+      "greenFrame": "Зеленый каркас",
+      "blackFrame": "Черный каркас",
+      "whiteFrame": "Белый каркас"
+    },
+    "amenityTypes": {
+      "pharmacy": "Аптека",
+      "kindergarten": "Детский сад",
+      "school": "Школа",
+      "university": "Университет",
+      "hospital": "Больница",
+      "clinic": "Клиника",
+      "busStop": "Автобусная остановка",
+      "metro": "Метро",
+      "groceryStore": "Продуктовый магазин",
+      "supermarket": "Супермаркет",
+      "mall": "Торговый центр",
+      "bank": "Банк",
+      "atm": "Банкомат",
+      "restaurant": "Ресторан",
+      "cafe": "Кафе",
+      "bakery": "Пекарня",
+      "sportsCenter": "Спортивный центр",
+      "gym": "Спортзал",
+      "stadium": "Стадион",
+      "swimmingPool": "Бассейн",
+      "park": "Парк",
+      "garden": "Сад",
+      "square": "Площадь",
+      "parking": "Парковка",
+      "bikePath": "Велосипедная дорожка",
+      "sportsField": "Спортивная площадка",
+      "childrenArea": "Детская площадка",
+      "laundry": "Прачечная",
+      "storage": "Склад",
+      "cinema": "Кинотеатр",
+      "theater": "Театр",
+      "library": "Библиотека",
+      "postOffice": "Почтовое отделение",
+      "gasStation": "АЗС",
+      "carWash": "Автомойка",
+      "veterinary": "Ветеринарная клиника",
+      "beautyCenter": "Салон красоты",
+      "dentist": "Стоматология"
+    },
+    "distances": {
+      "onSite": "На территории",
+      "300m": "В пределах 300м",
+      "500m": "В пределах 500м",
+      "1km": "В пределах 1км"
+    },
+    "services": {
+      "securityService": "Служба безопасности",
+      "hasConcierge": "Консьерж",
+      "videoSurveillance": "Видеонаблюдение",
+      "hasLobby": "Лобби/Холл",
+      "hasDoorman": "Швейцар",
+      "yardCleaning": "Уборка двора",
+      "entranceCleaning": "Уборка подъезда",
+      "landscaping": "Уход за ландшафтом",
+      "hasLighting": "Постоянное освещение",
+      "fireSystem": "Система пожаротушения",
+      "mainDoorLock": "Замок главной двери",
+      "maintenance": "Техническое обслуживание"
+    },
+    "labels": {
+      "projectOwner": "Владелец проекта",
+      "adminNote": "Вы редактируете этот проект как администратор"
+    },
+    "buttons": {
+      "saveChanges": "Сохранить изменения"
+    },
+    "messages": {
+      "notFound": "Проект не найден",
+      "loadError": "Произошла ошибка при загрузке проекта",
+      "noProjectWithId": "Проект с указанным ID не существует.",
+      "accessDenied": "Доступ запрещен",
+      "noEditPermission": "У вас нет прав для редактирования этого проекта.",
+      "updated": "Проект успешно обновлен",
+      "updateError": "Произошла ошибка при обновлении проекта: {{error}}. Проверьте консоль для деталей."
+    }
+  },
+  "manageProperties": {
+    "title": "Управление недвижимостью (Админ)",
+    "labels": {
+      "project": "Проект",
+      "owner": "Владелец",
+      "availableToLink": "Доступные для привязки объекты",
+      "linkedProperties": "Привязанные объекты ({{count}})"
+    },
+    "descriptions": {
+      "selectToLink": "Выберите объекты, которые хотите привязать к этому проекту",
+      "selectToUnlink": "Выберите объекты, которые хотите отвязать от этого проекта"
+    },
+    "messages": {
+      "adminOnly": "Только администраторы могут управлять недвижимостью",
+      "noChanges": "Никакие изменения не выбраны",
+      "changesSaved": "{{linked}} объектов привязано{{unlinked, plural, =0 {} other { и {{unlinked}} удалено}}}",
+      "errorSaving": "Произошла ошибка при сохранении изменений",
+      "noAvailable": "Нет доступных объектов для привязки",
+      "allLinked": "Все объекты уже привязаны к проектам",
+      "selectedToLink": "<strong>{{count}}</strong> объектов выбрано для привязки",
+      "noLinked": "Нет привязанных объектов",
+      "noneLinked": "К этому проекту еще не привязано ни одного объекта",
+      "selectedToUnlink": "<strong>{{count}}</strong> объектов выбрано для удаления"
+    },
+    "buttons": {
+      "saveChanges": "Сохранить изменения"
+    },
+    "mockData": {
+      "testListing": "Тестовое объявление (API не работает)",
+      "mockListing": "Тестовое объявление (Ошибка сети)",
+      "city": "Тбилиси",
+      "street1": "Руставели",
+      "street2": "Агмашенебели",
+      "testUser": "Тестовый пользователь",
+      "mockUser": "Тестовый пользователь"
+    }
+  },
+  "addAdvertisementModal": {
+    "title": "Добавить новую рекламу",
+    "description": "Введите детали рекламы и выберите место размещения",
+    "fields": {
+      "title": "Заголовок рекламы",
+      "advertiser": "Рекламодатель",
+      "description": "Описание",
+      "placement": "Место размещения рекламы",
+      "startDate": "Дата начала",
+      "endDate": "Дата окончания",
+      "imageUrl": "URL изображения рекламы",
+      "targetUrl": "Целевая ссылка"
+    },
+    "placeholders": {
+      "title": "напр: Новый проект - Ваке Резиденция",
+      "advertiser": "напр: Ваке Девелопмент",
+      "description": "Подробное описание рекламы...",
+      "placement": "Выберите место размещения рекламы",
+      "selectDate": "Выберите дату"
+    },
+    "labels": {
+      "selectedPlacement": "Выбранное место",
+      "dimensions": "Размеры"
+    },
+    "buttons": {
+      "submit": "Добавить рекламу"
+    },
+    "validation": {
+      "titleRequired": "Заголовок рекламы обязателен",
+      "advertiserRequired": "Имя рекламодателя обязательно",
+      "placementRequired": "Выбор места размещения рекламы обязателен",
+      "startDateRequired": "Дата начала обязательна",
+      "endDateRequired": "Дата окончания обязательна",
+      "imageRequired": "Изображение рекламы обязательно",
+      "targetUrlRequired": "Целевая ссылка обязательна",
+      "endDateAfterStart": "Дата окончания должна быть позже даты начала"
+    }
+  }
+}

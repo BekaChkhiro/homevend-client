@@ -5,7 +5,9 @@ import { Plus, Filter, Loader2, Eye, Edit, Trash2, MapPin, Calendar, User, Phone
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 import { agencyApi } from '@/lib/api';
+import { getLanguageUrl } from '@/components/LanguageRoute';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Agency {
@@ -31,6 +33,7 @@ interface Agency {
 }
 
 const AdminAgencies = () => {
+  const { t, i18n } = useTranslation();
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -48,9 +51,9 @@ const AdminAgencies = () => {
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "სააგენტოების ჩატვირთვისას მოხდა შეცდომა";
+                          t('agencies.messages.errorLoading');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -73,21 +76,21 @@ const AdminAgencies = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `სახეები: HTTP ${response.status}`);
+        throw new Error(errorData.message || t('agencies.messages.deleteError', { status: response.status }));
       }
 
       setAgencies(agencies.filter(a => a.id !== agencyId));
       
       toast({
-        title: "წარმატება",
-        description: "სააგენტო წარმატებით წაიშალა",
+        title: t('common.success'),
+        description: t('agencies.messages.deleted'),
       });
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "სააგენტოს წაშლისას მოხდა შეცდომა";
+                          t('agencies.messages.errorDeleting');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -113,7 +116,7 @@ const AdminAgencies = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `სტატუსი: HTTP ${response.status}`);
+        throw new Error(errorData.message || t('agencies.messages.statusError', { status: response.status }));
       }
 
       // Update local state
@@ -124,15 +127,15 @@ const AdminAgencies = () => {
       ));
       
       toast({
-        title: "წარმატება",
-        description: `სააგენტოს სტატუსი შეიცვალა: ${getStatusText(newStatus)}`,
+        title: t('common.success'),
+        description: t('agencies.messages.statusChanged', { status: getStatusText(newStatus) }),
       });
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
-                          "სააგენტოს სტატუსის შეცვლისას მოხდა შეცდომა";
+                          t('agencies.messages.errorChangingStatus');
       toast({
-        title: "შეცდომა",
+        title: t('common.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -150,9 +153,9 @@ const AdminAgencies = () => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "active": return "აქტიური";
-      case "pending": return "განხილვაში";
-      case "inactive": return "არააქტიური";
+      case "active": return t('agencies.status.active');
+      case "pending": return t('agencies.status.pending');
+      case "inactive": return t('agencies.status.inactive');
       default: return status;
     }
   };
@@ -165,14 +168,14 @@ const AdminAgencies = () => {
     return (
       <div>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">სააგენტოების მართვა</h1>
-          <p className="text-gray-600">ყველა სააგენტოს ნახვა და მართვა</p>
+          <h1 className="text-3xl font-bold mb-2">{t('agencies.title')}</h1>
+          <p className="text-gray-600">{t('agencies.subtitle')}</p>
         </div>
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="flex items-center space-x-2">
               <Loader2 className="h-6 w-6 animate-spin" />
-              <span>სააგენტოების ჩატვირთვა...</span>
+              <span>{t('agencies.loading.text')}</span>
             </div>
           </CardContent>
         </Card>
@@ -183,25 +186,25 @@ const AdminAgencies = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">სააგენტოების მართვა</h1>
-        <p className="text-gray-600">ყველა სააგენტოს ნახვა და მართვა ({agencies.length} სააგენტო)</p>
+        <h1 className="text-3xl font-bold mb-2">{t('agencies.title')}</h1>
+        <p className="text-gray-600">{t('agencies.subtitleWithCount', { count: agencies.length })}</p>
       </div>
 
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>სააგენტოების სია</CardTitle>
-              <CardDescription>ყველა სააგენტოს ნახვა, დამტკიცება და მართვა</CardDescription>
+              <CardTitle>{t('agencies.list.title')}</CardTitle>
+              <CardDescription>{t('agencies.list.description')}</CardDescription>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
-                ფილტრი
+                {t('agencies.buttons.filter')}
               </Button>
               <Button size="sm" onClick={fetchAgencies}>
                 <Plus className="h-4 w-4 mr-2" />
-                განახლება
+                {t('agencies.buttons.refresh')}
               </Button>
             </div>
           </div>
@@ -242,21 +245,21 @@ const AdminAgencies = () => {
                       <div className="flex items-center text-gray-600 mb-2">
                         <User className="h-4 w-4 mr-1 flex-shrink-0" />
                         <span className="text-sm truncate mr-4">
-                          მფლობელი: {agency.owner.name}
+                          {t('agencies.labels.owner')} {agency.owner.name}
                         </span>
                         <Building className="h-4 w-4 mr-1 flex-shrink-0" />
                         <span className="text-sm">
-                          {agency.totalAgents} აგენტი, {agency.activeListings} აქტიური განცხადება
+                          {agency.totalAgents} {t('agencies.labels.agents')}, {agency.activeListings} {t('agencies.labels.activeListings')}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-4 text-xs text-gray-500">
                         <div className="flex items-center">
                           <Calendar className="h-3 w-3 mr-1" />
-                          <span>რეგისტრაცია: {formatDate(agency.createdAt)}</span>
+                          <span>{t('agencies.labels.registration')} {formatDate(agency.createdAt)}</span>
                         </div>
                         <div>
-                          სულ {agency.totalListings} განცხადება
+                          {t('agencies.labels.totalListings', { count: agency.totalListings })}
                         </div>
                       </div>
                     </div>
@@ -267,11 +270,11 @@ const AdminAgencies = () => {
                         variant="ghost" 
                         size="sm" 
                         className="h-8 px-2"
-                        onClick={() => navigate(`/agencies/${agency.id}`)}
-                        title="ნახვა"
+                        onClick={() => navigate(getLanguageUrl(`agencies/${agency.id}`, i18n.language))}
+                        title={t('agencies.buttons.view')}
                       >
                         <Eye className="h-4 w-4 mr-1" />
-                        <span className="text-xs">ნახვა</span>
+                        <span className="text-xs">{t('agencies.buttons.view')}</span>
                       </Button>
                       
                       <Button 
@@ -283,10 +286,10 @@ const AdminAgencies = () => {
                           const newStatus = agency.status === 'active' ? 'inactive' : 'active';
                           handleStatusChange(agency.id, newStatus);
                         }}
-                        title="სტატუსის შეცვლა"
+                        title={t('agencies.buttons.changeStatus')}
                       >
                         <Edit className="h-4 w-4 mr-1" />
-                        <span className="text-xs">სტატუსი</span>
+                        <span className="text-xs">{t('agencies.buttons.changeStatus')}</span>
                       </Button>
                       
                       <AlertDialog>
@@ -295,26 +298,26 @@ const AdminAgencies = () => {
                             variant="ghost" 
                             size="sm" 
                             className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            title="წაშლა"
+                            title={t('agencies.buttons.delete')}
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
-                            <span className="text-xs">წაშლა</span>
+                            <span className="text-xs">{t('agencies.buttons.delete')}</span>
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>სააგენტოს წაშლა</AlertDialogTitle>
+                            <AlertDialogTitle>{t('agencies.deleteDialog.title')}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              დარწმუნებული ხართ, რომ გსურთ ამ სააგენტოს წაშლა? ეს მოქმედება შეუქცევადია.
+                              {t('agencies.deleteDialog.description')}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                            <AlertDialogCancel>{t('agencies.deleteDialog.cancel')}</AlertDialogCancel>
                             <AlertDialogAction 
                               onClick={() => handleDelete(agency.id)} 
                               className="bg-red-600 hover:bg-red-700"
                             >
-                              წაშლა
+                              {t('agencies.deleteDialog.confirm')}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -328,10 +331,10 @@ const AdminAgencies = () => {
           
           {agencies.length === 0 && !isLoading && (
             <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">სააგენტოები ვერ მოიძებნა</p>
+              <p className="text-gray-500 mb-4">{t('agencies.empty.text')}</p>
               <Button onClick={fetchAgencies}>
                 <Plus className="h-4 w-4 mr-2" />
-                განახლება
+                {t('agencies.buttons.refresh')}
               </Button>
             </div>
           )}

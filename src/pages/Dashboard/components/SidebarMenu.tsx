@@ -4,6 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 
 interface MenuItem {
   id: string;
@@ -21,6 +23,7 @@ interface SidebarMenuProps {
 export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
   const location = useLocation();
   const { user } = useAuth();
+  const { i18n } = useTranslation();
   
   // Define menu items with categories
   const allMenuItems: MenuItem[] = [
@@ -28,28 +31,28 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
     ...(user?.role === 'developer' ? [
       { 
         id: "add-project", 
-        path: "/dashboard/add-project", 
+        path: getLanguageUrl("dashboard/add-project", i18n.language), 
         label: "პროექტის დამატება", 
         icon: <Plus className="h-5 w-5" />,
         category: "projects"
       },
       { 
         id: "add-property", 
-        path: "/dashboard/add-property", 
+        path: getLanguageUrl("dashboard/add-property", i18n.language), 
         label: "განცხადების დამატება", 
         icon: <Plus className="h-5 w-5" />,
         category: "properties"
       },
       { 
         id: "my-projects", 
-        path: "/dashboard/my-projects", 
+        path: getLanguageUrl("dashboard/my-projects", i18n.language), 
         label: "ჩემი პროექტები", 
         icon: <Home className="h-5 w-5" />,
         category: "projects"
       },
       { 
         id: "my-properties", 
-        path: "/dashboard/my-properties", 
+        path: getLanguageUrl("dashboard/my-properties", i18n.language), 
         label: "ჩემი განცხადებები", 
         icon: <Home className="h-5 w-5" />,
         category: "properties"
@@ -58,14 +61,14 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
       // For regular users, show only property options
       { 
         id: "add-property", 
-        path: "/dashboard/add-property", 
+        path: getLanguageUrl("dashboard/add-property", i18n.language), 
         label: "განცხადების დამატება", 
         icon: <Plus className="h-5 w-5" />,
         category: "properties"
       },
       { 
         id: "my-properties", 
-        path: "/dashboard/my-properties", 
+        path: getLanguageUrl("dashboard/my-properties", i18n.language), 
         label: "ჩემი განცხადებები", 
         icon: <Home className="h-5 w-5" />,
         category: "properties"
@@ -73,21 +76,21 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
     ]),
     { 
       id: "favorites", 
-      path: "/dashboard/favorites", 
+      path: getLanguageUrl("dashboard/favorites", i18n.language), 
       label: "ფავორიტები", 
       icon: <Heart className="h-5 w-5" />,
       category: "properties"
     },
     { 
       id: "profile", 
-      path: "/dashboard/profile", 
+      path: getLanguageUrl("dashboard/profile", i18n.language), 
       label: "პროფილი", 
       icon: <User className="h-5 w-5" />,
       category: "account"
     },
     {
       id: "users",
-      path: "/dashboard/users",
+      path: getLanguageUrl("dashboard/users", i18n.language),
       label: "აგენტები",
       icon: <Users className="h-5 w-5" />,
       category: "account",
@@ -95,7 +98,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
     },
     { 
       id: "balance", 
-      path: "/dashboard/balance", 
+      path: getLanguageUrl("dashboard/balance", i18n.language), 
       label: "შევსება", 
       icon: <DollarSign className="h-5 w-5" />,
       category: "account"

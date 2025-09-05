@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface City {
   id: number;
@@ -27,6 +29,7 @@ const AdminEditProject: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
+  const { t, i18n } = useTranslation('admin');
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
@@ -108,11 +111,11 @@ const AdminEditProject: React.FC = () => {
       if (!response.ok) {
         if (response.status === 404) {
           toast({
-            title: "შეცდომა",
-            description: "პროექტი ვერ მოიძებნა",
+            title: t('common.error'),
+            description: t('editProject.messages.notFound'),
             variant: "destructive",
           });
-          navigate('/admin/projects');
+          navigate(getLanguageUrl('admin/projects', i18n.language));
           return;
         }
         throw new Error('Failed to fetch project');
@@ -187,11 +190,11 @@ const AdminEditProject: React.FC = () => {
     } catch (error) {
       console.error('Error fetching project:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტის ჩატვირთვისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('editProject.messages.loadError'),
         variant: "destructive",
       });
-      navigate('/admin/projects');
+      navigate(getLanguageUrl('admin/projects', i18n.language));
     } finally {
       setIsFetching(false);
     }
@@ -349,8 +352,8 @@ const AdminEditProject: React.FC = () => {
         // Handle specific error cases
         if (response.status === 404) {
           toast({
-            title: "პროექტი ვერ მოიძებნა",
-            description: "მითითებული ID-ით პროექტი არ არსებობს.",
+            title: t('editProject.messages.notFound'),
+            description: t('editProject.messages.noProjectWithId'),
             variant: "destructive",
           });
           return;
@@ -358,8 +361,8 @@ const AdminEditProject: React.FC = () => {
         
         if (response.status === 403) {
           toast({
-            title: "წვდომა აკრძალულია",
-            description: "თქვენ არ გაქვთ უფლება ამ პროექტის რედაქტირების.",
+            title: t('editProject.messages.accessDenied'),
+            description: t('editProject.messages.noEditPermission'),
             variant: "destructive",
           });
           return;
@@ -372,11 +375,11 @@ const AdminEditProject: React.FC = () => {
       console.log('Update success response:', result);
 
       toast({
-        title: "წარმატება",
-        description: "პროექტი წარმატებით განახლდა",
+        title: t('common.success'),
+        description: t('editProject.messages.updated'),
       });
 
-      navigate('/admin/projects');
+      navigate(getLanguageUrl('admin/projects', i18n.language));
     } catch (error: any) {
       console.error('Error updating project:', error);
       console.error('Error details:', {
@@ -385,8 +388,8 @@ const AdminEditProject: React.FC = () => {
       });
       
       toast({
-        title: "შეცდომა",
-        description: `პროექტის განახლებისას მოხდა შეცდომა: ${error.message}. შეამოწმეთ კონსოლი დეტალებისთვის.`,
+        title: t('common.error'),
+        description: t('editProject.messages.updateError', { error: error.message }),
         variant: "destructive",
       });
     } finally {
@@ -400,18 +403,18 @@ const AdminEditProject: React.FC = () => {
         <div className="mb-6">
           <Button
             variant="ghost"
-            onClick={() => navigate('/admin/projects')}
+            onClick={() => navigate(getLanguageUrl('admin/projects', i18n.language))}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            უკან დაბრუნება
+            {t('common.back')}
           </Button>
-          <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება (ადმინი)</h1>
+          <h1 className="text-2xl font-bold mb-2">{t('editProject.title')}</h1>
         </div>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">პროექტის ჩატვირთვა...</p>
+            <p className="text-gray-600">{t('common.loading')}</p>
           </div>
         </div>
       </div>
@@ -423,23 +426,23 @@ const AdminEditProject: React.FC = () => {
       <div className="mb-6">
         <Button
           variant="ghost"
-          onClick={() => navigate('/admin/projects')}
+          onClick={() => navigate(getLanguageUrl('admin/projects', i18n.language))}
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          უკან დაბრუნება
+          {t('common.back')}
         </Button>
         
-        <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება (ადმინი)</h1>
+        <h1 className="text-2xl font-bold mb-2">{t('editProject.title')}</h1>
         <div className="space-y-1">
-          <p className="text-gray-600">პროექტი #{id}</p>
+          <p className="text-gray-600">{t('editProject.projectNumber', { id })}</p>
           {projectOwner && (
             <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
               <p className="text-sm text-blue-800">
-                <strong>პროექტის მფლობელი:</strong> {projectOwner.fullName || projectOwner.name} ({projectOwner.email})
+                <strong>{t('editProject.labels.projectOwner')}:</strong> {projectOwner.fullName || projectOwner.name} ({projectOwner.email})
               </p>
               <p className="text-xs text-blue-600 mt-1">
-                შენიშვნა: ადმინისტრატორებს შეუძლიათ ნებისმიერი პროექტის რედაქტირება
+                {t('editProject.labels.adminNote')}
               </p>
             </div>
           )}
@@ -449,9 +452,9 @@ const AdminEditProject: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="basic" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="basic">ძირითადი ინფო</TabsTrigger>
-            <TabsTrigger value="amenities">კომფორტი</TabsTrigger>
-            <TabsTrigger value="services">სერვისები</TabsTrigger>
+            <TabsTrigger value="basic">{t('editProject.tabs.basic')}</TabsTrigger>
+            <TabsTrigger value="amenities">{t('editProject.tabs.amenities')}</TabsTrigger>
+            <TabsTrigger value="services">{t('editProject.tabs.services')}</TabsTrigger>
           </TabsList>
 
           {/* Basic Information Tab */}
@@ -460,13 +463,13 @@ const AdminEditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  პროექტის ინფორმაცია
+                  {t('editProject.sections.projectInfo.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="projectName">პროექტის დასახელება *</Label>
+                    <Label htmlFor="projectName">{t('editProject.fields.projectName')} *</Label>
                     <Input
                       id="projectName"
                       value={formData.projectName}
@@ -476,24 +479,24 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="projectType">პროექტის ტიპი *</Label>
+                    <Label htmlFor="projectType">{t('editProject.fields.projectType')} *</Label>
                     <Select
                       value={formData.projectType}
                       onValueChange={(value) => handleInputChange('projectType', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ ტიპი" />
+                        <SelectValue placeholder={t('editProject.placeholders.selectType')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="private_house">კერძო სახლი</SelectItem>
-                        <SelectItem value="apartment_building">საცხოვრებელი კომპლექსი</SelectItem>
+                        <SelectItem value="private_house">{t('editProject.projectTypes.privateHouse')}</SelectItem>
+                        <SelectItem value="apartment_building">{t('editProject.projectTypes.apartmentBuilding')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="description">აღწერა</Label>
+                    <Label htmlFor="description">{t('editProject.fields.description')}</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
@@ -509,20 +512,20 @@ const AdminEditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  ლოკაცია
+                  {t('editProject.sections.location.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="cityId">ქალაქი *</Label>
+                    <Label htmlFor="cityId">{t('editProject.fields.city')} *</Label>
                     <Select
                       value={formData.cityId}
                       onValueChange={(value) => handleInputChange('cityId', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ ქალაქი" />
+                        <SelectValue placeholder={t('editProject.placeholders.selectCity')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(cities || []).map((city) => (
@@ -535,14 +538,14 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="areaId">რაიონი</Label>
+                    <Label htmlFor="areaId">{t('editProject.fields.area')}</Label>
                     <Select
                       value={formData.areaId}
                       onValueChange={(value) => handleInputChange('areaId', value)}
                       disabled={!formData.cityId}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ რაიონი" />
+                        <SelectValue placeholder={t('editProject.placeholders.selectArea')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(areas || []).map((area) => (
@@ -555,7 +558,7 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="street">ქუჩა *</Label>
+                    <Label htmlFor="street">{t('editProject.fields.street')} *</Label>
                     <Input
                       id="street"
                       value={formData.street}
@@ -565,7 +568,7 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="streetNumber">ნომერი</Label>
+                    <Label htmlFor="streetNumber">{t('editProject.fields.streetNumber')}</Label>
                     <Input
                       id="streetNumber"
                       value={formData.streetNumber}
@@ -581,32 +584,32 @@ const AdminEditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
-                  პროექტის დეტალები
+                  {t('editProject.sections.details.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="deliveryStatus">ჩაბარების სტატუსი *</Label>
+                    <Label htmlFor="deliveryStatus">{t('editProject.fields.deliveryStatus')} *</Label>
                     <Select
                       value={formData.deliveryStatus}
                       onValueChange={(value) => handleInputChange('deliveryStatus', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ სტატუსი" />
+                        <SelectValue placeholder={t('editProject.placeholders.selectStatus')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="completed_with_renovation">ჩაბარება რემონტით</SelectItem>
-                        <SelectItem value="green_frame">მწვანე კარკასი</SelectItem>
-                        <SelectItem value="black_frame">შავი კარკასი</SelectItem>
-                        <SelectItem value="white_frame">თეთრი კარკასი</SelectItem>
+                        <SelectItem value="completed_with_renovation">{t('editProject.deliveryStatuses.completedWithRenovation')}</SelectItem>
+                        <SelectItem value="green_frame">{t('editProject.deliveryStatuses.greenFrame')}</SelectItem>
+                        <SelectItem value="black_frame">{t('editProject.deliveryStatuses.blackFrame')}</SelectItem>
+                        <SelectItem value="white_frame">{t('editProject.deliveryStatuses.whiteFrame')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
-                    <Label htmlFor="deliveryDate">ჩაბარების თარიღი</Label>
+                    <Label htmlFor="deliveryDate">{t('editProject.fields.deliveryDate')}</Label>
                     <Input
                       id="deliveryDate"
                       type="date"
@@ -616,7 +619,7 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfBuildings">კორპუსების რაოდენობა *</Label>
+                    <Label htmlFor="numberOfBuildings">{t('editProject.fields.numberOfBuildings')} *</Label>
                     <Input
                       id="numberOfBuildings"
                       type="number"
@@ -628,7 +631,7 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="totalApartments">სულ ბინები *</Label>
+                    <Label htmlFor="totalApartments">{t('editProject.fields.totalApartments')} *</Label>
                     <Input
                       id="totalApartments"
                       type="number"
@@ -640,7 +643,7 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfFloors">სართულების რაოდენობა *</Label>
+                    <Label htmlFor="numberOfFloors">{t('editProject.fields.numberOfFloors')} *</Label>
                     <Input
                       id="numberOfFloors"
                       type="number"
@@ -652,7 +655,7 @@ const AdminEditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="parkingSpaces">პარკინგის ადგილები</Label>
+                    <Label htmlFor="parkingSpaces">{t('editProject.fields.parkingSpaces')}</Label>
                     <Input
                       id="parkingSpaces"
                       type="number"
@@ -668,12 +671,12 @@ const AdminEditProject: React.FC = () => {
             {/* Photo Gallery Placeholder */}
             <Card>
               <CardHeader>
-                <CardTitle>ფოტო გალერია</CardTitle>
-                <CardDescription>ფოტო ატვირთვის ფუნქციონალი (მოკი)</CardDescription>
+                <CardTitle>{t('editProject.sections.gallery.title')}</CardTitle>
+                <CardDescription>{t('editProject.sections.gallery.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  <p className="text-gray-500">ფოტო ატვირთვის ფუნქციონალი განხორციელდება მოგვიანებით</p>
+                  <p className="text-gray-500">{t('editProject.sections.gallery.placeholder')}</p>
                 </div>
               </CardContent>
             </Card>
@@ -687,58 +690,58 @@ const AdminEditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  მანძილის მიხედვით კომფორტი
+                  {t('editProject.sections.amenitiesByDistance.title')}
                 </CardTitle>
-                <CardDescription>აირჩიეთ რა არსებობს პროექტის გარშემო და მიუთითეთ მანძილი</CardDescription>
+                <CardDescription>{t('editProject.sections.amenitiesByDistance.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {(() => {
                   const amenityTypes = [
-                    { key: 'pharmacy', label: '💊 აფთიაქი' },
-                    { key: 'kindergarten', label: '👶 საბავშო ბაღი' },
-                    { key: 'school', label: '🎒 სკოლა' },
-                    { key: 'university', label: '🎓 უნივერსიტეტი' },
-                    { key: 'hospital', label: '🏥 საავადმყოფო' },
-                    { key: 'clinic', label: '🩺 კლინიკა' },
-                    { key: 'busStop', label: '🚌 ავტობუსის გაჩერება' },
-                    { key: 'metro', label: '🚇 მეტრო' },
-                    { key: 'groceryStore', label: '🛒 საყიდლების მაღაზია' },
-                    { key: 'supermarket', label: '🏬 სუპერმარკეტი' },
-                    { key: 'mall', label: '🏢 სავაჭრო ცენტრი' },
-                    { key: 'bank', label: '🏦 ბანკი' },
-                    { key: 'atm', label: '💳 ბანკომატი' },
-                    { key: 'restaurant', label: '🍽️ რესტორანი' },
-                    { key: 'cafe', label: '☕ კაფე' },
-                    { key: 'bakery', label: '🥖 საცხობი' },
-                    { key: 'sportsCenter', label: '🏋️ სპორტული ცენტრი' },
-                    { key: 'gym', label: '💪 სპორტული დარბაზი' },
-                    { key: 'stadium', label: '🏟️ სტადიონი' },
-                    { key: 'swimmingPool', label: '🏊 საცურაო აუზი' },
-                    { key: 'park', label: '🌳 პარკი' },
-                    { key: 'garden', label: '🌳 ბაღი' },
-                    { key: 'square', label: '🏛️ მოედანი' },
-                    { key: 'parking', label: '🚗 პარკინგი' },
-                    { key: 'bikePath', label: '🚴 ველოსიპედის ბილიკი' },
-                    { key: 'sportsField', label: '⚽ სპორტული მოედანი' },
-                    { key: 'childrenArea', label: '🎪 ბავშვთა მოედანი' },
-                    { key: 'laundry', label: '🧺 სამრეცხაო' },
-                    { key: 'storage', label: '📦 საწყობი' },
-                    { key: 'cinema', label: '🎬 კინო' },
-                    { key: 'theater', label: '🎭 თეატრი' },
-                    { key: 'library', label: '📚 ბიბლიოთეკა' },
-                    { key: 'postOffice', label: '📫 ფოსტის განყოფილება' },
-                    { key: 'gasStation', label: '⛽ ბენზინგასამართი სადგური' },
-                    { key: 'carWash', label: '🚗 ავტორეცხვა' },
-                    { key: 'veterinary', label: '🐕 ვეტერინარული კლინიკა' },
-                    { key: 'beautyCenter', label: '💄 სილამაზის სალონი' },
-                    { key: 'dentist', label: '🦷 სტომატოლოგია' }
+                    { key: 'pharmacy', label: `💊 ${t('editProject.amenityTypes.pharmacy')}` },
+                    { key: 'kindergarten', label: `👶 ${t('editProject.amenityTypes.kindergarten')}` },
+                    { key: 'school', label: `🎒 ${t('editProject.amenityTypes.school')}` },
+                    { key: 'university', label: `🎓 ${t('editProject.amenityTypes.university')}` },
+                    { key: 'hospital', label: `🏥 ${t('editProject.amenityTypes.hospital')}` },
+                    { key: 'clinic', label: `🩺 ${t('editProject.amenityTypes.clinic')}` },
+                    { key: 'busStop', label: `🚌 ${t('editProject.amenityTypes.busStop')}` },
+                    { key: 'metro', label: `🚇 ${t('editProject.amenityTypes.metro')}` },
+                    { key: 'groceryStore', label: `🛒 ${t('editProject.amenityTypes.groceryStore')}` },
+                    { key: 'supermarket', label: `🏬 ${t('editProject.amenityTypes.supermarket')}` },
+                    { key: 'mall', label: `🏢 ${t('editProject.amenityTypes.mall')}` },
+                    { key: 'bank', label: `🏦 ${t('editProject.amenityTypes.bank')}` },
+                    { key: 'atm', label: `💳 ${t('editProject.amenityTypes.atm')}` },
+                    { key: 'restaurant', label: `🍽️ ${t('editProject.amenityTypes.restaurant')}` },
+                    { key: 'cafe', label: `☕ ${t('editProject.amenityTypes.cafe')}` },
+                    { key: 'bakery', label: `🥖 ${t('editProject.amenityTypes.bakery')}` },
+                    { key: 'sportsCenter', label: `🏋️ ${t('editProject.amenityTypes.sportsCenter')}` },
+                    { key: 'gym', label: `💪 ${t('editProject.amenityTypes.gym')}` },
+                    { key: 'stadium', label: `🏟️ ${t('editProject.amenityTypes.stadium')}` },
+                    { key: 'swimmingPool', label: `🏊 ${t('editProject.amenityTypes.swimmingPool')}` },
+                    { key: 'park', label: `🌳 ${t('editProject.amenityTypes.park')}` },
+                    { key: 'garden', label: `🌳 ${t('editProject.amenityTypes.garden')}` },
+                    { key: 'square', label: `🏛️ ${t('editProject.amenityTypes.square')}` },
+                    { key: 'parking', label: `🚗 ${t('editProject.amenityTypes.parking')}` },
+                    { key: 'bikePath', label: `🚴 ${t('editProject.amenityTypes.bikePath')}` },
+                    { key: 'sportsField', label: `⚽ ${t('editProject.amenityTypes.sportsField')}` },
+                    { key: 'childrenArea', label: `🎪 ${t('editProject.amenityTypes.childrenArea')}` },
+                    { key: 'laundry', label: `🧺 ${t('editProject.amenityTypes.laundry')}` },
+                    { key: 'storage', label: `📦 ${t('editProject.amenityTypes.storage')}` },
+                    { key: 'cinema', label: `🎬 ${t('editProject.amenityTypes.cinema')}` },
+                    { key: 'theater', label: `🎭 ${t('editProject.amenityTypes.theater')}` },
+                    { key: 'library', label: `📚 ${t('editProject.amenityTypes.library')}` },
+                    { key: 'postOffice', label: `📫 ${t('editProject.amenityTypes.postOffice')}` },
+                    { key: 'gasStation', label: `⛽ ${t('editProject.amenityTypes.gasStation')}` },
+                    { key: 'carWash', label: `🚗 ${t('editProject.amenityTypes.carWash')}` },
+                    { key: 'veterinary', label: `🐕 ${t('editProject.amenityTypes.veterinary')}` },
+                    { key: 'beautyCenter', label: `💄 ${t('editProject.amenityTypes.beautyCenter')}` },
+                    { key: 'dentist', label: `🦷 ${t('editProject.amenityTypes.dentist')}` }
                   ];
 
                   const distances = [
-                    { key: 'onSite', label: 'ტერიტორიაზე', color: 'bg-green-100 text-green-800' },
-                    { key: '300m', label: '300მ-მდე', color: 'bg-blue-100 text-blue-800' },
-                    { key: '500m', label: '500მ-მდე', color: 'bg-purple-100 text-purple-800' },
-                    { key: '1km', label: '1კმ-მდე', color: 'bg-orange-100 text-orange-800' }
+                    { key: 'onSite', label: t('editProject.distances.onSite'), color: 'bg-green-100 text-green-800' },
+                    { key: '300m', label: t('editProject.distances.300m'), color: 'bg-blue-100 text-blue-800' },
+                    { key: '500m', label: t('editProject.distances.500m'), color: 'bg-purple-100 text-purple-800' },
+                    { key: '1km', label: t('editProject.distances.1km'), color: 'bg-orange-100 text-orange-800' }
                   ];
 
                   return (
@@ -807,25 +810,25 @@ const AdminEditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  ჩაბარების შემდგომ სერვისები
+                  {t('editProject.sections.services.title')}
                 </CardTitle>
-                <CardDescription>აირჩიეთ სერვისები, რომლებიც იქნება ხელმისაწვდომი პროექტის ჩაბარების შემდეგ</CardDescription>
+                <CardDescription>{t('editProject.sections.services.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {[
-                    { key: 'securityService', label: '🛡️ მცველის სერვისი' },
-                    { key: 'hasConcierge', label: '🛎️ კონსიერჟი' },
-                    { key: 'videoSurveillance', label: '📹 ვიდეო ზედამხედველობა' },
-                    { key: 'hasLobby', label: '🏛️ ლობი/მიღების ჰოლი' },
-                    { key: 'hasDoorman', label: '🚪 კარისკაცი' },
-                    { key: 'yardCleaning', label: '🧹 ეზოს დასუფთავება' },
-                    { key: 'entranceCleaning', label: '🚪 შესასვლელის დასუფთავება' },
-                    { key: 'landscaping', label: '🌺 ლანდშაფტის მოვლა' },
-                    { key: 'hasLighting', label: '💡 მუდმივი განათება' },
-                    { key: 'fireSystem', label: '🔥 ხანძრის ჩაქრობის სისტემა' },
-                    { key: 'mainDoorLock', label: '🔒 მთავარი კარის საკეტი' },
-                    { key: 'maintenance', label: '🔧 ტექნიკური მომსახურება' }
+                    { key: 'securityService', label: `🛡️ ${t('editProject.services.securityService')}` },
+                    { key: 'hasConcierge', label: `🛎️ ${t('editProject.services.hasConcierge')}` },
+                    { key: 'videoSurveillance', label: `📹 ${t('editProject.services.videoSurveillance')}` },
+                    { key: 'hasLobby', label: `🏛️ ${t('editProject.services.hasLobby')}` },
+                    { key: 'hasDoorman', label: `🚪 ${t('editProject.services.hasDoorman')}` },
+                    { key: 'yardCleaning', label: `🧹 ${t('editProject.services.yardCleaning')}` },
+                    { key: 'entranceCleaning', label: `🚪 ${t('editProject.services.entranceCleaning')}` },
+                    { key: 'landscaping', label: `🌺 ${t('editProject.services.landscaping')}` },
+                    { key: 'hasLighting', label: `💡 ${t('editProject.services.hasLighting')}` },
+                    { key: 'fireSystem', label: `🔥 ${t('editProject.services.fireSystem')}` },
+                    { key: 'mainDoorLock', label: `🔒 ${t('editProject.services.mainDoorLock')}` },
+                    { key: 'maintenance', label: `🔧 ${t('editProject.services.maintenance')}` }
                   ].map((service) => (
                     <div key={service.key} className="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                       <Checkbox
@@ -847,12 +850,12 @@ const AdminEditProject: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate('/admin/projects')}
+            onClick={() => navigate(getLanguageUrl('admin/projects', i18n.language))}
           >
-            გაუქმება
+            {t('common.cancel')}
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "შენახვა..." : "ცვლილებების შენახვა"}
+            {isLoading ? t('common.saving') : t('editProject.buttons.saveChanges')}
           </Button>
         </div>
       </form>

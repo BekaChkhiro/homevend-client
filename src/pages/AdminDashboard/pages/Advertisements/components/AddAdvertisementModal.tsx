@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -66,6 +67,7 @@ export const AddAdvertisementModal = ({
   availablePlacements,
   selectedPlacementId
 }: AddAdvertisementModalProps) => {
+  const { t } = useTranslation('admin');
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -92,16 +94,16 @@ export const AddAdvertisementModal = ({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) newErrors.title = 'რეკლამის სათაური აუცილებელია';
-    if (!formData.advertiser.trim()) newErrors.advertiser = 'რეკლამის ავტორის სახელი აუცილებელია';
-    if (!formData.placementId) newErrors.placementId = 'რეკლამის ადგილის არჩევა აუცილებელია';
-    if (!formData.startDate) newErrors.startDate = 'დაწყების თარიღი აუცილებელია';
-    if (!formData.endDate) newErrors.endDate = 'დასრულების თარიღი აუცილებელია';
-    if (!formData.imageUrl.trim()) newErrors.imageUrl = 'რეკლამის სურათი აუცილებელია';
-    if (!formData.targetUrl.trim()) newErrors.targetUrl = 'მიზნობრივი ლინკი აუცილებელია';
+    if (!formData.title.trim()) newErrors.title = t('addAdvertisementModal.validation.titleRequired');
+    if (!formData.advertiser.trim()) newErrors.advertiser = t('addAdvertisementModal.validation.advertiserRequired');
+    if (!formData.placementId) newErrors.placementId = t('addAdvertisementModal.validation.placementRequired');
+    if (!formData.startDate) newErrors.startDate = t('addAdvertisementModal.validation.startDateRequired');
+    if (!formData.endDate) newErrors.endDate = t('addAdvertisementModal.validation.endDateRequired');
+    if (!formData.imageUrl.trim()) newErrors.imageUrl = t('addAdvertisementModal.validation.imageRequired');
+    if (!formData.targetUrl.trim()) newErrors.targetUrl = t('addAdvertisementModal.validation.targetUrlRequired');
     
     if (formData.startDate && formData.endDate && formData.startDate >= formData.endDate) {
-      newErrors.endDate = 'დასრულების თარიღი უნდა იყოს დაწყების თარიღზე გვიან';
+      newErrors.endDate = t('addAdvertisementModal.validation.endDateAfterStart');
     }
 
     setErrors(newErrors);
@@ -159,9 +161,9 @@ export const AddAdvertisementModal = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">ახალი რეკლამის დამატება</DialogTitle>
+          <DialogTitle className="text-xl font-bold">{t('addAdvertisementModal.title')}</DialogTitle>
           <DialogDescription>
-            შეიყვანეთ რეკლამის დეტალები და აირჩიეთ სადე განთავსება
+            {t('addAdvertisementModal.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -169,12 +171,12 @@ export const AddAdvertisementModal = ({
           {/* Basic Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title">რეკლამის სათაური *</Label>
+              <Label htmlFor="title">{t('addAdvertisementModal.fields.title')} *</Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                placeholder="მაგ: ახალი პროექტი - ვაკის რეზიდენცია"
+                placeholder={t('addAdvertisementModal.placeholders.title')}
                 className={errors.title ? 'border-red-500' : ''}
               />
               {errors.title && (
@@ -186,12 +188,12 @@ export const AddAdvertisementModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="advertiser">რეკლამის ავტორი *</Label>
+              <Label htmlFor="advertiser">{t('addAdvertisementModal.fields.advertiser')} *</Label>
               <Input
                 id="advertiser"
                 value={formData.advertiser}
                 onChange={(e) => handleInputChange('advertiser', e.target.value)}
-                placeholder="მაგ: ვაკე დეველოპმენტი"
+                placeholder={t('addAdvertisementModal.placeholders.advertiser')}
                 className={errors.advertiser ? 'border-red-500' : ''}
               />
               {errors.advertiser && (
@@ -205,25 +207,25 @@ export const AddAdvertisementModal = ({
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">აღწერა</Label>
+            <Label htmlFor="description">{t('addAdvertisementModal.fields.description')}</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="რეკლამის დეტალური აღწერა..."
+              placeholder={t('addAdvertisementModal.placeholders.description')}
               rows={3}
             />
           </div>
 
           {/* Placement Selection */}
           <div className="space-y-2">
-            <Label>რეკლამის ადგილი *</Label>
+            <Label>{t('addAdvertisementModal.fields.placement')} *</Label>
             <Select
               value={formData.placementId}
               onValueChange={(value) => handleInputChange('placementId', value)}
             >
               <SelectTrigger className={errors.placementId ? 'border-red-500' : ''}>
-                <SelectValue placeholder="აირჩიეთ რეკლამის ადგილი" />
+                <SelectValue placeholder={t('addAdvertisementModal.placeholders.placement')} />
               </SelectTrigger>
               <SelectContent>
                 {availablePlacements.map((placement) => (
@@ -247,10 +249,10 @@ export const AddAdvertisementModal = ({
             {selectedPlacement && (
               <div className="p-3 bg-blue-50 rounded-md">
                 <p className="text-sm text-blue-800">
-                  <strong>არჩეული ადგილი:</strong> {selectedPlacement.location}
+                  <strong>{t('addAdvertisementModal.labels.selectedPlacement')}:</strong> {selectedPlacement.location}
                 </p>
                 <p className="text-sm text-blue-600">
-                  ზომა: {selectedPlacement.dimensions}
+                  {t('addAdvertisementModal.labels.dimensions')}: {selectedPlacement.dimensions}
                 </p>
               </div>
             )}
@@ -259,7 +261,7 @@ export const AddAdvertisementModal = ({
           {/* Date Range */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>დაწყების თარიღი *</Label>
+              <Label>{t('addAdvertisementModal.fields.startDate')} *</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -271,7 +273,7 @@ export const AddAdvertisementModal = ({
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.startDate ? format(formData.startDate, "dd MMMM yyyy", { locale: ka }) : "აირჩიეთ თარიღი"}
+                    {formData.startDate ? format(formData.startDate, "dd MMMM yyyy", { locale: ka }) : t('addAdvertisementModal.placeholders.selectDate')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -292,7 +294,7 @@ export const AddAdvertisementModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label>დასრულების თარიღი *</Label>
+              <Label>{t('addAdvertisementModal.fields.endDate')} *</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -304,7 +306,7 @@ export const AddAdvertisementModal = ({
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.endDate ? format(formData.endDate, "dd MMMM yyyy", { locale: ka }) : "აირჩიეთ თარიღი"}
+                    {formData.endDate ? format(formData.endDate, "dd MMMM yyyy", { locale: ka }) : t('addAdvertisementModal.placeholders.selectDate')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -328,7 +330,7 @@ export const AddAdvertisementModal = ({
           {/* Media and Links */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="imageUrl">რეკლამის სურათის URL *</Label>
+              <Label htmlFor="imageUrl">{t('addAdvertisementModal.fields.imageUrl')} *</Label>
               <div className="flex gap-2">
                 <Input
                   id="imageUrl"
@@ -350,7 +352,7 @@ export const AddAdvertisementModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="targetUrl">მიზნობრივი ლინკი *</Label>
+              <Label htmlFor="targetUrl">{t('addAdvertisementModal.fields.targetUrl')} *</Label>
               <Input
                 id="targetUrl"
                 value={formData.targetUrl}
@@ -370,10 +372,10 @@ export const AddAdvertisementModal = ({
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
-            გაუქმება
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? 'ემატება...' : 'რეკლამის დამატება'}
+            {isSubmitting ? t('common.saving') : t('addAdvertisementModal.buttons.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

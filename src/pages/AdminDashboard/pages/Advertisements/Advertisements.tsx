@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from 'react-i18next';
 import { AddAdvertisementModal } from './components/AddAdvertisementModal';
 import { 
   Monitor, 
@@ -34,6 +35,7 @@ interface AdPlacement {
 }
 
 const Advertisements = () => {
+  const { t } = useTranslation();
   const [selectedPlacement, setSelectedPlacement] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedPlacementForAd, setSelectedPlacementForAd] = useState<string | undefined>();
@@ -188,10 +190,10 @@ const Advertisements = () => {
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'banner': return 'ბანერი';
-      case 'sidebar': return 'გვერდითი ბარი';
-      case 'popup': return 'პოპაპი';
-      case 'footer': return 'ფუტერი';
+      case 'banner': return t('advertisements.types.banner');
+      case 'sidebar': return t('advertisements.types.sidebar');
+      case 'popup': return t('advertisements.types.popup');
+      case 'footer': return t('advertisements.types.footer');
       default: return type;
     }
   };
@@ -205,46 +207,46 @@ const Advertisements = () => {
     console.log('New advertisement:', adData);
     // Here you would typically make an API call to save the advertisement
     // For now, we'll just log it and close the modal
-    alert('რეკლამა წარმატებით დაემატა!');
+    alert(t('advertisements.messages.adAdded'));
   };
 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">რეკლამის მართვა</h1>
-        <p className="text-gray-600">მართეთ რეკლამის ადგილები და მონიტორინგი გაუწიეთ შესრულებას</p>
+        <h1 className="text-3xl font-bold mb-2">{t('advertisements.title')}</h1>
+        <p className="text-gray-600">{t('advertisements.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">სულ ადგილები</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.totalPlacements')}</CardTitle>
             <MapPin className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{adPlacements.length}</div>
             <p className="text-xs text-muted-foreground">
-              {adPlacements.filter(p => p.status === 'active').length} აქტიური
+              {adPlacements.filter(p => p.status === 'active').length} {t('advertisements.stats.activeCount')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">სულ ნახვები</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.totalViews')}</CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {adPlacements.reduce((sum, p) => sum + p.views, 0).toLocaleString()}
             </div>
-            <p className="text-xs text-green-600">ამ თვეში</p>
+            <p className="text-xs text-green-600">{t('advertisements.stats.thisMonth')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">სულ კლიკები</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.totalClicks')}</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -260,7 +262,7 @@ const Advertisements = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">CTR მაჩვენებელი</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.ctrIndicator')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -268,7 +270,7 @@ const Advertisements = () => {
               {((adPlacements.reduce((sum, p) => sum + p.clicks, 0) / 
                 adPlacements.reduce((sum, p) => sum + p.views, 0)) * 100).toFixed(2)}%
             </div>
-            <p className="text-xs text-green-600">საშუალო კლიკის მაჩვენებელი</p>
+            <p className="text-xs text-green-600">{t('advertisements.stats.averageCtr')}</p>
           </CardContent>
         </Card>
       </div>
@@ -276,7 +278,7 @@ const Advertisements = () => {
       <div className="mb-6">
         <Button onClick={() => handleAddAdvertisement()} className="mb-4">
           <Plus className="h-4 w-4 mr-2" />
-          ახალი რეკლამის დამატება
+          {t('advertisements.buttons.addNew')}
         </Button>
       </div>
 
@@ -294,7 +296,7 @@ const Advertisements = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={placement.status === 'active' ? 'default' : 'secondary'}>
-                    {placement.status === 'active' ? 'აქტიური' : 'არააქტიური'}
+                    {placement.status === 'active' ? t('advertisements.status.active') : t('advertisements.status.inactive')}
                   </Badge>
                   <Badge variant="outline">{getTypeLabel(placement.type)}</Badge>
                 </div>
@@ -303,12 +305,12 @@ const Advertisements = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">ზომები</p>
+                  <p className="text-sm text-muted-foreground">{t('advertisements.labels.dimensions')}</p>
                   <p className="font-medium">{placement.dimensions}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">შესრულება</p>
-                  <p className="font-medium">{placement.views.toLocaleString()} ნახვა • {placement.clicks} კლიკი</p>
+                  <p className="text-sm text-muted-foreground">{t('advertisements.labels.performance')}</p>
+                  <p className="font-medium">{placement.views.toLocaleString()} {t('advertisements.labels.views')} • {placement.clicks} {t('advertisements.labels.clicks')}</p>
                 </div>
               </div>
 
@@ -320,7 +322,7 @@ const Advertisements = () => {
                       <p className="text-xs text-green-600">{placement.currentAd.advertiser}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-green-600">ვადა: {placement.currentAd.endDate}-მდე</p>
+                      <p className="text-xs text-green-600">{t('advertisements.labels.expires')} {placement.currentAd.endDate}{t('advertisements.labels.until')}</p>
                     </div>
                   </div>
                 </div>
@@ -329,16 +331,16 @@ const Advertisements = () => {
               <div className="flex gap-2">
                 {placement.status === 'active' ? (
                   <Button variant="outline" size="sm">
-                    დეაქტივაცია
+                    {t('advertisements.buttons.deactivate')}
                   </Button>
                 ) : (
                   <Button variant="outline" size="sm" onClick={() => handleAddAdvertisement(placement.id)}>
-                    აქტივაცია
+                    {t('advertisements.buttons.activate')}
                   </Button>
                 )}
                 <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
                   <Trash2 className="h-4 w-4 mr-1" />
-                  წაშლა
+                  {t('advertisements.buttons.delete')}
                 </Button>
               </div>
             </CardContent>
