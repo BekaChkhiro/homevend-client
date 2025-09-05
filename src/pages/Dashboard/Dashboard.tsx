@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { Sidebar, SidebarRef } from "./components/Sidebar";
 import { PropertyFormProvider } from "./contexts/PropertyFormContext";
 import { MobileDashboardNav } from "./components/MobileDashboardNav";
+import { useTranslation } from "react-i18next";
 
 // Context for balance refresh function
 const BalanceRefreshContext = createContext<(() => void) | null>(null);
@@ -20,6 +21,7 @@ const DashboardContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const sidebarRef = useRef<SidebarRef>(null);
+  const { t } = useTranslation('userDashboard');
 
   // თუ მომხმარებელი არ არის ავტორიზებული, გადავამისამართოთ შესვლის გვერდზე
   useEffect(() => {
@@ -43,7 +45,7 @@ const DashboardContent = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-          <p className="mt-2">იტვირთება...</p>
+          <p className="mt-2">{t('common.loading')}</p>
         </div>
       </div>
     );

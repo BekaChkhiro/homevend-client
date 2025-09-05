@@ -9,7 +9,7 @@ export const MobileDashboardNav = () => {
   const location = useLocation();
   const { user } = useAuth();
   const { favorites } = useFavorites();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('userDashboard');
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(`${path}/`);
@@ -22,21 +22,21 @@ export const MobileDashboardNav = () => {
         id: "properties",
         path: getLanguageUrl("dashboard/my-properties", i18n.language),
         icon: Home,
-        label: "ქონება",
+        label: t('mobileNav.properties'),
         show: true
       },
       {
         id: "add",
         path: getLanguageUrl("dashboard/add-property", i18n.language),
         icon: Plus,
-        label: "დამატება",
+        label: t('mobileNav.add'),
         show: true
       },
       {
         id: "favorites",
         path: getLanguageUrl("dashboard/favorites", i18n.language),
         icon: Heart,
-        label: "ფავორიტი",
+        label: t('mobileNav.favorites'),
         show: true,
         badge: favorites.size > 0 ? favorites.size : null
       },
@@ -44,7 +44,7 @@ export const MobileDashboardNav = () => {
         id: "profile",
         path: getLanguageUrl("dashboard/profile", i18n.language),
         icon: User,
-        label: "პროფილი",
+        label: t('mobileNav.profile'),
         show: true
       }
     ];
@@ -56,7 +56,7 @@ export const MobileDashboardNav = () => {
           id: "projects",
           path: getLanguageUrl("dashboard/my-projects", i18n.language),
           icon: FolderOpen,
-          label: "პროექტები",
+          label: t('mobileNav.projects'),
           show: true
         },
         ...baseItems.slice(0, 2), // Properties and Add
@@ -65,7 +65,7 @@ export const MobileDashboardNav = () => {
           id: "balance",
           path: getLanguageUrl("dashboard/balance", i18n.language),
           icon: DollarSign,
-          label: "ბალანსი",
+          label: t('mobileNav.balance'),
           show: true
         }
       ];
@@ -79,7 +79,7 @@ export const MobileDashboardNav = () => {
           id: "users",
           path: getLanguageUrl("dashboard/users", i18n.language),
           icon: Users,
-          label: "აგენტები",
+          label: t('mobileNav.agents'),
           show: true
         },
         baseItems[3] // Profile

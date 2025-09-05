@@ -1,0 +1,332 @@
+{
+  "common": {
+    "loading": "Загружается...",
+    "error": "Ошибка",
+    "success": "Успех",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "view": "Посмотреть",
+    "tryAgain": "Попробовать снова",
+    "mainContent": "Основное содержание",
+    "menuSidebar": "Боковое меню",
+    "contentSection": "Раздел контента"
+  },
+  "menu": {
+    "addProject": "Добавить проект",
+    "addProperty": "Добавить объявление",
+    "myProjects": "Мои проекты",
+    "myProperties": "Мои объявления",
+    "favorites": "Избранное",
+    "profile": "Профиль",
+    "agents": "Агенты",
+    "balance": "Пополнить",
+    "categories": {
+      "projects": "Проекты",
+      "properties": "Объявления",
+      "account": "Аккаунт"
+    }
+  },
+  "balance": {
+    "title": "Баланс",
+    "topUp": "Пополнить",
+    "error": "Ошибка",
+    "tooManyRequests": "Слишком много запросов",
+    "loadError": "Ошибка загрузки баланса"
+  },
+  "properties": {
+    "title": "Мои объявления",
+    "loading": "Загрузка объявлений...",
+    "addProperty": "Добавить объявление",
+    "noProperties": "У вас нет добавленных объявлений",
+    "noPropertiesDesc": "Добавьте ваше первое объявление и увеличьте шансы продажи",
+    "loadError": "Ошибка загрузки объявлений",
+    "deleteError": "Ошибка удаления объявления",
+    "deleteSuccess": "Объявление успешно удалено"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "loading": "Загрузка избранного...",
+    "loadError": "Ошибка загрузки избранного",
+    "removeError": "Ошибка удаления из избранного",
+    "removeSuccess": "Объявление удалено из избранного",
+    "noFavorites": "У вас нет объявлений в избранном",
+    "noFavoritesDesc": "Найдите желаемые объявления и добавьте их в избранное для будущего просмотра",
+    "searchProperties": "Поиск объявлений",
+    "propertyTypes": {
+      "apartment": "Квартира",
+      "house": "Дом",
+      "cottage": "Коттедж",
+      "land": "Земля",
+      "commercial": "Коммерческая"
+    },
+    "dealTypes": {
+      "sale": "Продается",
+      "rent": "Сдается",
+      "daily": "Посуточная аренда"
+    }
+  },
+  "profile": {
+    "personalInfo": "Личная информация",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "email": "Email",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "addressPlaceholder": "Город, район, улица"
+  },
+  "mobileNav": {
+    "properties": "Недвижимость",
+    "add": "Добавить",
+    "favorites": "Избранное",
+    "profile": "Профиль",
+    "projects": "Проекты",
+    "balance": "Баланс",
+    "agents": "Агенты"
+  },
+  "addProperty": {
+    "title": "Добавить объявление",
+    "submit": "Добавить объявление",
+    "submitting": "Добавление объявления...",
+    "citiesNotLoaded": "Города еще не загружены. Пожалуйста, подождите.",
+    "vipDaysError": "Количество VIP дней должно быть от 1 до 30",
+    "serviceDaysError": "Количество дней сервиса должно быть от 1 до 30",
+    "insufficientBalance": "Недостаточно средств",
+    "insufficientBalanceDesc": "Требуется {{required}}₾, доступно {{available}}₾",
+    "successWithVip": "Объявление успешно добавлено и VIP статус приобретен на {{days}} дней",
+    "successWithoutVip": "Объявление успешно добавлено",
+    "submissionError": "Ошибка при добавлении объявления",
+    "cityNotFound": "Город \"{{city}}\" не найден. Пожалуйста, выберите правильный город."
+  },
+  "profileSections": {
+    "personalInfo": {
+      "title": "Личная информация",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "email": "Email",
+      "phone": "Телефон",
+      "address": "Адрес",
+      "addressPlaceholder": "Город, район, улица"
+    },
+    "passwordChange": {
+      "title": "Изменить пароль",
+      "currentPassword": "Текущий пароль",
+      "newPassword": "Новый пароль",
+      "confirmPassword": "Подтвердить пароль"
+    },
+    "notificationSettings": {
+      "title": "Настройки уведомлений",
+      "emailNotifications": "Email уведомления",
+      "smsNotifications": "SMS уведомления",
+      "pushNotifications": "Push уведомления"
+    },
+    "privacySettings": {
+      "title": "Настройки конфиденциальности",
+      "profileVisibility": "Видимость профиля",
+      "contactVisibility": "Видимость контактной информации"
+    }
+  },
+  "projects": {
+    "title": "Мои проекты",
+    "loading": "Загрузка проектов...",
+    "addProject": "Добавить проект",
+    "noProjects": "У вас нет добавленных проектов",
+    "noProjectsDesc": "Добавьте ваш первый проект и управляйте объявлениями",
+    "loadError": "Ошибка загрузки проектов",
+    "deleteError": "Ошибка удаления проекта",
+    "deleteSuccess": "Проект успешно удален",
+    "manageProperties": "Управление объявлениями"
+  },
+  "vip": {
+    "title": "VIP сервисы",
+    "free": "Бесплатно",
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "superVip": "SUPER VIP",
+    "days": "дней",
+    "selectDays": "Выберите дни",
+    "totalCost": "Общая стоимость",
+    "yourBalance": "Ваш баланс",
+    "additionalServices": "Дополнительные сервисы",
+    "autoRenew": "Авто-продление",
+    "colorSeparation": "Цветовое выделение",
+    "purchaseVip": "Купить VIP",
+    "skipVip": "Пропустить VIP"
+  },
+  "validation": {
+    "required": "Это поле обязательно",
+    "email": "Неверный формат email",
+    "phone": "Неверный формат телефона",
+    "minLength": "Минимум {{min}} символов",
+    "maxLength": "Максимум {{max}} символов",
+    "numeric": "Должно быть числом",
+    "positive": "Должно быть положительным числом"
+  },
+  "propertyCard": {
+    "views": "просмотров",
+    "rooms": "комнат",
+    "bedrooms": "спален",
+    "bathrooms": "ванных",
+    "area": "площадь",
+    "price": "цена",
+    "vipExpires": "VIP истекает",
+    "services": "сервисы",
+    "contact": "контакт",
+    "editProperty": "Редактировать объявление",
+    "deleteProperty": "Удалить объявление",
+    "purchaseVip": "Купить VIP",
+    "deleteConfirm": "Вы уверены, что хотите удалить это объявление?",
+    "locationNotSpecified": "Местоположение не указано"
+  },
+  "uploadPhotos": {
+    "title": "Загрузить фото",
+    "dragDrop": "Перетащите фото сюда или",
+    "selectFiles": "выберите файлы",
+    "maxFiles": "Максимум {{max}} фото",
+    "supportedFormats": "Поддерживаемые форматы: JPG, PNG, WebP",
+    "maxSize": "Максимальный размер: {{size}}MB",
+    "uploading": "Загрузка...",
+    "uploadError": "Ошибка загрузки фото",
+    "removePhoto": "Удалить фото"
+  },
+  "toast": {
+    "success": "Успех",
+    "error": "Ошибка",
+    "warning": "Предупреждение",
+    "info": "Информация"
+  },
+  "addProject": {
+    "title": "Добавить новый проект",
+    "subtitle": "Заполните информацию о проекте",
+    "backToDashboard": "Назад к панели",
+    "accessDenied": "Доступ запрещен",
+    "accessDeniedDesc": "Только разработчики могут добавлять проекты",
+    "onlyDevelopers": "Только разработчики могут добавлять проекты",
+    "tabs": {
+      "basic": "Основная информация",
+      "amenities": "Удобства",
+      "services": "Сервисы",
+      "properties": "Привязать объявления"
+    },
+    "sections": {
+      "projectInfo": "Информация о проекте",
+      "location": "Расположение",
+      "projectDetails": "Детали проекта",
+      "amenitiesByDistance": "Удобства по расстоянию",
+      "amenitiesDesc": "Выберите, что находится рядом с проектом, и укажите расстояние",
+      "servicesAfterDelivery": "Сервисы после сдачи",
+      "servicesDesc": "Выберите сервисы, которые будут доступны после сдачи проекта",
+      "linkProperties": "Привязка объявлений к проекту",
+      "linkPropertiesDesc": "Выберите ваши существующие объявления, которые хотите привязать к этому проекту"
+    },
+    "fields": {
+      "projectName": "Название проекта",
+      "projectType": "Тип проекта",
+      "description": "Описание",
+      "city": "Город",
+      "district": "Район",
+      "street": "Улица",
+      "streetNumber": "Номер",
+      "deliveryStatus": "Статус сдачи",
+      "deliveryDate": "Дата сдачи",
+      "buildingsCount": "Количество корпусов",
+      "totalApartments": "Всего квартир",
+      "floorsCount": "Количество этажей",
+      "parkingSpaces": "Парковочные места"
+    },
+    "placeholders": {
+      "selectType": "Выберите тип",
+      "selectCity": "Выберите город",
+      "selectDistrict": "Выберите район",
+      "selectStatus": "Выберите статус"
+    },
+    "projectTypes": {
+      "privateHouse": "Частный дом",
+      "apartmentBuilding": "Жилой комплекс"
+    },
+    "deliveryStatuses": {
+      "completedWithRenovation": "Сдача с ремонтом",
+      "greenFrame": "Зеленый каркас",
+      "blackFrame": "Черный каркас",
+      "whiteFrame": "Белый каркас"
+    },
+    "distances": {
+      "onSite": "На территории",
+      "within300m": "В пределах 300м",
+      "within500m": "В пределах 500м",
+      "within1km": "В пределах 1км"
+    },
+    "amenities": {
+      "pharmacy": "Аптека",
+      "kindergarten": "Детский сад",
+      "school": "Школа",
+      "university": "Университет",
+      "hospital": "Больница",
+      "clinic": "Клиника",
+      "busStop": "Автобусная остановка",
+      "metro": "Метро",
+      "groceryStore": "Продуктовый магазин",
+      "supermarket": "Супермаркет",
+      "mall": "Торговый центр",
+      "bank": "Банк",
+      "atm": "Банкомат",
+      "restaurant": "Ресторан",
+      "cafe": "Кафе",
+      "bakery": "Пекарня",
+      "sportsCenter": "Спортивный центр",
+      "gym": "Спортзал",
+      "stadium": "Стадион",
+      "swimmingPool": "Бассейн",
+      "park": "Парк",
+      "garden": "Сад",
+      "square": "Площадь",
+      "parking": "Парковка",
+      "bikePath": "Велодорожка",
+      "sportsField": "Спортплощадка",
+      "childrenArea": "Детская площадка",
+      "laundry": "Прачечная",
+      "storage": "Склад",
+      "cinema": "Кинотеатр",
+      "theater": "Театр",
+      "library": "Библиотека",
+      "postOffice": "Почтовое отделение",
+      "gasStation": "Заправка",
+      "carWash": "Автомойка",
+      "veterinary": "Ветклиника",
+      "beautyCenter": "Салон красоты",
+      "dentist": "Стоматология"
+    },
+    "services": {
+      "securityService": "Служба охраны",
+      "concierge": "Консьерж",
+      "videoSurveillance": "Видеонаблюдение",
+      "lobby": "Лобби/Зал ожидания",
+      "doorman": "Швейцар",
+      "yardCleaning": "Уборка двора",
+      "entranceCleaning": "Уборка подъезда",
+      "landscaping": "Ландшафтный дизайн",
+      "lighting": "Постоянное освещение",
+      "fireSystem": "Система пожаротушения",
+      "mainDoorLock": "Замок главной двери",
+      "maintenance": "Техническое обслуживание"
+    },
+    "propertyLinking": {
+      "loading": "Загрузка объявлений...",
+      "noProperties": "У вас нет существующих объявлений для привязки",
+      "noPropertiesDesc": "Сначала создайте объявление, затем сможете привязать его к проекту",
+      "selectedCount": "{{count}} объявлений выбрано для привязки",
+      "selectPrompt": "Выберите объявления для привязки к проекту",
+      "willBeLinked": "{{count}} объявлений будут привязаны к проекту после создания",
+      "rooms": "комнат"
+    },
+    "buttons": {
+      "cancel": "Отмена",
+      "save": "Сохранить проект",
+      "saving": "Сохранение..."
+    },
+    "success": "Проект успешно создан",
+    "successWithProperties": "Проект успешно создан и {{count}} объявлений привязано",
+    "createError": "Ошибка создания проекта"
+  }
+}

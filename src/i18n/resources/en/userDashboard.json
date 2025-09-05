@@ -1,0 +1,332 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "tryAgain": "Try again",
+    "mainContent": "Main content",
+    "menuSidebar": "Menu sidebar",
+    "contentSection": "Content section"
+  },
+  "menu": {
+    "addProject": "Add Project",
+    "addProperty": "Add Property",
+    "myProjects": "My Projects",
+    "myProperties": "My Properties",
+    "favorites": "Favorites",
+    "profile": "Profile",
+    "agents": "Agents",
+    "balance": "Top Up",
+    "categories": {
+      "projects": "Projects",
+      "properties": "Properties",
+      "account": "Account"
+    }
+  },
+  "balance": {
+    "title": "Balance",
+    "topUp": "Top Up",
+    "error": "Error",
+    "tooManyRequests": "Too many requests",
+    "loadError": "Error loading balance"
+  },
+  "properties": {
+    "title": "My Properties",
+    "loading": "Loading properties...",
+    "addProperty": "Add Property",
+    "noProperties": "You have no properties added",
+    "noPropertiesDesc": "Add your first property and increase your sales chances",
+    "loadError": "Error loading properties",
+    "deleteError": "Error deleting property",
+    "deleteSuccess": "Property successfully deleted"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "loading": "Loading favorites...",
+    "loadError": "Error loading favorites",
+    "removeError": "Error removing from favorites",
+    "removeSuccess": "Property removed from favorites",
+    "noFavorites": "You have no properties added to favorites",
+    "noFavoritesDesc": "Find desired properties and add them to favorites for future review",
+    "searchProperties": "Search Properties",
+    "propertyTypes": {
+      "apartment": "Apartment",
+      "house": "House",
+      "cottage": "Cottage",
+      "land": "Land",
+      "commercial": "Commercial"
+    },
+    "dealTypes": {
+      "sale": "For Sale",
+      "rent": "For Rent",
+      "daily": "Daily Rental"
+    }
+  },
+  "profile": {
+    "personalInfo": "Personal Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "addressPlaceholder": "City, District, Street"
+  },
+  "mobileNav": {
+    "properties": "Property",
+    "add": "Add",
+    "favorites": "Favorites",
+    "profile": "Profile",
+    "projects": "Projects",
+    "balance": "Balance",
+    "agents": "Agents"
+  },
+  "addProperty": {
+    "title": "Add Property",
+    "submit": "Add Property",
+    "submitting": "Adding property...",
+    "citiesNotLoaded": "Cities not loaded yet. Please wait.",
+    "vipDaysError": "VIP days must be between 1 and 30",
+    "serviceDaysError": "Service days must be between 1 and 30",
+    "insufficientBalance": "Insufficient balance",
+    "insufficientBalanceDesc": "Required {{required}}₾, available {{available}}₾",
+    "successWithVip": "Property successfully added and VIP status purchased for {{days}} days",
+    "successWithoutVip": "Property successfully added",
+    "submissionError": "Error occurred while adding property",
+    "cityNotFound": "City \"{{city}}\" not found. Please select a valid city."
+  },
+  "profileSections": {
+    "personalInfo": {
+      "title": "Personal Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "addressPlaceholder": "City, District, Street"
+    },
+    "passwordChange": {
+      "title": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "notificationSettings": {
+      "title": "Notification Settings",
+      "emailNotifications": "Email Notifications",
+      "smsNotifications": "SMS Notifications",
+      "pushNotifications": "Push Notifications"
+    },
+    "privacySettings": {
+      "title": "Privacy Settings",
+      "profileVisibility": "Profile Visibility",
+      "contactVisibility": "Contact Information Visibility"
+    }
+  },
+  "projects": {
+    "title": "My Projects",
+    "loading": "Loading projects...",
+    "addProject": "Add Project",
+    "noProjects": "You have no projects added",
+    "noProjectsDesc": "Add your first project and manage properties",
+    "loadError": "Error loading projects",
+    "deleteError": "Error deleting project",
+    "deleteSuccess": "Project successfully deleted",
+    "manageProperties": "Manage Properties"
+  },
+  "vip": {
+    "title": "VIP Services",
+    "free": "Free",
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "superVip": "SUPER VIP",
+    "days": "days",
+    "selectDays": "Select days",
+    "totalCost": "Total cost",
+    "yourBalance": "Your balance",
+    "additionalServices": "Additional Services",
+    "autoRenew": "Auto-renew",
+    "colorSeparation": "Color separation",
+    "purchaseVip": "Purchase VIP",
+    "skipVip": "Skip VIP"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email format",
+    "phone": "Invalid phone format",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters",
+    "numeric": "Must be a number",
+    "positive": "Must be a positive number"
+  },
+  "propertyCard": {
+    "views": "views",
+    "rooms": "rooms",
+    "bedrooms": "bedrooms",
+    "bathrooms": "bathrooms",
+    "area": "area",
+    "price": "price",
+    "vipExpires": "VIP expires",
+    "services": "services",
+    "contact": "contact",
+    "editProperty": "Edit property",
+    "deleteProperty": "Delete property",
+    "purchaseVip": "Purchase VIP",
+    "deleteConfirm": "Are you sure you want to delete this property?",
+    "locationNotSpecified": "Location not specified"
+  },
+  "uploadPhotos": {
+    "title": "Upload Photos",
+    "dragDrop": "Drag and drop photos here or",
+    "selectFiles": "select files",
+    "maxFiles": "Maximum {{max}} photos",
+    "supportedFormats": "Supported formats: JPG, PNG, WebP",
+    "maxSize": "Maximum size: {{size}}MB",
+    "uploading": "Uploading...",
+    "uploadError": "Error uploading photo",
+    "removePhoto": "Remove photo"
+  },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "addProject": {
+    "title": "Add New Project",
+    "subtitle": "Fill in the project information",
+    "backToDashboard": "Back to Dashboard",
+    "accessDenied": "Access Denied",
+    "accessDeniedDesc": "Only developers can add projects",
+    "onlyDevelopers": "Only developers can add projects",
+    "tabs": {
+      "basic": "Basic Info",
+      "amenities": "Amenities",
+      "services": "Services",
+      "properties": "Link Properties"
+    },
+    "sections": {
+      "projectInfo": "Project Information",
+      "location": "Location",
+      "projectDetails": "Project Details",
+      "amenitiesByDistance": "Amenities by Distance",
+      "amenitiesDesc": "Select what exists around the project and specify the distance",
+      "servicesAfterDelivery": "Services After Delivery",
+      "servicesDesc": "Select services that will be available after project delivery",
+      "linkProperties": "Link Properties to Project",
+      "linkPropertiesDesc": "Choose your existing properties that you want to link to this project"
+    },
+    "fields": {
+      "projectName": "Project Name",
+      "projectType": "Project Type",
+      "description": "Description",
+      "city": "City",
+      "district": "District",
+      "street": "Street",
+      "streetNumber": "Number",
+      "deliveryStatus": "Delivery Status",
+      "deliveryDate": "Delivery Date",
+      "buildingsCount": "Number of Buildings",
+      "totalApartments": "Total Apartments",
+      "floorsCount": "Number of Floors",
+      "parkingSpaces": "Parking Spaces"
+    },
+    "placeholders": {
+      "selectType": "Select type",
+      "selectCity": "Select city",
+      "selectDistrict": "Select district",
+      "selectStatus": "Select status"
+    },
+    "projectTypes": {
+      "privateHouse": "Private House",
+      "apartmentBuilding": "Apartment Complex"
+    },
+    "deliveryStatuses": {
+      "completedWithRenovation": "Completed with Renovation",
+      "greenFrame": "Green Frame",
+      "blackFrame": "Black Frame",
+      "whiteFrame": "White Frame"
+    },
+    "distances": {
+      "onSite": "On Site",
+      "within300m": "Within 300m",
+      "within500m": "Within 500m",
+      "within1km": "Within 1km"
+    },
+    "amenities": {
+      "pharmacy": "Pharmacy",
+      "kindergarten": "Kindergarten",
+      "school": "School",
+      "university": "University",
+      "hospital": "Hospital",
+      "clinic": "Clinic",
+      "busStop": "Bus Stop",
+      "metro": "Metro",
+      "groceryStore": "Grocery Store",
+      "supermarket": "Supermarket",
+      "mall": "Shopping Mall",
+      "bank": "Bank",
+      "atm": "ATM",
+      "restaurant": "Restaurant",
+      "cafe": "Cafe",
+      "bakery": "Bakery",
+      "sportsCenter": "Sports Center",
+      "gym": "Gym",
+      "stadium": "Stadium",
+      "swimmingPool": "Swimming Pool",
+      "park": "Park",
+      "garden": "Garden",
+      "square": "Square",
+      "parking": "Parking",
+      "bikePath": "Bike Path",
+      "sportsField": "Sports Field",
+      "childrenArea": "Children's Area",
+      "laundry": "Laundry",
+      "storage": "Storage",
+      "cinema": "Cinema",
+      "theater": "Theater",
+      "library": "Library",
+      "postOffice": "Post Office",
+      "gasStation": "Gas Station",
+      "carWash": "Car Wash",
+      "veterinary": "Veterinary Clinic",
+      "beautyCenter": "Beauty Center",
+      "dentist": "Dentist"
+    },
+    "services": {
+      "securityService": "Security Service",
+      "concierge": "Concierge",
+      "videoSurveillance": "Video Surveillance",
+      "lobby": "Lobby/Reception Hall",
+      "doorman": "Doorman",
+      "yardCleaning": "Yard Cleaning",
+      "entranceCleaning": "Entrance Cleaning",
+      "landscaping": "Landscaping",
+      "lighting": "Permanent Lighting",
+      "fireSystem": "Fire Suppression System",
+      "mainDoorLock": "Main Door Lock",
+      "maintenance": "Technical Maintenance"
+    },
+    "propertyLinking": {
+      "loading": "Loading properties...",
+      "noProperties": "You have no existing properties that can be linked",
+      "noPropertiesDesc": "Create a property first, then you can link it to a project",
+      "selectedCount": "{{count}} properties selected for linking",
+      "selectPrompt": "Select properties you want to link to the project",
+      "willBeLinked": "{{count}} properties will be linked to this project after creation",
+      "rooms": "rooms"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "Save Project",
+      "saving": "Saving..."
+    },
+    "success": "Project created successfully",
+    "successWithProperties": "Project created successfully and {{count}} properties linked",
+    "createError": "Error creating project"
+  }
+}
