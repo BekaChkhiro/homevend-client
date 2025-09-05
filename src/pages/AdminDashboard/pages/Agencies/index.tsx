@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from 'react-i18next';
 import { agencyApi } from '@/lib/api';
+import { getLanguageUrl } from '@/components/LanguageRoute';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Agency {
@@ -32,7 +33,7 @@ interface Agency {
 }
 
 const AdminAgencies = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -269,7 +270,7 @@ const AdminAgencies = () => {
                         variant="ghost" 
                         size="sm" 
                         className="h-8 px-2"
-                        onClick={() => navigate(`/agencies/${agency.id}`)}
+                        onClick={() => navigate(getLanguageUrl(`agencies/${agency.id}`, i18n.language))}
                         title={t('agencies.buttons.view')}
                       >
                         <Eye className="h-4 w-4 mr-1" />

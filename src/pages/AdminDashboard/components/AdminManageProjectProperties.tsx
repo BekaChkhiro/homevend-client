@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Building2, MapPin, Square, Bed, DollarSign, Eye, Link, Unlink } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface UserProperty {
   id: number;
@@ -56,7 +57,7 @@ export const AdminManageProjectProperties: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [project, setProject] = useState<Project | null>(null);
   const [allProperties, setAllProperties] = useState<UserProperty[]>([]);
@@ -470,7 +471,7 @@ export const AdminManageProjectProperties: React.FC = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate('/admin/projects')}
+          onClick={() => navigate(getLanguageUrl('admin/projects', i18n.language))}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           {t('common.back')}

@@ -2,11 +2,14 @@ import { Home, Building, Building2, Heart, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 
 export const MobileBottomNav = () => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
   const { favorites } = useFavorites();
+  const { i18n } = useTranslation();
 
   const isActive = (path: string) => {
     if (path === "/" && location.pathname === "/") {
@@ -18,21 +21,21 @@ export const MobileBottomNav = () => {
   const navItems = [
     {
       id: "home",
-      path: "/",
+      path: getLanguageUrl("", i18n.language),
       icon: Home,
       label: "მთავარი",
       show: true
     },
     {
       id: "properties",
-      path: "/properties",
+      path: getLanguageUrl("properties", i18n.language),
       icon: Building,
       label: "ქონება",
       show: true
     },
     {
       id: "favorites",
-      path: isAuthenticated ? "/dashboard/favorites" : "/login",
+      path: isAuthenticated ? getLanguageUrl("dashboard/favorites", i18n.language) : getLanguageUrl("login", i18n.language),
       icon: Heart,
       label: "ფავორიტი",
       show: true,
@@ -40,7 +43,7 @@ export const MobileBottomNav = () => {
     },
     {
       id: "profile",
-      path: isAuthenticated ? "/dashboard" : "/login",
+      path: isAuthenticated ? getLanguageUrl("dashboard", i18n.language) : getLanguageUrl("login", i18n.language),
       icon: User,
       label: isAuthenticated ? "კაბინეტი" : "შესვლა",
       show: true

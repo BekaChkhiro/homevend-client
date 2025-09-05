@@ -361,21 +361,153 @@
   },
   "servicePricing": {
     "title": "სერვისების ფასების მართვა",
-    "subtitle": "მართეთ სერვისების ფასები და პირობები"
+    "subtitle": "VIP და დამატებითი სერვისების ფასების მართვა",
+    "subtitleWithCount": "VIP და დამატებითი სერვისების ფასების მართვა ({{count}} სერვისი)",
+    "categories": {
+      "vip": "VIP სერვისები",
+      "service": "დამატებითი სერვისები"
+    },
+    "serviceTypes": {
+      "free": "უფასო განცხადება",
+      "vip": "VIP",
+      "vip_plus": "VIP+",
+      "super_vip": "SUPER VIP",
+      "auto_renew": "ავტო-განახლება",
+      "color_separation": "ფერადი განცალკევება"
+    },
+    "serviceDescriptions": {
+      "free": "უფასო განცხადება - ძირითადი ხილვადობა",
+      "vip": "VIP სტატუსი - გაუმჯობესებული ხილვადობა",
+      "vip_plus": "VIP+ სტატუსი - გაძლიერებული ხილვადობა",
+      "super_vip": "SUPER VIP სტატუსი - მაქსიმალური ხილვადობა",
+      "auto_renew": "ავტო-განახლება - ავტომატური ვადის გაგრძელება",
+      "color_separation": "ფერადი განცალკევება - განსაკუთრებული ფერადი ჩარჩო"
+    },
+    "labels": {
+      "currentPrice": "მიმდინარე ფასი",
+      "newPrice": "ახალი ღირებულება (დღეში)",
+      "pricePerDay": "₾ / დღეში",
+      "services": "სერვისი",
+      "service": "სერვისი"
+    },
+    "buttons": {
+      "saveAllPrices": "ყველა ფასის შენახვა",
+      "refresh": "განახლება"
+    },
+    "messages": {
+      "errorLoading": "ფასების ჩატვირთვისას მოხდა შეცდომა",
+      "errorUpdating": "ფასების განახლებისას მოხდა შეცდომა",
+      "priceChanged": "ფასი შეცვლილია - შენახვისთვის გამოიყენეთ \"ყველა ფასის შენახვა\" ღილაკი",
+      "noChanges": "ცვლილებები არ არის შესანახად",
+      "updated": "{{count}} სერვისის ფასი წარმატებით განახლდა",
+      "noServicesFound": "სერვისები ვერ მოიძებნა",
+      "noServicesAvailable": "ამჟამად არ არის ხელმისაწვდომი სერვისების ფასები",
+      "loadingPrices": "ფასების ჩატვირთვა..."
+    }
+  },
+  "apartmentCard": {
+    "labels": {
+      "locationNotSpecified": "მდებარეობა არ არის მითითებული",
+      "agent": "აგენტი:",
+      "views": "ნახვა",
+      "squareMeters": "მ²"
+    },
+    "buttons": {
+      "view": "ნახვა",
+      "edit": "რედაქტირება",
+      "delete": "წაშლა"
+    },
+    "deleteDialog": {
+      "title": "განცხადების წაშლა",
+      "description": "დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.",
+      "cancel": "გაუქმება",
+      "confirm": "წაშლა"
+    }
+  },
+  "userCard": {
+    "labels": {
+      "verified": "დამოწმებული",
+      "listings": "განცხადებები",
+      "joinDate": "გაწევრიანება:",
+      "lastActive": "ბოლო აქტივობა:",
+      "userId": "ID:"
+    },
+    "status": {
+      "active": "აქტიური",
+      "inactive": "არააქტიური",
+      "suspended": "შეჩერებული", 
+      "pending": "მოლოდინში"
+    },
+    "roles": {
+      "admin": "ადმინი",
+      "developer": "დეველოპერი",
+      "agency": "სააგენტო",
+      "user": "მომხმარებელი"
+    },
+    "buttons": {
+      "view": "ნახვა",
+      "edit": "რედაქტირება",
+      "message": "შეტყობინება",
+      "delete": "წაშლა"
+    },
+    "deleteDialog": {
+      "title": "მომხმარებლის წაშლა",
+      "description": "დარწმუნებული ხართ, რომ გსურთ ამ მომხმარებლის წაშლა? ეს მოქმედება შეუქცევადია.",
+      "cancel": "გაუქმება",
+      "confirm": "წაშლა"
+    }
   },
   "editUser": {
     "title": "მომხმარებლის რედაქტირება",
+    "subtitle": "მომხმარებელი #{id}",
+    "sections": {
+      "basicInfo": {
+        "title": "ძირითადი ინფორმაცია",
+        "description": "მომხმარებლის ძირითადი მონაცემების რედაქტირება"
+      },
+      "accountInfo": {
+        "title": "ანგარიშის ინფორმაცია",
+        "description": "დამატებითი ინფორმაცია მომხმარებლის შესახებ"
+      }
+    },
+    "fields": {
+      "fullName": "სახელი და გვარი",
+      "email": "ელ-ფოსტა",
+      "phone": "ტელეფონი",
+      "role": "როლი",
+      "selectRole": "აირჩიეთ როლი"
+    },
+    "placeholders": {
+      "fullName": "სახელი და გვარი",
+      "email": "ელ-ფოსტა",
+      "phone": "+995 555 123 456"
+    },
+    "roles": {
+      "user": "მომხმარებელი",
+      "admin": "ადმინი",
+      "developer": "დეველოპერი", 
+      "agency": "სააგენტო"
+    },
+    "stats": {
+      "registrationDate": "რეგისტრაციის თარიღი",
+      "listings": "განცხადებები",
+      "lastActivity": "ბოლო აქტივობა",
+      "unknown": "უცნობია"
+    },
     "messages": {
       "errorLoading": "მომხმარებლის ჩატვირთვისას მოხდა შეცდომა",
+      "loadingUser": "მომხმარებლის ჩატვირთვა...",
       "nameRequired": "სახელი და გვარი აუცილებელია",
       "emailRequired": "ელ-ფოსტა აუცილებელია",
       "emailInvalid": "ელ-ფოსტის ფორმატი არასწორია",
-      "updated": "მომხმარებელი წარმატებით განახლდა"
+      "updated": "მომხმარებელი წარმატებით განახლდა",
+      "saveError": "მომხმარებლის შენახვისას მოხდა შეცდომა"
     },
     "buttons": {
-      "back": "უკან",
-      "save": "შენახვა",
-      "cancel": "გაუქმება"
+      "back": "უკან დაბრუნება",
+      "save": "ცვლილებების შენახვა",
+      "cancel": "გაუქმება",
+      "saving": "შენახვა..."
     }
   },
   "editProperty": {
@@ -396,6 +528,130 @@
   "editProject": {
     "title": "პროექტის რედაქტირება (ადმინი)",
     "projectNumber": "პროექტი #{id}",
+    "tabs": {
+      "basic": "ძირითადი ინფორმაცია",
+      "amenities": "კომფორტი",
+      "services": "სერვისები"
+    },
+    "sections": {
+      "projectInfo": {
+        "title": "პროექტის ინფორმაცია"
+      },
+      "location": {
+        "title": "მდებარეობა"
+      },
+      "details": {
+        "title": "პროექტის დეტალები"
+      },
+      "gallery": {
+        "title": "ფოტო გალერეა",
+        "description": "ატვირთეთ პროექტის სურათები",
+        "placeholder": "ფოტოების ატვირთვის ფუნქციონალი მოგვიანებით განხორციელდება"
+      },
+      "amenitiesByDistance": {
+        "title": "მახლობლად არსებული კომფორტი",
+        "description": "აირჩიეთ კომფორტი და მისი მანძილი პროექტიდან"
+      },
+      "services": {
+        "title": "ჩაბარების შემდგომ სერვისები",
+        "description": "აირჩიეთ სერვისები, რომლებიც იქნება ხელმისაწვდომი პროექტის ჩაბარების შემდეგ"
+      }
+    },
+    "fields": {
+      "projectName": "პროექტის დასახელება",
+      "description": "აღწერა",
+      "city": "ქალაქი",
+      "area": "რაიონი",
+      "street": "ქუჩა",
+      "streetNumber": "ქუჩის ნომერი",
+      "projectType": "პროექტის ტიპი",
+      "deliveryStatus": "ჩაბარების სტატუსი",
+      "deliveryDate": "ჩაბარების თარიღი",
+      "numberOfBuildings": "კორპუსების რაოდენობა",
+      "totalApartments": "სულ ბინები",
+      "numberOfFloors": "სართულების რაოდენობა",
+      "parkingSpaces": "პარკირების ადგილები"
+    },
+    "placeholders": {
+      "selectType": "აირჩიეთ პროექტის ტიპი",
+      "selectCity": "აირჩიეთ ქალაქი",
+      "selectArea": "აირჩიეთ რაიონი",
+      "selectStatus": "აირჩიეთ ჩაბარების სტატუსი"
+    },
+    "projectTypes": {
+      "privateHouse": "კერძო სახლი",
+      "apartmentBuilding": "საცხოვრებელი კორპუსი"
+    },
+    "deliveryStatuses": {
+      "completedWithRenovation": "ჩაბარება რემონტით",
+      "greenFrame": "მწვანე კარკასი",
+      "blackFrame": "შავი კარკასი",
+      "whiteFrame": "თეთრი კარკასი"
+    },
+    "amenityTypes": {
+      "pharmacy": "აფთიაქი",
+      "kindergarten": "საბავშვო ბაღი",
+      "school": "სკოლა",
+      "university": "უნივერსიტეტი",
+      "hospital": "ჰოსპიტალი",
+      "clinic": "კლინიკა",
+      "busStop": "ავტობუსის გაჩერება",
+      "metro": "მეტრო",
+      "groceryStore": "პროდუქტების მაღაზია",
+      "supermarket": "სუპერმარკეტი",
+      "mall": "სავაჭრო ცენტრი",
+      "bank": "ბანკი",
+      "atm": "ბანკომატი",
+      "restaurant": "რესტორანი",
+      "cafe": "კაფე",
+      "bakery": "საცხობი",
+      "sportsCenter": "სპორტული ცენტრი",
+      "gym": "სპორტული დარბაზი",
+      "stadium": "სტადიონი",
+      "swimmingPool": "საცურაო აუზი",
+      "park": "პარკი",
+      "garden": "ბაღი",
+      "square": "მოედანი",
+      "parking": "პარკინგი",
+      "bikePath": "ველოსიპედის ბილიკი",
+      "sportsField": "სპორტული მოედანი",
+      "childrenArea": "ბავშვთა მოედანი",
+      "laundry": "სამრეცხაო",
+      "storage": "საწყობი",
+      "cinema": "კინო",
+      "theater": "თეატრი",
+      "library": "ბიბლიოთეკა",
+      "postOffice": "ფოსტის განყოფილება",
+      "gasStation": "ბენზინგასამართი სადგური",
+      "carWash": "ავტორეცხვა",
+      "veterinary": "ვეტერინარული კლინიკა",
+      "beautyCenter": "სილამაზის სალონი",
+      "dentist": "სტომატოლოგია"
+    },
+    "distances": {
+      "onSite": "ტერიტორიაზე",
+      "300m": "300მ-მდე",
+      "500m": "500მ-მდე",
+      "1km": "1კმ-მდე"
+    },
+    "services": {
+      "securityService": "მცველის სერვისი",
+      "hasConcierge": "კონსიერჟი",
+      "videoSurveillance": "ვიდეო ზედამხედველობა",
+      "hasLobby": "ლობი/მიღების ჰოლი",
+      "hasDoorman": "კარისკაცი",
+      "yardCleaning": "ეზოს დასუფთავება",
+      "entranceCleaning": "შესასვლელის დასუფთავება",
+      "landscaping": "ლანდშაფტის მოვლა",
+      "hasLighting": "მუდმივი განათება",
+      "fireSystem": "ხანძრის ჩაქრობის სისტემა",
+      "mainDoorLock": "მთავარი კარის საკეტი",
+      "maintenance": "ტექნიკური მომსახურება"
+    },
+    "labels": {
+      "projectOwner": "პროექტის მფლობელი",
+      "adminNote": "თქვენ რედაქტირებთ ამ პროექტს ადმინისტრატორის სახით"
+    },
     "buttons": {
       "saveChanges": "ცვლილებების შენახვა"
     },
@@ -444,6 +700,44 @@
       "street2": "აღმაშენებლის",
       "testUser": "ტესტ მომხმარებელი",
       "mockUser": "მოკი მომხმარებელი"
+    }
+  },
+  "addAdvertisementModal": {
+    "title": "ახალი რეკლამის დამატება",
+    "description": "შეიყვანეთ რეკლამის დეტალები და აირჩიეთ სადე განთავსება",
+    "fields": {
+      "title": "რეკლამის სათაური",
+      "advertiser": "რეკლამის ავტორი",
+      "description": "აღწერა",
+      "placement": "რეკლამის ადგილი",
+      "startDate": "დაწყების თარიღი",
+      "endDate": "დასრულების თარიღი",
+      "imageUrl": "რეკლამის სურათის URL",
+      "targetUrl": "მიზნობრივი ლინკი"
+    },
+    "placeholders": {
+      "title": "მაგ: ახალი პროექტი - ვაკის რეზიდენცია",
+      "advertiser": "მაგ: ვაკე დეველოპმენტი",
+      "description": "რეკლამის დეტალური აღწერა...",
+      "placement": "აირჩიეთ რეკლამის ადგილი",
+      "selectDate": "აირჩიეთ თარიღი"
+    },
+    "labels": {
+      "selectedPlacement": "არჩეული ადგილი",
+      "dimensions": "ზომა"
+    },
+    "buttons": {
+      "submit": "რეკლამის დამატება"
+    },
+    "validation": {
+      "titleRequired": "რეკლამის სათაური აუცილებელია",
+      "advertiserRequired": "რეკლამის ავტორის სახელი აუცილებელია",
+      "placementRequired": "რეკლამის ადგილის არჩევა აუცილებელია",
+      "startDateRequired": "დაწყების თარიღი აუცილებელია",
+      "endDateRequired": "დასრულების თარიღი აუცილებელია",
+      "imageRequired": "რეკლამის სურათი აუცილებელია",
+      "targetUrlRequired": "მიზნობრივი ლინკი აუცილებელია",
+      "endDateAfterStart": "დასრულების თარიღი უნდა იყოს დაწყების თარიღზე გვიან"
     }
   }
 }

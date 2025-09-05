@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from 'react-i18next';
 import { adminApi } from '@/lib/api';
+import { getLanguageUrl } from '@/components/LanguageRoute';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Project {
@@ -32,7 +33,7 @@ interface Project {
 }
 
 const AdminProjects = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -267,7 +268,7 @@ const AdminProjects = () => {
                         variant="ghost" 
                         size="sm" 
                         className="h-8 px-2"
-                        onClick={() => navigate(`/projects/${project.id}`)}
+                        onClick={() => navigate(getLanguageUrl(`projects/${project.id}`, i18n.language))}
                         title={t('projects.buttons.view')}
                       >
                         <Eye className="h-4 w-4 mr-1" />
@@ -278,7 +279,7 @@ const AdminProjects = () => {
                         variant="ghost" 
                         size="sm" 
                         className="h-8 px-2"
-                        onClick={() => navigate(`/admin/edit-project/${project.id}`)}
+                        onClick={() => navigate(getLanguageUrl(`admin/edit-project/${project.id}`, i18n.language))}
                         title={t('projects.buttons.edit')}
                       >
                         <Edit className="h-4 w-4 mr-1" />
@@ -289,7 +290,7 @@ const AdminProjects = () => {
                         variant="ghost" 
                         size="sm" 
                         className="h-8 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                        onClick={() => navigate(`/admin/projects/${project.id}/manage-properties`)}
+                        onClick={() => navigate(getLanguageUrl(`admin/projects/${project.id}/manage-properties`, i18n.language))}
                         title={t('projects.buttons.manageProperties')}
                       >
                         <Settings className="h-4 w-4 mr-1" />

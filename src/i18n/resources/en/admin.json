@@ -361,21 +361,153 @@
   },
   "servicePricing": {
     "title": "Service Pricing Management",
-    "subtitle": "Manage service prices and conditions"
+    "subtitle": "Manage VIP and additional service prices",
+    "subtitleWithCount": "Manage VIP and additional service prices ({{count}} services)",
+    "categories": {
+      "vip": "VIP Services",
+      "service": "Additional Services"
+    },
+    "serviceTypes": {
+      "free": "Free Listing",
+      "vip": "VIP",
+      "vip_plus": "VIP+",
+      "super_vip": "Super VIP",
+      "auto_renew": "Auto-Renewal",
+      "color_separation": "Color Highlight"
+    },
+    "serviceDescriptions": {
+      "free": "Free listing - basic visibility",
+      "vip": "VIP status - improved visibility",
+      "vip_plus": "VIP+ status - enhanced visibility",
+      "super_vip": "SUPER VIP status - maximum visibility",
+      "auto_renew": "Auto-renewal - automatic expiration extension",
+      "color_separation": "Color separation - distinctive colored frame"
+    },
+    "labels": {
+      "currentPrice": "Current Price",
+      "newPrice": "New Price (per day)",
+      "pricePerDay": "₾ / day",
+      "services": "services",
+      "service": "service"
+    },
+    "buttons": {
+      "saveAllPrices": "Save All Prices",
+      "refresh": "Refresh"
+    },
+    "messages": {
+      "errorLoading": "Error occurred while loading prices",
+      "errorUpdating": "Error occurred while updating prices",
+      "priceChanged": "Price changed - use \"Save All Prices\" button to save",
+      "noChanges": "No changes to save",
+      "updated": "{{count}} service price successfully updated",
+      "noServicesFound": "No services found",
+      "noServicesAvailable": "Currently no service prices are available",
+      "loadingPrices": "Loading prices..."
+    }
+  },
+  "apartmentCard": {
+    "labels": {
+      "locationNotSpecified": "Location not specified",
+      "agent": "Agent:",
+      "views": "views",
+      "squareMeters": "sq.m"
+    },
+    "buttons": {
+      "view": "View",
+      "edit": "Edit", 
+      "delete": "Delete"
+    },
+    "deleteDialog": {
+      "title": "Delete Listing",
+      "description": "Are you sure you want to delete this listing? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    }
+  },
+  "userCard": {
+    "labels": {
+      "verified": "Verified",
+      "listings": "Listings",
+      "joinDate": "Joined:",
+      "lastActive": "Last active:",
+      "userId": "ID:"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive", 
+      "suspended": "Suspended",
+      "pending": "Pending"
+    },
+    "roles": {
+      "admin": "Admin",
+      "developer": "Developer",
+      "agency": "Agency",
+      "user": "User"
+    },
+    "buttons": {
+      "view": "View",
+      "edit": "Edit",
+      "message": "Message",
+      "delete": "Delete"
+    },
+    "deleteDialog": {
+      "title": "Delete User",
+      "description": "Are you sure you want to delete this user? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    }
   },
   "editUser": {
     "title": "Edit User",
+    "subtitle": "User #{id}",
+    "sections": {
+      "basicInfo": {
+        "title": "Basic Information",
+        "description": "Edit user's basic details"
+      },
+      "accountInfo": {
+        "title": "Account Information", 
+        "description": "Additional information about the user"
+      }
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "selectRole": "Select role"
+    },
+    "placeholders": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "+995 555 123 456"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin", 
+      "developer": "Developer",
+      "agency": "Agency"
+    },
+    "stats": {
+      "registrationDate": "Registration Date",
+      "listings": "Listings",
+      "lastActivity": "Last Activity",
+      "unknown": "Unknown"
+    },
     "messages": {
       "errorLoading": "Error loading user",
+      "loadingUser": "Loading user...",
       "nameRequired": "Name is required",
       "emailRequired": "Email is required", 
       "emailInvalid": "Email format is invalid",
-      "updated": "User successfully updated"
+      "updated": "User successfully updated",
+      "saveError": "Error saving user"
     },
     "buttons": {
       "back": "Back",
-      "save": "Save",
-      "cancel": "Cancel"
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "saving": "Saving..."
     }
   },
   "editProperty": {
@@ -396,6 +528,130 @@
   "editProject": {
     "title": "Edit Project (Admin)",
     "projectNumber": "Project #{id}",
+    "tabs": {
+      "basic": "Basic Information",
+      "amenities": "Amenities",
+      "services": "Services"
+    },
+    "sections": {
+      "projectInfo": {
+        "title": "Project Information"
+      },
+      "location": {
+        "title": "Location"
+      },
+      "details": {
+        "title": "Project Details"
+      },
+      "gallery": {
+        "title": "Photo Gallery",
+        "description": "Upload project images",
+        "placeholder": "Photo upload functionality will be implemented later"
+      },
+      "amenitiesByDistance": {
+        "title": "Nearby Amenities",
+        "description": "Select amenities and their distance from the project"
+      },
+      "services": {
+        "title": "Post-handover Services",
+        "description": "Select services that will be available after project completion"
+      }
+    },
+    "fields": {
+      "projectName": "Project Name",
+      "description": "Description",
+      "city": "City",
+      "area": "Area",
+      "street": "Street",
+      "streetNumber": "Street Number",
+      "projectType": "Project Type",
+      "deliveryStatus": "Delivery Status",
+      "deliveryDate": "Delivery Date",
+      "numberOfBuildings": "Number of Buildings",
+      "totalApartments": "Total Apartments",
+      "numberOfFloors": "Number of Floors",
+      "parkingSpaces": "Parking Spaces"
+    },
+    "placeholders": {
+      "selectType": "Select project type",
+      "selectCity": "Select city",
+      "selectArea": "Select area",
+      "selectStatus": "Select delivery status"
+    },
+    "projectTypes": {
+      "privateHouse": "Private House",
+      "apartmentBuilding": "Apartment Building"
+    },
+    "deliveryStatuses": {
+      "completedWithRenovation": "Completed with Renovation",
+      "greenFrame": "Green Frame",
+      "blackFrame": "Black Frame",
+      "whiteFrame": "White Frame"
+    },
+    "amenityTypes": {
+      "pharmacy": "Pharmacy",
+      "kindergarten": "Kindergarten",
+      "school": "School",
+      "university": "University",
+      "hospital": "Hospital",
+      "clinic": "Clinic",
+      "busStop": "Bus Stop",
+      "metro": "Metro",
+      "groceryStore": "Grocery Store",
+      "supermarket": "Supermarket",
+      "mall": "Shopping Mall",
+      "bank": "Bank",
+      "atm": "ATM",
+      "restaurant": "Restaurant",
+      "cafe": "Cafe",
+      "bakery": "Bakery",
+      "sportsCenter": "Sports Center",
+      "gym": "Gym",
+      "stadium": "Stadium",
+      "swimmingPool": "Swimming Pool",
+      "park": "Park",
+      "garden": "Garden",
+      "square": "Square",
+      "parking": "Parking",
+      "bikePath": "Bike Path",
+      "sportsField": "Sports Field",
+      "childrenArea": "Children's Area",
+      "laundry": "Laundry",
+      "storage": "Storage",
+      "cinema": "Cinema",
+      "theater": "Theater",
+      "library": "Library",
+      "postOffice": "Post Office",
+      "gasStation": "Gas Station",
+      "carWash": "Car Wash",
+      "veterinary": "Veterinary Clinic",
+      "beautyCenter": "Beauty Salon",
+      "dentist": "Dentist"
+    },
+    "distances": {
+      "onSite": "On-site",
+      "300m": "Within 300m",
+      "500m": "Within 500m",
+      "1km": "Within 1km"
+    },
+    "services": {
+      "securityService": "Security Service",
+      "hasConcierge": "Concierge",
+      "videoSurveillance": "Video Surveillance",
+      "hasLobby": "Lobby/Reception Hall",
+      "hasDoorman": "Doorman",
+      "yardCleaning": "Yard Cleaning",
+      "entranceCleaning": "Entrance Cleaning",
+      "landscaping": "Landscaping",
+      "hasLighting": "Continuous Lighting",
+      "fireSystem": "Fire Suppression System",
+      "mainDoorLock": "Main Door Lock",
+      "maintenance": "Technical Maintenance"
+    },
+    "labels": {
+      "projectOwner": "Project Owner",
+      "adminNote": "You are editing this project as an administrator"
+    },
     "buttons": {
       "saveChanges": "Save Changes"
     },
@@ -444,6 +700,44 @@
       "street2": "Agmashenebeli",
       "testUser": "Test User",
       "mockUser": "Mock User"
+    }
+  },
+  "addAdvertisementModal": {
+    "title": "Add New Advertisement",
+    "description": "Enter advertisement details and choose placement location",
+    "fields": {
+      "title": "Advertisement Title",
+      "advertiser": "Advertiser",
+      "description": "Description",
+      "placement": "Advertisement Placement",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "imageUrl": "Advertisement Image URL",
+      "targetUrl": "Target URL"
+    },
+    "placeholders": {
+      "title": "e.g: New Project - Vake Residence",
+      "advertiser": "e.g: Vake Development",
+      "description": "Detailed advertisement description...",
+      "placement": "Select advertisement placement",
+      "selectDate": "Select date"
+    },
+    "labels": {
+      "selectedPlacement": "Selected Placement",
+      "dimensions": "Dimensions"
+    },
+    "buttons": {
+      "submit": "Add Advertisement"
+    },
+    "validation": {
+      "titleRequired": "Advertisement title is required",
+      "advertiserRequired": "Advertiser name is required",
+      "placementRequired": "Advertisement placement selection is required",
+      "startDateRequired": "Start date is required",
+      "endDateRequired": "End date is required",
+      "imageRequired": "Advertisement image is required",
+      "targetUrlRequired": "Target URL is required",
+      "endDateAfterStart": "End date must be after start date"
     }
   }
 }

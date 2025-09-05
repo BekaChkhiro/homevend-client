@@ -6,6 +6,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useNavigate } from "react-router-dom";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface UserCardProps {
   id: number;
@@ -38,6 +40,7 @@ export const UserCard = ({
 }: UserCardProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active": return "bg-green-100 text-green-800";
@@ -49,13 +52,7 @@ export const UserCard = ({
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case "active": return "აქტიური";
-      case "inactive": return "არააქტიური";
-      case "suspended": return "შეჩერებული";
-      case "pending": return "მოლოდინში";
-      default: return status;
-    }
+    return t(`userCard.status.${status}`, status);
   };
 
   const getRoleColor = (role: string) => {
@@ -69,13 +66,7 @@ export const UserCard = ({
   };
 
   const getRoleText = (role: string) => {
-    switch (role) {
-      case "admin": return "ადმინი";
-      case "developer": return "დეველოპერი";
-      case "agency": return "სააგენტო";
-      case "user": return "მომხმარებელი";
-      default: return role;
-    }
+    return t(`userCard.roles.${role}`, role);
   };
 
   const getRoleIcon = (role: string) => {
@@ -89,11 +80,11 @@ export const UserCard = ({
   };
 
   const handleView = () => {
-    navigate(`/user/${id}`);
+    navigate(getLanguageUrl(`user/${id}`, i18n.language));
   };
 
   const handleEdit = () => {
-    navigate(`/admin/edit-user/${id}`);
+    navigate(getLanguageUrl(`admin/edit-user/${id}`, i18n.language));
   };
 
   const handleDelete = () => {
@@ -140,13 +131,13 @@ export const UserCard = ({
                   </Badge>
                   {verified && (
                     <Badge variant="outline" className="text-xs px-2 py-1 text-blue-600 border-blue-200">
-                      დამოწმებული
+                      {t('userCard.labels.verified')}
                     </Badge>
                   )}
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-sm text-gray-600">განცხადებები</div>
+                <div className="text-sm text-gray-600">{t('userCard.labels.listings')}</div>
                 <div className="text-lg font-semibold text-primary">{propertiesCount}</div>
               </div>
             </div>
@@ -166,10 +157,10 @@ export const UserCard = ({
             <div className="flex items-center gap-6 text-sm text-gray-600">
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-2" />
-                <span>გაწევრიანება: {joinDate}</span>
+                <span>{t('userCard.labels.joinDate')} {joinDate}</span>
               </div>
               <div className="flex items-center">
-                <span>ბოლო აქტივობა: {lastActive}</span>
+                <span>{t('userCard.labels.lastActive')} {lastActive}</span>
               </div>
             </div>
           </div>
@@ -189,34 +180,34 @@ export const UserCard = ({
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={handleView}>
                   <Eye className="mr-2 h-4 w-4" />
-                  ნახვა
+                  {t('userCard.buttons.view')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleEdit}>
                   <Edit className="mr-2 h-4 w-4" />
-                  რედაქტირება
+                  {t('userCard.buttons.edit')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => window.location.href = `mailto:${email}`}>
                   <Mail className="mr-2 h-4 w-4" />
-                  შეტყობინება
+                  {t('userCard.buttons.message')}
                 </DropdownMenuItem>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <DropdownMenuItem className="text-red-600" onSelect={(e) => e.preventDefault()}>
                       <Trash2 className="mr-2 h-4 w-4" />
-                      წაშლა
+                      {t('userCard.buttons.delete')}
                     </DropdownMenuItem>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>მომხმარებლის წაშლა</AlertDialogTitle>
+                      <AlertDialogTitle>{t('userCard.deleteDialog.title')}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        დარწმუნებული ხართ, რომ გსურთ ამ მომხმარებლის წაშლა? ეს მოქმედება შეუქცევადია.
+                        {t('userCard.deleteDialog.description')}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                      <AlertDialogCancel>{t('userCard.deleteDialog.cancel')}</AlertDialogCancel>
                       <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                        წაშლა
+                        {t('userCard.deleteDialog.confirm')}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -224,7 +215,7 @@ export const UserCard = ({
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <span className="text-sm text-gray-500">ID: {id}</span>
+            <span className="text-sm text-gray-500">{t('userCard.labels.userId')} {id}</span>
           </div>
         </div>
       </CardContent>

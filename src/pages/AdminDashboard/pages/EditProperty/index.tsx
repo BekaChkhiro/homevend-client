@@ -21,6 +21,7 @@ import { FormActions } from "../../../Dashboard/pages/AddProperty/components/For
 import { propertyFormSchema, type PropertyFormData } from "../../../Dashboard/pages/AddProperty/types/propertyForm";
 import { propertyApi, citiesApi } from "@/lib/api";
 import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface City {
   id: number;
@@ -39,7 +40,7 @@ const AdminEditProperty = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
@@ -109,7 +110,7 @@ const AdminEditProperty = () => {
           description: t('editProperty.messages.noId'),
           variant: "destructive",
         });
-        navigate('/admin/listings');
+        navigate(getLanguageUrl('admin/listings', i18n.language));
         return;
       }
 
@@ -194,7 +195,7 @@ const AdminEditProperty = () => {
           description: t('editProperty.messages.loadError'),
           variant: "destructive",
         });
-        navigate('/admin/listings');
+        navigate(getLanguageUrl('admin/listings', i18n.language));
       } finally {
         setIsPropertyLoading(false);
       }
@@ -312,7 +313,7 @@ const AdminEditProperty = () => {
         description: t('editProperty.messages.updated'),
       });
       
-      navigate('/admin/listings');
+      navigate(getLanguageUrl('admin/listings', i18n.language));
     } catch (error: any) {
       console.error("Update error:", error);
       console.error("Error response:", error.response?.data);
@@ -357,7 +358,7 @@ const AdminEditProperty = () => {
           <div className="mb-6">
             <Button
               variant="ghost"
-              onClick={() => navigate("/admin/listings")}
+              onClick={() => navigate(getLanguageUrl("admin/listings", i18n.language))}
               className="mb-4"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -384,7 +385,7 @@ const AdminEditProperty = () => {
         <div className="mb-6">
           <Button
             variant="ghost"
-            onClick={() => navigate("/admin/listings")}
+            onClick={() => navigate(getLanguageUrl("admin/listings", i18n.language))}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />

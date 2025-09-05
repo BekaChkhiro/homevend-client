@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
@@ -140,6 +140,9 @@ const App = () => (
             
             {/* Redirect root to default language */}
             <Route path="/" element={<LanguageRedirect />} />
+            
+            {/* Redirect dashboard routes without language prefix */}
+            <Route path="/dashboard/*" element={<Navigate to="/en/dashboard" replace />} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

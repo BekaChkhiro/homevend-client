@@ -2,11 +2,14 @@ import { Home, Heart, User, Plus, DollarSign, Users, FolderOpen } from "lucide-r
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 
 export const MobileDashboardNav = () => {
   const location = useLocation();
   const { user } = useAuth();
   const { favorites } = useFavorites();
+  const { i18n } = useTranslation();
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(`${path}/`);
@@ -17,21 +20,21 @@ export const MobileDashboardNav = () => {
     const baseItems = [
       {
         id: "properties",
-        path: "/dashboard/my-properties",
+        path: getLanguageUrl("dashboard/my-properties", i18n.language),
         icon: Home,
         label: "ქონება",
         show: true
       },
       {
         id: "add",
-        path: "/dashboard/add-property",
+        path: getLanguageUrl("dashboard/add-property", i18n.language),
         icon: Plus,
         label: "დამატება",
         show: true
       },
       {
         id: "favorites",
-        path: "/dashboard/favorites",
+        path: getLanguageUrl("dashboard/favorites", i18n.language),
         icon: Heart,
         label: "ფავორიტი",
         show: true,
@@ -39,7 +42,7 @@ export const MobileDashboardNav = () => {
       },
       {
         id: "profile",
-        path: "/dashboard/profile",
+        path: getLanguageUrl("dashboard/profile", i18n.language),
         icon: User,
         label: "პროფილი",
         show: true
@@ -51,7 +54,7 @@ export const MobileDashboardNav = () => {
       return [
         {
           id: "projects",
-          path: "/dashboard/my-projects",
+          path: getLanguageUrl("dashboard/my-projects", i18n.language),
           icon: FolderOpen,
           label: "პროექტები",
           show: true
@@ -60,7 +63,7 @@ export const MobileDashboardNav = () => {
         baseItems[2], // Favorites
         {
           id: "balance",
-          path: "/dashboard/balance",
+          path: getLanguageUrl("dashboard/balance", i18n.language),
           icon: DollarSign,
           label: "ბალანსი",
           show: true
@@ -74,7 +77,7 @@ export const MobileDashboardNav = () => {
         ...baseItems.slice(0, 3), // Properties, Add, Favorites
         {
           id: "users",
-          path: "/dashboard/users",
+          path: getLanguageUrl("dashboard/users", i18n.language),
           icon: Users,
           label: "აგენტები",
           show: true

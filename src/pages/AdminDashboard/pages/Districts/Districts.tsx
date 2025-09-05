@@ -20,6 +20,9 @@ interface District {
   nameEn: string;
   nameRu?: string;
   description?: string;
+  descriptionKa?: string;
+  descriptionEn?: string;
+  descriptionRu?: string;
   pricePerSqm: number;
   isActive: boolean;
   createdAt: string;
@@ -38,12 +41,43 @@ const Districts = () => {
     nameEn: '',
     nameRu: '',
     description: '',
+    descriptionKa: '',
+    descriptionEn: '',
+    descriptionRu: '',
     isActive: true,
     pricePerSqm: ''
   });
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
+  
+  // Helper function to get district name based on current language
+  const getDistrictName = (district: District): string => {
+    const lang = i18n.language;
+    switch (lang) {
+      case 'ka':
+        return district.nameKa;
+      case 'ru':
+        return district.nameRu || district.nameEn; // Fallback to English if Russian not available
+      case 'en':
+      default:
+        return district.nameEn;
+    }
+  };
+  
+  // Helper function to get district description based on current language
+  const getDistrictDescription = (district: District): string => {
+    const lang = i18n.language;
+    switch (lang) {
+      case 'ka':
+        return district.descriptionKa || district.description || district.descriptionEn || '';
+      case 'ru':
+        return district.descriptionRu || district.description || district.descriptionEn || district.descriptionKa || '';
+      case 'en':
+      default:
+        return district.descriptionEn || district.description || district.descriptionKa || '';
+    }
+  };
 
   useEffect(() => {
     fetchDistricts();
@@ -128,6 +162,9 @@ const Districts = () => {
       nameEn: '',
       nameRu: '',
       description: '',
+      descriptionKa: '',
+      descriptionEn: '',
+      descriptionRu: '',
       isActive: true,
       pricePerSqm: ''
     });
@@ -141,6 +178,9 @@ const Districts = () => {
       nameEn: district.nameEn,
       nameRu: district.nameRu || '',
       description: district.description || '',
+      descriptionKa: district.descriptionKa || '',
+      descriptionEn: district.descriptionEn || '',
+      descriptionRu: district.descriptionRu || '',
       isActive: district.isActive,
       pricePerSqm: district.pricePerSqm ? district.pricePerSqm.toString() : ''
     });
@@ -232,13 +272,35 @@ const Districts = () => {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="description">{t('districts.form.descriptionField')}</Label>
+                  <Label htmlFor="descriptionKa">{t('districts.form.descriptionField')} (ქართული)</Label>
                   <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder={t('districts.form.placeholders.description')}
-                    rows={3}
+                    id="descriptionKa"
+                    value={formData.descriptionKa}
+                    onChange={(e) => setFormData({ ...formData, descriptionKa: e.target.value })}
+                    placeholder="აღწერა ქართულ ენაზე"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="descriptionEn">{t('districts.form.descriptionField')} (English)</Label>
+                  <Textarea
+                    id="descriptionEn"
+                    value={formData.descriptionEn}
+                    onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
+                    placeholder="Description in English"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="descriptionRu">{t('districts.form.descriptionField')} (Русский)</Label>
+                  <Textarea
+                    id="descriptionRu"
+                    value={formData.descriptionRu}
+                    onChange={(e) => setFormData({ ...formData, descriptionRu: e.target.value })}
+                    placeholder="Описание на русском языке"
+                    rows={2}
                   />
                 </div>
 
@@ -287,11 +349,8 @@ const Districts = () => {
                 <div className="flex-1">
                   <CardTitle className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-gray-500" />
-                    <span>{district.nameKa}</span>
+                    <span>{getDistrictName(district)}</span>
                   </CardTitle>
-                  <CardDescription className="mt-1">
-                    {district.nameEn}
-                  </CardDescription>
                 </div>
                 <div className="flex items-center gap-1">
                   <Badge variant={district.isActive ? 'default' : 'secondary'} className="text-xs">
@@ -312,9 +371,9 @@ const Districts = () => {
             </CardHeader>
 
             <CardContent>
-              {district.description && (
+              {getDistrictDescription(district) && (
                 <p className="text-sm text-gray-600 mb-4">
-                  {district.description}
+                  {getDistrictDescription(district)}
                 </p>
               )}
 
@@ -330,8 +389,8 @@ const Districts = () => {
               )}
 
               <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                <span>{t('districts.labels.created')} {new Date(district.createdAt).toLocaleDateString('ka-GE')}</span>
-                <span>{t('districts.labels.updated')} {new Date(district.updatedAt).toLocaleDateString('ka-GE')}</span>
+                <span>{t('districts.labels.created')} {new Date(district.createdAt).toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : i18n.language === 'ru' ? 'ru-RU' : 'en-US')}</span>
+                <span>{t('districts.labels.updated')} {new Date(district.updatedAt).toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : i18n.language === 'ru' ? 'ru-RU' : 'en-US')}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -379,7 +438,7 @@ const Districts = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>{t('districts.deleteDialog.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('districts.deleteDialog.description', { name: deletingDistrict?.nameKa })}
+              {t('districts.deleteDialog.description', { name: deletingDistrict ? getDistrictName(deletingDistrict) : '' })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
