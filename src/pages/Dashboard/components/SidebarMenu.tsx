@@ -26,34 +26,36 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
   const { i18n } = useTranslation();
   
   // Define menu items with categories
+  const { t } = useTranslation('userDashboard');
+  
   const allMenuItems: MenuItem[] = [
     // For developers, show both project and property options
     ...(user?.role === 'developer' ? [
       { 
         id: "add-project", 
         path: getLanguageUrl("dashboard/add-project", i18n.language), 
-        label: "პროექტის დამატება", 
+        label: t('menu.addProject'), 
         icon: <Plus className="h-5 w-5" />,
         category: "projects"
       },
       { 
         id: "add-property", 
         path: getLanguageUrl("dashboard/add-property", i18n.language), 
-        label: "განცხადების დამატება", 
+        label: t('menu.addProperty'), 
         icon: <Plus className="h-5 w-5" />,
         category: "properties"
       },
       { 
         id: "my-projects", 
         path: getLanguageUrl("dashboard/my-projects", i18n.language), 
-        label: "ჩემი პროექტები", 
+        label: t('menu.myProjects'), 
         icon: <Home className="h-5 w-5" />,
         category: "projects"
       },
       { 
         id: "my-properties", 
         path: getLanguageUrl("dashboard/my-properties", i18n.language), 
-        label: "ჩემი განცხადებები", 
+        label: t('menu.myProperties'), 
         icon: <Home className="h-5 w-5" />,
         category: "properties"
       },
@@ -62,14 +64,14 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
       { 
         id: "add-property", 
         path: getLanguageUrl("dashboard/add-property", i18n.language), 
-        label: "განცხადების დამატება", 
+        label: t('menu.addProperty'), 
         icon: <Plus className="h-5 w-5" />,
         category: "properties"
       },
       { 
         id: "my-properties", 
         path: getLanguageUrl("dashboard/my-properties", i18n.language), 
-        label: "ჩემი განცხადებები", 
+        label: t('menu.myProperties'), 
         icon: <Home className="h-5 w-5" />,
         category: "properties"
       },
@@ -77,21 +79,21 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
     { 
       id: "favorites", 
       path: getLanguageUrl("dashboard/favorites", i18n.language), 
-      label: "ფავორიტები", 
+      label: t('menu.favorites'), 
       icon: <Heart className="h-5 w-5" />,
       category: "properties"
     },
     { 
       id: "profile", 
       path: getLanguageUrl("dashboard/profile", i18n.language), 
-      label: "პროფილი", 
+      label: t('menu.profile'), 
       icon: <User className="h-5 w-5" />,
       category: "account"
     },
     {
       id: "users",
       path: getLanguageUrl("dashboard/users", i18n.language),
-      label: "აგენტები",
+      label: t('menu.agents'),
       icon: <Users className="h-5 w-5" />,
       category: "account",
       roles: ['agency'],
@@ -99,7 +101,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
     { 
       id: "balance", 
       path: getLanguageUrl("dashboard/balance", i18n.language), 
-      label: "შევსება", 
+      label: t('menu.balance'), 
       icon: <DollarSign className="h-5 w-5" />,
       category: "account"
     },
@@ -176,9 +178,9 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ onNavigate }) => {
 
   return (
     <div className="p-3">
-      {projectItems.length > 0 && renderCategory("პროექტები", projectItems)}
-      {propertyItems.length > 0 && renderCategory("განცხადებები", propertyItems)}
-      {accountItems.length > 0 && renderCategory("ანგარიში", accountItems)}
+      {projectItems.length > 0 && renderCategory(t('menu.categories.projects'), projectItems)}
+      {propertyItems.length > 0 && renderCategory(t('menu.categories.properties'), propertyItems)}
+      {accountItems.length > 0 && renderCategory(t('menu.categories.account'), accountItems)}
       {uncategorizedItems.length > 0 && uncategorizedItems.map(renderMenuItem)}
     </div>
   );

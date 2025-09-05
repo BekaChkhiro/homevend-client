@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CreditCard, Wallet, History, Loader2, ExternalLink } from "lucide-react";
+import { CreditCard, Wallet, History, Loader2, ExternalLink, RefreshCw } from "lucide-react";
 import { balanceApi } from '@/lib/api';
 
 interface PaymentProvider {
@@ -105,6 +105,16 @@ export const BalancePage = () => {
         } else {
           alert('გადახდის ლინკის შექმნა ვერ მოხერხდა');
         }
+      } else if (result.provider === 'bog') {
+        // Redirect to BOG payment page
+        if (result.data.checkoutUrl) {
+          // Show info message before redirect
+          alert('თქვენ გადამისამართდებით BOG-ის გადახდის გვერდზე. გადახდის შემდეგ ბალანსი ავტომატურად განახლდება.');
+          window.location.href = result.data.checkoutUrl; // Direct redirect for BOG
+          // Note: User will be redirected to BOG payment page and return after payment
+        } else {
+          alert('BOG გადახდის ლინკის შექმნა ვერ მოხერხდა');
+        }
       }
     } catch (error: any) {
       console.error('Error during top-up:', error);
@@ -172,6 +182,13 @@ export const BalancePage = () => {
   useEffect(() => {
     fetchBalance();
     fetchPaymentProviders();
+    
+    // Set up periodic balance refresh to catch webhook-updated payments
+    const balanceRefreshInterval = setInterval(() => {
+      fetchBalance();
+    }, 30000); // Check every 30 seconds
+    
+    return () => clearInterval(balanceRefreshInterval);
   }, []);
 
   // Check URL for payment success and refresh balance
@@ -203,7 +220,18 @@ export const BalancePage = () => {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium">მიმდინარე ბალანსი</h3>
-              <Wallet className="h-5 w-5 text-gray-400" />
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={fetchBalance}
+                  disabled={loading}
+                  className="p-1 h-8 w-8"
+                >
+                  <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                </Button>
+                <Wallet className="h-5 w-5 text-gray-400" />
+              </div>
             </div>
             <div className="text-3xl font-bold text-primary">{balanceData?.balance?.toFixed(2) || '0.00'} ₾</div>
             <p className="text-sm text-gray-500 mt-2">
@@ -257,7 +285,7 @@ export const BalancePage = () => {
                         ლიმიტი: {provider.minAmount}₾ - {provider.maxAmount}₾
                       </p>
                     </div>
-                    {provider.id === 'flitt' && (
+                    {(provider.id === 'flitt' || provider.id === 'bog') && (
                       <ExternalLink className="h-4 w-4 text-gray-400" />
                     )}
                   </div>
@@ -303,7 +331,8 @@ export const BalancePage = () => {
                 <CreditCard className="h-4 w-4 mr-2" />
               )}
               {topUpLoading ? 'შევსება...' : 
-               selectedProvider === 'flitt' ? 'ბანკის ბარათით გადახდა' : 'შევსება (ტესტისთვის)'}
+               selectedProvider === 'flitt' ? 'ბანკის ბარათით გადახდა (Flitt)' :
+               selectedProvider === 'bog' ? 'ბანკის ბარათით გადახდა (BOG)' : 'შევსება (ტესტისთვის)'}
             </Button>
           </div>
         </Card>

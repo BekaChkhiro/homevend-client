@@ -7,6 +7,8 @@ import { UserPropertyCard } from "./UserPropertyCard";
 import { MyProjects } from "./MyProjects";
 import { propertyApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 import {
   Pagination,
   PaginationContent,
@@ -68,6 +70,7 @@ export const MyProperties: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation('userDashboard');
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,8 +88,8 @@ export const MyProperties: React.FC = () => {
     } catch (error: any) {
       console.error('Error fetching properties:', error);
       toast({
-        title: "შეცდომა",
-        description: "განცხადებების ჩატვირთვისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('properties.loadError'),
         variant: "destructive",
       });
     } finally {
@@ -107,14 +110,14 @@ export const MyProperties: React.FC = () => {
       }
       
       toast({
-        title: "წარმატება",
-        description: "განცხადება წარმატებით წაიშალა",
+        title: t('common.success'),
+        description: t('properties.deleteSuccess'),
       });
     } catch (error: any) {
       console.error('Error deleting property:', error);
       toast({
-        title: "შეცდომა",
-        description: "განცხადების წაშლისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('properties.deleteError'),
         variant: "destructive",
       });
     }
@@ -134,7 +137,7 @@ export const MyProperties: React.FC = () => {
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center space-x-2">
           <Loader2 className="h-6 w-6 animate-spin" />
-          <span>განცხადებების ჩატვირთვა...</span>
+          <span>{t('properties.loading')}</span>
         </div>
       </div>
     );
@@ -142,7 +145,7 @@ export const MyProperties: React.FC = () => {
 
   return (
     <>
-      <h2 className="text-lg md:text-xl font-medium mb-4">ჩემი განცხადებები</h2>
+      <h2 className="text-lg md:text-xl font-medium mb-4">{t('properties.title')}</h2>
       
       {hasProperties ? (
         <div className="space-y-4">
@@ -167,16 +170,16 @@ export const MyProperties: React.FC = () => {
                 className="mx-auto w-24 h-24 md:w-32 md:h-32 opacity-50"
               />
             </div>
-            <h3 className="text-base md:text-lg font-medium mb-2">თქვენ არ გაქვთ განცხადებები დამატებული</h3>
+            <h3 className="text-base md:text-lg font-medium mb-2">{t('properties.noProperties')}</h3>
             <p className="text-xs md:text-sm text-gray-500 mb-4">
-              დაამატეთ თქვენი პირველი განცხადება და გაზარდეთ გაყიდვების შანსები
+              {t('properties.noPropertiesDesc')}
             </p>
             <Button 
               className="flex items-center mx-auto text-sm"
-              onClick={() => navigate('/dashboard/add-property')}
+              onClick={() => navigate(getLanguageUrl('/dashboard/add-property', i18n.language))}
             >
               <Plus className="h-4 w-4 mr-1" />
-              განცხადების დამატება
+              {t('properties.addProperty')}
             </Button>
           </div>
         </div>

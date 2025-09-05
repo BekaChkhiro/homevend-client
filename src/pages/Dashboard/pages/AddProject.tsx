@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar, DollarSign, Bed, Square } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhotoGallerySection } from "./AddProject/components/PhotoGallerySection";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface City {
   id: number;
@@ -51,6 +53,7 @@ export const AddProject: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation('userDashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
   const [areas, setAreas] = useState<Area[]>([]);
@@ -264,8 +267,8 @@ export const AddProject: React.FC = () => {
     
     if (user?.role !== 'developer') {
       toast({
-        title: "შეცდომა",
-        description: "მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება",
+        title: t('common.error'),
+        description: t('addProject.onlyDevelopers'),
         variant: "destructive",
       });
       return;
@@ -326,16 +329,18 @@ export const AddProject: React.FC = () => {
 
 
       toast({
-        title: "წარმატება",
-        description: `პროექტი წარმატებით შეიქმნა${selectedProperties.length > 0 ? ` და ${selectedProperties.length} განცხადება მიმაგრდა` : ''}`,
+        title: t('common.success'),
+        description: selectedProperties.length > 0 
+          ? t('addProject.successWithProperties', { count: selectedProperties.length })
+          : t('addProject.success'),
       });
 
-      navigate('/dashboard');
+      navigate(getLanguageUrl('/dashboard', i18n.language));
     } catch (error: any) {
       console.error('Error creating project:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტის შექმნისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('addProject.createError'),
         variant: "destructive",
       });
     } finally {
@@ -348,15 +353,15 @@ export const AddProject: React.FC = () => {
       <div className="max-w-2xl mx-auto py-8">
         <Card>
           <CardHeader>
-            <CardTitle>წვდომა აკრძალულია</CardTitle>
+            <CardTitle>{t('addProject.accessDenied')}</CardTitle>
             <CardDescription>
-              მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება
+              {t('addProject.accessDeniedDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate('/dashboard')} variant="outline">
+            <Button onClick={() => navigate(getLanguageUrl('/dashboard', i18n.language))} variant="outline">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              უკან დაბრუნება
+              {t('addProject.backToDashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -369,24 +374,24 @@ export const AddProject: React.FC = () => {
       <div className="mb-6">
         <Button
           variant="ghost"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate(getLanguageUrl('/dashboard', i18n.language))}
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          უკან დაბრუნება
+          {t('addProject.backToDashboard')}
         </Button>
         
-        <h1 className="text-2xl font-bold mb-2">ახალი პროექტის დამატება</h1>
-        <p className="text-gray-600">შეავსეთ პროექტის ინფორმაცია</p>
+        <h1 className="text-2xl font-bold mb-2">{t('addProject.title')}</h1>
+        <p className="text-gray-600">{t('addProject.subtitle')}</p>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="basic" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="basic">ძირითადი ინფო</TabsTrigger>
-            <TabsTrigger value="amenities">კომფორტი</TabsTrigger>
-            <TabsTrigger value="services">სერვისები</TabsTrigger>
-            <TabsTrigger value="properties">განცხადების მიმაგრება</TabsTrigger>
+            <TabsTrigger value="basic">{t('addProject.tabs.basic')}</TabsTrigger>
+            <TabsTrigger value="amenities">{t('addProject.tabs.amenities')}</TabsTrigger>
+            <TabsTrigger value="services">{t('addProject.tabs.services')}</TabsTrigger>
+            <TabsTrigger value="properties">{t('addProject.tabs.properties')}</TabsTrigger>
           </TabsList>
 
           {/* Basic Information Tab */}
@@ -395,13 +400,13 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  პროექტის ინფორმაცია
+                  {t('addProject.sections.projectInfo')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="projectName">პროექტის დასახელება *</Label>
+                    <Label htmlFor="projectName">{t('addProject.fields.projectName')} *</Label>
                     <Input
                       id="projectName"
                       value={formData.projectName}
@@ -411,24 +416,24 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="projectType">პროექტის ტიპი *</Label>
+                    <Label htmlFor="projectType">{t('addProject.fields.projectType')} *</Label>
                     <Select
                       value={formData.projectType}
                       onValueChange={(value) => handleInputChange('projectType', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ ტიპი" />
+                        <SelectValue placeholder={t('addProject.placeholders.selectType')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="private_house">კერძო სახლი</SelectItem>
-                        <SelectItem value="apartment_building">საცხოვრებელი კომპლექსი</SelectItem>
+                        <SelectItem value="private_house">{t('addProject.projectTypes.privateHouse')}</SelectItem>
+                        <SelectItem value="apartment_building">{t('addProject.projectTypes.apartmentBuilding')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="description">აღწერა</Label>
+                    <Label htmlFor="description">{t('addProject.fields.description')}</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
@@ -444,20 +449,20 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  ლოკაცია
+                  {t('addProject.sections.location')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="cityId">ქალაქი *</Label>
+                    <Label htmlFor="cityId">{t('addProject.fields.city')} *</Label>
                     <Select
                       value={formData.cityId}
                       onValueChange={(value) => handleInputChange('cityId', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ ქალაქი" />
+                        <SelectValue placeholder={t('addProject.placeholders.selectCity')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(cities || []).map((city) => (
@@ -470,14 +475,14 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="areaId">რაიონი</Label>
+                    <Label htmlFor="areaId">{t('addProject.fields.district')}</Label>
                     <Select
                       value={formData.areaId}
                       onValueChange={(value) => handleInputChange('areaId', value)}
                       disabled={!formData.cityId}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ რაიონი" />
+                        <SelectValue placeholder={t('addProject.placeholders.selectDistrict')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(areas || []).map((area) => (
@@ -490,7 +495,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="street">ქუჩა *</Label>
+                    <Label htmlFor="street">{t('addProject.fields.street')} *</Label>
                     <Input
                       id="street"
                       value={formData.street}
@@ -500,7 +505,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="streetNumber">ნომერი</Label>
+                    <Label htmlFor="streetNumber">{t('addProject.fields.streetNumber')}</Label>
                     <Input
                       id="streetNumber"
                       value={formData.streetNumber}
@@ -516,32 +521,32 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
-                  პროექტის დეტალები
+                  {t('addProject.sections.projectDetails')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="deliveryStatus">ჩაბარების სტატუსი *</Label>
+                    <Label htmlFor="deliveryStatus">{t('addProject.fields.deliveryStatus')} *</Label>
                     <Select
                       value={formData.deliveryStatus}
                       onValueChange={(value) => handleInputChange('deliveryStatus', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ სტატუსი" />
+                        <SelectValue placeholder={t('addProject.placeholders.selectStatus')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="completed_with_renovation">ჩაბარება რემონტით</SelectItem>
-                        <SelectItem value="green_frame">მწვანე კარკასი</SelectItem>
-                        <SelectItem value="black_frame">შავი კარკასი</SelectItem>
-                        <SelectItem value="white_frame">თეთრი კარკასი</SelectItem>
+                        <SelectItem value="completed_with_renovation">{t('addProject.deliveryStatuses.completedWithRenovation')}</SelectItem>
+                        <SelectItem value="green_frame">{t('addProject.deliveryStatuses.greenFrame')}</SelectItem>
+                        <SelectItem value="black_frame">{t('addProject.deliveryStatuses.blackFrame')}</SelectItem>
+                        <SelectItem value="white_frame">{t('addProject.deliveryStatuses.whiteFrame')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
-                    <Label htmlFor="deliveryDate">ჩაბარების თარიღი</Label>
+                    <Label htmlFor="deliveryDate">{t('addProject.fields.deliveryDate')}</Label>
                     <Input
                       id="deliveryDate"
                       type="date"
@@ -551,7 +556,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfBuildings">კორპუსების რაოდენობა *</Label>
+                    <Label htmlFor="numberOfBuildings">{t('addProject.fields.buildingsCount')} *</Label>
                     <Input
                       id="numberOfBuildings"
                       type="number"
@@ -563,7 +568,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="totalApartments">სულ ბინები *</Label>
+                    <Label htmlFor="totalApartments">{t('addProject.fields.totalApartments')} *</Label>
                     <Input
                       id="totalApartments"
                       type="number"
@@ -575,7 +580,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfFloors">სართულების რაოდენობა *</Label>
+                    <Label htmlFor="numberOfFloors">{t('addProject.fields.floorsCount')} *</Label>
                     <Input
                       id="numberOfFloors"
                       type="number"
@@ -587,7 +592,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="parkingSpaces">პარკინგის ადგილები</Label>
+                    <Label htmlFor="parkingSpaces">{t('addProject.fields.parkingSpaces')}</Label>
                     <Input
                       id="parkingSpaces"
                       type="number"
@@ -615,28 +620,28 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  მანძილის მიხედვით კომფორტი
+                  {t('addProject.sections.amenitiesByDistance')}
                 </CardTitle>
-                <CardDescription>აირჩიეთ რა არსებობს პროექტის გარშემო და მიუთითეთ მანძილი</CardDescription>
+                <CardDescription>{t('addProject.sections.amenitiesDesc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {(() => {
                   const amenityTypes = [
-                    { key: 'pharmacy', label: '💊 აფთიაქი' },
-                    { key: 'kindergarten', label: '👶 საბავშო ბაღი' },
-                    { key: 'school', label: '🎒 სკოლა' },
-                    { key: 'university', label: '🎓 უნივერსიტეტი' },
-                    { key: 'hospital', label: '🏥 საავადმყოფო' },
-                    { key: 'clinic', label: '🩺 კლინიკა' },
-                    { key: 'busStop', label: '🚌 ავტობუსის გაჩერება' },
-                    { key: 'metro', label: '🚇 მეტრო' },
-                    { key: 'groceryStore', label: '🛒 საყიდლების მაღაზია' },
-                    { key: 'supermarket', label: '🏬 სუპერმარკეტი' },
-                    { key: 'mall', label: '🏢 სავაჭრო ცენტრი' },
-                    { key: 'bank', label: '🏦 ბანკი' },
-                    { key: 'atm', label: '💳 ბანკომატი' },
-                    { key: 'restaurant', label: '🍽️ რესტორანი' },
-                    { key: 'cafe', label: '☕ კაფე' },
+                    { key: 'pharmacy', label: `💊 ${t('addProject.amenities.pharmacy')}` },
+                    { key: 'kindergarten', label: `👶 ${t('addProject.amenities.kindergarten')}` },
+                    { key: 'school', label: `🎒 ${t('addProject.amenities.school')}` },
+                    { key: 'university', label: `🎓 ${t('addProject.amenities.university')}` },
+                    { key: 'hospital', label: `🏥 ${t('addProject.amenities.hospital')}` },
+                    { key: 'clinic', label: `🩺 ${t('addProject.amenities.clinic')}` },
+                    { key: 'busStop', label: `🚌 ${t('addProject.amenities.busStop')}` },
+                    { key: 'metro', label: `🚇 ${t('addProject.amenities.metro')}` },
+                    { key: 'groceryStore', label: `🛒 ${t('addProject.amenities.groceryStore')}` },
+                    { key: 'supermarket', label: `🏬 ${t('addProject.amenities.supermarket')}` },
+                    { key: 'mall', label: `🏢 ${t('addProject.amenities.mall')}` },
+                    { key: 'bank', label: `🏦 ${t('addProject.amenities.bank')}` },
+                    { key: 'atm', label: `💳 ${t('addProject.amenities.atm')}` },
+                    { key: 'restaurant', label: `🍽️ ${t('addProject.amenities.restaurant')}` },
+                    { key: 'cafe', label: `☕ ${t('addProject.amenities.cafe')}` },
                     { key: 'bakery', label: '🥖 საცხობი' },
                     { key: 'sportsCenter', label: '🏋️ სპორტული ცენტრი' },
                     { key: 'gym', label: '💪 სპორტული დარბაზი' },
@@ -663,10 +668,10 @@ export const AddProject: React.FC = () => {
                   ];
 
                   const distances = [
-                    { key: 'onSite', label: 'ტერიტორიაზე', color: 'bg-green-100 text-green-800' },
-                    { key: '300m', label: '300მ-მდე', color: 'bg-blue-100 text-blue-800' },
-                    { key: '500m', label: '500მ-მდე', color: 'bg-purple-100 text-purple-800' },
-                    { key: '1km', label: '1კმ-მდე', color: 'bg-orange-100 text-orange-800' }
+                    { key: 'onSite', label: t('addProject.distances.onSite'), color: 'bg-green-100 text-green-800' },
+                    { key: '300m', label: t('addProject.distances.within300m'), color: 'bg-blue-100 text-blue-800' },
+                    { key: '500m', label: t('addProject.distances.within500m'), color: 'bg-purple-100 text-purple-800' },
+                    { key: '1km', label: t('addProject.distances.within1km'), color: 'bg-orange-100 text-orange-800' }
                   ];
 
                   return (
@@ -735,18 +740,18 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  ჩაბარების შემდგომ სერვისები
+                  {t('addProject.sections.servicesAfterDelivery')}
                 </CardTitle>
-                <CardDescription>აირჩიეთ სერვისები, რომლებიც იქნება ხელმისაწვდომი პროექტის ჩაბარების შემდეგ</CardDescription>
+                <CardDescription>{t('addProject.sections.servicesDesc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {[
-                    { key: 'securityService', label: '🛡️ მცველის სერვისი' },
-                    { key: 'hasConcierge', label: '🛎️ კონსიერჟი' },
-                    { key: 'videoSurveillance', label: '📹 ვიდეო ზედამხედველობა' },
-                    { key: 'hasLobby', label: '🏛️ ლობი/მიღების ჰოლი' },
-                    { key: 'hasDoorman', label: '🚪 კარისკაცი' },
+                    { key: 'securityService', label: `🛡️ ${t('addProject.services.securityService')}` },
+                    { key: 'hasConcierge', label: `🛎️ ${t('addProject.services.concierge')}` },
+                    { key: 'videoSurveillance', label: `📹 ${t('addProject.services.videoSurveillance')}` },
+                    { key: 'hasLobby', label: `🏛️ ${t('addProject.services.lobby')}` },
+                    { key: 'hasDoorman', label: `🚪 ${t('addProject.services.doorman')}` },
                     { key: 'yardCleaning', label: '🧹 ეზოს დასუფთავება' },
                     { key: 'entranceCleaning', label: '🚪 შესასვლელის დასუფთავება' },
                     { key: 'landscaping', label: '🌺 ლანდშაფტის მოვლა' },

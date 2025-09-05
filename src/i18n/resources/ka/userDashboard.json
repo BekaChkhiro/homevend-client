@@ -1,0 +1,332 @@
+{
+  "common": {
+    "loading": "იტვირთება...",
+    "error": "შეცდომა",
+    "success": "წარმატება",
+    "save": "შენახვა",
+    "cancel": "გაუქმება",
+    "delete": "წაშლა",
+    "edit": "რედაქტირება",
+    "view": "ნახვა",
+    "tryAgain": "თავიდან სცადეთ",
+    "mainContent": "მთავარი კონტენტი",
+    "menuSidebar": "მენიუ სიდებარი",
+    "contentSection": "კონტენტის ნაწილი"
+  },
+  "menu": {
+    "addProject": "პროექტის დამატება",
+    "addProperty": "განცხადების დამატება",
+    "myProjects": "ჩემი პროექტები",
+    "myProperties": "ჩემი განცხადებები",
+    "favorites": "ფავორიტები",
+    "profile": "პროფილი",
+    "agents": "აგენტები",
+    "balance": "შევსება",
+    "categories": {
+      "projects": "პროექტები",
+      "properties": "განცხადებები",
+      "account": "ანგარიში"
+    }
+  },
+  "balance": {
+    "title": "ბალანსი",
+    "topUp": "შევსება",
+    "error": "შეცდომა",
+    "tooManyRequests": "ძალიან ბევრი მოთხოვნა",
+    "loadError": "ბალანსის ჩატვირთვისას მოხდა შეცდომა"
+  },
+  "properties": {
+    "title": "ჩემი განცხადებები",
+    "loading": "განცხადებების ჩატვირთვა...",
+    "addProperty": "განცხადების დამატება",
+    "noProperties": "თქვენ არ გაქვთ განცხადებები დამატებული",
+    "noPropertiesDesc": "დაამატეთ თქვენი პირველი განცხადება და გაზარდეთ გაყიდვების შანსები",
+    "loadError": "განცხადებების ჩატვირთვისას მოხდა შეცდომა",
+    "deleteError": "განცხადების წაშლისას მოხდა შეცდომა",
+    "deleteSuccess": "განცხადება წარმატებით წაიშალა"
+  },
+  "favorites": {
+    "title": "ფავორიტები",
+    "loading": "ფავორიტების ჩატვირთვა...",
+    "loadError": "ფავორიტების ჩატვირთვისას მოხდა შეცდომა",
+    "removeError": "ფავორიტებიდან წაშლისას მოხდა შეცდომა",
+    "removeSuccess": "განცხადება წაიშალა ფავორიტებიდან",
+    "noFavorites": "თქვენ არ გაქვთ ფავორიტებში დამატებული განცხადებები",
+    "noFavoritesDesc": "მოძებნეთ სასურველი განცხადებები და დაამატეთ ფავორიტებში მომავალი განხილვისთვის",
+    "searchProperties": "განცხადებების ძებნა",
+    "propertyTypes": {
+      "apartment": "ბინა",
+      "house": "სახლი",
+      "cottage": "კოტეჯი",
+      "land": "მიწა",
+      "commercial": "კომერციული"
+    },
+    "dealTypes": {
+      "sale": "იყიდება",
+      "rent": "ქირავდება",
+      "daily": "დღიური ქირავნობა"
+    }
+  },
+  "profile": {
+    "personalInfo": "პირადი ინფორმაცია",
+    "firstName": "სახელი",
+    "lastName": "გვარი",
+    "email": "ელფოსტა",
+    "phone": "ტელეფონი",
+    "address": "მისამართი",
+    "addressPlaceholder": "ქალაქი, უბანი, ქუჩა"
+  },
+  "mobileNav": {
+    "properties": "ქონება",
+    "add": "დამატება",
+    "favorites": "ფავორიტი",
+    "profile": "პროფილი",
+    "projects": "პროექტები",
+    "balance": "ბალანსი",
+    "agents": "აგენტები"
+  },
+  "addProperty": {
+    "title": "განცხადების დამატება",
+    "submit": "განცხადების დამატება",
+    "submitting": "განცხადების დამატება...",
+    "citiesNotLoaded": "ქალაქები ჯერ არ ჩაიტვირთა. გთხოვთ მოიცადოთ.",
+    "vipDaysError": "VIP დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+    "serviceDaysError": "სერვისების დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+    "insufficientBalance": "არასაკმარისი ბალანსი",
+    "insufficientBalanceDesc": "საჭიროა {{required}}₾, ხელმისაწვდომია {{available}}₾",
+    "successWithVip": "განცხადება წარმატებით დაემატა და VIP სტატუსი შეძენილია {{days}} დღით",
+    "successWithoutVip": "განცხადება წარმატებით დაემატა",
+    "submissionError": "შეცდომა მოხდა განცხადების დამატებისას",
+    "cityNotFound": "ქალაქი \"{{city}}\" ვერ მოიძებნა. გთხოვთ აირჩიოთ სწორი ქალაქი."
+  },
+  "profileSections": {
+    "personalInfo": {
+      "title": "პირადი ინფორმაცია",
+      "firstName": "სახელი",
+      "lastName": "გვარი",
+      "email": "ელფოსტა",
+      "phone": "ტელეფონი",
+      "address": "მისამართი",
+      "addressPlaceholder": "ქალაქი, უბანი, ქუჩა"
+    },
+    "passwordChange": {
+      "title": "პაროლის შეცვლა",
+      "currentPassword": "მიმდინარე პაროლი",
+      "newPassword": "ახალი პაროლი",
+      "confirmPassword": "პაროლის დადასტურება"
+    },
+    "notificationSettings": {
+      "title": "შეტყობინებების პარამეტრები",
+      "emailNotifications": "ელ-ფოსტით შეტყობინებები",
+      "smsNotifications": "SMS შეტყობინებები",
+      "pushNotifications": "Push შეტყობინებები"
+    },
+    "privacySettings": {
+      "title": "კონფიდენციალურობის პარამეტრები",
+      "profileVisibility": "პროფილის ხილვადობა",
+      "contactVisibility": "საკონტაქტო ინფორმაციის ხილვადობა"
+    }
+  },
+  "projects": {
+    "title": "ჩემი პროექტები",
+    "loading": "პროექტების ჩატვირთვა...",
+    "addProject": "პროექტის დამატება",
+    "noProjects": "თქვენ არ გაქვთ პროექტები დამატებული",
+    "noProjectsDesc": "დაამატეთ თქვენი პირველი პროექტი და მართეთ განცხადებები",
+    "loadError": "პროექტების ჩატვირთვისას მოხდა შეცდომა",
+    "deleteError": "პროექტის წაშლისას მოხდა შეცდომა",
+    "deleteSuccess": "პროექტი წარმატებით წაიშალა",
+    "manageProperties": "განცხადების მართვა"
+  },
+  "vip": {
+    "title": "VIP სერვისები",
+    "free": "უფასო",
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "superVip": "SUPER VIP",
+    "days": "დღე",
+    "selectDays": "აირჩიეთ დღეები",
+    "totalCost": "სულ ღირებულება",
+    "yourBalance": "თქვენი ბალანსი",
+    "additionalServices": "დამატებითი სერვისები",
+    "autoRenew": "ავტო-განახლება",
+    "colorSeparation": "ფერადი განცალკევება",
+    "purchaseVip": "VIP-ის შეძენა",
+    "skipVip": "VIP-ის გამოტოვება"
+  },
+  "validation": {
+    "required": "ეს ველი აუცილებელია",
+    "email": "არასწორი ელ-ფოსტის ფორმატი",
+    "phone": "არასწორი ტელეფონის ფორმატი",
+    "minLength": "მინიმუმ {{min}} სიმბოლო",
+    "maxLength": "მაქსიმუმ {{max}} სიმბოლო",
+    "numeric": "უნდა იყოს რიცხვი",
+    "positive": "უნდა იყოს დადებითი რიცხვი"
+  },
+  "propertyCard": {
+    "views": "ნახვა",
+    "rooms": "ოთახი",
+    "bedrooms": "საძინებელი",
+    "bathrooms": "სააბაზანო",
+    "area": "ფართობი",
+    "price": "ფასი",
+    "vipExpires": "VIP ვადა",
+    "services": "სერვისები",
+    "contact": "საკონტაქტო",
+    "editProperty": "განცხადების რედაქტირება",
+    "deleteProperty": "განცხადების წაშლა",
+    "purchaseVip": "VIP-ის შეძენა",
+    "deleteConfirm": "დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა?",
+    "locationNotSpecified": "მდებარეობა მითითებული არ არის"
+  },
+  "uploadPhotos": {
+    "title": "ფოტოების ატვირთვა",
+    "dragDrop": "ჩააგდეთ ფოტოები აქ ან",
+    "selectFiles": "აირჩიეთ ფაილები",
+    "maxFiles": "მაქსიმუმ {{max}} ფოტო",
+    "supportedFormats": "მხარდაჭერილი ფორმატები: JPG, PNG, WebP",
+    "maxSize": "მაქსიმუმ ზომა: {{size}}MB",
+    "uploading": "ატვირთვა...",
+    "uploadError": "ფოტოს ატვირთვისას მოხდა შეცდომა",
+    "removePhoto": "ფოტოს წაშლა"
+  },
+  "toast": {
+    "success": "წარმატება",
+    "error": "შეცდომა",
+    "warning": "გაფრთხილება",
+    "info": "ინფორმაცია"
+  },
+  "addProject": {
+    "title": "ახალი პროექტის დამატება",
+    "subtitle": "შეავსეთ პროექტის ინფორმაცია",
+    "backToDashboard": "უკან დაბრუნება",
+    "accessDenied": "წვდომა აკრძალულია",
+    "accessDeniedDesc": "მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება",
+    "onlyDevelopers": "მხოლოდ დეველოპერებს შეუძლიათ პროექტების დამატება",
+    "tabs": {
+      "basic": "ძირითადი ინფო",
+      "amenities": "კომფორტი",
+      "services": "სერვისები",
+      "properties": "განცხადების მიმაგრება"
+    },
+    "sections": {
+      "projectInfo": "პროექტის ინფორმაცია",
+      "location": "ლოკაცია",
+      "projectDetails": "პროექტის დეტალები",
+      "amenitiesByDistance": "მანძილის მიხედვით კომფორტი",
+      "amenitiesDesc": "აირჩიეთ რა არსებობს პროექტის გარშემო და მიუთითეთ მანძილი",
+      "servicesAfterDelivery": "ჩაბარების შემდგომ სერვისები",
+      "servicesDesc": "აირჩიეთ სერვისები, რომლებიც იქნება ხელმისაწვდომი პროექტის ჩაბარების შემდეგ",
+      "linkProperties": "განცხადების მიმაგრება პროექტზე",
+      "linkPropertiesDesc": "აირჩიეთ თქვენი არსებული განცხადებები რომლებიც გსურთ ამ პროექტთან დაკავშირება"
+    },
+    "fields": {
+      "projectName": "პროექტის დასახელება",
+      "projectType": "პროექტის ტიპი",
+      "description": "აღწერა",
+      "city": "ქალაქი",
+      "district": "რაიონი",
+      "street": "ქუჩა",
+      "streetNumber": "ნომერი",
+      "deliveryStatus": "ჩაბარების სტატუსი",
+      "deliveryDate": "ჩაბარების თარიღი",
+      "buildingsCount": "კორპუსების რაოდენობა",
+      "totalApartments": "სულ ბინები",
+      "floorsCount": "სართულების რაოდენობა",
+      "parkingSpaces": "პარკინგის ადგილები"
+    },
+    "placeholders": {
+      "selectType": "აირჩიეთ ტიპი",
+      "selectCity": "აირჩიეთ ქალაქი",
+      "selectDistrict": "აირჩიეთ რაიონი",
+      "selectStatus": "აირჩიეთ სტატუსი"
+    },
+    "projectTypes": {
+      "privateHouse": "კერძო სახლი",
+      "apartmentBuilding": "საცხოვრებელი კომპლექსი"
+    },
+    "deliveryStatuses": {
+      "completedWithRenovation": "ჩაბარება რემონტით",
+      "greenFrame": "მწვანე კარკასი",
+      "blackFrame": "შავი კარკასი",
+      "whiteFrame": "თეთრი კარკასი"
+    },
+    "distances": {
+      "onSite": "ტერიტორიაზე",
+      "within300m": "300მ-მდე",
+      "within500m": "500მ-მდე",
+      "within1km": "1კმ-მდე"
+    },
+    "amenities": {
+      "pharmacy": "აფთიაქი",
+      "kindergarten": "საბავშვო ბაღი",
+      "school": "სკოლა",
+      "university": "უნივერსიტეტი",
+      "hospital": "საავადმყოფო",
+      "clinic": "კლინიკა",
+      "busStop": "ავტობუსის გაჩერება",
+      "metro": "მეტრო",
+      "groceryStore": "საყიდლების მაღაზია",
+      "supermarket": "სუპერმარკეტი",
+      "mall": "სავაჭრო ცენტრი",
+      "bank": "ბანკი",
+      "atm": "ბანკომატი",
+      "restaurant": "რესტორანი",
+      "cafe": "კაფე",
+      "bakery": "საცხობი",
+      "sportsCenter": "სპორტული ცენტრი",
+      "gym": "სპორტული დარბაზი",
+      "stadium": "სტადიონი",
+      "swimmingPool": "საცურაო აუზი",
+      "park": "პარკი",
+      "garden": "ბაღი",
+      "square": "მოედანი",
+      "parking": "პარკინგი",
+      "bikePath": "ველოსიპედის ბილიკი",
+      "sportsField": "სპორტული მოედანი",
+      "childrenArea": "ბავშვთა მოედანი",
+      "laundry": "სამრეცხაო",
+      "storage": "საწყობი",
+      "cinema": "კინო",
+      "theater": "თეატრი",
+      "library": "ბიბლიოთეკა",
+      "postOffice": "ფოსტის განყოფილება",
+      "gasStation": "ბენზინგასამართი სადგური",
+      "carWash": "ავტორეცხვა",
+      "veterinary": "ვეტერინარული კლინიკა",
+      "beautyCenter": "სილამაზის სალონი",
+      "dentist": "სტომატოლოგია"
+    },
+    "services": {
+      "securityService": "მცველის სერვისი",
+      "concierge": "კონსიერჟი",
+      "videoSurveillance": "ვიდეო ზედამხედველობა",
+      "lobby": "ლობი/მიღების ჰოლი",
+      "doorman": "კარისკაცი",
+      "yardCleaning": "ეზოს დასუფთავება",
+      "entranceCleaning": "შესასვლელის დასუფთავება",
+      "landscaping": "ლანდშაფტის მოვლა",
+      "lighting": "მუდმივი განათება",
+      "fireSystem": "ხანძრის ჩაქრობის სისტემა",
+      "mainDoorLock": "მთავარი კარის საკეტი",
+      "maintenance": "ტექნიკური მომსახურება"
+    },
+    "propertyLinking": {
+      "loading": "განცხადებების ჩატვირთვა...",
+      "noProperties": "თქვენ არ გაქვთ არსებული განცხადებები რომლებიც შეიძლება მიამაგროთ",
+      "noPropertiesDesc": "ჯერ შექმენით განცხადება, შემდეგ მოახერხებთ მის მიმაგრებას პროექტზე",
+      "selectedCount": "{{count}} განცხადება არჩეულია მიმაგრებისთვის",
+      "selectPrompt": "აირჩიეთ განცხადებები რომლებიც გსურთ პროექტთან მიამაგროთ",
+      "willBeLinked": "{{count}} განცხადება მიმაგრდება ამ პროექტზე პროექტის შექმნის შემდეგ",
+      "rooms": "ოთახი"
+    },
+    "buttons": {
+      "cancel": "გაუქმება",
+      "save": "პროექტის შენახვა",
+      "saving": "შენახვა..."
+    },
+    "success": "პროექტი წარმატებით შეიქმნა",
+    "successWithProperties": "პროექტი წარმატებით შეიქმნა და {{count}} განცხადება მიმაგრდა",
+    "createError": "პროექტის შექმნისას მოხდა შეცდომა"
+  }
+}

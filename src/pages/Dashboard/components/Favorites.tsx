@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { favoritesApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface FavoriteProperty {
   id: number;
@@ -36,6 +38,7 @@ export const Favorites: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { toggleFavorite } = useFavorites();
+  const { t, i18n } = useTranslation('userDashboard');
   const [favorites, setFavorites] = useState<FavoriteProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,10 +55,10 @@ export const Favorites: React.FC = () => {
       setFavorites(response.favorites);
     } catch (error: any) {
       console.error('Error fetching favorites:', error);
-      setError('ფავორიტების ჩატვირთვისას მოხდა შეცდომა');
+      setError(t('favorites.loadError'));
       toast({
-        title: "შეცდომა",
-        description: "ფავორიტების ჩატვირთვისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('favorites.loadError'),
         variant: "destructive",
       });
     } finally {
@@ -70,37 +73,25 @@ export const Favorites: React.FC = () => {
       // Update local state to remove from the list immediately
       setFavorites(prev => prev.filter(fav => fav.id !== propertyId));
       toast({
-        title: "წარმატება",
-        description: "განცხადება წაიშალა ფავორიტებიდან",
+        title: t('common.success'),
+        description: t('favorites.removeSuccess'),
       });
     } catch (error: any) {
       console.error('Error removing from favorites:', error);
       toast({
-        title: "შეცდომა", 
-        description: "ფავორიტებიდან წაშლისას მოხდა შეცდომა",
+        title: t('common.error'), 
+        description: t('favorites.removeError'),
         variant: "destructive",
       });
     }
   };
 
   const translatePropertyType = (type: string) => {
-    const translations: Record<string, string> = {
-      'apartment': 'ბინა',
-      'house': 'სახლი',
-      'cottage': 'კოტეჯი',
-      'land': 'მიწა',
-      'commercial': 'კომერციული'
-    };
-    return translations[type] || type;
+    return t(`favorites.propertyTypes.${type}`) || type;
   };
 
   const translateDealType = (type: string) => {
-    const translations: Record<string, string> = {
-      'sale': 'იყიდება',
-      'rent': 'ქირავდება', 
-      'daily': 'დღიური ქირავნობა'
-    };
-    return translations[type] || type;
+    return t(`favorites.dealTypes.${type}`) || type;
   };
 
   const formatAddress = (property: FavoriteProperty) => {
@@ -117,10 +108,10 @@ export const Favorites: React.FC = () => {
   if (loading) {
     return (
       <>
-        <h2 className="text-xl font-medium mb-4">ფავორიტები</h2>
+        <h2 className="text-xl font-medium mb-4">{t('favorites.title')}</h2>
         <div className="flex items-center justify-center h-32">
           <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="ml-2">ფავორიტების ჩატვირთვა...</span>
+          <span className="ml-2">{t('favorites.loading')}</span>
         </div>
       </>
     );
@@ -129,11 +120,11 @@ export const Favorites: React.FC = () => {
   if (error) {
     return (
       <>
-        <h2 className="text-xl font-medium mb-4">ფავორიტები</h2>
+        <h2 className="text-xl font-medium mb-4">{t('favorites.title')}</h2>
         <div className="bg-white p-8 rounded-lg border text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <Button onClick={fetchFavorites}>
-            თავიდან სცადეთ
+            {t('common.tryAgain')}
           </Button>
         </div>
       </>
@@ -142,7 +133,7 @@ export const Favorites: React.FC = () => {
   
   return (
     <>
-      <h2 className="text-lg md:text-xl font-medium mb-4">ფავორიტები</h2>
+      <h2 className="text-lg md:text-xl font-medium mb-4">{t('favorites.title')}</h2>
 
       {favorites.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -177,16 +168,16 @@ export const Favorites: React.FC = () => {
         <div className="bg-white p-4 md:p-8 rounded-lg border text-center">
           <div className="max-w-xs mx-auto">
             <Heart className="mx-auto h-12 w-12 md:h-16 md:w-16 text-gray-300 mb-4" />
-            <h3 className="text-base md:text-lg font-medium mb-2">თქვენ არ გაქვთ ფავორიტებში დამატებული განცხადებები</h3>
+            <h3 className="text-base md:text-lg font-medium mb-2">{t('favorites.noFavorites')}</h3>
             <p className="text-xs md:text-sm text-gray-500 mb-4">
-              მოძებნეთ სასურველი განცხადებები და დაამატეთ ფავორიტებში მომავალი განხილვისთვის
+              {t('favorites.noFavoritesDesc')}
             </p>
             <Button 
               className="flex items-center mx-auto text-sm"
-              onClick={() => navigate('/properties')}
+              onClick={() => navigate(getLanguageUrl('/properties', i18n.language))}
             >
               <Search className="h-4 w-4 mr-1" />
-              განცხადებების ძებნა
+              {t('favorites.searchProperties')}
             </Button>
           </div>
         </div>

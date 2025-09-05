@@ -18,6 +18,8 @@ import { PhotoGallerySection } from "./components/PhotoGallerySection";
 import { VipSelectionSection } from "./components/VipSelectionSection";
 import { propertyFormSchema, type PropertyFormData } from "./types/propertyForm";
 import { propertyApi, citiesApi, vipApi, balanceApi, servicesApi } from "@/lib/api";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface City {
   id: number;
@@ -40,6 +42,7 @@ export const AddProperty = () => {
   const [freeServicePrice, setFreeServicePrice] = useState<number>(0);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t, i18n } = useTranslation('userDashboard');
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
@@ -318,12 +321,12 @@ export const AddProperty = () => {
         });
       }
       
-      navigate('/dashboard/my-properties');
+      navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
     } catch (error: any) {
       console.error("Submission error:", error);
       toast({
-        title: "შეცდომა",
-        description: error.response?.data?.message || "შეცდომა მოხდა განცხადების დამატებისას",
+        title: t('common.error'),
+        description: error.response?.data?.message || t('addProperty.submissionError'),
         variant: "destructive",
       });
     } finally {
@@ -333,17 +336,17 @@ export const AddProperty = () => {
 
   
   const handleVipPurchased = () => {
-    navigate('/dashboard/my-properties');
+    navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
   };
 
   const handleSkipVip = () => {
-    navigate('/dashboard/my-properties');
+    navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
   };
 
   return (
     <div className="w-full min-h-screen flex flex-col relative">
       <div className="flex-1 overflow-auto p-2 sm:p-4 md:p-6 pb-16 sm:pb-24 md:pb-32">
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">განცხადების დამატება</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">{t('addProperty.title')}</h2>
       
         <Card className="p-2 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6">
           <Form {...form}>
@@ -408,10 +411,10 @@ export const AddProperty = () => {
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                განცხადების დამატება...
+                {t('addProperty.submitting')}
               </>
             ) : (
-              'განცხადების დამატება'
+              t('addProperty.submit')
             )}
           </button>
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef, us
 import { Button } from "@/components/ui/button";
 import { balanceApi } from "@/lib/api";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Balance {
   balance: number;
@@ -17,6 +18,7 @@ export const BalanceSection = forwardRef<BalanceSectionRef>((props, ref) => {
   const [error, setError] = useState<string | null>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout>();
   const lastFetchTimeRef = useRef<number>(0);
+  const { t } = useTranslation('userDashboard');
 
   const fetchBalance = useCallback(async () => {
     const now = Date.now();
@@ -43,11 +45,11 @@ export const BalanceSection = forwardRef<BalanceSectionRef>((props, ref) => {
       
       // Handle rate limit errors specifically
       if (error.response?.status === 429) {
-        setError('ძალიან ბევრი მოთხოვნა');
+        setError(t('balance.tooManyRequests'));
         // Don't update lastFetchTime on 429 so it can retry sooner
         lastFetchTimeRef.current = 0;
       } else {
-        setError('ბალანსის ჩატვირთვისას მოხდა შეცდომა');
+        setError(t('balance.loadError'));
       }
       
       // Don't reset balance on error to avoid flickering
@@ -88,12 +90,12 @@ export const BalanceSection = forwardRef<BalanceSectionRef>((props, ref) => {
     <div className="p-4 border-b bg-gray-50">
       <div className="flex justify-center">
         <div>
-          <div className="text-xs text-gray-500 mb-1">ბალანსი</div>
+          <div className="text-xs text-gray-500 mb-1">{t('balance.title')}</div>
           <div className="font-bold flex items-center justify-center">
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : error ? (
-              <span className="text-red-500 text-xs">შეცდომა</span>
+              <span className="text-red-500 text-xs">{t('balance.error')}</span>
             ) : (
               `${formatBalance(balance)} ₾`
             )}
@@ -101,7 +103,7 @@ export const BalanceSection = forwardRef<BalanceSectionRef>((props, ref) => {
         </div>
       </div>
       <Button variant="default" size="sm" className="w-full mt-2">
-        შევსება
+        {t('balance.topUp')}
       </Button>
     </div>
   );
