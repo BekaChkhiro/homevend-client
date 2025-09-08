@@ -26,6 +26,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface Project {
   id: number;
@@ -65,6 +67,7 @@ export const MyProjects: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation('userDashboard');
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -94,8 +97,8 @@ export const MyProjects: React.FC = () => {
     } catch (error: any) {
       console.error('Error fetching projects:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტების ჩატვირთვისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('projects.loadError'),
         variant: "destructive",
       });
     } finally {
@@ -126,14 +129,14 @@ export const MyProjects: React.FC = () => {
       }
       
       toast({
-        title: "წარმატება",
-        description: "პროექტი წარმატებით წაიშალა",
+        title: t('common.success'),
+        description: t('projects.deleteSuccess'),
       });
     } catch (error: any) {
       console.error('Error deleting project:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტის წაშლისას მოხდა შეცდომა",
+        title: t('common.error'),
+        description: t('projects.deleteError'),
         variant: "destructive",
       });
     }
@@ -142,9 +145,9 @@ export const MyProjects: React.FC = () => {
   const getProjectTypeLabel = (type: string) => {
     switch (type) {
       case 'private_house':
-        return 'კერძო სახლი';
+        return t('projectTypes.privateHouse');
       case 'apartment_building':
-        return 'საცხოვრებელი კომპლექსი';
+        return t('projectTypes.apartmentComplex');
       default:
         return type;
     }
@@ -153,13 +156,13 @@ export const MyProjects: React.FC = () => {
   const getDeliveryStatusLabel = (status: string) => {
     switch (status) {
       case 'completed_with_renovation':
-        return 'ჩაბარება რემონტით';
+        return t('deliveryStatuses.completedWithRenovation');
       case 'green_frame':
-        return 'მწვანე კარკასი';
+        return t('deliveryStatuses.greenFrame');
       case 'black_frame':
-        return 'შავი კარკასი';
+        return t('deliveryStatuses.blackFrame');
       case 'white_frame':
-        return 'თეთრი კარკასი';
+        return t('deliveryStatuses.whiteFrame');
       default:
         return status;
     }
@@ -201,9 +204,9 @@ export const MyProjects: React.FC = () => {
           <div className="mb-4">
             <Building2 className="mx-auto w-32 h-32 opacity-50 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium mb-2">დეველოპერის ანგარიში საჭიროა</h3>
+          <h3 className="text-lg font-medium mb-2">{t('projects.developerAccountRequired')}</h3>
           <p className="text-sm text-gray-500 mb-4">
-            პროექტების მართვისთვის გჭირდებათ დეველოპერის ანგარიში
+            {t('projects.developerAccountRequiredDesc')}
           </p>
         </div>
       </div>
@@ -223,7 +226,7 @@ export const MyProjects: React.FC = () => {
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center space-x-2">
           <Loader2 className="h-6 w-6 animate-spin" />
-          <span>პროექტების ჩატვირთვა...</span>
+          <span>{t('projects.loading')}</span>
         </div>
       </div>
     );
@@ -232,13 +235,13 @@ export const MyProjects: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-medium">ჩემი პროექტები</h2>
+        <h2 className="text-xl font-medium">{t('projects.title')}</h2>
         <Button 
           className="flex items-center"
-          onClick={() => navigate('/dashboard/add-project')}
+          onClick={() => navigate(getLanguageUrl('/dashboard/add-project', i18n.language))}
         >
           <Plus className="h-4 w-4 mr-1" />
-          პროექტის დამატება
+          {t('projects.addProject')}
         </Button>
       </div>
       
@@ -269,29 +272,29 @@ export const MyProjects: React.FC = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(`/dashboard/edit-project/${project.id}`)}
+                        onClick={() => navigate(getLanguageUrl(`/dashboard/edit-project/${project.id}`, i18n.language))}
                       >
                         <Edit className="h-4 w-4 mr-1" />
-                        რედაქტირება
+                        {t('common.edit')}
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="outline" size="sm" className="hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors">
                             <Trash2 className="h-4 w-4 mr-1" />
-                            წაშლა
+                            {t('common.delete')}
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>დაადასტურეთ წაშლა</AlertDialogTitle>
+                            <AlertDialogTitle>{t('projects.confirmDelete')}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              ნამდვილად გსურთ პროექტის "{project.projectName}" წაშლა? ეს ქმედება შეუქცევადია.
+                              {t('projects.confirmDeleteMessage', { projectName: project.projectName })}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                             <AlertDialogAction onClick={() => handleDeleteProject(project.id)}>
-                              წაშლა
+                              {t('common.delete')}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -303,19 +306,19 @@ export const MyProjects: React.FC = () => {
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
                     <div>
-                      <span className="text-gray-500">ტიპი:</span>
+                      <span className="text-gray-500">{t('projects.type')}:</span>
                       <p className="font-medium">{getProjectTypeLabel(project.projectType)}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">კორპუსები:</span>
+                      <span className="text-gray-500">{t('projects.buildings')}:</span>
                       <p className="font-medium">{project.numberOfBuildings}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">ბინები:</span>
+                      <span className="text-gray-500">{t('projects.apartments')}:</span>
                       <p className="font-medium">{project.totalApartments}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">სართულები:</span>
+                      <span className="text-gray-500">{t('projects.floors')}:</span>
                       <p className="font-medium">{project.numberOfFloors}</p>
                     </div>
                   </div>
@@ -330,7 +333,7 @@ export const MyProjects: React.FC = () => {
                     <div className="flex items-center gap-4">
                       {minPrice && (
                         <div>
-                          <span className="text-gray-500 text-sm">ფასი დაწყებული:</span>
+                          <span className="text-gray-500 text-sm">{t('projects.priceFrom')}:</span>
                           <p className="text-lg font-bold text-primary">
                             {formatPrice(minPrice)}
                           </p>
@@ -339,7 +342,7 @@ export const MyProjects: React.FC = () => {
                       {project.deliveryDate && (
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <Calendar className="h-4 w-4" />
-                          <span>ჩაბარება: {new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</span>
+                          <span>{t('projects.delivery')}: {new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</span>
                         </div>
                       )}
                     </div>
@@ -352,17 +355,17 @@ export const MyProjects: React.FC = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(`/dashboard/projects/${project.id}/manage-properties`)}
+                        onClick={() => navigate(getLanguageUrl(`/dashboard/projects/${project.id}/manage-properties`, i18n.language))}
                       >
                         <Building2 className="h-4 w-4 mr-1" />
-                        განცხადების მართვა
+                        {t('projects.manageProperties')}
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(`/projects/${project.id}`)}
+                        onClick={() => navigate(getLanguageUrl(`/projects/${project.id}`, i18n.language))}
                       >
-                        დეტალურად
+                        {t('projects.viewDetails')}
                       </Button>
                     </div>
                   </div>
@@ -412,16 +415,16 @@ export const MyProjects: React.FC = () => {
             <div className="mb-4">
               <Building2 className="mx-auto w-32 h-32 opacity-50 text-gray-400" />
             </div>
-            <h3 className="text-lg font-medium mb-2">თქვენ არ გაქვთ პროექტები დამატებული</h3>
+            <h3 className="text-lg font-medium mb-2">{t('projects.noProjects')}</h3>
             <p className="text-sm text-gray-500 mb-4">
-              დაამატეთ თქვენი პირველი პროექტი და გაზარდეთ ხილვადობა
+              {t('projects.noProjectsDesc')}
             </p>
             <Button 
               className="flex items-center mx-auto"
-              onClick={() => navigate('/dashboard/add-project')}
+              onClick={() => navigate(getLanguageUrl('/dashboard/add-project', i18n.language))}
             >
               <Plus className="h-4 w-4 mr-1" />
-              პროექტის დამატება
+              {t('projects.addProject')}
             </Button>
           </div>
         </div>

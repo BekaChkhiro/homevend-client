@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Crown, CreditCard, Sparkles } from 'lucide-react';
 import { VipPurchaseModal } from '@/components/VipPurchaseModal';
 import { useBalanceRefresh } from '../../Dashboard';
+import { useTranslation } from 'react-i18next';
 
 interface VipAfterCreateSectionProps {
   propertyId?: number;
@@ -16,6 +17,7 @@ export const VipAfterCreateSection: React.FC<VipAfterCreateSectionProps> = ({
   propertyTitle,
   onVipPurchased
 }) => {
+  const { t } = useTranslation('userDashboard');
   const [showVipModal, setShowVipModal] = useState(false);
   const refreshBalance = useBalanceRefresh();
 
@@ -33,13 +35,13 @@ export const VipAfterCreateSection: React.FC<VipAfterCreateSectionProps> = ({
   return (
     <>
       <div className="space-y-4">
-        <h3 className="text-lg font-medium">გაზარდეთ თქვენი განცხადების ხილვადობა</h3>
+        <h3 className="text-lg font-medium">{t('addPropertyForm.vipAfterCreate.title')}</h3>
         
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Crown className="h-5 w-5 text-yellow-500" />
-              VIP სტატუსი და დამატებითი სერვისები
+              {t('vip.title')}
             </CardTitle>
             <CardDescription>
               განცხადება: {propertyTitle}
@@ -52,12 +54,12 @@ export const VipAfterCreateSection: React.FC<VipAfterCreateSectionProps> = ({
               <div className="space-y-2">
                 <h4 className="font-medium flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-blue-500" />
-                  VIP უპირატესობები:
+                  {t('addPropertyForm.vipAfterCreate.vipBenefits')}
                 </h4>
                 <ul className="text-sm text-gray-600 space-y-1 ml-6">
-                  <li>• პრიორიტეტული ჩვენება ძებნის შედეგებში</li>
-                  <li>• VIP ნიშნით გამოყოფა</li>
-                  <li>• მეტი ნახვა და კონტაქტი</li>
+                  <li>• {t('addPropertyForm.vipAfterCreate.priorityDisplay')}</li>
+                  <li>• {t('addPropertyForm.vipAfterCreate.vipBadge')}</li>
+                  <li>• {t('addPropertyForm.vipAfterCreate.moreViews')}</li>
                 </ul>
               </div>
 
@@ -65,11 +67,11 @@ export const VipAfterCreateSection: React.FC<VipAfterCreateSectionProps> = ({
               <div className="space-y-2">
                 <h4 className="font-medium flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-green-500" />
-                  დამატებითი სერვისები:
+                  {t('addPropertyForm.vipAfterCreate.additionalServices')}
                 </h4>
                 <ul className="text-sm text-gray-600 space-y-1 ml-6">
-                  <li>• ავტო განახლება - ყოველდღიური ავტომატური განახლება</li>
-                  <li>• ფერადი გამოყოფა - ფერადი ბორდერით გამოყოფა</li>
+                  <li>• {t('addPropertyForm.vipAfterCreate.autoRenewalDaily')}</li>
+                  <li>• {t('addPropertyForm.vipAfterCreate.colorHighlight')}</li>
                 </ul>
               </div>
             </div>
@@ -81,14 +83,14 @@ export const VipAfterCreateSection: React.FC<VipAfterCreateSectionProps> = ({
                 onClick={handleSkip}
                 className="flex-1"
               >
-                უფასო სტატუსით გაგრძელება
+                {t('addPropertyForm.vipAfterCreate.continueWithFree')}
               </Button>
               <Button 
                 onClick={() => setShowVipModal(true)}
                 className="flex-1"
               >
                 <Crown className="h-4 w-4 mr-2" />
-                სერვისების არჩევა
+                {t('addPropertyForm.vipAfterCreate.selectServices')}
               </Button>
             </div>
           </CardContent>

@@ -8,10 +8,15 @@
     "delete": "Удалить",
     "edit": "Редактировать",
     "view": "Посмотреть",
+    "remove": "Удалить",
     "tryAgain": "Попробовать снова",
     "mainContent": "Основное содержание",
     "menuSidebar": "Боковое меню",
-    "contentSection": "Раздел контента"
+    "contentSection": "Раздел контента",
+    "squareMeters": "м²",
+    "back": "Назад",
+    "note": "Примечание",
+    "day": "день"
   },
   "menu": {
     "addProject": "Добавить проект",
@@ -136,21 +141,63 @@
     "loadError": "Ошибка загрузки проектов",
     "deleteError": "Ошибка удаления проекта",
     "deleteSuccess": "Проект успешно удален",
-    "manageProperties": "Управление объявлениями"
+    "manageProperties": "Управление объявлениями",
+    "developerAccountRequired": "Требуется аккаунт разработчика",
+    "developerAccountRequiredDesc": "Для управления проектами нужен аккаунт разработчика",
+    "confirmDelete": "Подтвердить удаление",
+    "confirmDeleteMessage": "Вы уверены, что хотите удалить проект \"{{projectName}}\"? Это действие необратимо.",
+    "type": "Тип",
+    "buildings": "Корпуса",
+    "apartments": "Квартиры",
+    "floors": "Этажи",
+    "priceFrom": "Цена от",
+    "delivery": "Сдача",
+    "viewDetails": "Подробно"
   },
   "vip": {
     "title": "VIP сервисы",
-    "free": "Бесплатно",
-    "vip": "VIP",
-    "vipPlus": "VIP+",
-    "superVip": "SUPER VIP",
-    "days": "дней",
-    "selectDays": "Выберите дни",
-    "totalCost": "Общая стоимость",
+    "purchaseTitle": "Покупка VIP статуса и дополнительных сервисов",
+    "property": "Недвижимость",
+    "activeStatus": "Активный VIP статус",
+    "propertyHasStatus": "У недвижимости статус {{status}}",
+    "daysRemaining": "Осталось {{days}} дней",
+    "expirestoday": "Истекает сегодня",
     "yourBalance": "Ваш баланс",
+    "selectPackage": "Выберите VIP пакет",
+    "free": "Бесплатно",
+    "standardVisibility": "Стандартная видимость",
+    "howManyDays": "На сколько дней",
+    "selectDays": "Выберите дни",
     "additionalServices": "Дополнительные сервисы",
-    "autoRenew": "Авто-продление",
-    "colorSeparation": "Цветовое выделение",
+    "optional": "опционально",
+    "totalCost": "Общая стоимость",
+    "vipPackage": "VIP пакет",
+    "total": "Итого",
+    "insufficientBalance": "Недостаточно средств",
+    "needRecharge": "Необходимо пополнить баланс",
+    "serviceTypes": {
+      "free": "Бесплатно",
+      "vip": "VIP",
+      "vipplus": "VIP+",
+      "vip_plus": "VIP+",
+      "supervip": "Супер VIP",
+      "super_vip": "Супер VIP",
+      "autorenew": "Авто-продление",
+      "auto_renew": "Авто-продление",
+      "colorseparation": "Цветовое выделение",
+      "color_separation": "Цветовое выделение"
+    },
+    "descriptions": {
+      "vip": "Приоритетный показ с VIP значком",
+      "vipplus": "Улучшенный VIP с высоким приоритетом",
+      "vip_plus": "Улучшенный VIP с высоким приоритетом",
+      "supervip": "Максимальный уровень VIP с премиум размещением",
+      "super_vip": "Максимальный уровень VIP с премиум размещением",
+      "autorenew": "Ежедневное автоматическое продление",
+      "auto_renew": "Ежедневное автоматическое продление",
+      "colorseparation": "Выделение цветной рамкой",
+      "color_separation": "Выделение цветной рамкой"
+    },
     "purchaseVip": "Купить VIP",
     "skipVip": "Пропустить VIP"
   },
@@ -177,6 +224,8 @@
     "deleteProperty": "Удалить объявление",
     "purchaseVip": "Купить VIP",
     "deleteConfirm": "Вы уверены, что хотите удалить это объявление?",
+    "deleteConfirmation": "Вы уверены, что хотите удалить это объявление? Это действие необратимо.",
+    "agent": "Агент",
     "locationNotSpecified": "Местоположение не указано"
   },
   "uploadPhotos": {
@@ -195,6 +244,280 @@
     "error": "Ошибка",
     "warning": "Предупреждение",
     "info": "Информация"
+  },
+  "payment": {
+    "selectPaymentMethod": "Пожалуйста, выберите способ оплаты",
+    "paymentPageOpened": "Страница оплаты открыта в новой вкладке. Баланс будет автоматически обновлен после оплаты.",
+    "paymentLinkError": "Не удалось создать ссылку для оплаты",
+    "redirectToBOG": "Перенаправление на BOG",
+    "redirectMessage": "Вы будете перенаправлены на страницу оплаты BOG. После оплаты вы автоматически вернетесь на страницу баланса.",
+    "errorDuringTopUp": "Ошибка при пополнении",
+    "paymentStarted": "Оплата начата",
+    "paymentVerifying": "Ваша оплата успешно завершена BOG. Баланс сейчас проверяется и будет автоматически обновлен...",
+    "balanceSuccessfullyToppedUp": "Баланс успешно пополнен!",
+    "paymentCompleted": "Оплата завершена",
+    "paymentCompletedMessage": "Ваша оплата успешно завершена. Если баланс еще не обновился, нажмите кнопку обновления через несколько минут.",
+    "paymentCompletedCheckBalance": "Ваша оплата завершена. Пожалуйста, нажмите кнопку обновления через несколько минут для проверки баланса.",
+    "paymentFailed": "Оплата не удалась",
+    "paymentFailedMessage": "Ваша оплата не может быть завершена. Пожалуйста, попробуйте снова или используйте другой способ оплаты.",
+    "topping": "Пополнение...",
+    "payWithCardFlitt": "Оплата банковской картой (Flitt)",
+    "payWithCardBOG": "Оплата банковской картой (BOG)",
+    "topUpForTest": "Пополнение (для тестирования)",
+    "tryAgain": "Попробовать снова",
+    "ok": "OK",
+    "statuses": {
+      "completed": "Завершено",
+      "pending": "В процессе",
+      "failed": "Не удалось",
+      "cancelled": "Отменено"
+    }
+  },
+  "serviceLabels": {
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "vipplus": "VIP+",
+    "superVip": "СУПЕР VIP",
+    "supervip": "СУПЕР VIP",
+    "autoRenew": "Авто-продление",
+    "autorenew": "Авто-продление",
+    "colorSeparation": "Цветовое выделение",
+    "colorseparation": "Цветовое выделение"
+  },
+  "transactionTypes": {
+    "autoRenew": "Авто обновление",
+    "colorSeparation": "Цветовая подсветка",
+    "topUp": "Пополнение баланса",
+    "vipPurchase": "Покупка VIP",
+    "servicePurchase": "Дополнительный сервис",
+    "propertyPost": "Размещение объявления"
+  },
+  "vipStatus": {
+    "vipActive": "VIP Активен",
+    "vipPlusActive": "VIP+ Активен",
+    "superVipActive": "SUPER VIP",
+    "purchaseVip": "Купить VIP",
+    "expirestoday": "Истекает сегодня",
+    "dayRemaining": "Остался 1 день",
+    "daysRemaining": "Осталось {{days}} дней",
+    "daysRemainingShort": "{{days}} дней"
+  },
+  "projectTypes": {
+    "privateHouse": "Частный дом",
+    "apartmentComplex": "Жилой комплекс"
+  },
+  "deliveryStatuses": {
+    "completedWithRenovation": "Сдача с ремонтом",
+    "greenFrame": "Зеленый каркас",
+    "blackFrame": "Черный каркас",
+    "whiteFrame": "Белый каркас"
+  },
+  "placeholder": {
+    "eg2RoomApartmentInVake": "напр. 2-комнатная квартира в Ваке",
+    "selectCategory": "Выберите категорию",
+    "detailedPropertyDescription": "Подробное описание объявления...",
+    "cityDistrictStreet": "Город, район, улица"
+  },
+  "profileSettings": {
+    "title": "Настройки профиля",
+    "tabs": {
+      "personal": "Личные",
+      "password": "Пароль",
+      "notifications": "Уведомления",
+      "privacy": "Конфиденциальность"
+    }
+  },
+  "addPropertyForm": {
+    "basicInfo": {
+      "title": "Основная информация",
+      "propertyTitle": "Название объявления",
+      "propertyTitlePlaceholder": "напр. 2-комнатная квартира в Ваке",
+      "propertyType": "Тип недвижимости",
+      "dealType": "Тип сделки",
+      "dealTypes": {
+        "sale": "Продается",
+        "rent": "Сдается", 
+        "daily": "Посуточная аренда"
+      },
+      "propertyTypes": {
+        "apartment": "Квартира",
+        "house": "Частный дом",
+        "cottage": "Коттедж",
+        "commercialSpace": "Коммерческая площадь",
+        "land": "Земля",
+        "hotel": "Отель"
+      },
+      "location": "Местоположение",
+      "city": "Город",
+      "selectCityPlaceholder": "Выберите город",
+      "district": "Район",
+      "districtDesc": "Выберите район (необязательно)",
+      "districtPlaceholder": "Выберите район",
+      "street": "Адрес улицы",
+      "streetPlaceholder": "Город, район, улица",
+      "streetNumber": "Номер дома",
+      "streetNumberPlaceholder": "Номер",
+      "propertyTitleDesc": "Краткое и информативное название",
+      "propertyTypeDesc": "Выберите тип недвижимости",
+      "dealTypeDesc": "Какую сделку вы хотите",
+      "locationDesc": "Точный адрес недвижимости"
+    },
+    "propertyDetails": {
+      "title": "Детали недвижимости",
+      "roomCount": "Количество комнат",
+      "bedroomCount": "Количество спален",
+      "bathroomCount": "Количество ванных",
+      "floor": "Этаж",
+      "totalFloors": "Всего этажей",
+      "area": "Площадь (м²)",
+      "livingArea": "Жилая площадь (м²)",
+      "kitchenArea": "Площадь кухни (м²)",
+      "balconyArea": "Площадь балкона (м²)",
+      "ceilingHeight": "Высота потолков (м)",
+      "constructionType": "Тип конструкции",
+      "constructionTypes": {
+        "newConstruction": "Новое строительство",
+        "oldConstruction": "Старое строительство",
+        "renovated": "Отремонтированное"
+      },
+      "condition": "Состояние",
+      "conditions": {
+        "newConstruction": "Новое строительство",
+        "renovated": "Отремонтированное",
+        "goodCondition": "Хорошее состояние",
+        "needsRenovation": "Требует ремонта"
+      },
+      "yearBuilt": "Год постройки",
+      "entrance": "Номер подъезда",
+      "parkingSpaces": "Парковочные места"
+    },
+    "features": {
+      "title": "Особенности и удобства",
+      "utilities": "Коммунальные услуги",
+      "internet": "Интернет",
+      "tv": "ТВ",
+      "telephone": "Телефон", 
+      "naturalGas": "Природный газ",
+      "hotWater": "Горячая вода",
+      "elevator": "Лифт",
+      "balcony": "Балкон",
+      "loggia": "Лоджия",
+      "basement": "Подвал",
+      "attic": "Чердак",
+      "garage": "Гараж",
+      "pool": "Бассейн",
+      "yard": "Двор",
+      "garden": "Сад",
+      "alarm": "Система безопасности",
+      "centralHeating": "Центральное отопление",
+      "airConditioner": "Кондиционер",
+      "fireplace": "Камин",
+      "sauna": "Сауна",
+      "jacuzzi": "Джакузи",
+      "poolTypes": {
+        "indoor": "Внутренний",
+        "outdoor": "Наружный"
+      }
+    },
+    "furniture": {
+      "title": "Мебель и техника",
+      "furnished": "Мебель",
+      "appliances": "Техника",
+      "refrigerator": "Холодильник",
+      "washingMachine": "Стиральная машина",
+      "dishwasher": "Посудомоечная машина",
+      "oven": "Духовка",
+      "microwave": "Микроволновка",
+      "tv_appliance": "Телевизор"
+    },
+    "pricing": {
+      "title": "Цены и контактная информация",
+      "totalArea": "Общая площадь (м²)",
+      "price": "Цена",
+      "pricePerSqm": "Цена за м²",
+      "currency": "Валюта",
+      "priceNegotiable": "Цена договорная",
+      "contactPerson": "Контактное лицо",
+      "contactPhone": "Контактный телефон",
+      "contactEmail": "Контактный email",
+      "description": "Описание",
+      "descriptionPlaceholder": "Подробное описание недвижимости..."
+    },
+    "vipServices": {
+      "title": "VIP услуги и пакеты",
+      "selectPackage": "Выберите VIP пакет",
+      "packages": {
+        "free": "Бесплатно",
+        "vip": "VIP", 
+        "vipPlus": "VIP+",
+        "superVip": "SUPER VIP"
+      },
+      "packageBenefits": {
+        "vip": "Приоритет в результатах поиска, VIP значок",
+        "vipPlus": "Все VIP преимущества + выделенное размещение",
+        "superVip": "Максимальная видимость, топ позиция, выделенная рамка"
+      },
+      "days": "Дни",
+      "selectDays": "Выберите количество дней",
+      "additionalServices": "Дополнительные услуги",
+      "autoRenew": "Авто-продление",
+      "autoRenewDesc": "Автоматическое ежедневное обновление",
+      "colorSeparation": "Цветовое выделение",
+      "colorSeparationDesc": "Выделение цветной рамкой",
+      "totalCost": "Общая стоимость",
+      "yourBalance": "Ваш баланс",
+      "purchaseServices": "Купить услуги"
+    },
+    "photos": {
+      "title": "Фотографии",
+      "uploadPhotos": "Загрузить фото",
+      "dragDrop": "Перетащите фото сюда или",
+      "selectFiles": "выберите файлы",
+      "maxFiles": "Максимум 20 фото",
+      "supportedFormats": "Поддерживаемые форматы: JPG, PNG, WebP",
+      "maxSize": "Максимальный размер: 10MB",
+      "uploading": "Загрузка...",
+      "uploadError": "Ошибка загрузки фото",
+      "removePhoto": "Удалить фото"
+    },
+    "tags": {
+      "title": "Теги",
+      "availableTags": "Доступные теги",
+      "luxury": "Люкс",
+      "new": "Новое",
+      "codeDoor": "Кодовая дверь",
+      "airbnbBooking": "Аккаунт Airbnb/Booking",
+      "investment": "Инвестиционное",
+      "disabilityFriendly": "Для людей с ограниченными возможностями"
+    },
+    "formActions": {
+      "addProperty": "Добавить объявление",
+      "updateProperty": "Обновить объявление", 
+      "saving": "Сохранение...",
+      "cancel": "Отмена"
+    },
+    "vipAfterCreate": {
+      "title": "Увеличьте видимость вашего объявления",
+      "vipBenefits": "VIP преимущества:",
+      "priorityDisplay": "Приоритетный показ в результатах поиска",
+      "vipBadge": "Выделение VIP значком",
+      "moreViews": "Больше просмотров и контактов",
+      "additionalServices": "Дополнительные услуги:",
+      "autoRenewalDaily": "Авто-продление - автоматическое ежедневное обновление",
+      "colorHighlight": "Цветовое выделение - выделение цветной рамкой",
+      "continueWithFree": "Продолжить с бесплатным статусом",
+      "selectServices": "Выбрать услуги"
+    }
+  },
+  "editProperty": {
+    "title": "Редактировать объявление",
+    "propertyIdMissing": "ID недвижимости не указан",
+    "loadError": "Ошибка при загрузке недвижимости",
+    "successWithServices": "Объявление обновлено и услуги приобретены: {{services}}",
+    "successWithoutServices": "Объявление успешно обновлено",
+    "updateError": "Ошибка при обновлении объявления",
+    "updating": "Обновление...",
+    "updateProperty": "Обновить объявление"
   },
   "addProject": {
     "title": "Добавить новый проект",

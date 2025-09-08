@@ -8,10 +8,15 @@
     "delete": "წაშლა",
     "edit": "რედაქტირება",
     "view": "ნახვა",
+    "remove": "ამოღება",
     "tryAgain": "თავიდან სცადეთ",
     "mainContent": "მთავარი კონტენტი",
     "menuSidebar": "მენიუ სიდებარი",
-    "contentSection": "კონტენტის ნაწილი"
+    "contentSection": "კონტენტის ნაწილი",
+    "squareMeters": "მ²",
+    "back": "უკან",
+    "note": "შენიშვნა",
+    "day": "დღე"
   },
   "menu": {
     "addProject": "პროექტის დამატება",
@@ -59,7 +64,8 @@
       "house": "სახლი",
       "cottage": "კოტეჯი",
       "land": "მიწა",
-      "commercial": "კომერციული"
+      "commercial": "კომერციული",
+      "featured": "რჩეული"
     },
     "dealTypes": {
       "sale": "იყიდება",
@@ -136,21 +142,63 @@
     "loadError": "პროექტების ჩატვირთვისას მოხდა შეცდომა",
     "deleteError": "პროექტის წაშლისას მოხდა შეცდომა",
     "deleteSuccess": "პროექტი წარმატებით წაიშალა",
-    "manageProperties": "განცხადების მართვა"
+    "manageProperties": "განცხადების მართვა",
+    "developerAccountRequired": "დეველოპერის ანგარიში საჭიროა",
+    "developerAccountRequiredDesc": "პროექტების მართვისთვის გჭირდებათ დეველოპერის ანგარიში",
+    "confirmDelete": "დაადასტურეთ წაშლა",
+    "confirmDeleteMessage": "ნამდვილად გსურთ პროექტის \"{{projectName}}\" წაშლა? ეს ქმედება შეუქცევადია.",
+    "type": "ტიპი",
+    "buildings": "კორპუსები",
+    "apartments": "ბინები",
+    "floors": "სართულები",
+    "priceFrom": "ფასი დაწყებული",
+    "delivery": "ჩაბარება",
+    "viewDetails": "დეტალურად"
   },
   "vip": {
     "title": "VIP სერვისები",
-    "free": "უფასო",
-    "vip": "VIP",
-    "vipPlus": "VIP+",
-    "superVip": "SUPER VIP",
-    "days": "დღე",
-    "selectDays": "აირჩიეთ დღეები",
-    "totalCost": "სულ ღირებულება",
+    "purchaseTitle": "VIP სტატუსის და დამატებითი სერვისების შეძენა",
+    "property": "ქონება",
+    "activeStatus": "აქტიური VIP სტატუსი",
+    "propertyHasStatus": "ქონებას აქვს {{status}} სტატუსი",
+    "daysRemaining": "{{days}} დღე დარჩა",
+    "expirestoday": "დღეს იწურება",
     "yourBalance": "თქვენი ბალანსი",
+    "selectPackage": "აირჩიეთ VIP პაკეტი",
+    "free": "უფასო",
+    "standardVisibility": "სტანდარტული ხილვადობა",
+    "howManyDays": "რამდენი დღით",
+    "selectDays": "აირჩიეთ დღეები",
     "additionalServices": "დამატებითი სერვისები",
-    "autoRenew": "ავტო-განახლება",
-    "colorSeparation": "ფერადი განცალკევება",
+    "optional": "არჩევითი",
+    "totalCost": "ღირებულების ჯამი",
+    "vipPackage": "VIP პაკეტი",
+    "total": "სულ",
+    "insufficientBalance": "არასაკმარისი ბალანსი",
+    "needRecharge": "საჭიროა ბალანსის შევსება",
+    "serviceTypes": {
+      "free": "უფასო",
+      "vip": "VIP",
+      "vipplus": "VIP+",
+      "vip_plus": "VIP+",
+      "supervip": "სუპერ VIP",
+      "super_vip": "სუპერ VIP",
+      "autorenew": "ავტო-განახლება",
+      "auto_renew": "ავტო-განახლება",
+      "colorseparation": "ფერადი განცალკევება",
+      "color_separation": "ფერადი განცალკევება"
+    },
+    "descriptions": {
+      "vip": "პრიორიტეტული ჩვენება VIP ნიშნით",
+      "vipplus": "გაუმჯობესებული VIP მაღალი პრიორიტეტით",
+      "vip_plus": "გაუმჯობესებული VIP მაღალი პრიორიტეტით",
+      "supervip": "უმაღლესი დონის VIP პრემიუმ ადგილით",
+      "super_vip": "უმაღლესი დონის VIP პრემიუმ ადგილით",
+      "autorenew": "ყოველდღიური ავტომატური განახლება",
+      "auto_renew": "ყოველდღიური ავტომატური განახლება",
+      "colorseparation": "ფერადი ბორდერით გამოყოფა",
+      "color_separation": "ფერადი ბორდერით გამოყოფა"
+    },
     "purchaseVip": "VIP-ის შეძენა",
     "skipVip": "VIP-ის გამოტოვება"
   },
@@ -177,6 +225,8 @@
     "deleteProperty": "განცხადების წაშლა",
     "purchaseVip": "VIP-ის შეძენა",
     "deleteConfirm": "დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა?",
+    "deleteConfirmation": "დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.",
+    "agent": "აგენტი",
     "locationNotSpecified": "მდებარეობა მითითებული არ არის"
   },
   "uploadPhotos": {
@@ -195,6 +245,384 @@
     "error": "შეცდომა",
     "warning": "გაფრთხილება",
     "info": "ინფორმაცია"
+  },
+  "payment": {
+    "selectPaymentMethod": "გთხოვთ აირჩიოთ გადახდის მეთოდი",
+    "paymentPageOpened": "გადახდის გვერდი გაიხსნა ახალ ტაბში. გადახდის შემდეგ ბალანსი ავტომატურად განახლდება.",
+    "paymentLinkError": "გადახდის ლინკის შექმნა ვერ მოხერხდა",
+    "redirectToBOG": "გადამისამართება BOG-ზე",
+    "redirectMessage": "თქვენ გადამისამართდებით BOG-ის გადახდის გვერდზე. გადახდის შემდეგ ავტომატურად დაბრუნდებით ბალანსის გვერდზე.",
+    "errorDuringTopUp": "შეცდომა შევსების დროს",
+    "paymentStarted": "გადახდა დაიწყო",
+    "paymentVerifying": "თქვენი გადახდა წარმატებით შესრულდა BOG-ის მხრიდან. ბალანსი ახლა ვერიფიცირდება და ავტომატურად განახლდება...",
+    "balanceSuccessfullyToppedUp": "ბალანსი წარმატებით შევსდა!",
+    "paymentCompleted": "გადახდა განხორციელდა",
+    "paymentCompletedMessage": "თქვენი გადახდა წარმატებით დასრულდა. თუ ბალანსი ჯერ არ განახლდა, გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე.",
+    "paymentCompletedCheckBalance": "თქვენი გადახდა განხორციელდა. გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე ბალანსის შესამოწმებლად.",
+    "paymentFailed": "გადახდა ვერ განხორციელდა",
+    "paymentFailedMessage": "თქვენი გადახდა ვერ შესრულდა. გთხოვთ სცადოთ ხელახლა ან გამოიყენოთ სხვა გადახდის მეთოდი.",
+    "topping": "შევსება...",
+    "payWithCardFlitt": "ბანკის ბარათით გადახდა (Flitt)",
+    "payWithCardBOG": "ბანკის ბარათით გადახდა (BOG)",
+    "topUpForTest": "შევსება (ტესტისთვის)",
+    "tryAgain": "ხელახლა ცდა",
+    "ok": "კარგი",
+    "statuses": {
+      "completed": "დასრულებული",
+      "pending": "მიმდინარე",
+      "failed": "ვერ შესრულდა",
+      "cancelled": "გაუქმებული"
+    }
+  },
+  "serviceLabels": {
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "vipplus": "VIP+",
+    "superVip": "სუპერ VIP",
+    "supervip": "სუპერ VIP",
+    "autoRenew": "ავტო-განახლება",
+    "autorenew": "ავტო-განახლება",
+    "colorSeparation": "ფერადი განცალკევება",
+    "colorseparation": "ფერადი განცალკევება"
+  },
+  "transactionTypes": {
+    "autoRenew": "ავტო განახლება",
+    "colorSeparation": "ფერადი გამოყოფა",
+    "topUp": "ბალანსის შევსება",
+    "vipPurchase": "VIP შეძენა",
+    "servicePurchase": "დამატებითი სერვისი",
+    "propertyPost": "განცხადების განთავსება"
+  },
+  "vipStatus": {
+    "vipActive": "VIP აქტიური",
+    "vipPlusActive": "VIP+ აქტიური",
+    "superVipActive": "SUPER VIP",
+    "purchaseVip": "VIP შეძენა",
+    "expirestoday": "დღეს იწურება",
+    "dayRemaining": "1 დღე დარჩა",
+    "daysRemaining": "{{days}} დღე დარჩა",
+    "daysRemainingShort": "{{days}} დღე"
+  },
+  "projectTypes": {
+    "privateHouse": "კერძო სახლი",
+    "apartmentComplex": "საცხოვრებელი კომპლექსი"
+  },
+  "deliveryStatuses": {
+    "completedWithRenovation": "ჩაბარება რემონტით",
+    "greenFrame": "მწვანე კარკასი",
+    "blackFrame": "შავი კარკასი",
+    "whiteFrame": "თეთრი კარკასი"
+  },
+  "placeholder": {
+    "eg2RoomApartmentInVake": "მაგ: 2 ოთახიანი ბინა ვაკეში",
+    "selectCategory": "აირჩიეთ კატეგორია",
+    "detailedPropertyDescription": "განცხადების დეტალური აღწერა...",
+    "cityDistrictStreet": "ქალაქი, უბანი, ქუჩა"
+  },
+  "profileSettings": {
+    "title": "პროფილის პარამეტრები",
+    "tabs": {
+      "personal": "პირადი",
+      "password": "პაროლი",
+      "notifications": "შეტყობინებები",
+      "privacy": "კონფიდენციალურობა"
+    }
+  },
+  "addPropertyForm": {
+    "basicInfo": {
+      "title": "ძირითადი ინფორმაცია",
+      "subtitle": "შეავსეთ ქონების ძირითადი მონაცემები",
+      "propertyTitle": "განცხადების სათაური",
+      "propertyTitleDesc": "შეიყვანეთ მიმზიდველი სათაური თქვენი ქონებისთვის",
+      "propertyTitlePlaceholder": "მაგ: 2 საძინებლიანი ბინა ვაკეში",
+      "propertyTitleTip": "კარგი სათაური უნდა იყოს ინფორმაციული და მიმზიდველი",
+      "propertyType": "უძრავი ქონების ტიპი",
+      "propertyTypeDesc": "აირჩიეთ ქონების ტიპი",
+      "dealType": "გარიგების ტიპი",
+      "dealTypeDesc": "როგორი გარიგება გსურთ",
+      "dailyRentalCategory": "დღიურის კატეგორია",
+      "dailyRentalCategoryDesc": "აირჩიეთ დღიური ქირაობის ტიპი",
+      "dailyRentalCategoryPlaceholder": "აირჩიეთ კატეგორია (არასავალდებულო)",
+      "location": "მდებარეობა",
+      "locationDesc": "ქონების ზუსტი მისამართი",
+      "selectCity": "აირჩიე ქალაქი",
+      "selectCityPlaceholder": "აირჩიეთ ქალაქი",
+      "district": "უბანი / რაიონი",
+      "districtDesc": "აირჩიეთ უბანი (არასავალდებულო)",
+      "districtPlaceholder": "აირჩიეთ უბანი",
+      "street": "ჩაწერეთ ქუჩა",
+      "streetPlaceholder": "ქუჩის დასახელება",
+      "streetNumber": "ჩაწერეთ ქუჩის ნომერი",
+      "streetNumberPlaceholder": "ნომერი",
+      "cadastralCode": "საკადასტრო კოდი",
+      "cadastralCodeDesc": "ქონების საკადასტრო კოდი თუ ცნობილია",
+      "cadastralCodePlaceholder": "მაგ: 01.10.14.009.088",
+      "cadastralCodeTip": "საკადასტრო კოდი არის უნიკალური იდენტიფიკატორი, რომელიც გამოიყენება ქონების იურიდიული სტატუსის დასადგენად",
+      "loading": "იტვირთება...",
+      "propertyTypes": {
+        "apartment": "ბინები",
+        "house": "კერძო სახლები",
+        "cottage": "აგრაკები",
+        "land": "მიწის ნაკვეთები",
+        "commercial": "კომერციული",
+        "office": "საოფისე",
+        "hotel": "სასტუმროები"
+      },
+      "propertyTypeDescs": {
+        "apartment": "მრავალსართულიანი",
+        "house": "ცალკე მდგომი",
+        "cottage": "დასასვენებელი",
+        "land": "სამშენებლო",
+        "commercial": "მაღაზია, საწყობი",
+        "office": "ოფისის ფართი",
+        "hotel": "სასტუმრო"
+      },
+      "dealTypes": {
+        "sale": "იყიდება",
+        "rent": "ქირავდება",
+        "mortgage": "გირავდება",
+        "lease": "გაიცემა იჯარით",
+        "daily": "ქირავდება დღიურად",
+        "redemption": "ნასყიდობა გამოსყიდობის უფლებით"
+      },
+      "dealTypeDescs": {
+        "sale": "სრული გაყიდვა",
+        "rent": "გრძელვადიანი ქირა",
+        "mortgage": "გირავით გადაცემა",
+        "lease": "კომერციული იჯარა",
+        "daily": "მოკლევადიანი ქირა",
+        "redemption": "გამოსყიდობის უფლებით"
+      },
+      "dailyRentalCategories": {
+        "sea": "ზღვასთან დღიური ქირაობა",
+        "mountains": "მთაში დღიური ქირაობა",
+        "villa": "დღიური ვილები"
+      },
+      "projectLink": "პროექტთან დაკავშირება",
+      "projectLinkDesc": "აირჩიეთ პროექტი რომელთანაც უნდა დაკავშირდეს ეს განცხადება",
+      "projectLinkPlaceholder": "აირჩიეთ პროექტი (არასავალდებულო)",
+      "projectLinkTip": "თუ აირჩევთ პროექტს, ეს განცხადება ასევე გამოჩნდება პროექტის გვერდზე როგორც დაკავშირებული ქონება",
+      "dailyRentalTip": "თუ არ აირჩევთ კონკრეტულ კატეგორიას, ქონება ჩაირთვება ზოგად 'დღიური ქირაობა' კატეგორიაში"
+    },
+    "propertyDetails": {
+      "title": "განცხადების დეტალები",
+      "subtitle": "დამატებითი ინფორმაცია ქონების შესახებ",
+      "rooms": "ოთახები",
+      "bedrooms": "საძინებელი",
+      "bathrooms": "სველი წერტილი",
+      "totalFloors": "სართულები სულ",
+      "floorNumber": "რომელ სართულზე",
+      "buildingStatus": "შენობის სტატუსი",
+      "constructionYear": "აშენების წელი",
+      "condition": "მდგომარეობა",
+      "projectType": "პროექტის ტიპი",
+      "ceilingHeight": "ჭერის სიმაღლე",
+      "heating": "გათბობა",
+      "parking": "პარკირება",
+      "hotWater": "ცხელი წყალი",
+      "buildingMaterial": "სამშენებლო მასალა",
+      "buildingStatuses": {
+        "old": "ძველი აშენებული",
+        "new": "ახალი აშენებული",
+        "underConstruction": "მშენებარე"
+      },
+      "conditions": {
+        "newRenovated": "ახალი გარემონტებული",
+        "oldRenovated": "ძველი გარემონტებული",
+        "needsRenovation": "სარემონტო",
+        "whiteFrame": "თეთრი კარკასი",
+        "blackFrame": "შავი კარკასი",
+        "greenFrame": "მწვანე კარკასი"
+      },
+      "heatingTypes": {
+        "central": "ცენტრალური",
+        "gas": "გაზი",
+        "electric": "ელექტრო",
+        "wood": "ხეით",
+        "solar": "მზის ენერგია"
+      },
+      "parkingTypes": {
+        "none": "არ არის",
+        "yard": "ეზოში",
+        "garage": "გარაჟი",
+        "underground": "მიწისქვეშ"
+      },
+      "buildingMaterials": {
+        "brick": "აგური",
+        "block": "ბლოკი",
+        "panel": "პანელი",
+        "monolith": "მონოლითი",
+        "wood": "ხისპერი"
+      },
+      "amenities": {
+        "title": "დამატებითი ინფორმაცია",
+        "hasBalcony": "აივანი",
+        "balconyCount": "აივნების რაოდენობა",
+        "balconyArea": "აივნის ფართი",
+        "hasPool": "აუზი",
+        "poolType": "აუზის ტიპი",
+        "hasLivingRoom": "მისაღები",
+        "livingRoomArea": "მისაღების ფართი",
+        "livingRoomType": "მისაღების ტიპი",
+        "hasLoggia": "ლოჯი",
+        "loggiaArea": "ლოჯის ფართი",
+        "hasVeranda": "ვერანდა",
+        "verandaArea": "ვერანდის ფართი",
+        "hasYard": "აქვს ეზო",
+        "yardArea": "ეზოს ფართი",
+        "hasStorage": "სათავსო",
+        "storageArea": "სათავსოს ფართი",
+        "storageType": "სათავსოს ტიპი",
+        "poolTypes": {
+          "indoor": "შიდა",
+          "outdoor": "გარეთ",
+          "shared": "საერთო"
+        },
+        "storageTypes": {
+          "basement": "სარდაფი",
+          "attic": "რიღი",
+          "separate": "ცალკე"
+        }
+      }
+    },
+    "features": {
+      "title": "მახასიათებლები",
+      "internet": "ინტერნეტი",
+      "tv": "ტელევიზია",
+      "gas": "ბუნებრივი აირი",
+      "elevator": "ლიფტი",
+      "cargoElevator": "სატვირთო ლიფტი",
+      "water": "წყალი",
+      "sewage": "კანალიზაცია",
+      "electricity": "ელექტრო ენერგია",
+      "phone": "ტელეფონი",
+      "fenced": "შემოღობილი",
+      "balcony": "ჭიშკარი",
+      "kitchenAppliances": "სამზარეულო + ტექნიკა"
+    },
+    "advantages": {
+      "title": "უპირატესობები",
+      "spa": "სპა",
+      "bar": "ბარი",
+      "gym": "სპორტ დარბაზი",
+      "fireplace": "ბუხარი",
+      "bbq": "მაყალი/გრილი",
+      "jacuzzi": "ჯაკუზი",
+      "sauna": "საუნა",
+      "garden": "ბაღი",
+      "terrace": "ტერასა",
+      "balconyView": "ხედი აივნიდან",
+      "seaView": "ზღვის ხედი",
+      "mountainView": "მთის ხედი",
+      "cityView": "ქალაქის ხედი",
+      "parkView": "პარკის ხედი"
+    },
+    "furniture": {
+      "title": "ავეჯი და ტექნიკა",
+      "furniture": "ავეჯი",
+      "bed": "საწოლი",
+      "sofa": "დივანი",
+      "table": "მაგიდა",
+      "chairs": "სკამები",
+      "wardrobe": "კარადა",
+      "stove": "ქურა (გაზის)",
+      "refrigerator": "მცივნივი",
+      "washingMachine": "სარეცხი მანქანა",
+      "dishwasher": "ჩურჩხელის სარეცხი მანქანა",
+      "airConditioner": "კონდიციონერი",
+      "tv": "ტელევიზორი",
+      "microwave": "მიკროტალღური"
+    },
+    "pricing": {
+      "title": "ფასი და ფართი",
+      "subtitle": "მიუთითეთ ქონების ფასი და ფართი",
+      "area": "ფართი (მ²)",
+      "areaDesc": "ქონების საერთო ფართი",
+      "areaPlaceholder": "ფართი კვადრატულ მეტრში",
+      "totalPrice": "სრული ფასი ($)",
+      "totalPricePlaceholder": "სრული ფასი დოლარში",
+      "pricePerSqm": "კვ. ფასი ($/მ²)",
+      "pricePerSqmPlaceholder": "გამოითვლება ავტომატურად",
+      "priceCalculation": "ფასის გამოთვლა",
+      "priceCalculationTip": "კვადრატული მეტრის ფასი გამოითვლება ავტომატურად სრული ფასისა და ფართის მიხედვით"
+    },
+    "contact": {
+      "title": "საკონტაქტო ინფორმაცია",
+      "name": "სახელი",
+      "namePlaceholder": "თქვენი სახელი",
+      "phone": "ტელეფონის ნომერი",
+      "phonePlaceholder": "+995 XXX XXX XXX",
+      "phoneExample": "მაგალითი: +995 555 123 456"
+    },
+    "description": {
+      "title": "აღწერა",
+      "subtitle": "აღწერა სხვადასხვა ენაზე",
+      "georgian": "ქართული",
+      "english": "ინგლისური",
+      "russian": "რუსული",
+      "georgianPlaceholder": "აღწერა ქართულად",
+      "englishPlaceholder": "Description in English",
+      "russianPlaceholder": "Описание по-русски"
+    },
+    "photos": {
+      "title": "ფოტო გალერეა",
+      "subtitle": "ფოტოების ატვირთვა",
+      "dragDrop": "ჩააგდეთ ფოტოები აქ ან დააჭირეთ ატვირთვის ღილაკს",
+      "selectFiles": "ფოტოების არჩევა",
+      "recommendations": "რეკომენდაციები"
+    },
+    "tags": {
+      "title": "ბეჯები",
+      "luxury": "ლუქსი",
+      "new": "ახალი",
+      "codeEntry": "კარი კოდით",
+      "airbnb": "Airbnb/Booking ექაუნთი",
+      "investment": "საინვესტიციო",
+      "disabled": "სსმპ"
+    },
+    "vipServices": {
+      "title": "სერვისები",
+      "subtitle": "VIP სტატუსის და დამატებითი სერვისების შერჩევა",
+      "yourBalance": "თქვენი ბალანსი",
+      "howManyDays": "რამდენი დღით?",
+      "selectDays": "აირჩიეთ დღეები",
+      "totalCost": "ღირებულების ჯამი",
+      "vipPackage": "VIP პაკეტი",
+      "additionalServices": "დამატებითი სერვისები",
+      "total": "სულ",
+      "insufficientBalance": "არასაკმარისი ბალანსი. საჭიროა ბალანსის შევსება",
+      "serviceTypes": {
+        "free": "უფასო განცხადება",
+        "vip": "VIP",
+        "vipPlus": "VIP+",
+        "superVip": "SUPER VIP",
+        "autoRenew": "ავტო განახლება",
+        "colorSeparation": "ფერადი გამოყოფა"
+      },
+      "serviceDescs": {
+        "free": "სტანდარტული ხილვადობა",
+        "vip": "პრიორიტეტული ჩვენება VIP ნიშნით",
+        "vipPlus": "უმაღლესი პრიორიტეტი და გამოყოფა",
+        "superVip": "დაუმატებელი უმაღლესი ხილვადობა",
+        "autoRenew": "ავტომატურად განახლება",
+        "colorSeparation": "ფერადი გამოყოფა სიაში"
+      }
+    },
+    "formActions": {
+      "submitting": "იგზავნება...",
+      "updateProperty": "განცხადების განახლება",
+      "addProperty": "განცხადების დამატება"
+    }
+  },
+  "editProperty": {
+    "title": "განცხადების რედაქტირება",
+    "propertyIdMissing": "უძრავი ქონების ID არ არის მითითებული",
+    "loadError": "შეცდომა მოხდა უძრავი ქონების ჩატვირთვისას",
+    "successWithServices": "განცხადება განახლდა და სერვისები შეძენილია: {{services}}",
+    "successWithoutServices": "განცხადება წარმატებით განახლდა",
+    "updateError": "შეცდომა მოხდა განცხადების განახლებისას",
+    "updating": "განახლება...",
+    "updateProperty": "განცხადების განახლება"
   },
   "addProject": {
     "title": "ახალი პროექტის დამატება",

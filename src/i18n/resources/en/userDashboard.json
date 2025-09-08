@@ -8,10 +8,15 @@
     "delete": "Delete",
     "edit": "Edit",
     "view": "View",
+    "remove": "Remove",
     "tryAgain": "Try again",
     "mainContent": "Main content",
     "menuSidebar": "Menu sidebar",
-    "contentSection": "Content section"
+    "contentSection": "Content section",
+    "squareMeters": "m²",
+    "back": "Back",
+    "note": "Note",
+    "day": "day"
   },
   "menu": {
     "addProject": "Add Project",
@@ -136,21 +141,63 @@
     "loadError": "Error loading projects",
     "deleteError": "Error deleting project",
     "deleteSuccess": "Project successfully deleted",
-    "manageProperties": "Manage Properties"
+    "manageProperties": "Manage Properties",
+    "developerAccountRequired": "Developer Account Required",
+    "developerAccountRequiredDesc": "You need a developer account to manage projects",
+    "confirmDelete": "Confirm Deletion",
+    "confirmDeleteMessage": "Are you sure you want to delete project \"{{projectName}}\"? This action is irreversible.",
+    "type": "Type",
+    "buildings": "Buildings",
+    "apartments": "Apartments",
+    "floors": "Floors",
+    "priceFrom": "Price from",
+    "delivery": "Delivery",
+    "viewDetails": "View Details"
   },
   "vip": {
     "title": "VIP Services",
-    "free": "Free",
-    "vip": "VIP",
-    "vipPlus": "VIP+",
-    "superVip": "SUPER VIP",
-    "days": "days",
-    "selectDays": "Select days",
-    "totalCost": "Total cost",
+    "purchaseTitle": "VIP Status and Additional Services Purchase",
+    "property": "Property",
+    "activeStatus": "Active VIP Status",
+    "propertyHasStatus": "Property has {{status}} status",
+    "daysRemaining": "{{days}} days remaining",
+    "expirestoday": "Expires today",
     "yourBalance": "Your balance",
+    "selectPackage": "Select VIP package",
+    "free": "Free",
+    "standardVisibility": "Standard visibility",
+    "howManyDays": "How many days",
+    "selectDays": "Select days",
     "additionalServices": "Additional Services",
-    "autoRenew": "Auto-renew",
-    "colorSeparation": "Color separation",
+    "optional": "optional",
+    "totalCost": "Total Cost",
+    "vipPackage": "VIP Package",
+    "total": "Total",
+    "insufficientBalance": "Insufficient balance",
+    "needRecharge": "Balance top-up required",
+    "serviceTypes": {
+      "free": "Free",
+      "vip": "VIP",
+      "vipplus": "VIP+",
+      "vip_plus": "VIP+",
+      "supervip": "Super VIP",
+      "super_vip": "Super VIP",
+      "autorenew": "Auto-renew",
+      "auto_renew": "Auto-renew",
+      "colorseparation": "Color separation",
+      "color_separation": "Color separation"
+    },
+    "descriptions": {
+      "vip": "Priority display with VIP badge",
+      "vipplus": "Enhanced VIP with high priority",
+      "vip_plus": "Enhanced VIP with high priority",
+      "supervip": "Highest level VIP with premium placement",
+      "super_vip": "Highest level VIP with premium placement",
+      "autorenew": "Daily automatic renewal",
+      "auto_renew": "Daily automatic renewal",
+      "colorseparation": "Colored border highlighting",
+      "color_separation": "Colored border highlighting"
+    },
     "purchaseVip": "Purchase VIP",
     "skipVip": "Skip VIP"
   },
@@ -177,6 +224,8 @@
     "deleteProperty": "Delete property",
     "purchaseVip": "Purchase VIP",
     "deleteConfirm": "Are you sure you want to delete this property?",
+    "deleteConfirmation": "Are you sure you want to delete this property? This action is irreversible.",
+    "agent": "Agent",
     "locationNotSpecified": "Location not specified"
   },
   "uploadPhotos": {
@@ -195,6 +244,280 @@
     "error": "Error",
     "warning": "Warning",
     "info": "Information"
+  },
+  "payment": {
+    "selectPaymentMethod": "Please select a payment method",
+    "paymentPageOpened": "Payment page opened in a new tab. Balance will be automatically updated after payment.",
+    "paymentLinkError": "Failed to create payment link",
+    "redirectToBOG": "Redirect to BOG",
+    "redirectMessage": "You will be redirected to BOG payment page. After payment, you will automatically return to the balance page.",
+    "errorDuringTopUp": "Error during top-up",
+    "paymentStarted": "Payment started",
+    "paymentVerifying": "Your payment was successfully completed by BOG. Balance is now being verified and will be automatically updated...",
+    "balanceSuccessfullyToppedUp": "Balance successfully topped up!",
+    "paymentCompleted": "Payment completed",
+    "paymentCompletedMessage": "Your payment was successfully completed. If the balance has not been updated yet, please click the refresh button in a few minutes.",
+    "paymentCompletedCheckBalance": "Your payment has been completed. Please click the refresh button in a few minutes to check your balance.",
+    "paymentFailed": "Payment failed",
+    "paymentFailedMessage": "Your payment could not be completed. Please try again or use a different payment method.",
+    "topping": "Topping up...",
+    "payWithCardFlitt": "Pay with bank card (Flitt)",
+    "payWithCardBOG": "Pay with bank card (BOG)",
+    "topUpForTest": "Top up (for testing)",
+    "tryAgain": "Try again",
+    "ok": "OK",
+    "statuses": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "serviceLabels": {
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "vipplus": "VIP+",
+    "superVip": "SUPER VIP",
+    "supervip": "SUPER VIP",
+    "autoRenew": "Auto-renew",
+    "autorenew": "Auto-renew",
+    "colorSeparation": "Color separation",
+    "colorseparation": "Color separation"
+  },
+  "transactionTypes": {
+    "autoRenew": "Auto renewal",
+    "colorSeparation": "Color highlighting",
+    "topUp": "Balance top-up",
+    "vipPurchase": "VIP purchase",
+    "servicePurchase": "Additional service",
+    "propertyPost": "Property posting"
+  },
+  "vipStatus": {
+    "vipActive": "VIP Active",
+    "vipPlusActive": "VIP+ Active",
+    "superVipActive": "SUPER VIP",
+    "purchaseVip": "Purchase VIP",
+    "expirestoday": "Expires today",
+    "dayRemaining": "1 day remaining",
+    "daysRemaining": "{{days}} days remaining",
+    "daysRemainingShort": "{{days}} days"
+  },
+  "projectTypes": {
+    "privateHouse": "Private House",
+    "apartmentComplex": "Apartment Complex"
+  },
+  "deliveryStatuses": {
+    "completedWithRenovation": "Completed with Renovation",
+    "greenFrame": "Green Frame",
+    "blackFrame": "Black Frame",
+    "whiteFrame": "White Frame"
+  },
+  "placeholder": {
+    "eg2RoomApartmentInVake": "e.g. 2 room apartment in Vake",
+    "selectCategory": "Select category",
+    "detailedPropertyDescription": "Detailed property description...",
+    "cityDistrictStreet": "City, District, Street"
+  },
+  "profileSettings": {
+    "title": "Profile Settings",
+    "tabs": {
+      "personal": "Personal",
+      "password": "Password",
+      "notifications": "Notifications",
+      "privacy": "Privacy"
+    }
+  },
+  "addPropertyForm": {
+    "basicInfo": {
+      "title": "Basic Information",
+      "propertyTitle": "Property Title",
+      "propertyTitlePlaceholder": "e.g. 2 room apartment in Vake",
+      "propertyType": "Property Type",
+      "dealType": "Deal Type",
+      "dealTypes": {
+        "sale": "For Sale",
+        "rent": "For Rent", 
+        "daily": "Daily Rental"
+      },
+      "propertyTypes": {
+        "apartment": "Apartment",
+        "house": "Private House",
+        "cottage": "Cottage",
+        "commercialSpace": "Commercial Space",
+        "land": "Land",
+        "hotel": "Hotel"
+      },
+      "location": "Location",
+      "city": "City",
+      "selectCityPlaceholder": "Select city",
+      "district": "District", 
+      "districtDesc": "Select district (optional)",
+      "districtPlaceholder": "Select district",
+      "street": "Street Address",
+      "streetPlaceholder": "City, District, Street",
+      "streetNumber": "Street Number",
+      "streetNumberPlaceholder": "Number",
+      "propertyTitleDesc": "Short and informative title",
+      "propertyTypeDesc": "Select property type",
+      "dealTypeDesc": "What kind of deal do you want",
+      "locationDesc": "Exact property address"
+    },
+    "propertyDetails": {
+      "title": "Property Details",
+      "roomCount": "Room Count",
+      "bedroomCount": "Bedroom Count",
+      "bathroomCount": "Bathroom Count",
+      "floor": "Floor",
+      "totalFloors": "Total Floors",
+      "area": "Area (m²)",
+      "livingArea": "Living Area (m²)",
+      "kitchenArea": "Kitchen Area (m²)",
+      "balconyArea": "Balcony Area (m²)",
+      "ceilingHeight": "Ceiling Height (m)",
+      "constructionType": "Construction Type",
+      "constructionTypes": {
+        "newConstruction": "New Construction",
+        "oldConstruction": "Old Construction",
+        "renovated": "Renovated"
+      },
+      "condition": "Condition",
+      "conditions": {
+        "newConstruction": "New Construction",
+        "renovated": "Renovated",
+        "goodCondition": "Good Condition",
+        "needsRenovation": "Needs Renovation"
+      },
+      "yearBuilt": "Year Built",
+      "entrance": "Entrance Number",
+      "parkingSpaces": "Parking Spaces"
+    },
+    "features": {
+      "title": "Features and Amenities",
+      "utilities": "Utilities",
+      "internet": "Internet",
+      "tv": "TV",
+      "telephone": "Telephone", 
+      "naturalGas": "Natural Gas",
+      "hotWater": "Hot Water",
+      "elevator": "Elevator",
+      "balcony": "Balcony",
+      "loggia": "Loggia",
+      "basement": "Basement",
+      "attic": "Attic",
+      "garage": "Garage",
+      "pool": "Pool",
+      "yard": "Yard",
+      "garden": "Garden",
+      "alarm": "Security System",
+      "centralHeating": "Central Heating",
+      "airConditioner": "Air Conditioning",
+      "fireplace": "Fireplace",
+      "sauna": "Sauna",
+      "jacuzzi": "Jacuzzi",
+      "poolTypes": {
+        "indoor": "Indoor",
+        "outdoor": "Outdoor"
+      }
+    },
+    "furniture": {
+      "title": "Furniture and Appliances",
+      "furnished": "Furniture",
+      "appliances": "Appliances",
+      "refrigerator": "Refrigerator",
+      "washingMachine": "Washing Machine",
+      "dishwasher": "Dishwasher",
+      "oven": "Oven",
+      "microwave": "Microwave",
+      "tv_appliance": "Television"
+    },
+    "pricing": {
+      "title": "Pricing and Contact Information",
+      "totalArea": "Total Area (m²)",
+      "price": "Price",
+      "pricePerSqm": "Price per m²",
+      "currency": "Currency",
+      "priceNegotiable": "Price Negotiable",
+      "contactPerson": "Contact Person",
+      "contactPhone": "Contact Phone",
+      "contactEmail": "Contact Email",
+      "description": "Description",
+      "descriptionPlaceholder": "Detailed property description..."
+    },
+    "vipServices": {
+      "title": "VIP Services and Packages",
+      "selectPackage": "Select VIP Package",
+      "packages": {
+        "free": "Free",
+        "vip": "VIP", 
+        "vipPlus": "VIP+",
+        "superVip": "SUPER VIP"
+      },
+      "packageBenefits": {
+        "vip": "Priority in search results, VIP badge",
+        "vipPlus": "All VIP benefits + featured placement",
+        "superVip": "Maximum visibility, top position, highlighted border"
+      },
+      "days": "Days",
+      "selectDays": "Select number of days",
+      "additionalServices": "Additional Services",
+      "autoRenew": "Auto-renewal",
+      "autoRenewDesc": "Automatic daily renewal",
+      "colorSeparation": "Color highlighting",
+      "colorSeparationDesc": "Highlighted with colored border",
+      "totalCost": "Total Cost",
+      "yourBalance": "Your Balance",
+      "purchaseServices": "Purchase Services"
+    },
+    "photos": {
+      "title": "Photos",
+      "uploadPhotos": "Upload Photos",
+      "dragDrop": "Drag and drop photos here or",
+      "selectFiles": "select files",
+      "maxFiles": "Maximum 20 photos",
+      "supportedFormats": "Supported formats: JPG, PNG, WebP",
+      "maxSize": "Maximum size: 10MB",
+      "uploading": "Uploading...",
+      "uploadError": "Error uploading photo",
+      "removePhoto": "Remove photo"
+    },
+    "tags": {
+      "title": "Tags",
+      "availableTags": "Available Tags",
+      "luxury": "Luxury",
+      "new": "New",
+      "codeDoor": "Code Door",
+      "airbnbBooking": "Airbnb/Booking Account",
+      "investment": "Investment",
+      "disabilityFriendly": "Disability Friendly"
+    },
+    "formActions": {
+      "addProperty": "Add Property",
+      "updateProperty": "Update Property", 
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    },
+    "vipAfterCreate": {
+      "title": "Increase Your Property's Visibility",
+      "vipBenefits": "VIP Benefits:",
+      "priorityDisplay": "Priority display in search results",
+      "vipBadge": "VIP badge highlight",
+      "moreViews": "More views and contacts",
+      "additionalServices": "Additional Services:",
+      "autoRenewalDaily": "Auto-renewal - automatic daily renewal",
+      "colorHighlight": "Color highlight - highlighted with colored border",
+      "continueWithFree": "Continue with free status",
+      "selectServices": "Select Services"
+    }
+  },
+  "editProperty": {
+    "title": "Edit Property",
+    "propertyIdMissing": "Property ID is not specified",
+    "loadError": "Error occurred while loading property",
+    "successWithServices": "Property updated and services purchased: {{services}}",
+    "successWithoutServices": "Property successfully updated",
+    "updateError": "Error occurred while updating property",
+    "updating": "Updating...",
+    "updateProperty": "Update Property"
   },
   "addProject": {
     "title": "Add New Project",

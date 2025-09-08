@@ -1,0 +1,41 @@
+{
+  "navigation": {
+    "home": "Home",
+    "aboutUs": "About Us",
+    "properties": "Properties",
+    "agencies": "Agencies",
+    "developers": "Developers",
+    "services": "Services",
+    "priceStatistics": "Price Statistics",
+    "advertising": "Advertising",
+    "contact": "Contact",
+    "projects": "Projects",
+    "addProperty": "Add Property",
+    "addProject": "Add Project"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close",
+    "menu": "Menu",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "add": "Add",
+    "remove": "Remove",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "tryAgain": "Try Again"
+  }
+}

@@ -27,13 +27,13 @@ export const Sidebar = forwardRef<SidebarRef, SidebarProps>(({ user, isMobile = 
   return (
     <div className={isMobile ? "w-full flex flex-col h-full" : "w-64 flex flex-col h-full"}>
       <div className={`bg-white ${isMobile ? '' : 'rounded-lg border'} flex flex-col flex-1`}>
-        {/* პროფილის მონაცემები */}
+        {/* Profile data */}
         <ProfileSection user={user} />
         
-        {/* ბალანსი */}
+        {/* Balance */}
         <BalanceSection ref={balanceSectionRef} />
         
-        {/* მენიუს ელემენტები */}
+        {/* Menu items */}
         <div className="flex-1">
           <SidebarMenu onNavigate={onNavigate} />
         </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface FormActionsProps {
   onSubmit: () => void;
@@ -13,6 +14,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
   isLoading = false,
   isEdit = false,
 }) => {
+  const { t } = useTranslation('userDashboard');
   return (
     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/95 to-background/80 backdrop-blur-md border-t border-border/30 shadow-xl z-50">
       <div className="container mx-auto px-6 py-6">
@@ -30,7 +32,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
             {isLoading ? (
               <div className="flex items-center gap-3">
                 <Loader2 className="h-5 w-5 animate-spin" />
-                <span className="text-lg">იგზავნება...</span>
+                <span className="text-lg">{t('addPropertyForm.formActions.saving')}</span>
               </div>
             ) : (
               <div className="flex items-center gap-3">
@@ -38,7 +40,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
                   <Plus className="h-4 w-4" />
                 </div>
                 <span className="text-lg">
-                  {isEdit ? "განცხადების განახლება" : "განცხადების დამატება"}
+                  {isEdit ? t('addPropertyForm.formActions.updateProperty') : t('addPropertyForm.formActions.addProperty')}
                 </span>
               </div>
             )}

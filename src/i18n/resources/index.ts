@@ -4,21 +4,42 @@ import adminRu from './ru/admin.json';
 import userDashboardEn from './en/userDashboard.json';
 import userDashboardKa from './ka/userDashboard.json';
 import userDashboardRu from './ru/userDashboard.json';
+import commonEn from './en/common.json';
+import commonKa from './ka/common.json';
+import commonRu from './ru/common.json';
+import authEn from './en/auth.json';
+import authKa from './ka/auth.json';
+import authRu from './ru/auth.json';
+import propertyCardEn from './en/propertyCard.json';
+import propertyCardKa from './ka/propertyCard.json';
+import propertyCardRu from './ru/propertyCard.json';
 
 export const resources = {
   en: {
     admin: adminEn,
     userDashboard: userDashboardEn,
+    common: commonEn,
+    auth: authEn,
+    propertyCard: propertyCardEn,
   },
   ka: {
     admin: adminKa,
     userDashboard: userDashboardKa,
+    common: commonKa,
+    auth: authKa,
+    propertyCard: propertyCardKa,
   },
   ru: {
     admin: adminRu,
     userDashboard: userDashboardRu,
+    common: commonRu,
+    auth: authRu,
+    propertyCard: propertyCardRu,
   },
 };
 
 export type AdminTranslations = typeof adminEn;
 export type UserDashboardTranslations = typeof userDashboardEn;
+export type CommonTranslations = typeof commonEn;
+export type AuthTranslations = typeof authEn;
+export type PropertyCardTranslations = typeof propertyCardEn;

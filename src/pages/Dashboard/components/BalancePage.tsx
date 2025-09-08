@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreditCard, Wallet, History, Loader2, ExternalLink, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
 import { balanceApi } from '@/lib/api';
+import { useTranslation } from 'react-i18next';
 
 interface PaymentProvider {
   id: string;
@@ -42,6 +43,7 @@ interface BalanceData {
 }
 
 export const BalancePage = () => {
+  const { t } = useTranslation('userDashboard');
   const [balanceData, setBalanceData] = useState<BalanceData | null>(null);
   const [paymentProviders, setPaymentProviders] = useState<PaymentProvider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState<string>('test');
@@ -96,7 +98,7 @@ export const BalancePage = () => {
     const provider = paymentProviders.find(p => p.id === selectedProvider);
     
     if (!provider) {
-      alert('გთხოვთ აირჩიოთ გადახდის მეთოდი');
+      alert(t('payment.selectPaymentMethod'));
       return;
     }
 
@@ -118,9 +120,9 @@ export const BalancePage = () => {
         // Redirect to Flitt payment page
         if (result.data.checkoutUrl) {
           window.open(result.data.checkoutUrl, '_blank');
-          alert('გადახდის გვერდი გაიხსნა ახალ ტაბში. გადახდის შემდეგ ბალანსი ავტომატურად განახლდება.');
+          alert(t('payment.paymentPageOpened'));
         } else {
-          alert('გადახდის ლინკის შექმნა ვერ მოხერხდა');
+          alert(t('payment.paymentLinkError'));
         }
       } else if (result.provider === 'bog') {
         // Redirect to BOG payment page
@@ -129,8 +131,8 @@ export const BalancePage = () => {
           setPaymentStatusDialog({
             show: true,
             type: 'processing',
-            title: 'გადამისამართება BOG-ზე',
-            message: 'თქვენ გადამისამართდებით BOG-ის გადახდის გვერდზე. გადახდის შემდეგ ავტომატურად დაბრუნდებით ბალანსის გვერდზე.',
+            title: t('payment.redirectToBOG'),
+            message: t('payment.redirectMessage'),
             amount: amount
           });
           
@@ -139,7 +141,7 @@ export const BalancePage = () => {
             window.location.href = result.data.checkoutUrl;
           }, 2000);
         } else {
-          alert('BOG გადახდის ლინკის შექმნა ვერ მოხერხდა');
+          alert(t('payment.paymentLinkError'));
         }
       }
     } catch (error: any) {
@@ -227,8 +229,8 @@ export const BalancePage = () => {
       setPaymentStatusDialog({
         show: true,
         type: 'processing',
-        title: 'გადახდა დაიწყო',
-        message: 'თქვენი გადახდა წარმატებით შესრულდა BOG-ის მხრიდან. ბალანსი ახლა ვერიფიცირდება და ავტომატურად განახლდება...'
+        title: t('payment.paymentStarted'),
+        message: t('payment.paymentVerifying')
       });
       
       // Start polling for balance updates
@@ -248,7 +250,7 @@ export const BalancePage = () => {
             setPaymentStatusDialog({
               show: true,
               type: 'success',
-              title: 'ბალანსი წარმატებით შევსდა!',
+              title: t('payment.balanceSuccessfullyToppedUp'),
               message: `თქვენი ბალანსი შევსდა ${increase.toFixed(2)}₾-ით. ახალი ბალანსი: ${data.balance.toFixed(2)}₾`,
               amount: increase,
               newBalance: data.balance
@@ -266,8 +268,8 @@ export const BalancePage = () => {
             setPaymentStatusDialog({
               show: true,
               type: 'success',
-              title: 'გადახდა განხორციელდა',
-              message: 'თქვენი გადახდა წარმატებით დასრულდა. თუ ბალანსი ჯერ არ განახლდა, გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე.',
+              title: t('payment.paymentCompleted'),
+              message: t('payment.paymentCompletedMessage'),
             });
             window.history.replaceState({}, '', window.location.pathname);
           }
@@ -279,8 +281,8 @@ export const BalancePage = () => {
             setPaymentStatusDialog({
               show: true,
               type: 'success',
-              title: 'გადახდა განხორციელდა',
-              message: 'თქვენი გადახდა განხორციელდა. გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე ბალანსის შესამოწმებლად.',
+              title: t('payment.paymentCompleted'),
+              message: t('payment.paymentCompletedCheckBalance'),
             });
             window.history.replaceState({}, '', window.location.pathname);
           }
@@ -295,8 +297,8 @@ export const BalancePage = () => {
       setPaymentStatusDialog({
         show: true,
         type: 'failed',
-        title: 'გადახდა ვერ განხორციელდა',
-        message: 'თქვენი გადახდა ვერ შესრულდა. გთხოვთ სცადოთ ხელახლა ან გამოიყენოთ სხვა გადახდის მეთოდი.'
+        title: t('payment.paymentFailed'),
+        message: t('payment.paymentFailedMessage')
       });
       window.history.replaceState({}, '', window.location.pathname);
     }

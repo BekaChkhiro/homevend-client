@@ -1,0 +1,11 @@
+{
+  "propertyCard": {
+    "locationNotSpecified": "მდებარეობა არ არის მითითებული",
+    "titleNotSpecified": "სათაური არ არის მითითებული",
+    "agent": "აგენტი:",
+    "sqMeter": "მ²",
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "superVip": "SUPER VIP"
+  }
+}

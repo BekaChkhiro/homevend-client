@@ -7,8 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, FormItem, FormControl } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { Home, Thermometer, Car, Droplets, Building, Waves, Sofa, TreePine, Warehouse, Sailboat, Tally4, Landmark } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const PropertyDetailsSection = () => {
+  const { t } = useTranslation('userDashboard');
   const form = useFormContext();
 
   // Watch form values for conditional rendering
@@ -26,12 +28,12 @@ export const PropertyDetailsSection = () => {
     <div className="space-y-4 sm:space-y-6 md:space-y-8">
       <div className="flex items-center space-x-2 border-b pb-2 sm:pb-3 mb-2">
         <Home className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />
-        <h3 className="text-lg sm:text-xl font-semibold">განცხადების დეტალები</h3>
+        <h3 className="text-lg sm:text-xl font-semibold">{t('addPropertyForm.propertyDetails.title')}</h3>
       </div>
 
       {/* Rooms */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">ოთახები</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.roomCount')}</Label>
         <FormField
           control={form.control}
           name="rooms"
@@ -69,7 +71,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Bedrooms */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">საძინებელი</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.bedroomCount')}</Label>
         <FormField
           control={form.control}
           name="bedrooms"
@@ -109,7 +111,7 @@ export const PropertyDetailsSection = () => {
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Droplets className="h-4 w-4 text-muted-foreground" />
-          <span>სველი წერტილი</span>
+          <span>{t('addPropertyForm.propertyDetails.bathroomCount')}</span>
         </Label>
         <FormField
           control={form.control}
@@ -153,7 +155,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Total Floors */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">სართულები სულ</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.totalFloors')}</Label>
         <FormField
           control={form.control}
           name="totalFloors"

@@ -4,18 +4,20 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const NotificationSettings: React.FC = () => {
+  const { t } = useTranslation('userDashboard');
   return (
     <Card className="p-6">
       <div className="flex items-center gap-2 mb-4">
         <Bell className="h-5 w-5" />
-        <h3 className="text-lg font-medium">შეტყობინებების პარამეტრები</h3>
+        <h3 className="text-lg font-medium">{t('profileSections.notificationSettings.title')}</h3>
       </div>
       
       <div className="space-y-6">
         <div>
-          <h4 className="font-medium mb-3">ელფოსტის შეტყობინებები</h4>
+          <h4 className="font-medium mb-3">{t('profileSections.notificationSettings.emailNotifications')}</h4>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
@@ -78,8 +80,8 @@ export const NotificationSettings: React.FC = () => {
         </div>
         
         <div className="flex gap-3">
-          <Button>შენახვა</Button>
-          <Button variant="outline">განულება</Button>
+          <Button>{t('common.save')}</Button>
+          <Button variant="outline">{t('common.cancel')}</Button>
         </div>
       </div>
     </Card>

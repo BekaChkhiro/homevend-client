@@ -5,8 +5,10 @@ import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/f
 import { useFormContext } from "react-hook-form";
 import { Calculator, DollarSign, Square, TrendingUp } from "lucide-react";
 import type { PropertyFormData } from "../types/propertyForm";
+import { useTranslation } from "react-i18next";
 
 export const PriceAreaSection = () => {
+  const { t } = useTranslation('userDashboard');
   const form = useFormContext<PropertyFormData>();
   const area = form.watch("area");
   const totalPrice = form.watch("totalPrice");
@@ -30,7 +32,7 @@ export const PriceAreaSection = () => {
           <DollarSign className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />
         </div>
         <div>
-          <h3 className="text-lg sm:text-xl font-semibold text-foreground">ფასი და ფართი</h3>
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground">{t('addPropertyForm.pricing.title')}</h3>
           <p className="text-xs sm:text-sm text-muted-foreground">მიუთითეთ ქონების ფასი და ფართი</p>
         </div>
       </div>

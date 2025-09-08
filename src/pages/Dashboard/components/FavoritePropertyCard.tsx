@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart, Eye, Phone, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface FavoritePropertyCardProps {
   id: number;
@@ -41,6 +43,7 @@ export const FavoritePropertyCard = ({
 }: FavoritePropertyCardProps) => {
 
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation('userDashboard');
 
   const handleRemoveFromFavorites = () => {
     if (onRemoveFromFavorites) {
@@ -54,7 +57,7 @@ export const FavoritePropertyCard = ({
   };
 
   const handleViewProperty = () => {
-    navigate(`/property/${id}`);
+    navigate(getLanguageUrl(`property/${id}`, i18n.language));
   };
 
   return (
@@ -72,7 +75,7 @@ export const FavoritePropertyCard = ({
             {featured && (
               <div className="absolute -top-1 -right-1">
                 <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs px-1 py-0.5">
-                  რჩეული
+                  {t('favorites.propertyTypes.featured') || 'რჩეული'}
                 </Badge>
               </div>
             )}
@@ -106,7 +109,7 @@ export const FavoritePropertyCard = ({
             </div>
             <div className="flex items-center">
               <Square className="h-3 w-3 mr-1" />
-              <span>{area}მ²</span>
+              <span>{area}{t('common.squareMeters') || 'მ²'}</span>
             </div>
           </div>
           <div className="flex gap-1 flex-wrap">
@@ -128,7 +131,7 @@ export const FavoritePropertyCard = ({
             className="h-6 px-2 text-xs flex-1"
           >
             <Eye className="h-3 w-3 mr-1" />
-            ნახვა
+            {t('common.view')}
           </Button>
           
           <Button 
@@ -138,7 +141,7 @@ export const FavoritePropertyCard = ({
             className="h-6 px-2 text-xs flex-1"
           >
             <Phone className="h-3 w-3 mr-1" />
-            დარეკვა
+            {t('propertyCard.contact') || 'დარეკვა'}
           </Button>
 
           <Button 
@@ -148,7 +151,7 @@ export const FavoritePropertyCard = ({
             onClick={handleRemoveFromFavorites}
           >
             <Heart className="h-3 w-3 mr-1 fill-current" />
-            ამოშლა
+            {t('common.remove')}
           </Button>
         </div>
       </CardContent>

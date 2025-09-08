@@ -6,34 +6,37 @@ import { PasswordChange } from "./profile/PasswordChange";
 import { NotificationSettings } from "./profile/NotificationSettings";
 import { PrivacySettings } from "./profile/PrivacySettings";
 import { User as UserType } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface ProfileContentProps {
   user: UserType;
 }
 
 export const ProfileContent: React.FC<ProfileContentProps> = ({ user }) => {
+  const { t } = useTranslation('userDashboard');
+  
   return (
     <div className="w-full">
       <div className="p-6">
-        <h2 className="text-2xl font-bold mb-6">პროფილის პარამეტრები</h2>
+        <h2 className="text-2xl font-bold mb-6">{t('profileSettings.title')}</h2>
         
         <Tabs defaultValue="personal" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="personal" className="flex items-center gap-2">
               <User className="h-4 w-4" />
-              პირადი
+              {t('profileSettings.tabs.personal')}
             </TabsTrigger>
             <TabsTrigger value="password" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
-              პაროლი
+              {t('profileSettings.tabs.password')}
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
-              შეტყობინებები
+              {t('profileSettings.tabs.notifications')}
             </TabsTrigger>
             <TabsTrigger value="privacy" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              კონფიდენციალურობა
+              {t('profileSettings.tabs.privacy')}
             </TabsTrigger>
           </TabsList>
           

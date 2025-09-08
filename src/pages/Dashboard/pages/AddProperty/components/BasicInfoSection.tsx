@@ -9,6 +9,7 @@ import { Home, Building2, Tent, Hotel, Briefcase, CreditCard, MapPin, BookOpen }
 import type { PropertyFormData } from "../types/propertyForm";
 import { citiesApi, areasApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface City {
   id: number;
@@ -38,6 +39,7 @@ interface Project {
 }
 
 export const BasicInfoSection = () => {
+  const { t, i18n } = useTranslation('userDashboard');
   const form = useFormContext<PropertyFormData>();
   const { user } = useAuth();
   const watchedDealType = form.watch("dealType");
@@ -172,8 +174,8 @@ export const BasicInfoSection = () => {
           <BookOpen className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />
         </div>
         <div>
-          <h3 className="text-lg sm:text-xl font-semibold text-foreground">ძირითადი ინფორმაცია</h3>
-          <p className="text-xs sm:text-sm text-muted-foreground">შეავსეთ ქონების ძირითადი მონაცემები</p>
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground">{t('addPropertyForm.basicInfo.title')}</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">{t('addPropertyForm.basicInfo.subtitle')}</p>
         </div>
       </div>
       
@@ -184,10 +186,10 @@ export const BasicInfoSection = () => {
             <div className="flex items-center justify-center w-6 sm:w-8 h-6 sm:h-8 bg-primary/10 rounded-lg">
               <BookOpen className="h-3 sm:h-4 w-3 sm:w-4 text-primary" />
             </div>
-            <span>განცხადების სათაური</span>
+            <span>{t('addPropertyForm.basicInfo.propertyTitle')}</span>
             <span className="text-destructive">*</span>
           </Label>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1 ml-0 sm:ml-11">შეიყვანეთ მიმზიდველი სათაური თქვენი ქონებისთვის</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 ml-0 sm:ml-11">{t('addPropertyForm.basicInfo.propertyTitleDesc')}</p>
         </div>
         <div>
           <FormField
@@ -198,7 +200,7 @@ export const BasicInfoSection = () => {
                 <FormControl>
                   <Input 
                     id="title" 
-                    placeholder="მაგ: 2 საძინებლიანი ბინა ვაკეში" 
+                    placeholder={t('addPropertyForm.basicInfo.propertyTitlePlaceholder')} 
                     className="h-11 sm:h-12 text-sm sm:text-base border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                     {...field}
                   />
@@ -209,7 +211,7 @@ export const BasicInfoSection = () => {
           />
           <div className="mt-3 p-3 bg-muted/50 rounded-lg">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              💡 კარგი სათაური უნდა იყოს ინფორმაციული და მიმზიდველი
+              💡 {t('addPropertyForm.basicInfo.propertyTitleTip')}
             </p>
           </div>
         </div>
@@ -222,10 +224,10 @@ export const BasicInfoSection = () => {
             <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
               <Building2 className="h-4 w-4 text-primary" />
             </div>
-            <span>უძრავი ქონების ტიპი</span>
+            <span>{t('addPropertyForm.basicInfo.propertyType')}</span>
             <span className="text-destructive">*</span>
           </Label>
-          <p className="text-sm text-muted-foreground mt-1 ml-11">აირჩიეთ ქონების ტიპი</p>
+          <p className="text-sm text-muted-foreground mt-1 ml-11">{t('addPropertyForm.basicInfo.propertyTypeDesc')}</p>
         </div>
         <FormField
           control={form.control}
@@ -239,13 +241,13 @@ export const BasicInfoSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4"
                 >
                   {[
-                    { value: "apartment", label: "ბინები", mobileLabel: "ბინები", icon: <Building2 className="h-5 w-5" />, desc: "მრავალსართულიანი" },
-                    { value: "house", label: "კერძო სახლები", mobileLabel: "სახლები", icon: <Home className="h-5 w-5" />, desc: "ცალკე მდგომი" },
-                    { value: "cottage", label: "აგრაკები", mobileLabel: "აგრაკები", icon: <Tent className="h-5 w-5" />, desc: "დასასვენებელი" },
-                    { value: "land", label: "მიწის ნაკვეთები", mobileLabel: "მიწები", icon: <MapPin className="h-5 w-5" />, desc: "სამშენებლო" },
-                    { value: "commercial", label: "კომერციული", mobileLabel: "კომერცია", icon: <Briefcase className="h-5 w-5" />, desc: "მაღაზია, საწყობი" },
+                    { value: "apartment", label: t('addPropertyForm.basicInfo.propertyTypes.apartment'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypes.apartment'), icon: <Building2 className="h-5 w-5" />, desc: "მრავალსართულიანი" },
+                    { value: "house", label: t('addPropertyForm.basicInfo.propertyTypes.house'), mobileLabel: "სახლები", icon: <Home className="h-5 w-5" />, desc: "ცალკე მდგომი" },
+                    { value: "cottage", label: t('addPropertyForm.basicInfo.propertyTypes.cottage'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypes.cottage'), icon: <Tent className="h-5 w-5" />, desc: "დასასვენებელი" },
+                    { value: "land", label: t('addPropertyForm.basicInfo.propertyTypes.land'), mobileLabel: "მიწები", icon: <MapPin className="h-5 w-5" />, desc: "სამშენებლო" },
+                    { value: "commercial", label: t('addPropertyForm.basicInfo.propertyTypes.commercialSpace'), mobileLabel: "კომერცია", icon: <Briefcase className="h-5 w-5" />, desc: "მაღაზია, საწყობი" },
                     { value: "office", label: "საოფისე", mobileLabel: "ოფისები", icon: <Briefcase className="h-5 w-5" />, desc: "ოფისის ფართი" },
-                    { value: "hotel", label: "სასტუმროები", mobileLabel: "ჰოტელები", icon: <Hotel className="h-5 w-5" />, desc: "სასტუმრო" }
+                    { value: "hotel", label: t('addPropertyForm.basicInfo.propertyTypes.hotel'), mobileLabel: "ჰოტელები", icon: <Hotel className="h-5 w-5" />, desc: "სასტუმრო" }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -285,10 +287,10 @@ export const BasicInfoSection = () => {
             <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
               <CreditCard className="h-4 w-4 text-primary" />
             </div>
-            <span>გარიგების ტიპი</span>
+            <span>{t('addPropertyForm.basicInfo.dealType')}</span>
             <span className="text-destructive">*</span>
           </Label>
-          <p className="text-sm text-muted-foreground mt-1 ml-11">როგორი გარიგება გსურთ</p>
+          <p className="text-sm text-muted-foreground mt-1 ml-11">{t('addPropertyForm.basicInfo.dealTypeDesc')}</p>
         </div>
         <FormField
           control={form.control}
@@ -302,11 +304,11 @@ export const BasicInfoSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                 >
                   {[
-                    { value: "sale", label: "იყიდება", desc: "სრული გაყიდვა" },
-                    { value: "rent", label: "ქირავდება", desc: "გრძელვადიანი ქირა" },
+                    { value: "sale", label: t('addPropertyForm.basicInfo.dealTypes.sale'), desc: "სრული გაყიდვა" },
+                    { value: "rent", label: t('addPropertyForm.basicInfo.dealTypes.rent'), desc: "გრძელვადიანი ქირა" },
                     { value: "mortgage", label: "გირავდება", desc: "გირავით გადაცემა" },
                     { value: "lease", label: "გაიცემა იჯარით", desc: "კომერციული იჯარა" },
-                    { value: "daily", label: "ქირავდება დღიურად", desc: "მოკლევადიანი ქირა" },
+                    { value: "daily", label: t('addPropertyForm.basicInfo.dealTypes.daily'), desc: "მოკლევადიანი ქირა" },
                     { value: "redemption", label: "ნასყიდობა გამოსყიდობის უფლებით", desc: "გამოსყიდობის უფლებით" }
                   ].map((option) => (
                     <label
@@ -431,16 +433,16 @@ export const BasicInfoSection = () => {
             <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
               <MapPin className="h-4 w-4 text-primary" />
             </div>
-            <span>მდებარეობა</span>
+            <span>{t('addPropertyForm.basicInfo.location')}</span>
             <span className="text-destructive">*</span>
           </Label>
-          <p className="text-sm text-muted-foreground mt-1 ml-11">ქონების ზუსტი მისამართი</p>
+          <p className="text-sm text-muted-foreground mt-1 ml-11">{t('addPropertyForm.basicInfo.locationDesc')}</p>
         </div>
         
         <div className="space-y-6">
           {/* City */}
           <div>
-            <Label htmlFor="city" className="text-sm font-medium text-foreground mb-3 block">აირჩიე ქალაქი</Label>
+            <Label htmlFor="city" className="text-sm font-medium text-foreground mb-3 block">{t('addPropertyForm.basicInfo.city')}</Label>
             <FormField
               control={form.control}
               name="city"
@@ -449,15 +451,17 @@ export const BasicInfoSection = () => {
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger id="city" className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors">
-                        <SelectValue placeholder={citiesLoading ? "იტვირთება..." : "აირჩიეთ ქალაქი"} />
+                        <SelectValue placeholder={citiesLoading ? t('common.loading') : t('addPropertyForm.basicInfo.selectCityPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent className="max-h-[300px]">
                         {citiesLoading ? (
-                          <SelectItem value="loading" disabled>იტვირთება...</SelectItem>
+                          <SelectItem value="loading" disabled>{t('common.loading')}</SelectItem>
                         ) : (
                           cities.map((city) => (
                             <SelectItem key={city.code} value={city.code}>
-                              {city.nameGeorgian}
+                              {i18n.language === 'en' && city.nameEnglish ? city.nameEnglish : 
+                               i18n.language === 'ru' && city.nameRussian ? city.nameRussian : 
+                               city.nameGeorgian}
                             </SelectItem>
                           ))
                         )}
@@ -479,9 +483,9 @@ export const BasicInfoSection = () => {
                 </div>
                 <div>
                   <Label htmlFor="district" className="text-base font-semibold text-foreground">
-                    უბანი / რაიონი
+                    {t('addPropertyForm.basicInfo.district')}
                   </Label>
-                  <p className="text-sm text-muted-foreground">აირჩიეთ უბანი (არასავალდებულო)</p>
+                  <p className="text-sm text-muted-foreground">{t('addPropertyForm.basicInfo.districtDesc')}</p>
                 </div>
               </div>
               <FormField
@@ -495,15 +499,17 @@ export const BasicInfoSection = () => {
                         value={field.value || ""}
                       >
                         <SelectTrigger id="district" className="h-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors">
-                          <SelectValue placeholder={areasLoading ? "იტვირთება..." : "აირჩიეთ უბანი"} />
+                          <SelectValue placeholder={areasLoading ? t('common.loading') : t('addPropertyForm.basicInfo.districtPlaceholder')} />
                         </SelectTrigger>
                         <SelectContent className="max-h-[300px]">
                           {areasLoading ? (
-                            <SelectItem value="loading" disabled>იტვირთება...</SelectItem>
+                            <SelectItem value="loading" disabled>{t('common.loading')}</SelectItem>
                           ) : (
                             areas.map((area) => (
                               <SelectItem key={area.id} value={area.id.toString()}>
-                                {area.nameKa}
+                                {i18n.language === 'en' && area.nameEn ? area.nameEn : 
+                                 i18n.language === 'ru' && area.nameRu ? area.nameRu : 
+                                 area.nameKa}
                               </SelectItem>
                             ))
                           )}
@@ -520,7 +526,7 @@ export const BasicInfoSection = () => {
           {/* Street and Number - Grid Layout */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <Label htmlFor="street" className="text-sm font-medium text-foreground mb-3 block">ჩაწერეთ ქუჩა</Label>
+              <Label htmlFor="street" className="text-sm font-medium text-foreground mb-3 block">{t('addPropertyForm.basicInfo.street')}</Label>
               <FormField
                 control={form.control}
                 name="street"
@@ -529,7 +535,7 @@ export const BasicInfoSection = () => {
                     <FormControl>
                       <Input 
                         id="street" 
-                        placeholder="ქუჩის დასახელება" 
+                        placeholder={t('addPropertyForm.basicInfo.streetPlaceholder')} 
                         className="h-11 sm:h-12 text-sm sm:text-base border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                         {...field}
                       />
@@ -541,7 +547,7 @@ export const BasicInfoSection = () => {
             </div>
             
             <div>
-              <Label htmlFor="street-number" className="text-sm font-medium text-foreground mb-3 block">ჩაწერეთ ქუჩის ნომერი</Label>
+              <Label htmlFor="street-number" className="text-sm font-medium text-foreground mb-3 block">{t('addPropertyForm.basicInfo.streetNumber')}</Label>
               <FormField
                 control={form.control}
                 name="streetNumber"
@@ -550,7 +556,7 @@ export const BasicInfoSection = () => {
                     <FormControl>
                       <Input 
                         id="street-number" 
-                        placeholder="ნომერი" 
+                        placeholder={t('addPropertyForm.basicInfo.streetNumberPlaceholder')} 
                         className="h-11 sm:h-12 text-sm sm:text-base border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                         {...field}
                       />
