@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CreditCard, Wallet, History, Loader2, ExternalLink, RefreshCw } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CreditCard, Wallet, History, Loader2, ExternalLink, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
 import { balanceApi } from '@/lib/api';
 
 interface PaymentProvider {
@@ -48,15 +49,31 @@ export const BalancePage = () => {
   const [providersLoading, setProvidersLoading] = useState(true);
   const [topUpAmount, setTopUpAmount] = useState('');
   const [topUpLoading, setTopUpLoading] = useState(false);
+  const [paymentStatusDialog, setPaymentStatusDialog] = useState<{
+    show: boolean;
+    type: 'success' | 'failed' | 'processing';
+    title: string;
+    message: string;
+    amount?: number;
+    newBalance?: number;
+  }>({
+    show: false,
+    type: 'success',
+    title: '',
+    message: ''
+  });
+  const [balanceRefreshing, setBalanceRefreshing] = useState(false);
 
-  const fetchBalance = async () => {
+  const fetchBalance = async (showRefreshing = false) => {
     try {
+      if (showRefreshing) setBalanceRefreshing(true);
       const data = await balanceApi.getBalance();
       setBalanceData(data);
     } catch (error) {
       console.error('Error fetching balance:', error);
     } finally {
       setLoading(false);
+      if (showRefreshing) setBalanceRefreshing(false);
     }
   };
 
@@ -108,10 +125,19 @@ export const BalancePage = () => {
       } else if (result.provider === 'bog') {
         // Redirect to BOG payment page
         if (result.data.checkoutUrl) {
-          // Show info message before redirect
-          alert('თქვენ გადამისამართდებით BOG-ის გადახდის გვერდზე. გადახდის შემდეგ ბალანსი ავტომატურად განახლდება.');
-          window.location.href = result.data.checkoutUrl; // Direct redirect for BOG
-          // Note: User will be redirected to BOG payment page and return after payment
+          // Show processing dialog
+          setPaymentStatusDialog({
+            show: true,
+            type: 'processing',
+            title: 'გადამისამართება BOG-ზე',
+            message: 'თქვენ გადამისამართდებით BOG-ის გადახდის გვერდზე. გადახდის შემდეგ ავტომატურად დაბრუნდებით ბალანსის გვერდზე.',
+            amount: amount
+          });
+          
+          // Redirect after a short delay to let user see the message
+          setTimeout(() => {
+            window.location.href = result.data.checkoutUrl;
+          }, 2000);
         } else {
           alert('BOG გადახდის ლინკის შექმნა ვერ მოხერხდა');
         }
@@ -191,16 +217,90 @@ export const BalancePage = () => {
     return () => clearInterval(balanceRefreshInterval);
   }, []);
 
-  // Check URL for payment success and refresh balance
+  // Check URL for payment success/failure and refresh balance
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('payment') === 'success') {
-      setTimeout(() => {
-        fetchBalance();
-        window.history.replaceState({}, '', window.location.pathname);
-      }, 1000);
+    const paymentStatus = urlParams.get('payment');
+    
+    if (paymentStatus === 'success') {
+      // Show success dialog and refresh balance
+      setPaymentStatusDialog({
+        show: true,
+        type: 'processing',
+        title: 'გადახდა დაიწყო',
+        message: 'თქვენი გადახდა წარმატებით შესრულდა BOG-ის მხრიდან. ბალანსი ახლა ვერიფიცირდება და ავტომატურად განახლდება...'
+      });
+      
+      // Start polling for balance updates
+      let pollCount = 0;
+      const maxPolls = 12; // Poll for 1 minute (5 seconds * 12)
+      const originalBalance = balanceData?.balance || 0;
+      
+      const pollBalance = async () => {
+        pollCount++;
+        try {
+          const data = await balanceApi.getBalance();
+          
+          // Check if balance has been updated
+          if (data.balance > originalBalance) {
+            const increase = data.balance - originalBalance;
+            setBalanceData(data);
+            setPaymentStatusDialog({
+              show: true,
+              type: 'success',
+              title: 'ბალანსი წარმატებით შევსდა!',
+              message: `თქვენი ბალანსი შევსდა ${increase.toFixed(2)}₾-ით. ახალი ბალანსი: ${data.balance.toFixed(2)}₾`,
+              amount: increase,
+              newBalance: data.balance
+            });
+            window.history.replaceState({}, '', window.location.pathname);
+            return;
+          }
+          
+          // Continue polling if balance hasn't updated yet and we haven't exceeded max polls
+          if (pollCount < maxPolls) {
+            setTimeout(pollBalance, 5000);
+          } else {
+            // Timeout reached, show manual refresh option
+            setBalanceData(data);
+            setPaymentStatusDialog({
+              show: true,
+              type: 'success',
+              title: 'გადახდა განხორციელდა',
+              message: 'თქვენი გადახდა წარმატებით დასრულდა. თუ ბალანსი ჯერ არ განახლდა, გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე.',
+            });
+            window.history.replaceState({}, '', window.location.pathname);
+          }
+        } catch (error) {
+          console.error('Error polling balance:', error);
+          if (pollCount < maxPolls) {
+            setTimeout(pollBalance, 5000);
+          } else {
+            setPaymentStatusDialog({
+              show: true,
+              type: 'success',
+              title: 'გადახდა განხორციელდა',
+              message: 'თქვენი გადახდა განხორციელდა. გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე ბალანსის შესამოწმებლად.',
+            });
+            window.history.replaceState({}, '', window.location.pathname);
+          }
+        }
+      };
+      
+      // Start polling after a short delay
+      setTimeout(pollBalance, 2000);
+      
+    } else if (paymentStatus === 'failed') {
+      // Show failure dialog
+      setPaymentStatusDialog({
+        show: true,
+        type: 'failed',
+        title: 'გადახდა ვერ განხორციელდა',
+        message: 'თქვენი გადახდა ვერ შესრულდა. გთხოვთ სცადოთ ხელახლა ან გამოიყენოთ სხვა გადახდის მეთოდი.'
+      });
+      window.history.replaceState({}, '', window.location.pathname);
     }
-  }, []);
+  }, [balanceData?.balance]);
 
   if (loading || providersLoading) {
     return (
@@ -224,11 +324,11 @@ export const BalancePage = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={fetchBalance}
-                  disabled={loading}
+                  onClick={() => fetchBalance(true)}
+                  disabled={balanceRefreshing}
                   className="p-1 h-8 w-8"
                 >
-                  <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`h-4 w-4 ${balanceRefreshing ? 'animate-spin' : ''}`} />
                 </Button>
                 <Wallet className="h-5 w-5 text-gray-400" />
               </div>
@@ -373,6 +473,42 @@ export const BalancePage = () => {
           )}
         </Card>
       </div>
+
+      {/* Payment Status Dialog */}
+      <Dialog open={paymentStatusDialog.show} onOpenChange={(open) => setPaymentStatusDialog({ ...paymentStatusDialog, show: open })}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              {paymentStatusDialog.type === 'success' && <CheckCircle className="h-8 w-8 text-green-500" />}
+              {paymentStatusDialog.type === 'failed' && <AlertCircle className="h-8 w-8 text-red-500" />}
+              {paymentStatusDialog.type === 'processing' && <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />}
+              <div>
+                <DialogTitle className="text-xl">{paymentStatusDialog.title}</DialogTitle>
+              </div>
+            </div>
+          </DialogHeader>
+          <DialogDescription className="text-base leading-relaxed">
+            {paymentStatusDialog.message}
+          </DialogDescription>
+          {paymentStatusDialog.type !== 'processing' && (
+            <div className="flex justify-end gap-2 mt-4">
+              {paymentStatusDialog.type === 'success' && paymentStatusDialog.newBalance && (
+                <Button
+                  variant="outline"
+                  onClick={() => fetchBalance(true)}
+                  disabled={balanceRefreshing}
+                >
+                  {balanceRefreshing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+                  ბალანსის განახლება
+                </Button>
+              )}
+              <Button onClick={() => setPaymentStatusDialog({ ...paymentStatusDialog, show: false })}>
+                {paymentStatusDialog.type === 'failed' ? 'ხელახლა ცდა' : 'კარგი'}
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
