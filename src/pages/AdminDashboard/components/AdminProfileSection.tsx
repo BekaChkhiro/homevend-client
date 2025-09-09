@@ -8,7 +8,7 @@ interface AdminProfileSectionProps {
 }
 
 export const AdminProfileSection: React.FC<AdminProfileSectionProps> = ({ user }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('admin');
 
   return (
     <div className="p-4 border-b">

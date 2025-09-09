@@ -1,0 +1,24 @@
+{
+  "agencies": {
+    "title": "სააგენტოები",
+    "subtitle": "იპოვნეთ საუკეთესო უძრავი ქონების სააგენტოები საქართველოში",
+    "searchPlaceholder": "ძიება სააგენტოს სახელით...",
+    "searchButton": "ძიება",
+    "loading": "იტვირთება...",
+    "showing": "ნაჩვენებია {{count}} სააგენტოს {{total}}-დან",
+    "noAgenciesFound": "სააგენტო არ მოიძებნა",
+    "noAgenciesDescription": "სცადეთ სხვა საძიებო პარამეტრები",
+    "owner": "მოღვაწე: {{name}}",
+    "agents": "აგენტი",
+    "properties": "უძრავი ქონება",
+    "sales": "გაყიდვა",
+    "detailsButton": "დეტალები",
+    "founded": "დაარსდა: {{date}}",
+    "website": "ვებსაიტი",
+    "socialMedia": "სოციალური მედია",
+    "pagination": {
+      "previous": "წინა",
+      "next": "შემდეგი"
+    }
+  }
+}

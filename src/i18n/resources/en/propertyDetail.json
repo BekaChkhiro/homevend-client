@@ -1,0 +1,191 @@
+{
+  "errors": {
+    "title": "Error",
+    "propertyIdRequired": "Property ID is required",
+    "propertyNotFound": "Property not found or failed to load",
+    "loadingFailed": "Error loading property"
+  },
+  "propertyNotFound": "Property not found",
+  "noDescription": "No description provided",
+  "perSquareMeter": "/m²",
+  "bedrooms": "bedrooms",
+  "bathrooms": "bathrooms", 
+  "squareMeters": "m²",
+  "meters": "m",
+  "yes": "Yes",
+  "count": "pcs",
+  "email": "Email",
+  "similarProperties": "Similar Properties",
+  "contact": {
+    "contact": "Contact",
+    "contactAgent": "Contact Agent",
+    "contactDeveloper": "Contact Developer"
+  },
+  "userRoles": {
+    "agent": "Agent",
+    "developer": "Developer", 
+    "user": "User"
+  },
+  "linkedProject": "Linked Project",
+  "sections": {
+    "mainInformation": "Main Information",
+    "propertyStructure": "Property Structure", 
+    "buildingInformation": "Building Information",
+    "infrastructure": "Infrastructure",
+    "additionalSpaces": "Additional Spaces",
+    "features": "Features",
+    "advantages": "Advantages",
+    "furnitureAppliances": "Furniture & Appliances",
+    "tags": "Tags",
+    "description": "Description"
+  },
+  "fields": {
+    "listingTitle": "Listing Title *",
+    "propertyType": "Property Type *",
+    "dealType": "Deal Type *",
+    "location": "Location *",
+    "cadastralCode": "Cadastral Code",
+    "rooms": "Rooms",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Wet Rooms",
+    "totalFloors": "Total Floors",
+    "propertyFloor": "Property Floor",
+    "usableArea": "Usable Area",
+    "status": "Status",
+    "constructionYear": "Construction Year",
+    "condition": "Condition",
+    "projectType": "Project Type",
+    "ceilingHeight": "Ceiling Height",
+    "buildingMaterial": "Building Material",
+    "heating": "Heating",
+    "parking": "Parking",
+    "hotWater": "Hot Water",
+    "balcony": "Balcony",
+    "pool": "Pool",
+    "livingRoom": "Living Room",
+    "loggia": "Loggia",
+    "veranda": "Veranda",
+    "hasYard": "Has Yard",
+    "storage": "Storage"
+  },
+  "buildingStatus": {
+    "old_built": "Old Built",
+    "new_built": "New Built",
+    "under_construction": "Under Construction"
+  },
+  "constructionYear": {
+    "before_1955": "Before 1955",
+    "1955_2000": "1955-2000",
+    "after_2000": "After 2000"
+  },
+  "condition": {
+    "excellent": "Excellent",
+    "very_good": "Very Good",
+    "good": "Good",
+    "needs_renovation": "Needs Renovation",
+    "under_renovation": "Under Renovation",
+    "newly_renovated": "Newly Renovated",
+    "old_renovated": "Old Renovated", 
+    "ongoing_renovation": "Ongoing Renovation",
+    "black_frame": "Black Frame",
+    "white_frame": "White Frame",
+    "green_frame": "Green Frame"
+  },
+  "projectType": {
+    "standard": "Standard",
+    "non_standard": "Non-Standard",
+    "elite": "Elite"
+  },
+  "buildingMaterial": {
+    "brick": "Brick",
+    "block": "Block", 
+    "panel": "Panel",
+    "monolith": "Monolith"
+  },
+  "propertyType": {
+    "apartment": "Apartment",
+    "house": "House",
+    "cottage": "Cottage",
+    "land": "Land"
+  },
+  "dealType": {
+    "sale": "For Sale",
+    "rent": "For Rent",
+    "daily": "Daily Rental"
+  },
+  "parking": {
+    "garage": "Garage",
+    "parking_space": "Parking Space",
+    "no_parking": "No Parking"
+  },
+  "heating": {
+    "central_heating": "Central Heating",
+    "gas_heating": "Gas Heating"
+  },
+  "hotWater": {
+    "central_hot_water": "Central Hot Water",
+    "solar_heater": "Solar Heater"
+  },
+  "poolType": {
+    "indoor": "Indoor Pool",
+    "outdoor": "Outdoor Pool",
+    "jacuzzi": "Jacuzzi"
+  },
+  "features": {
+    "internet": "Internet",
+    "elevator": "Elevator",
+    "tv": "Television",
+    "cargo_elevator": "Cargo Elevator",
+    "water": "Water",
+    "gas": "Gas",
+    "kitchen_appliances": "Kitchen Appliances",
+    "phone": "Phone",
+    "electricity": "Electricity",
+    "intercom": "Intercom",
+    "fenced": "Fenced",
+    "sewerage": "Sewerage"
+  },
+  "advantages": {
+    "spa": "Spa",
+    "fireplace": "Fireplace",
+    "bbq": "BBQ Area",
+    "bar": "Bar",
+    "gym": "Gym",
+    "jacuzzi": "Jacuzzi",
+    "fruit_trees": "Fruit Trees",
+    "yard_lighting": "Yard Lighting",
+    "sauna": "Sauna",
+    "alarm": "Security System",
+    "security": "Security",
+    "wine_cellar": "Wine Cellar",
+    "ventilation": "Ventilation"
+  },
+  "furnitureAppliances": {
+    "refrigerator": "Refrigerator",
+    "dishwasher": "Dishwasher",
+    "oven": "Oven",
+    "bed": "Bed",
+    "sofa": "Sofa",
+    "gas_stove": "Gas Stove",
+    "stove_gas": "Gas Stove",
+    "air_conditioner": "Air Conditioner",
+    "washing_machine": "Washing Machine",
+    "chairs": "Chairs",
+    "furniture": "Furniture",
+    "table": "Table",
+    "stove_electric": "Electric Stove"
+  },
+  "tags": {
+    "luxury": "Luxury",
+    "new": "New",
+    "code_door": "Code Door",
+    "airbnb_booking": "Airbnb/Booking Account",
+    "investment": "Investment",
+    "disability_friendly": "Disability Friendly"
+  },
+  "vipStatus": {
+    "vip": "VIP",
+    "vip_plus": "VIP+", 
+    "super_vip": "SUPER VIP"
+  }
+}

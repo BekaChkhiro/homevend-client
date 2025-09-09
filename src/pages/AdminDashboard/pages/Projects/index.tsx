@@ -33,7 +33,7 @@ interface Project {
 }
 
 const AdminProjects = () => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();

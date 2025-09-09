@@ -51,7 +51,7 @@ interface ApartmentCardProps {
 
 export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
   
   if (!property) {
     return null;
@@ -161,10 +161,10 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
                 <span>{property.area} {t('apartmentCard.labels.squareMeters')}</span>
               </div>
               <Badge variant="outline" className="text-xs px-2 py-0.5">
-                {property.propertyType}
+                {t(`listings.propertyTypes.${property.propertyType}`, { defaultValue: property.propertyType })}
               </Badge>
               <Badge variant="outline" className="text-xs px-2 py-0.5">
-                {property.dealType}
+                {t(`listings.dealTypes.${property.dealType}`, { defaultValue: property.dealType })}
               </Badge>
             </div>
 

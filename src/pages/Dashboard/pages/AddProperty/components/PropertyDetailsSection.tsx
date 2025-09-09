@@ -10,7 +10,7 @@ import { Home, Thermometer, Car, Droplets, Building, Waves, Sofa, TreePine, Ware
 import { useTranslation } from "react-i18next";
 
 export const PropertyDetailsSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext();
 
   // Watch form values for conditional rendering
@@ -665,8 +665,8 @@ export const PropertyDetailsSection = () => {
                       className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                     >
                       {[
-                        { value: "separate", label: t('addPropertyForm.propertyDetails.verandaTypes.separate') },
-                        { value: "studio", label: t('addPropertyForm.propertyDetails.verandaTypes.studio') }
+                        { value: "separate", label: t('addPropertyForm.propertyDetails.livingRoomTypes.separate') },
+                        { value: "studio", label: t('addPropertyForm.propertyDetails.livingRoomTypes.studio') }
                       ].map((option) => (
                         <label
                           key={option.value}

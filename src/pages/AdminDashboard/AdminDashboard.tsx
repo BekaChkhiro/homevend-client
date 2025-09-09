@@ -10,7 +10,7 @@ const AdminDashboard = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
 
   useEffect(() => {
     if (!isLoading) {

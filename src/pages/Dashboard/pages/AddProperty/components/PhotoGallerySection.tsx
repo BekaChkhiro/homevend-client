@@ -6,7 +6,7 @@ import { Camera, Upload, X, Image } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const PhotoGallerySection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {

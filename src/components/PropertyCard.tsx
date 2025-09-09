@@ -19,17 +19,29 @@ const VIP_BG_COLORS = {
   super_vip: 'bg-yellow-500 text-black border-yellow-600'
 };
 
-const VIP_LABELS = {
-  vip: 'VIP',
-  vip_plus: 'VIP+',
-  super_vip: 'SUPER VIP'
-};
+// VIP labels are now handled with translations inside the component
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
   const { t, i18n } = useTranslation('propertyCard');
   
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ka-GE', {
+    // Use appropriate locale for number formatting based on current language
+    let locale = 'ka-GE';
+    switch (i18n.language) {
+      case 'ka':
+        locale = 'ka-GE';
+        break;
+      case 'en':
+        locale = 'en-US';
+        break;
+      case 'ru':
+        locale = 'ru-RU';
+        break;
+      default:
+        locale = 'ka-GE';
+    }
+    
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'GEL',
       minimumFractionDigits: 0,
@@ -46,7 +58,23 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     if (!isVipActive()) return null;
     const vipType = property.vipStatus!;
     const colorClass = VIP_BG_COLORS[vipType as keyof typeof VIP_BG_COLORS];
-    const label = VIP_LABELS[vipType as keyof typeof VIP_LABELS];
+    
+    // Use translations for VIP labels
+    let label = '';
+    switch (vipType) {
+      case 'vip':
+        label = t('propertyCard.vip');
+        break;
+      case 'vip_plus':
+        label = t('propertyCard.vipPlus');
+        break;
+      case 'super_vip':
+        label = t('propertyCard.superVip');
+        break;
+      default:
+        label = 'VIP';
+    }
+    
     return { colorClass, label };
   };
 
@@ -69,24 +97,48 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     };
   };
 
-  // Get city name for badge
+  // Get city name for badge - language aware
   const getCityName = () => {
     if (property.cityData) {
-      return property.cityData.nameGeorgian;
+      // Use appropriate language name based on current language
+      switch (i18n.language) {
+        case 'ka':
+          return property.cityData.nameGeorgian || property.cityData['nameKa'];
+        case 'en':
+          return property.cityData['nameEnglish'] || property.cityData['nameEn'] || property.cityData.nameGeorgian;
+        case 'ru':
+          return property.cityData['nameRussian'] || property.cityData['nameRu'] || property.cityData.nameGeorgian;
+        default:
+          return property.cityData.nameGeorgian;
+      }
     } else if (property.city) {
       return property.city;
     }
     return null;
   };
 
-  // Build the location string with district and street (without city)
+  // Build the location string with district and street (without city) - language aware
   // Order: District → Street → Street Number
   const getDistrictAndStreet = () => {
     const parts = [];
     
-    // 1. Add district/area first
-    if (property.areaData?.nameKa) {
-      parts.push(property.areaData.nameKa);
+    // 1. Add district/area first - language aware
+    if (property.areaData) {
+      let areaName = '';
+      switch (i18n.language) {
+        case 'ka':
+          areaName = property.areaData['nameKa'] || property.areaData['nameGeorgian'] || property.areaData['name'];
+          break;
+        case 'en':
+          areaName = property.areaData['nameEn'] || property.areaData['nameEnglish'] || property.areaData['nameKa'] || property.areaData['name'];
+          break;
+        case 'ru':
+          areaName = property.areaData['nameRu'] || property.areaData['nameRussian'] || property.areaData['nameKa'] || property.areaData['name'];
+          break;
+        default:
+          areaName = property.areaData['nameKa'] || property.areaData['name'];
+      }
+      if (areaName) parts.push(areaName);
     } else if (property.district) {
       parts.push(property.district);
     }

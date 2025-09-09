@@ -1,0 +1,191 @@
+{
+  "errors": {
+    "title": "Ошибка",
+    "propertyIdRequired": "Требуется ID недвижимости",
+    "propertyNotFound": "Недвижимость не найдена или не удалось загрузить",
+    "loadingFailed": "Ошибка при загрузке недвижимости"
+  },
+  "propertyNotFound": "Недвижимость не найдена",
+  "noDescription": "Описание не предоставлено",
+  "perSquareMeter": "/м²",
+  "bedrooms": "спальни",
+  "bathrooms": "ванные",
+  "squareMeters": "м²",
+  "meters": "м",
+  "yes": "Да",
+  "count": "шт",
+  "email": "Эл. почта",
+  "similarProperties": "Похожая недвижимость",
+  "contact": {
+    "contact": "Связаться",
+    "contactAgent": "Связаться с агентом",
+    "contactDeveloper": "Связаться с застройщиком"
+  },
+  "userRoles": {
+    "agent": "Агент",
+    "developer": "Застройщик",
+    "user": "Пользователь"
+  },
+  "linkedProject": "Связанный проект",
+  "sections": {
+    "mainInformation": "Основная информация",
+    "propertyStructure": "Структура недвижимости",
+    "buildingInformation": "Информация о здании", 
+    "infrastructure": "Инфраструктура",
+    "additionalSpaces": "Дополнительные помещения",
+    "features": "Характеристики",
+    "advantages": "Преимущества",
+    "furnitureAppliances": "Мебель и техника",
+    "tags": "Теги",
+    "description": "Описание"
+  },
+  "fields": {
+    "listingTitle": "Заголовок объявления *",
+    "propertyType": "Тип недвижимости *",
+    "dealType": "Тип сделки *",
+    "location": "Местоположение *",
+    "cadastralCode": "Кадастровый код",
+    "rooms": "Комнаты",
+    "bedrooms": "Спальни",
+    "bathrooms": "Санузлы",
+    "totalFloors": "Этажей всего",
+    "propertyFloor": "Этаж недвижимости",
+    "usableArea": "Полезная площадь",
+    "status": "Статус",
+    "constructionYear": "Год постройки",
+    "condition": "Состояние",
+    "projectType": "Тип проекта",
+    "ceilingHeight": "Высота потолков",
+    "buildingMaterial": "Строительный материал",
+    "heating": "Отопление",
+    "parking": "Парковка",
+    "hotWater": "Горячая вода",
+    "balcony": "Балкон",
+    "pool": "Бассейн",
+    "livingRoom": "Гостиная",
+    "loggia": "Лоджия",
+    "veranda": "Веранда",
+    "hasYard": "Есть двор",
+    "storage": "Кладовая"
+  },
+  "buildingStatus": {
+    "old_built": "Старая постройка",
+    "new_built": "Новая постройка",
+    "under_construction": "В процессе строительства"
+  },
+  "constructionYear": {
+    "before_1955": "До 1955 года",
+    "1955_2000": "1955-2000 годы",
+    "after_2000": "После 2000 года"
+  },
+  "condition": {
+    "excellent": "Отличное",
+    "very_good": "Очень хорошее",
+    "good": "Хорошее",
+    "needs_renovation": "Требует ремонта",
+    "under_renovation": "В процессе ремонта",
+    "newly_renovated": "Недавно отремонтированное",
+    "old_renovated": "Старый ремонт",
+    "ongoing_renovation": "Текущий ремонт",
+    "black_frame": "Черный каркас",
+    "white_frame": "Белый каркас",
+    "green_frame": "Зеленый каркас"
+  },
+  "projectType": {
+    "standard": "Стандартный",
+    "non_standard": "Нестандартный",
+    "elite": "Элитный"
+  },
+  "buildingMaterial": {
+    "brick": "Кирпич",
+    "block": "Блок",
+    "panel": "Панель",
+    "monolith": "Монолит"
+  },
+  "propertyType": {
+    "apartment": "Квартира",
+    "house": "Дом",
+    "cottage": "Коттедж",
+    "land": "Земля"
+  },
+  "dealType": {
+    "sale": "Продается",
+    "rent": "Сдается",
+    "daily": "Посуточная аренда"
+  },
+  "parking": {
+    "garage": "Гараж",
+    "parking_space": "Парковочное место",
+    "no_parking": "Парковки нет"
+  },
+  "heating": {
+    "central_heating": "Центральное отопление",
+    "gas_heating": "Газовое отопление"
+  },
+  "hotWater": {
+    "central_hot_water": "Центральная горячая вода",
+    "solar_heater": "Солнечный коллектор"
+  },
+  "poolType": {
+    "indoor": "Крытый бассейн",
+    "outdoor": "Открытый бассейн",
+    "jacuzzi": "Джакузи"
+  },
+  "features": {
+    "internet": "Интернет",
+    "elevator": "Лифт",
+    "tv": "Телевизор",
+    "cargo_elevator": "Грузовой лифт",
+    "water": "Вода",
+    "gas": "Газ",
+    "kitchen_appliances": "Кухонная техника",
+    "phone": "Телефон",
+    "electricity": "Электричество",
+    "intercom": "Домофон",
+    "fenced": "Огорожено",
+    "sewerage": "Канализация"
+  },
+  "advantages": {
+    "spa": "СПА",
+    "fireplace": "Камин",
+    "bbq": "Место для шашлыка",
+    "bar": "Бар",
+    "gym": "Спортзал",
+    "jacuzzi": "Джакузи",
+    "fruit_trees": "Фруктовые деревья",
+    "yard_lighting": "Освещение двора",
+    "sauna": "Сауна",
+    "alarm": "Сигнализация",
+    "security": "Безопасность",
+    "wine_cellar": "Винный погреб",
+    "ventilation": "Вентиляция"
+  },
+  "furnitureAppliances": {
+    "refrigerator": "Холодильник",
+    "dishwasher": "Посудомойка",
+    "oven": "Духовка",
+    "bed": "Кровать",
+    "sofa": "Диван",
+    "gas_stove": "Газовая плита",
+    "stove_gas": "Газовая плита", 
+    "air_conditioner": "Кондиционер",
+    "washing_machine": "Стиральная машина",
+    "chairs": "Стулья",
+    "furniture": "Мебель",
+    "table": "Стол",
+    "stove_electric": "Электроплита"
+  },
+  "tags": {
+    "luxury": "Люкс",
+    "new": "Новое",
+    "code_door": "Дверь с кодом",
+    "airbnb_booking": "Аккаунт Airbnb/Booking",
+    "investment": "Инвестиционное",
+    "disability_friendly": "Для людей с ограниченными возможностями"
+  },
+  "vipStatus": {
+    "vip": "VIP",
+    "vip_plus": "VIP+",
+    "super_vip": "SUPER VIP"
+  }
+}

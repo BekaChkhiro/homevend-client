@@ -416,43 +416,71 @@
       "constructionYear": "აშენების წელი",
       "condition": "მდგომარეობა",
       "projectType": "პროექტის ტიპი",
+      "propertyStyle": "უძრავი ქონების სტილი",
+      "propertyStyles": {
+        "non-standard": "არასტანდარტული",
+        "villa": "ვილა", 
+        "townhouse": "თაუნჰაუსი"
+      },
       "ceilingHeight": "ჭერის სიმაღლე",
       "heating": "გათბობა",
       "parking": "პარკირება",
       "hotWater": "ცხელი წყალი",
       "buildingMaterial": "სამშენებლო მასალა",
+      "buildingStatus": "შენობის სტატუსი",
       "buildingStatuses": {
-        "old": "ძველი აშენებული",
-        "new": "ახალი აშენებული",
-        "underConstruction": "მშენებარე"
+        "old-built": "ძველი აშენებული",
+        "new-built": "ახალი აშენებული",
+        "under-construction": "მშენებარე"
       },
+      "condition": "მდგომარეობა",
       "conditions": {
-        "newRenovated": "ახალი გარემონტებული",
-        "oldRenovated": "ძველი გარემონტებული",
-        "needsRenovation": "სარემონტო",
-        "whiteFrame": "თეთრი კარკასი",
-        "blackFrame": "შავი კარკასი",
-        "greenFrame": "მწვანე კარკასი"
+        "newly-renovated": "ახლად გარემონტებული",
+        "old-renovated": "ძველი გარემონტებული", 
+        "ongoing-renovation": "მიმდინარე რემონტი",
+        "needs-renovation": "სარემონტო",
+        "white-frame": "თეთრი კარკასი",
+        "black-frame": "შავი კარკასი",
+        "green-frame": "მწვანე კარკასი",
+        "white-plus": "თეთრი პლუს"
       },
+      "heatingType": "გათბობის ტიპი",
       "heatingTypes": {
-        "central": "ცენტრალური",
-        "gas": "გაზი",
-        "electric": "ელექტრო",
-        "wood": "ხეით",
-        "solar": "მზის ენერგია"
+        "central-heating": "ცენტრალური გათბობა",
+        "gas-heater": "გაზური გამათბობელი",
+        "electric-heater": "ელექტრო გამათბობელი",
+        "central-floor": "ცენტრალური + იატაკის გათბობა",
+        "no-heating": "გათბობის გარეშე",
+        "individual": "ინდივიდუალური",
+        "floor-heating": "იატაკის გათბობა"
       },
+      "parkingType": "პარკინგის ტიპი",
       "parkingTypes": {
-        "none": "არ არის",
-        "yard": "ეზოში",
         "garage": "გარაჟი",
-        "underground": "მიწისქვეშ"
+        "parking-space": "პარკირების ადგილი",
+        "yard-parking": "ეზოს პარკინგი",
+        "underground-parking": "მიწისქვეშა პარკინგი",
+        "paid-parking": "ფასიანი პარკინგი",
+        "no-parking": "პარკინგის გარეშე"
       },
-      "buildingMaterials": {
-        "brick": "აგური",
+      "hotWaterType": "ცხელი წყლის ტიპი",
+      "hotWaterTypes": {
+        "gas-water-heater": "გაზური წყლის გამათბობელი",
+        "boiler": "ბოილერი",
+        "electric-water-heater": "ელექტრო წყლის გამათბობელი",
+        "solar-heater": "მზის გამათბობელი",
+        "no-hot-water": "ცხელი წყლის გარეშე",
+        "central-hot-water": "ცენტრალური ცხელი წყალი",
+        "natural-hot-water": "ბუნებრივი ცხელი წყალი",
+        "individual": "ინდივიდუალური"
+      },
+      "wallMaterial": "კედლის მასალა",
+      "wallMaterials": {
         "block": "ბლოკი",
-        "panel": "პანელი",
-        "monolith": "მონოლითი",
-        "wood": "ხისპერი"
+        "brick": "აგური",
+        "wood": "ხისპერი",
+        "reinforced-concrete": "რკინაბეტონი",
+        "combined": "შერეული"
       },
       "amenities": {
         "title": "დამატებითი ინფორმაცია",
@@ -464,6 +492,10 @@
         "hasLivingRoom": "მისაღები",
         "livingRoomArea": "მისაღების ფართი",
         "livingRoomType": "მისაღების ტიპი",
+        "livingRoomTypes": {
+          "separate": "ცალკე",
+          "studio": "სტუდია"
+        },
         "hasLoggia": "ლოჯი",
         "loggiaArea": "ლოჯის ფართი",
         "hasVeranda": "ვერანდა",
@@ -489,16 +521,16 @@
       "title": "მახასიათებლები",
       "internet": "ინტერნეტი",
       "tv": "ტელევიზია",
-      "gas": "ბუნებრივი აირი",
+      "naturalGas": "ბუნებრივი აირი",
       "elevator": "ლიფტი",
-      "cargoElevator": "სატვირთო ლიფტი",
+      "cargo-elevator": "სატვირთო ლიფტი",
       "water": "წყალი",
-      "sewage": "კანალიზაცია",
+      "sewerage": "კანალიზაცია",
       "electricity": "ელექტრო ენერგია",
-      "phone": "ტელეფონი",
+      "telephone": "ტელეფონი",
       "fenced": "შემოღობილი",
-      "balcony": "ჭიშკარი",
-      "kitchenAppliances": "სამზარეულო + ტექნიკა"
+      "intercom": "ინტერკომი",
+      "kitchen-appliances": "სამზარეულო + ტექნიკა"
     },
     "advantages": {
       "title": "უპირატესობები",
@@ -756,5 +788,42 @@
     "success": "პროექტი წარმატებით შეიქმნა",
     "successWithProperties": "პროექტი წარმატებით შეიქმნა და {{count}} განცხადება მიმაგრდა",
     "createError": "პროექტის შექმნისას მოხდა შეცდომა"
+  },
+  "manageProjectProperties": {
+    "title": "განცხადების მართვა",
+    "projectTitle": "პროექტი: {{projectName}}",
+    "loading": "მონაცემების ჩატვირთვა...",
+    "onlyDevelopersCanManage": "მხოლოდ დეველოპერებს შეუძლიათ განცხადებების მართვა",
+    "availableToLink": {
+      "title": "მიმაგრების ხელმისაწვდომი განცხადებები",
+      "description": "აირჩიეთ განცხადებები რომლებიც გსურთ ამ პროექტთან მიამაგროთ",
+      "noProperties": "არ არის ხელმისაწვდომი განცხადებები მიმაგრებისთვის",
+      "noPropertiesDesc": "ყველა თქვენი განცხადება უკვე მიმაგრებულია პროექტებზე",
+      "selectedCount": "{{count}} განცხადება არჩეულია მიმაგრებისთვის"
+    },
+    "linkedProperties": {
+      "title": "მიმაგრებული განცხადებები ({{count}})",
+      "description": "აირჩიეთ განცხადებები რომლებიც გსურთ ამ პროექტისგან მოხსნათ",
+      "noProperties": "არ არის მიმაგრებული განცხადებები",
+      "noPropertiesDesc": "ამ პროექტზე ჯერ არ არის მიმაგრებული განცხადებები",
+      "selectedCount": "{{count}} განცხადება არჩეულია მოსახსნელად"
+    },
+    "propertyDetails": {
+      "rooms": "ოთახი",
+      "views": "ნახვები"
+    },
+    "actions": {
+      "cancel": "გაუქმება",
+      "saveChanges": "ცვლილებების შენახვა",
+      "saving": "შენახვა..."
+    },
+    "messages": {
+      "noChanges": "შეტყობინება",
+      "noChangesDescription": "არანაირი ცვლილება არ არის შერჩეული",
+      "success": "წარმატება",
+      "successDescription": "{{linked}} განცხადება მიმაგრდა{{unlinked, plural, =0 {} other { და {{unlinked}} მოხსნილია}}",
+      "error": "შეცდომა",
+      "errorDescription": "ცვლილებების შენახვისას მოხდა შეცდომა"
+    }
   }
 }

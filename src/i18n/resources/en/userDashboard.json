@@ -559,6 +559,10 @@
       "livingRoom": "Living Room",
       "livingRoomArea": "Living Room Area (m²)",
       "livingRoomType": "Living Room Type",
+      "livingRoomTypes": {
+        "separate": "Separate",
+        "studio": "Studio"
+      },
       "loggia": "Loggia",
       "loggiaArea": "Loggia Area (m²)",
       "veranda": "Veranda",
@@ -943,5 +947,42 @@
     "success": "Project created successfully",
     "successWithProperties": "Project created successfully and {{count}} properties linked",
     "createError": "Error creating project"
+  },
+  "manageProjectProperties": {
+    "title": "Manage Properties",
+    "projectTitle": "Project: {{projectName}}",
+    "loading": "Loading data...",
+    "onlyDevelopersCanManage": "Only developers can manage properties",
+    "availableToLink": {
+      "title": "Available Properties to Link",
+      "description": "Select properties you want to link to this project",
+      "noProperties": "No available properties for linking",
+      "noPropertiesDesc": "All your properties are already linked to projects",
+      "selectedCount": "{{count}} properties selected for linking"
+    },
+    "linkedProperties": {
+      "title": "Linked Properties ({{count}})",
+      "description": "Select properties you want to unlink from this project",
+      "noProperties": "No linked properties",
+      "noPropertiesDesc": "No properties are linked to this project yet",
+      "selectedCount": "{{count}} properties selected for unlinking"
+    },
+    "propertyDetails": {
+      "rooms": "rooms",
+      "views": "views"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "saving": "Saving..."
+    },
+    "messages": {
+      "noChanges": "No changes selected",
+      "noChangesDescription": "No changes have been selected",
+      "success": "Success",
+      "successDescription": "{{linked}} properties linked{{unlinked, plural, =0 {} other { and {{unlinked}} unlinked}}",
+      "error": "Error",
+      "errorDescription": "An error occurred while saving changes"
+    }
   }
 }

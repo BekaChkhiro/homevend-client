@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Waves, Martini, Dumbbell, Flame, ChefHat, Bath, TreePine, Apple, Shield, Warehouse, Fan, Eye, Check } from "lucide-react";
 
 export const AdvantagesSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext();
   const advantages = form.watch("advantages");
   

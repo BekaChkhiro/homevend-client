@@ -1,0 +1,292 @@
+{
+  "projectForm": {
+    "addTitle": "Add New Project",
+    "addSubtitle": "Create a new project with detailed information",
+    "editTitle": "Edit Project",
+    "editSubtitle": "Update project information",
+    "backButton": "Back",
+    "addProject": {
+      "title": "Add New Project",
+      "subtitle": "Create a new project with detailed information",
+      "backToDashboard": "Back to Dashboard",
+      "onlyDevelopers": "Only developers can create projects",
+      "accessDenied": "Access Denied",
+      "accessDeniedDesc": "You don't have permission to create projects"
+    },
+    "error": "Error",
+    "success": "Success",
+    "loading": "Loading project...",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "createProject": "Create Project",
+    "cancel": "Cancel",
+    "accessDenied": {
+      "title": "Access Denied", 
+      "description": "Only developers can edit projects"
+    },
+    "errors": {
+      "projectNotFound": "Project not found",
+      "loadingError": "Error occurred while loading project",
+      "updateError": "Error occurred while updating project",
+      "permissionError": "Only developers can edit projects"
+    },
+    "success": {
+      "updated": "Project successfully updated",
+      "created": "Project successfully created"
+    },
+    "tabs": {
+      "basic": "Basic Info",
+      "photos": "Photos",
+      "amenities": "Amenities", 
+      "services": "Services",
+      "properties": "Properties"
+    },
+    "projectInfo": {
+      "title": "Project Information",
+      "projectName": "Project Name",
+      "projectNameRequired": "Project Name *",
+      "projectType": "Project Type",
+      "projectTypeRequired": "Project Type *",
+      "description": "Description",
+      "selectType": "Choose type",
+      "types": {
+        "privateHouse": "Private House",
+        "apartmentBuilding": "Apartment Complex"
+      }
+    },
+    "location": {
+      "title": "Location", 
+      "city": "City",
+      "cityRequired": "City *",
+      "area": "District",
+      "street": "Street",
+      "streetRequired": "Street *",
+      "streetNumber": "Number",
+      "selectCity": "Choose city",
+      "selectArea": "Choose district"
+    },
+    "projectDetails": {
+      "title": "Project Details",
+      "deliveryStatus": "Delivery Status",
+      "deliveryStatusRequired": "Delivery Status *",
+      "deliveryDate": "Delivery Date", 
+      "numberOfBuildings": "Number of Buildings",
+      "numberOfBuildingsRequired": "Number of Buildings *",
+      "totalApartments": "Total Apartments",
+      "totalApartmentsRequired": "Total Apartments *",
+      "numberOfFloors": "Number of Floors", 
+      "numberOfFloorsRequired": "Number of Floors *",
+      "parkingSpaces": "Parking Spaces",
+      "selectStatus": "Choose status",
+      "deliveryStatuses": {
+        "completedWithRenovation": "Delivery with renovation",
+        "greenFrame": "Green frame",
+        "blackFrame": "Black frame", 
+        "whiteFrame": "White frame"
+      }
+    },
+    "amenities": {
+      "title": "Distance-based Amenities",
+      "subtitle": "Choose what exists around the project and specify distance",
+      "distances": {
+        "onSite": "On-site",
+        "300m": "Within 300m",
+        "500m": "Within 500m", 
+        "1km": "Within 1km"
+      },
+      "types": {
+        "pharmacy": "💊 Pharmacy",
+        "kindergarten": "👶 Kindergarten",
+        "school": "🎒 School",
+        "university": "🎓 University", 
+        "hospital": "🏥 Hospital",
+        "clinic": "🩺 Clinic",
+        "busStop": "🚌 Bus Stop",
+        "metro": "🚇 Metro",
+        "groceryStore": "🛒 Grocery Store",
+        "supermarket": "🏬 Supermarket",
+        "mall": "🏢 Mall",
+        "bank": "🏦 Bank",
+        "atm": "💳 ATM",
+        "restaurant": "🍽️ Restaurant", 
+        "cafe": "☕ Cafe",
+        "bakery": "🥖 Bakery",
+        "sportsCenter": "🏋️ Sports Center",
+        "gym": "💪 Gym",
+        "stadium": "🏟️ Stadium",
+        "swimmingPool": "🏊 Swimming Pool",
+        "park": "🌳 Park",
+        "garden": "🌳 Garden",
+        "square": "🏛️ Square",
+        "parking": "🚗 Parking",
+        "bikePath": "🚴 Bike Path",
+        "sportsField": "⚽ Sports Field",
+        "childrenArea": "🎪 Children's Playground",
+        "laundry": "🧺 Laundry",
+        "storage": "📦 Storage",
+        "cinema": "🎬 Cinema",
+        "theater": "🎭 Theater",
+        "library": "📚 Library",
+        "postOffice": "📫 Post Office",
+        "gasStation": "⛽ Gas Station",
+        "carWash": "🚗 Car Wash",
+        "veterinary": "🐕 Veterinary Clinic", 
+        "beautyCenter": "💄 Beauty Salon",
+        "dentist": "🦷 Dentist"
+      }
+    },
+    "services": {
+      "title": "Post-delivery Services",
+      "subtitle": "Choose services that will be available after project delivery",
+      "types": {
+        "securityService": "🛡️ Security Service",
+        "hasConcierge": "🛎️ Concierge",
+        "videoSurveillance": "📹 Video Surveillance", 
+        "hasLobby": "🏛️ Lobby/Reception Hall",
+        "hasDoorman": "🚪 Doorman",
+        "yardCleaning": "🧹 Yard Cleaning",
+        "entranceCleaning": "🚪 Entrance Cleaning",
+        "landscaping": "🌺 Landscaping",
+        "hasLighting": "💡 Permanent Lighting",
+        "fireSystem": "🔥 Fire Suppression System",
+        "mainDoorLock": "🔒 Main Door Lock",
+        "maintenance": "🔧 Technical Maintenance"
+      }
+    },
+    "attachProperties": {
+      "title": "Link Properties to Project",
+      "description": "Choose your existing properties to link with this project",
+      "noProperties": "You have no existing properties to attach",
+      "noPropertiesDescription": "Create a property first, then you can attach it to a project"
+    },
+    "distances": {
+      "onSite": "On-site",
+      "within300m": "Within 300m",
+      "within500m": "Within 500m",
+      "within1km": "Within 1km"
+    },
+    "sections": {
+      "projectInfo": "Project Information",
+      "location": "Location",
+      "projectDetails": "Project Details",
+      "amenitiesByDistance": "Distance-based Amenities",
+      "amenitiesDesc": "Choose what exists around the project and specify distance",
+      "servicesAfterDelivery": "Post-delivery Services",
+      "servicesDesc": "Choose services that will be available after project delivery"
+    },
+    "fields": {
+      "projectName": "Project Name",
+      "projectType": "Project Type",
+      "description": "Description",
+      "city": "City",
+      "district": "District",
+      "street": "Street",
+      "streetNumber": "Street Number",
+      "deliveryStatus": "Delivery Status",
+      "deliveryDate": "Delivery Date",
+      "buildingsCount": "Number of Buildings",
+      "totalApartments": "Total Apartments",
+      "floorsCount": "Number of Floors",
+      "parkingSpaces": "Parking Spaces"
+    },
+    "placeholders": {
+      "selectType": "Choose type",
+      "selectCity": "Choose city",
+      "selectDistrict": "Choose district",
+      "selectStatus": "Choose status"
+    },
+    "projectTypes": {
+      "privateHouse": "Private House",
+      "apartmentBuilding": "Apartment Complex"
+    },
+    "deliveryStatuses": {
+      "completedWithRenovation": "Delivery with renovation",
+      "greenFrame": "Green frame",
+      "blackFrame": "Black frame",
+      "whiteFrame": "White frame"
+    },
+    "services": {
+      "title": "Post-delivery Services",
+      "subtitle": "Choose services that will be available after project delivery",
+      "types": {
+        "securityService": "🛡️ Security Service",
+        "hasConcierge": "🛎️ Concierge",
+        "videoSurveillance": "📹 Video Surveillance",
+        "hasLobby": "🏛️ Lobby/Reception Hall",
+        "hasDoorman": "🚪 Doorman",
+        "yardCleaning": "🧹 Yard Cleaning",
+        "entranceCleaning": "🚪 Entrance Cleaning",
+        "landscaping": "🌺 Landscaping",
+        "hasLighting": "💡 Permanent Lighting",
+        "fireSystem": "🔥 Fire Suppression System",
+        "mainDoorLock": "🔒 Main Door Lock",
+        "maintenance": "🔧 Technical Maintenance"
+      }
+    },
+    "amenities": {
+      "title": "Distance-based Amenities",
+      "subtitle": "Choose what exists around the project and specify distance",
+      "types": {
+        "pharmacy": "💊 Pharmacy",
+        "kindergarten": "👶 Kindergarten",
+        "school": "🎒 School",
+        "university": "🎓 University",
+        "hospital": "🏥 Hospital",
+        "clinic": "🩺 Clinic",
+        "busStop": "🚌 Bus Stop",
+        "metro": "🚇 Metro",
+        "groceryStore": "🛒 Grocery Store",
+        "supermarket": "🏬 Supermarket",
+        "mall": "🏢 Mall",
+        "bank": "🏦 Bank",
+        "atm": "💳 ATM",
+        "restaurant": "🍽️ Restaurant",
+        "cafe": "☕ Cafe",
+        "bakery": "🥖 Bakery",
+        "sportsCenter": "🏋️ Sports Center",
+        "gym": "💪 Gym",
+        "stadium": "🏟️ Stadium",
+        "swimmingPool": "🏊 Swimming Pool",
+        "park": "🌳 Park",
+        "garden": "🌳 Garden",
+        "square": "🏛️ Square",
+        "parking": "🚗 Parking",
+        "bikePath": "🚴 Bike Path",
+        "sportsField": "⚽ Sports Field",
+        "childrenArea": "🎪 Children's Playground",
+        "laundry": "🧺 Laundry",
+        "storage": "📦 Storage",
+        "cinema": "🎬 Cinema",
+        "theater": "🎭 Theater",
+        "library": "📚 Library",
+        "postOffice": "📫 Post Office",
+        "gasStation": "⛽ Gas Station",
+        "carWash": "🚗 Car Wash",
+        "veterinary": "🐕 Veterinary Clinic",
+        "beautyCenter": "💄 Beauty Salon",
+        "dentist": "🦷 Dentist"
+      },
+      "distances": {
+        "onSite": "On-site",
+        "300m": "Within 300m",
+        "500m": "Within 500m",
+        "1km": "Within 1km"
+      }
+    },
+    "photoGallery": {
+      "title": "Photo Gallery",
+      "uploadTitle": "Upload Photos",
+      "uploadDescription": "Drop photos here or click the upload button",
+      "selectPhotos": "Select Photos",
+      "uploadedPhotos": "Uploaded Photos",
+      "recommendations": {
+        "title": "Photo Upload Recommendations:",
+        "highQuality": "Use high-quality photos (minimum 1200x800 pixels)",
+        "differentAngles": "Upload photos taken from different angles",
+        "allBuildings": "Include photos of all buildings and important details",
+        "maxFileSize": "Maximum file size: 10MB per photo",
+        "supportedFormats": "Supported formats: JPG, PNG, WebP"
+      }
+    }
+  }
+}

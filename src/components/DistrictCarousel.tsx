@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, DollarSign, MapPin } from "lucide-react";
 import { publicApiClient } from "@/lib/api";
+import { useTranslation } from "react-i18next";
 
 interface District {
   id: number;
@@ -23,6 +24,7 @@ interface DistrictCarouselProps {
 }
 
 export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = "" }) => {
+  const { t, i18n } = useTranslation('home');
   const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -49,9 +51,9 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
   };
 
   const getPriceLevel = (price: number) => {
-    if (price >= 2000) return { level: 'მაღალი', color: 'text-green-600 bg-green-50 border-green-200' };
-    if (price >= 1500) return { level: 'საშუალო', color: 'text-blue-600 bg-blue-50 border-blue-200' };
-    return { level: 'დაბალი', color: 'text-orange-600 bg-orange-50 border-orange-200' };
+    if (price >= 2000) return { level: t('home.districtCarousel.priceLevel.high'), color: 'text-green-600 bg-green-50 border-green-200' };
+    if (price >= 1500) return { level: t('home.districtCarousel.priceLevel.medium'), color: 'text-blue-600 bg-blue-50 border-blue-200' };
+    return { level: t('home.districtCarousel.priceLevel.low'), color: 'text-orange-600 bg-orange-50 border-orange-200' };
   };
 
   const visibleCards = 3;
@@ -81,9 +83,9 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
     return (
       <div className="text-center py-12">
         <MapPin className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">მონაცემები არ მოიძებნა</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">{t('home.districtCarousel.noDataFound')}</h3>
         <p className="text-gray-500">
-          ამჟამად არ არის ხელმისაწვდომი რაიონების ფასების ინფორმაცია
+          {t('home.districtCarousel.noDataDescription')}
         </p>
       </div>
     );
@@ -133,20 +135,24 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
                     <CardTitle className="flex items-center justify-between text-lg">
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-gray-500" />
-                        <span>{district.nameKa}</span>
+                        <span>
+                          {i18n.language === 'ka' ? district.nameKa : 
+                           i18n.language === 'ru' ? district.nameRu : 
+                           district.nameEn}
+                        </span>
                       </div>
                       <Badge variant="outline" className="text-xs">
                         {priceLevel.level}
                       </Badge>
                     </CardTitle>
                     <CardDescription className="text-sm">
-                      {district.nameEn}
+                      {i18n.language === 'ka' && district.nameEn ? district.nameEn : ''}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className={`p-4 rounded-lg border ${priceLevel.color}`}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium">ფასი 1 კვ/მ:</span>
+                        <span className="text-sm font-medium">{t('home.districtCarousel.pricePerSqm')}</span>
                         <div className="flex items-center gap-1">
                           <DollarSign className="h-4 w-4" />
                           <span className="text-xl font-bold">
@@ -155,7 +161,7 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
                         </div>
                       </div>
                       <div className="text-xs opacity-75">
-                        USD / კვადრატული მეტრი
+                        {t('home.districtCarousel.currency')}
                       </div>
                     </div>
 
@@ -167,8 +173,8 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
 
                     <div className="mt-3 pt-3 border-t">
                       <div className="flex items-center justify-between text-xs text-gray-500">
-                        <span>განახლებულია:</span>
-                        <span>{new Date(district.updatedAt).toLocaleDateString('ka-GE')}</span>
+                        <span>{t('home.districtCarousel.updated')}</span>
+                        <span>{new Date(district.updatedAt).toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : i18n.language === 'ru' ? 'ru-RU' : 'en-US')}</span>
                       </div>
                     </div>
                   </CardContent>

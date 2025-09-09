@@ -33,7 +33,7 @@ interface Agency {
 }
 
 const AdminAgencies = () => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();

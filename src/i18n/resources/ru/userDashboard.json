@@ -468,7 +468,15 @@
         "newConstruction": "Новое строительство",
         "renovated": "Отремонтированное",
         "goodCondition": "Хорошее состояние",
-        "needsRenovation": "Требует ремонта"
+        "needsRenovation": "Требует ремонта",
+        "newly-renovated": "Недавно отремонтированная",
+        "old-renovated": "Старый ремонт",
+        "ongoing-renovation": "Идет ремонт",
+        "needs-renovation": "Требует ремонта",
+        "white-frame": "Белый каркас",
+        "black-frame": "Черный каркас", 
+        "green-frame": "Зеленый каркас",
+        "white-plus": "Белый плюс"
       },
       "yearBuilt": "Год постройки",
       "entrance": "Номер подъезда", 
@@ -481,6 +489,10 @@
       "livingRoom": "Гостиная",
       "livingRoomArea": "Площадь гостиной (м²)",
       "livingRoomType": "Тип гостиной",
+      "livingRoomTypes": {
+        "separate": "Отдельная",
+        "studio": "Студия"
+      },
       "loggia": "Лоджия",
       "loggiaArea": "Площадь лоджии (м²)",
       "veranda": "Веранда",
@@ -501,28 +513,74 @@
       "constructionYear": "Год строительства",
       "condition": "Состояние",
       "projectType": "Тип проекта",
+      "propertyStyle": "Стиль недвижимости",
+      "propertyStyles": {
+        "non-standard": "Нестандартный",
+        "villa": "Вилла",
+        "townhouse": "Таунхаус"
+      },
       "ceilingHeight": "Высота потолков",
       "ceilingHeightPlaceholder": "Высота в метрах",
       "buildingStatus": "Статус здания",
+      "buildingStatuses": {
+        "old-built": "Старой постройки",
+        "new-built": "Новой постройки",
+        "under-construction": "Строящийся"
+      },
       "heatingType": "Тип отопления",
+      "heatingTypes": {
+        "central-heating": "Центральное отопление",
+        "gas-heater": "Газовый обогреватель",
+        "electric-heater": "Электрический обогреватель",
+        "central-floor": "Центральное + теплые полы",
+        "no-heating": "Без отопления",
+        "individual": "Индивидуальное",
+        "floor-heating": "Теплые полы"
+      },
+      "parkingType": "Тип парковки",
+      "parkingTypes": {
+        "garage": "Гараж",
+        "parking-space": "Парковочное место",
+        "yard-parking": "Парковка во дворе",
+        "underground-parking": "Подземная парковка",
+        "paid-parking": "Платная парковка",
+        "no-parking": "Без парковки"
+      },
+      "hotWaterType": "Тип горячей воды",
+      "hotWaterTypes": {
+        "gas-water-heater": "Газовый водонагреватель",
+        "boiler": "Бойлер",
+        "electric-water-heater": "Электрический водонагреватель",
+        "solar-heater": "Солнечный обогреватель",
+        "no-hot-water": "Без горячей воды",
+        "central-hot-water": "Центральная горячая вода",
+        "natural-hot-water": "Природная горячая вода",
+        "individual": "Индивидуальная"
+      },
+      "wallMaterial": "Материал стен",
+      "wallMaterials": {
+        "block": "Блок",
+        "brick": "Кирпич",
+        "wood": "Дерево",
+        "reinforced-concrete": "Железобетон",
+        "combined": "Смешанный"
+      },
       "floorsPlaceholder": "Количество этажей"
     },
     "features": {
       "title": "Особенности и удобства",
-      "utilities": "Коммунальные услуги",
       "internet": "Интернет",
       "tv": "ТВ",
-      "telephone": "Телефон", 
       "naturalGas": "Природный газ",
-      "hotWater": "Горячая вода",
       "elevator": "Лифт",
-      "balcony": "Балкон",
-      "loggia": "Лоджия",
-      "basement": "Подвал",
-      "attic": "Чердак",
-      "garage": "Гараж",
-      "pool": "Бассейн",
-      "yard": "Двор",
+      "cargo-elevator": "Грузовой лифт",
+      "water": "Вода",
+      "sewerage": "Канализация",
+      "electricity": "Электричество",
+      "telephone": "Телефон",
+      "fenced": "Огороженная территория",
+      "intercom": "Домофон",
+      "kitchen-appliances": "Кухня + Техника",
       "garden": "Сад",
       "alarm": "Система безопасности",
       "centralHeating": "Центральное отопление",
@@ -840,5 +898,42 @@
     "success": "Проект успешно создан",
     "successWithProperties": "Проект успешно создан и {{count}} объявлений привязано",
     "createError": "Ошибка создания проекта"
+  },
+  "manageProjectProperties": {
+    "title": "Управление недвижимостью",
+    "projectTitle": "Проект: {{projectName}}",
+    "loading": "Загрузка данных...",
+    "onlyDevelopersCanManage": "Только разработчики могут управлять объявлениями",
+    "availableToLink": {
+      "title": "Доступные объявления для привязки",
+      "description": "Выберите объявления, которые хотите привязать к этому проекту",
+      "noProperties": "Нет доступных объявлений для привязки",
+      "noPropertiesDesc": "Все ваши объявления уже привязаны к проектам",
+      "selectedCount": "{{count}} объявлений выбрано для привязки"
+    },
+    "linkedProperties": {
+      "title": "Привязанные объявления ({{count}})",
+      "description": "Выберите объявления, которые хотите отвязать от этого проекта",
+      "noProperties": "Нет привязанных объявлений",
+      "noPropertiesDesc": "К этому проекту еще не привязано объявлений",
+      "selectedCount": "{{count}} объявлений выбрано для отвязки"
+    },
+    "propertyDetails": {
+      "rooms": "комнаты",
+      "views": "просмотры"
+    },
+    "actions": {
+      "cancel": "Отмена",
+      "saveChanges": "Сохранить изменения",
+      "saving": "Сохранение..."
+    },
+    "messages": {
+      "noChanges": "Нет изменений",
+      "noChangesDescription": "Никакие изменения не выбраны",
+      "success": "Успех",
+      "successDescription": "{{linked}} объявлений привязано{{unlinked, plural, =0 {} other { и {{unlinked}} отвязано}}",
+      "error": "Ошибка",
+      "errorDescription": "Произошла ошибка при сохранении изменений"
+    }
   }
 }

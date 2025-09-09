@@ -14,7 +14,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
   isLoading = false,
   isEdit = false,
 }) => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   return (
     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/95 to-background/80 backdrop-blur-md border-t border-border/30 shadow-xl z-50">
       <div className="container mx-auto px-6 py-6">
