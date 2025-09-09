@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Crown, CreditCard, Sparkles } from 'lucide-react';
 import { VipPurchaseModal } from '@/components/VipPurchaseModal';
-import { useBalanceRefresh } from '../../Dashboard';
+import { useBalanceRefresh } from '../../../Dashboard';
 import { useTranslation } from 'react-i18next';
 
 interface VipAfterCreateSectionProps {

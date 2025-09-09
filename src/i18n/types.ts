@@ -1,11 +1,15 @@
-import { AdminTranslations, UserDashboardTranslations } from './resources';
+import { AdminTranslations, UserDashboardTranslations, CommonTranslations, AuthTranslations, PropertyCardTranslations, AboutUsTranslations } from './resources';
 
 declare module 'react-i18next' {
   interface CustomTypeOptions {
-    defaultNS: 'admin';
+    defaultNS: 'common';
     resources: {
       admin: AdminTranslations;
       userDashboard: UserDashboardTranslations;
+      common: CommonTranslations;
+      auth: AuthTranslations;
+      propertyCard: PropertyCardTranslations;
+      aboutUs: AboutUsTranslations;
     };
   }
 }

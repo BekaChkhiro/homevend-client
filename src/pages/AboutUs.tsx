@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Home, Users, Award, TrendingUp, Phone, Mail, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 const AboutUs = () => {
+  const { t, i18n } = useTranslation('aboutUs');
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -14,23 +17,20 @@ const AboutUs = () => {
         {/* Hero Section */}
         <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">ჩვენს შესახებ</h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              HomeVend არის საქართველოს წამყვანი უძრავი ქონების პლატფორმა,
-              რომელიც აერთიანებს მყიდველებს და გამყიდველებს ერთ ადგილას.
-            </p>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('hero.title')}</h1>
+            <p className="text-xl text-muted-foreground mb-8">{t('hero.subtitle')}</p>
             <div className="flex justify-center gap-4 mb-8">
               <Badge variant="secondary" className="px-4 py-2">
                 <Home className="h-4 w-4 mr-2" />
-                10,000+ განცხადება
+                {t('hero.listings')}
               </Badge>
               <Badge variant="secondary" className="px-4 py-2">
                 <Users className="h-4 w-4 mr-2" />
-                50,000+ მომხმარებელი
+                {t('hero.users')}
               </Badge>
               <Badge variant="secondary" className="px-4 py-2">
                 <Award className="h-4 w-4 mr-2" />
-                #1 პლატფორმა
+                {t('hero.topPlatform')}
               </Badge>
             </div>
           </div>
@@ -45,13 +45,9 @@ const AboutUs = () => {
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <TrendingUp className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">ჩვენი მისია</h3>
+                  <h3 className="text-2xl font-bold mb-4">{t('mission.title')}</h3>
                 </div>
-                <p className="text-muted-foreground leading-relaxed text-center">
-                  ჩვენი მისიაა გავხადოთ უძრავი ქონების ყიდვა-გაყიდვის პროცესი
-                  მარტივი, უსაფრთხო და ეფექტური. ვეხმარებით ადამიანებს იპოვონ
-                  მათი ოცნების სახლი ან გაყიდონ ქონება სწრაფად და გამჭვირვალედ.
-                </p>
+                <p className="text-muted-foreground leading-relaxed text-center">{t('mission.description')}</p>
               </CardContent>
             </Card>
 
@@ -61,13 +57,9 @@ const AboutUs = () => {
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Award className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">ჩვენი ხედვა</h3>
+                  <h3 className="text-2xl font-bold mb-4">{t('vision.title')}</h3>
                 </div>
-                <p className="text-muted-foreground leading-relaxed text-center">
-                  ჩვენი ხედვაა ვიყოთ საქართველოში უძრავი ქონების ბაზრის
-                  ლიდერი და შევქმნათ ციფრული ეკოსისტემა, სადაც თითოეული
-                  მომხმარებელი მიიღებს საუკეთესო მომსახურებას.
-                </p>
+                <p className="text-muted-foreground leading-relaxed text-center">{t('vision.description')}</p>
               </CardContent>
             </Card>
           </div>
@@ -76,11 +68,8 @@ const AboutUs = () => {
         {/* Features Section */}
         <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">რატომ HomeVend?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              ჩვენ გთავაზობთ უნიკალურ სერვისებს, რომლებიც გხდის უძრავი ქონების
-              ძებნის და გაყიდვის პროცესს მაქსიმალურად კომფორტულს.
-            </p>
+            <h2 className="text-3xl font-bold mb-4">{t('features.title')}</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">{t('features.subtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -89,10 +78,8 @@ const AboutUs = () => {
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Home className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">ფართო არჩევანი</h3>
-                <p className="text-muted-foreground text-sm">
-                  ათასობით განცხადება ყველა რეგიონიდან და ყველა ფასის კატეგორიიდან
-                </p>
+                <h3 className="text-lg font-semibold mb-2">{t('features.items.wideSelection.title')}</h3>
+                <p className="text-muted-foreground text-sm">{t('features.items.wideSelection.desc')}</p>
               </CardContent>
             </Card>
 
@@ -101,10 +88,8 @@ const AboutUs = () => {
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">ვერიფიცირებული აგენტები</h3>
-                <p className="text-muted-foreground text-sm">
-                  ყველა აგენტი გადის ვერიფიკაციას უსაფრთხოების მაქსიმალური დონისთვის
-                </p>
+                <h3 className="text-lg font-semibold mb-2">{t('features.items.verifiedAgents.title')}</h3>
+                <p className="text-muted-foreground text-sm">{t('features.items.verifiedAgents.desc')}</p>
               </CardContent>
             </Card>
 
@@ -113,10 +98,8 @@ const AboutUs = () => {
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">ბაზრის ანალიტიკა</h3>
-                <p className="text-muted-foreground text-sm">
-                  რეალურ დროში ფასების ანალიზი და ბაზრის ტენდენციების თვალყურება
-                </p>
+                <h3 className="text-lg font-semibold mb-2">{t('features.items.marketAnalytics.title')}</h3>
+                <p className="text-muted-foreground text-sm">{t('features.items.marketAnalytics.desc')}</p>
               </CardContent>
             </Card>
 
@@ -125,10 +108,8 @@ const AboutUs = () => {
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Phone className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">24/7 მხარდაჭერა</h3>
-                <p className="text-muted-foreground text-sm">
-                  ჩვენი გუნდი მზადაა დაგეხმაროთ ნებისმიერ დროს
-                </p>
+                <h3 className="text-lg font-semibold mb-2">{t('features.items.support247.title')}</h3>
+                <p className="text-muted-foreground text-sm">{t('features.items.support247.desc')}</p>
               </CardContent>
             </Card>
 
@@ -137,10 +118,8 @@ const AboutUs = () => {
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">სწრაფი კომუნიკაცია</h3>
-                <p className="text-muted-foreground text-sm">
-                  მყისიერი შეტყობინებები აგენტებთან და მყიდველებთან
-                </p>
+                <h3 className="text-lg font-semibold mb-2">{t('features.items.fastCommunication.title')}</h3>
+                <p className="text-muted-foreground text-sm">{t('features.items.fastCommunication.desc')}</p>
               </CardContent>
             </Card>
 
@@ -149,10 +128,8 @@ const AboutUs = () => {
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MapPin className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">ინტერაქტიული რუკა</h3>
-                <p className="text-muted-foreground text-sm">
-                  განცხადებების ნახვა რუკაზე და მდებარეობის ზუსტი განსაზღვრა
-                </p>
+                <h3 className="text-lg font-semibold mb-2">{t('features.items.interactiveMap.title')}</h3>
+                <p className="text-muted-foreground text-sm">{t('features.items.interactiveMap.desc')}</p>
               </CardContent>
             </Card>
           </div>
@@ -162,18 +139,18 @@ const AboutUs = () => {
         <div className="bg-muted py-16">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">ჩვენი მონაცემები</h2>
-              <p className="text-muted-foreground">რიცხვები, რომლებიც ჩვენს წარმატებაზე მეტყველებს</p>
+              <h2 className="text-3xl font-bold mb-4">{t('stats.title')}</h2>
+              <p className="text-muted-foreground">{t('stats.subtitle')}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="text-4xl font-bold text-primary mb-2">10,000+</div>
-                <div className="text-muted-foreground">განცხადება</div>
+                <div className="text-muted-foreground">{t('stats.items.listings')}</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-primary mb-2">50,000+</div>
-                <div className="text-muted-foreground">მომხმარებელი</div>
+                <div className="text-muted-foreground">{t('stats.items.users')}</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-primary mb-2">500+</div>
@@ -190,19 +167,17 @@ const AboutUs = () => {
         {/* CTA Section */}
         <div className="container mx-auto px-4 py-16">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">მზად ხართ დაიწყოთ?</h2>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              შემოგვიერთდით ათასობით კმაყოფილ მომხმარებელს და იპოვეთ თქვენი ოცნების სახლი ან გაყიდეთ ქონება სწრაფად.
-            </p>
+            <h2 className="text-3xl font-bold mb-4">{t('cta.title')}</h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">{t('cta.subtitle')}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="px-8">
-                <Link to="/dashboard/add-property" className="flex items-center gap-1.5">
-                განცხადების დამატება
+                <Link to={getLanguageUrl("dashboard/add-property", i18n.language)} className="flex items-center gap-1.5">
+                {t('cta.buttons.addProperty')}
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="px-8">
-                <Link to="/properties" className="flex items-center gap-1.5">
-                ქონების ძებნა
+                <Link to={getLanguageUrl("properties", i18n.language)} className="flex items-center gap-1.5">
+                {t('cta.buttons.searchProperties')}
                 </Link>
               </Button>
             </div>

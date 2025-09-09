@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "title": "About Us",
+    "subtitle": "HomeVend is Georgia’s leading real estate platform, bringing buyers and sellers together in one place.",
+    "listings": "10,000+ listings",
+    "users": "50,000+ users",
+    "topPlatform": "#1 platform"
+  },
+  "mission": {
+    "title": "Our Mission",
+    "description": "Our mission is to make buying and selling real estate simple, secure, and efficient. We help people find their dream home or sell property quickly and transparently."
+  },
+  "vision": {
+    "title": "Our Vision",
+    "description": "Our vision is to be the market leader in Georgia’s real estate sector and build a digital ecosystem where every user receives the best service."
+  },
+  "features": {
+    "title": "Why HomeVend?",
+    "subtitle": "We offer unique services that make searching for and selling real estate as convenient as possible.",
+    "items": {
+      "wideSelection": {
+        "title": "Wide Selection",
+        "desc": "Thousands of listings from all regions and price ranges"
+      },
+      "verifiedAgents": {
+        "title": "Verified Agents",
+        "desc": "Every agent is verified for maximum safety"
+      },
+      "marketAnalytics": {
+        "title": "Market Analytics",
+        "desc": "Real-time price analysis and market trends"
+      },
+      "support247": {
+        "title": "24/7 Support",
+        "desc": "Our team is ready to help anytime"
+      },
+      "fastCommunication": {
+        "title": "Fast Communication",
+        "desc": "Instant messaging with agents and buyers"
+      },
+      "interactiveMap": {
+        "title": "Interactive Map",
+        "desc": "View listings on the map and locate them precisely"
+      }
+    }
+  },
+  "stats": {
+    "title": "Our Stats",
+    "subtitle": "Numbers that highlight our success",
+    "items": {
+      "listings": "listings",
+      "users": "users"
+    }
+  },
+  "cta": {
+    "title": "Ready to get started?",
+    "subtitle": "Join thousands of happy users to find your dream home or sell your property quickly.",
+    "buttons": {
+      "addProperty": "Add Listing",
+      "searchProperties": "Search Properties"
+    }
+  }
+}

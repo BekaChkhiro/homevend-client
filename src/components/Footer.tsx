@@ -1,7 +1,11 @@
 
 import { Home, Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 export const Footer = () => {
+  const { i18n } = useTranslation();
   return (
     <footer className="bg-muted/50 border-t border-border mt-8 sm:mt-12 lg:mt-16">
       <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-10 lg:py-12">
@@ -60,7 +64,7 @@ export const Footer = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-muted-foreground space-y-4 sm:space-y-0">
             <p>&copy; 2024 HOMEVEND.ge. ყველა უფლება დაცულია.</p>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-center">
-              <a href="/terms" className="hover:text-primary transition-colors">წესები და პირობები</a>
+              <Link to={getLanguageUrl('terms', i18n.language)} className="hover:text-primary transition-colors">წესები და პირობები</Link>
             </div>
           </div>
         </div>

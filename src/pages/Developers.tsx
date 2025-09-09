@@ -17,6 +17,8 @@ import {
   Construction
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 import { developerApi } from "@/lib/api";
 
 interface Developer {
@@ -43,6 +45,7 @@ interface Developer {
 }
 
 const Developers = () => {
+  const { i18n } = useTranslation();
   const [developers, setDevelopers] = useState<Developer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -180,7 +183,7 @@ const Developers = () => {
             <span>{developer.totalSales.toLocaleString()} ₾</span>
           </div>
           
-          <Link to={`/developers/${developer.id}`}>
+          <Link to={getLanguageUrl(`developers/${developer.id}`, i18n.language)}>
             <Button variant="outline" size="sm">
               დეტალურად
             </Button>

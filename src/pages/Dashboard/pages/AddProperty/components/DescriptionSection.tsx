@@ -4,36 +4,38 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileText, Languages } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export const DescriptionSection = () => {
+  const { t } = useTranslation('userDashboard');
   const { register, formState: { errors } } = useFormContext();
   return (
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <FileText className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">აღწერა</h3>
+        <h3 className="text-xl font-semibold">{t('addPropertyForm.pricing.description')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5">
         <Label className="block mb-4 font-medium flex items-center gap-2">
           <Languages className="h-4 w-4 text-muted-foreground" />
-          <span>აღწერა სხვადასხვა ენაზე</span>
+          <span>{t('addPropertyForm.pricing.descriptionInLanguages')}</span>
         </Label>
 
         <Tabs defaultValue="georgian" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="georgian">ქართული</TabsTrigger>
-            <TabsTrigger value="english">ინგლისური</TabsTrigger>
-            <TabsTrigger value="russian">რუსული</TabsTrigger>
+            <TabsTrigger value="georgian">{t('addPropertyForm.pricing.georgian')}</TabsTrigger>
+            <TabsTrigger value="english">{t('addPropertyForm.pricing.english')}</TabsTrigger>
+            <TabsTrigger value="russian">{t('addPropertyForm.pricing.russian')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="georgian" className="space-y-4">
             <div>
-              <Label htmlFor="descriptionGeorgian" className="text-sm mb-2 block">აღწერა ქართულად</Label>
+              <Label htmlFor="descriptionGeorgian" className="text-sm mb-2 block">{t('addPropertyForm.pricing.descriptionInGeorgian')}</Label>
               <Textarea 
                 {...register("descriptionGeorgian")}
                 id="descriptionGeorgian"
-                placeholder="დაწერეთ უძრავი ქონების დეტალური აღწერა ქართულად..."
+                placeholder={t('addPropertyForm.pricing.descriptionPlaceholder')}
                 className="min-h-[120px] border-input focus:ring-ring focus:ring-1"
                 rows={6}
               />
@@ -77,7 +79,7 @@ export const DescriptionSection = () => {
         </Tabs>
 
         <div className="mt-4 text-xs text-muted-foreground">
-          დეტალური აღწერა დაგეხმარებათ მეტი ინტერესი გაიღოთ პოტენციური მყიდველების მხრიდან
+          {t('addPropertyForm.pricing.descriptionHelp')}
         </div>
       </div>
     </div>

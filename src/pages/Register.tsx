@@ -9,11 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth, type AuthContextType } from "@/contexts/AuthContext";
 import { User, Building, Upload, X, Wrench } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 const Register = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { register } = useAuth() as AuthContextType;
+  const { i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("user");
   const [formData, setFormData] = useState({
@@ -154,7 +157,7 @@ const Register = () => {
           title: "რეგისტრაცია წარმატებით დასრულდა!",
           description: "შეამოწმეთ თქვენი ელ.ფოსტა ანგარიშის გასააქტიურებლად",
         });
-        navigate('/login?message=check-email');
+        navigate(getLanguageUrl('login?message=check-email', i18n.language));
       }
     } catch (error) {
       console.error('Registration error:', error);
@@ -598,7 +601,7 @@ const Register = () => {
             <CardFooter className="flex justify-center">
               <div className="text-sm text-muted-foreground">
                 უკვე გაქვთ ანგარიში?{" "}
-                <Link to="/login" className="text-primary hover:underline">
+                <Link to={getLanguageUrl('login', i18n.language)} className="text-primary hover:underline">
                   შესვლა
                 </Link>
               </div>

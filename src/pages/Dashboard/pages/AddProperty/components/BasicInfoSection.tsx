@@ -241,13 +241,13 @@ export const BasicInfoSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4"
                 >
                   {[
-                    { value: "apartment", label: t('addPropertyForm.basicInfo.propertyTypes.apartment'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypes.apartment'), icon: <Building2 className="h-5 w-5" />, desc: "მრავალსართულიანი" },
-                    { value: "house", label: t('addPropertyForm.basicInfo.propertyTypes.house'), mobileLabel: "სახლები", icon: <Home className="h-5 w-5" />, desc: "ცალკე მდგომი" },
-                    { value: "cottage", label: t('addPropertyForm.basicInfo.propertyTypes.cottage'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypes.cottage'), icon: <Tent className="h-5 w-5" />, desc: "დასასვენებელი" },
-                    { value: "land", label: t('addPropertyForm.basicInfo.propertyTypes.land'), mobileLabel: "მიწები", icon: <MapPin className="h-5 w-5" />, desc: "სამშენებლო" },
-                    { value: "commercial", label: t('addPropertyForm.basicInfo.propertyTypes.commercialSpace'), mobileLabel: "კომერცია", icon: <Briefcase className="h-5 w-5" />, desc: "მაღაზია, საწყობი" },
-                    { value: "office", label: "საოფისე", mobileLabel: "ოფისები", icon: <Briefcase className="h-5 w-5" />, desc: "ოფისის ფართი" },
-                    { value: "hotel", label: t('addPropertyForm.basicInfo.propertyTypes.hotel'), mobileLabel: "ჰოტელები", icon: <Hotel className="h-5 w-5" />, desc: "სასტუმრო" }
+                    { value: "apartment", label: t('addPropertyForm.basicInfo.propertyTypes.apartment'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypes.apartment'), icon: <Building2 className="h-5 w-5" />, desc: t('addPropertyForm.basicInfo.propertyTypeDescriptions.apartment') },
+                    { value: "house", label: t('addPropertyForm.basicInfo.propertyTypes.house'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypeMobileLabels.house'), icon: <Home className="h-5 w-5" />, desc: t('addPropertyForm.basicInfo.propertyTypeDescriptions.house') },
+                    { value: "cottage", label: t('addPropertyForm.basicInfo.propertyTypes.cottage'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypes.cottage'), icon: <Tent className="h-5 w-5" />, desc: t('addPropertyForm.basicInfo.propertyTypeDescriptions.cottage') },
+                    { value: "land", label: t('addPropertyForm.basicInfo.propertyTypes.land'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypeMobileLabels.land'), icon: <MapPin className="h-5 w-5" />, desc: t('addPropertyForm.basicInfo.propertyTypeDescriptions.land') },
+                    { value: "commercial", label: t('addPropertyForm.basicInfo.propertyTypes.commercialSpace'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypeMobileLabels.commercial'), icon: <Briefcase className="h-5 w-5" />, desc: t('addPropertyForm.basicInfo.propertyTypeDescriptions.commercial') },
+                    { value: "office", label: t('addPropertyForm.basicInfo.propertyTypes.office'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypeMobileLabels.office'), icon: <Briefcase className="h-5 w-5" />, desc: t('addPropertyForm.basicInfo.propertyTypeDescriptions.office') },
+                    { value: "hotel", label: t('addPropertyForm.basicInfo.propertyTypes.hotel'), mobileLabel: t('addPropertyForm.basicInfo.propertyTypeMobileLabels.hotel'), icon: <Hotel className="h-5 w-5" />, desc: t('addPropertyForm.basicInfo.propertyTypeDescriptions.hotel') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -304,12 +304,12 @@ export const BasicInfoSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                 >
                   {[
-                    { value: "sale", label: t('addPropertyForm.basicInfo.dealTypes.sale'), desc: "სრული გაყიდვა" },
-                    { value: "rent", label: t('addPropertyForm.basicInfo.dealTypes.rent'), desc: "გრძელვადიანი ქირა" },
-                    { value: "mortgage", label: "გირავდება", desc: "გირავით გადაცემა" },
-                    { value: "lease", label: "გაიცემა იჯარით", desc: "კომერციული იჯარა" },
-                    { value: "daily", label: t('addPropertyForm.basicInfo.dealTypes.daily'), desc: "მოკლევადიანი ქირა" },
-                    { value: "redemption", label: "ნასყიდობა გამოსყიდობის უფლებით", desc: "გამოსყიდობის უფლებით" }
+                    { value: "sale", label: t('addPropertyForm.basicInfo.dealTypes.sale'), desc: t('addPropertyForm.basicInfo.dealTypeDescriptions.sale') },
+                    { value: "rent", label: t('addPropertyForm.basicInfo.dealTypes.rent'), desc: t('addPropertyForm.basicInfo.dealTypeDescriptions.rent') },
+                    { value: "mortgage", label: t('addPropertyForm.basicInfo.dealTypes.mortgage'), desc: t('addPropertyForm.basicInfo.dealTypeDescriptions.mortgage') },
+                    { value: "lease", label: t('addPropertyForm.basicInfo.dealTypes.lease'), desc: t('addPropertyForm.basicInfo.dealTypeDescriptions.lease') },
+                    { value: "daily", label: t('addPropertyForm.basicInfo.dealTypes.daily'), desc: t('addPropertyForm.basicInfo.dealTypeDescriptions.daily') },
+                    { value: "redemption", label: t('addPropertyForm.basicInfo.dealTypes.redemption'), desc: t('addPropertyForm.basicInfo.dealTypeDescriptions.redemption') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -357,7 +357,7 @@ export const BasicInfoSection = () => {
                 <FormControl>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="h-11 sm:h-12 text-sm sm:text-base border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors">
-                      <SelectValue placeholder="აირჩიეთ კატეგორია (არასავალდებულო)" />
+                      <SelectValue placeholder={t('addPropertyForm.basicInfo.selectCategoryOptional')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="sea">ზღვასთან დღიური ქირაობა</SelectItem>
@@ -372,7 +372,7 @@ export const BasicInfoSection = () => {
           />
           <div className="mt-3 p-3 bg-muted/50 rounded-lg">
             <p className="text-xs text-muted-foreground">
-              💡 თუ არ აირჩევთ კონკრეტულ კატეგორიას, ქონება ჩაირთვება ზოგად "დღიური ქირაობა" კატეგორიაში
+              {t('addPropertyForm.basicInfo.dailyRentalNote')}
             </p>
           </div>
         </div>
@@ -399,7 +399,7 @@ export const BasicInfoSection = () => {
                 <FormControl>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="h-11 sm:h-12 text-sm sm:text-base border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors">
-                      <SelectValue placeholder={projectsLoading ? "იტვირთება..." : "აირჩიეთ პროექტი (არასავალდებულო)"} />
+                      <SelectValue placeholder={projectsLoading ? t('addPropertyForm.basicInfo.loadingProjects') : t('addPropertyForm.basicInfo.selectProjectOptional')} />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
                       {projectsLoading ? (
@@ -577,10 +577,10 @@ export const BasicInfoSection = () => {
             <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
               <BookOpen className="h-4 w-4 text-primary" />
             </div>
-            <span>საკადასტრო კოდი</span>
-            <span className="text-sm font-normal text-muted-foreground">(არასავალდებულო)</span>
+            <span>{t('addPropertyForm.basicInfo.cadastralCode')}</span>
+            <span className="text-sm font-normal text-muted-foreground">({t('addPropertyForm.basicInfo.optional')})</span>
           </Label>
-          <p className="text-sm text-muted-foreground mt-1 ml-11">ქონების საკადასტრო კოდი თუ ცნობილია</p>
+          <p className="text-sm text-muted-foreground mt-1 ml-11">{t('addPropertyForm.basicInfo.cadastralCodeDesc')}</p>
         </div>
         <div>
           <FormField
@@ -591,7 +591,7 @@ export const BasicInfoSection = () => {
                 <FormControl>
                   <Input 
                     id="cadastral-code" 
-                    placeholder="მაგ: 01.10.14.009.088" 
+                    placeholder={t('addPropertyForm.basicInfo.cadastralCodePlaceholder')} 
                     className="h-11 sm:h-12 text-sm sm:text-base border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                     {...field}
                   />
@@ -602,7 +602,7 @@ export const BasicInfoSection = () => {
           />
           <div className="mt-3 p-3 bg-muted/50 rounded-lg">
             <p className="text-xs text-muted-foreground">
-              💡 საკადასტრო კოდი არის უნიკალური იდენტიფიკატორი, რომელიც გამოიყენება ქონების იურიდიული სტატუსის დასადგენად
+              {t('addPropertyForm.basicInfo.cadastralCodeHelp')}
             </p>
           </div>
         </div>

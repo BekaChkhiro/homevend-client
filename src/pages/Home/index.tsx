@@ -12,6 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Building2, MapPin, TrendingUp, Users, BarChart3, Home as HomeIcon, CheckCircle, Phone, Globe, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 import { propertyApi, agencyApi, projectApi } from "@/lib/api";
 import type { Property, FilterState } from "@/pages/Index";
 
@@ -37,6 +39,7 @@ interface Agency {
 
 const Home = () => {
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
   const [properties, setProperties] = useState<Property[]>([]);
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
   const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -158,7 +161,7 @@ const Home = () => {
 
   const handleSearch = (searchFilters: FilterState) => {
     // Navigate to properties page with filters
-    navigate('/properties', { 
+    navigate(getLanguageUrl('properties', i18n.language), { 
       state: { filters: searchFilters }
     });
   };
@@ -206,7 +209,7 @@ const Home = () => {
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
-                <Link to="/properties">
+                <Link to={getLanguageUrl('properties', i18n.language)}>
                   <span className="hidden sm:inline">ყველას ნახვა</span>
                   <span className="sm:hidden">ყველა</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
@@ -248,7 +251,7 @@ const Home = () => {
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
-                <Link to="/agencies">
+                <Link to={getLanguageUrl('agencies', i18n.language)}>
                   <span className="hidden sm:inline">ყველას ნახვა</span>
                   <span className="sm:hidden">ყველა</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
@@ -425,11 +428,11 @@ const Home = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-                  <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
-                    <Link to="/services">
-                      დეტალურად
-                    </Link>
-                  </Button>
+                <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
+                  <Link to={getLanguageUrl('services', i18n.language)}>
+                    დეტალურად
+                  </Link>
+                </Button>
                 </CardContent>
               </Card>
 
@@ -444,11 +447,11 @@ const Home = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-                  <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
-                    <Link to="/services">
-                      დეტალურად
-                    </Link>
-                  </Button>
+                <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
+                  <Link to={getLanguageUrl('services', i18n.language)}>
+                    დეტალურად
+                  </Link>
+                </Button>
                 </CardContent>
               </Card>
             </div>
@@ -468,7 +471,7 @@ const Home = () => {
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
-                <Link to="/price-statistics">
+                <Link to={getLanguageUrl('price-statistics', i18n.language)}>
                   <span className="hidden sm:inline">ყველას ნახვა</span>
                   <span className="sm:hidden">ყველა</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />

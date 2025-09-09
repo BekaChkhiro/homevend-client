@@ -16,7 +16,9 @@
     "squareMeters": "m²",
     "back": "Back",
     "note": "Note",
-    "day": "day"
+    "day": "day",
+    "min": "Min",
+    "max": "Max"
   },
   "menu": {
     "addProject": "Add Project",
@@ -271,7 +273,40 @@
       "pending": "Pending",
       "failed": "Failed",
       "cancelled": "Cancelled"
-    }
+    },
+    "balancePageTitle": "Top Up Balance",
+    "currentBalance": "Current Balance",
+    "availableForAds": "Available amount for posting ads",
+    "lastTopUp": "Last Top-up",
+    "noTopUpsYet": "No top-ups yet",
+    "topUpBalance": "Top Up Balance",
+    "paymentMethod": "Payment Method",
+    "amount": "Amount",
+    "limit": "Limit",
+    "quickAmounts": {
+      "50": "50₾",
+      "100": "100₾",
+      "200": "200₾"
+    },
+    "transactionHistory": "Transaction History",
+    "noTransactions": "No transactions yet",
+    "refreshBalance": "Refresh Balance",
+    "invalidAmountAlert": "Please enter a valid amount",
+    "topUpSuccessAlert": "Top-up successful! New balance",
+    "errorAlert": "Error",
+    "transactionTypes": {
+      "top_up": "Balance Top-up",
+      "vip_purchase": "VIP Service",
+      "service_purchase": "Additional Service",
+      "property_post": "Property Posting"
+    },
+    "serviceLabels": {
+      "auto_renew": "Auto Renewal",
+      "color_separation": "Color Highlighting"
+    },
+    "days": "days",
+    "day": "day",
+    "balanceUpdated": "Your balance has been topped up by {{amount}}₾. New balance: {{balance}}₾"
   },
   "serviceLabels": {
     "vip": "VIP",
@@ -300,7 +335,15 @@
     "expirestoday": "Expires today",
     "dayRemaining": "1 day remaining",
     "daysRemaining": "{{days}} days remaining",
-    "daysRemainingShort": "{{days}} days"
+    "daysRemainingShort": "{{days}} days",
+    "day": "day"
+  },
+  "serviceLabels": {
+    "vip": "VIP",
+    "vipplus": "VIP+",
+    "supervip": "SUPER VIP",
+    "autorenew": "Auto-Renew",
+    "colorseparation": "Color Border"
   },
   "projectTypes": {
     "privateHouse": "Private House",
@@ -330,14 +373,27 @@
   "addPropertyForm": {
     "basicInfo": {
       "title": "Basic Information",
+      "subtitle": "Property Information",
       "propertyTitle": "Property Title",
       "propertyTitlePlaceholder": "e.g. 2 room apartment in Vake",
+      "propertyTitleTip": "Short and informative title",
       "propertyType": "Property Type",
       "dealType": "Deal Type",
       "dealTypes": {
         "sale": "For Sale",
         "rent": "For Rent", 
-        "daily": "Daily Rental"
+        "daily": "Daily Rental",
+        "mortgage": "Mortgage",
+        "lease": "For Lease",
+        "redemption": "Sale with Redemption Right"
+      },
+      "dealTypeDescriptions": {
+        "sale": "Full sale",
+        "rent": "Long-term rent",
+        "daily": "Short-term rent",
+        "mortgage": "Transfer with mortgage",
+        "lease": "Commercial lease",
+        "redemption": "With redemption right"
       },
       "propertyTypes": {
         "apartment": "Apartment",
@@ -345,7 +401,24 @@
         "cottage": "Cottage",
         "commercialSpace": "Commercial Space",
         "land": "Land",
+        "hotel": "Hotel",
+        "office": "Office"
+      },
+      "propertyTypeDescriptions": {
+        "apartment": "Multi-story",
+        "house": "Detached",
+        "cottage": "Recreational",
+        "land": "For construction",
+        "commercial": "Shop, warehouse",
+        "office": "Office space",
         "hotel": "Hotel"
+      },
+      "propertyTypeMobileLabels": {
+        "house": "Houses",
+        "land": "Lands",
+        "commercial": "Commerce",
+        "office": "Offices",
+        "hotel": "Hotels"
       },
       "location": "Location",
       "city": "City",
@@ -360,10 +433,26 @@
       "propertyTitleDesc": "Short and informative title",
       "propertyTypeDesc": "Select property type",
       "dealTypeDesc": "What kind of deal do you want",
-      "locationDesc": "Exact property address"
+      "locationDesc": "Exact property address",
+      "selectCategoryOptional": "Select category (optional)",
+      "selectProjectOptional": "Select project (optional)",
+      "loadingProjects": "Loading...",
+      "dailyRentalNote": "💡 If you don't select a specific category, the property will be included in the general 'Daily Rental' category",
+      "cadastralCode": "Cadastral Code",
+      "cadastralCodePlaceholder": "e.g: 01.10.14.009.088",
+      "optional": "optional",
+      "cadastralCodeDesc": "Property cadastral code if known",
+      "cadastralCodeHelp": "💡 Cadastral code is a unique identifier used to determine the legal status of the property",
+      "yourName": "Your name"
     },
     "propertyDetails": {
       "title": "Property Details",
+      "bathroomType": "Bathroom Type",
+      "bathroomTypes": {
+        "shared": "Shared"
+      },
+      "floors": "Floors",
+      "floorsPlaceholder": "Floors",
       "roomCount": "Room Count",
       "bedroomCount": "Bedroom Count",
       "bathroomCount": "Bathroom Count",
@@ -380,19 +469,134 @@
         "oldConstruction": "Old Construction",
         "renovated": "Renovated"
       },
+      "buildingStatus": "Building Status",
+      "buildingStatuses": {
+        "old-built": "Old Built",
+        "new-built": "New Built",
+        "under-construction": "Under Construction"
+      },
       "condition": "Condition",
       "conditions": {
         "newConstruction": "New Construction",
         "renovated": "Renovated",
         "goodCondition": "Good Condition",
-        "needsRenovation": "Needs Renovation"
+        "needsRenovation": "Needs Renovation",
+        "newly-renovated": "Newly Renovated",
+        "old-renovated": "Old Renovated",
+        "ongoing-renovation": "Ongoing Renovation",
+        "needs-renovation": "Needs Renovation",
+        "white-frame": "White Frame",
+        "black-frame": "Black Frame",
+        "green-frame": "Green Frame",
+        "white-plus": "White Plus"
       },
+      "propertyStyle": "Property Style",
+      "propertyStyles": {
+        "non-standard": "Non-standard",
+        "villa": "Villa",
+        "townhouse": "Townhouse"
+      },
+      "ceilingHeightPlaceholder": "Meters",
+      "heatingType": "Heating Type",
+      "heatingTypes": {
+        "central-heating": "Central Heating",
+        "gas-heater": "Gas Heater",
+        "electric-heater": "Electric Heater",
+        "central-floor": "Central + Floor Heating",
+        "no-heating": "No Heating",
+        "individual": "Individual",
+        "floor-heating": "Floor Heating"
+      },
+      "parkingType": "Parking Type",
+      "parkingTypes": {
+        "garage": "Garage",
+        "parking-space": "Parking Space",
+        "yard-parking": "Yard Parking",
+        "underground-parking": "Underground Parking",
+        "paid-parking": "Paid Parking",
+        "no-parking": "No Parking"
+      },
+      "hotWaterType": "Hot Water Type",
+      "hotWaterTypes": {
+        "gas-water-heater": "Gas Water Heater",
+        "boiler": "Boiler",
+        "electric-water-heater": "Electric Water Heater",
+        "solar-heater": "Solar Heater",
+        "no-hot-water": "No Hot Water",
+        "central-hot-water": "Central Hot Water",
+        "natural-hot-water": "Natural Hot Water",
+        "individual": "Individual"
+      },
+      "wallMaterial": "Wall Material",
+      "wallMaterials": {
+        "block": "Block",
+        "brick": "Brick",
+        "wood": "Wood",
+        "reinforced-concrete": "Reinforced Concrete",
+        "combined": "Combined"
+      },
+      "storageCount": "Storage Count",
+      "storageCountPlaceholder": "Quantity",
+      "storageArea": "Storage Area",
+      "storageAreaPlaceholder": "Area",
+      "poolType": "Pool Type",
+      "poolTypes": {
+        "outdoor": "Outdoor",
+        "indoor": "Indoor"
+      },
+      "veranda": "Veranda",
+      "verandaAreaPlaceholder": "Area",
+      "verandaType": "Veranda Type",
+      "verandaTypes": {
+        "separate": "Separate",
+        "studio": "Studio"
+      },
+      "balcony": "Balcony",
+      "balconyArea": "Balcony Area (m²)",
+      "balconyCount": "Number of Balconies",
+      "pool": "Pool",
+      "poolType": "Pool Type",
+      "livingRoom": "Living Room",
+      "livingRoomArea": "Living Room Area (m²)",
+      "livingRoomType": "Living Room Type",
+      "loggia": "Loggia",
+      "loggiaArea": "Loggia Area (m²)",
+      "veranda": "Veranda",
+      "verandaArea": "Veranda Area (m²)",
+      "hasYard": "Has Yard",
+      "yardArea": "Yard Area (m²)",
+      "storageType": "Storage Type",
+      "storageArea": "Storage Area (m²)",
+      "storageTypeLabel": "Storage Type",
+      "storageTypes": {
+        "basement": "Basement",
+        "attic": "Attic",
+        "pantry": "Pantry",
+        "external-storage": "External Storage",
+        "shared-storage": "Shared Storage",
+        "basement-attic": "Basement + Attic"
+      },
+      "constructionYear": "Construction Year",
+      "condition": "Condition",
+      "projectType": "Project Type",
+      "ceilingHeight": "Ceiling Height",
+      "ceilingHeightPlaceholder": "Height in meters",
+      "buildingStatus": "Building Status",
+      "heatingType": "Heating Type", 
+      "floorsPlaceholder": "Number of floors",
       "yearBuilt": "Year Built",
       "entrance": "Entrance Number",
       "parkingSpaces": "Parking Spaces"
     },
     "features": {
       "title": "Features and Amenities",
+      "cargo-elevator": "Cargo Elevator",
+      "water": "Water",
+      "sewerage": "Sewerage",
+      "electricity": "Electricity",
+      "fenced": "Fenced",
+      "intercom": "Gate",
+      "kitchen-appliances": "Kitchen + Appliances",
       "utilities": "Utilities",
       "internet": "Internet",
       "tv": "TV",
@@ -419,6 +623,22 @@
         "outdoor": "Outdoor"
       }
     },
+    "advantages": {
+      "title": "Additional Advantages",
+      "spa": "Spa",
+      "bar": "Bar",
+      "gym": "Gym",
+      "fireplace": "Fireplace",
+      "bbq": "BBQ/Grill",
+      "jacuzzi": "Jacuzzi",
+      "sauna": "Sauna",
+      "yard-lighting": "Yard Lighting",
+      "fruit-trees": "Fruit Trees",
+      "alarm": "Security System",
+      "wine-cellar": "Wine Cellar",
+      "ventilation": "Ventilation",
+      "security": "Security"
+    },
     "furniture": {
       "title": "Furniture and Appliances",
       "furnished": "Furniture",
@@ -428,20 +648,55 @@
       "dishwasher": "Dishwasher",
       "oven": "Oven",
       "microwave": "Microwave",
-      "tv_appliance": "Television"
+      "tv_appliance": "Television",
+      "bed": "Bed",
+      "sofa": "Sofa",
+      "table": "Table",
+      "chairs": "Chairs",
+      "stove-gas": "Gas Stove",
+      "stove-electric": "Electric Stove",
+      "air-conditioner": "Air Conditioner"
     },
     "pricing": {
       "title": "Pricing and Contact Information",
       "totalArea": "Total Area (m²)",
+      "totalAreaPlaceholder": "Area in square meters",
       "price": "Price",
+      "pricePlaceholder": "Total price in dollars",
       "pricePerSqm": "Price per m²",
+      "pricePerSqmPlaceholder": "Calculated automatically",
       "currency": "Currency",
       "priceNegotiable": "Price Negotiable",
       "contactPerson": "Contact Person",
+      "contactPersonPlaceholder": "Your name",
       "contactPhone": "Contact Phone",
       "contactEmail": "Contact Email",
       "description": "Description",
-      "descriptionPlaceholder": "Detailed property description..."
+      "descriptionPlaceholder": "Write a detailed property description in Georgian...",
+      "subtitle": "Specify property price and area",
+      "totalAreaDesc": "Total property area",
+      "totalValue": "Total property value",
+      "automaticallyCalculated": "Calculated automatically",
+      "priceCalculation": "Price Calculation",
+      "priceCalculationDesc": "Square meter price is calculated automatically based on total price and area.",
+      "descriptionInLanguages": "Description in different languages",
+      "georgian": "Georgian",
+      "english": "English", 
+      "russian": "Russian",
+      "descriptionInGeorgian": "Description in Georgian",
+      "descriptionHelp": "A detailed description will help attract more interest from potential buyers",
+      "phoneExample": "Example: +995 555 123 456"
+    },
+    "validation": {
+      "titleRequired": "Property title is required",
+      "propertyTypeRequired": "Property type is required",
+      "dealTypeRequired": "Deal type is required",
+      "cityRequired": "City is required",
+      "streetRequired": "Street is required",
+      "areaRequired": "Area is required",
+      "totalPriceRequired": "Total price is required",
+      "contactNameRequired": "Name is required",
+      "contactPhoneRequired": "Phone number is required"
     },
     "vipServices": {
       "title": "VIP Services and Packages",
@@ -466,10 +721,47 @@
       "colorSeparationDesc": "Highlighted with colored border",
       "totalCost": "Total Cost",
       "yourBalance": "Your Balance",
-      "purchaseServices": "Purchase Services"
+      "purchaseServices": "Purchase Services",
+      "title": "Services",
+      "selectVipAndServices": "VIP Status and Additional Services Selection",
+      "selectVipPackage": "Select VIP Package",
+      "free": "Free",
+      "standardVisibility": "Standard visibility",
+      "perDay": "per day",
+      "howManyDays": "How many days?",
+      "selectDays": "Select days",
+      "days": "days",
+      "packageDescriptions": {
+        "vip": "Priority display with VIP badge",
+        "vip_plus": "Enhanced VIP with high priority",
+        "super_vip": "Highest level VIP with premium placement"
+      },
+      "additionalServices": {
+        "autoRenew": "Auto Renewal",
+        "colorSeparation": "Color Highlighting"
+      },
+      "serviceDescriptions": {
+        "autoRenew": "Daily automatic renewal",
+        "colorSeparation": "Highlighted with colored border"
+      },
+      "additionalServicesOptional": "Additional Services (Optional)",
+      "costSummary": "Cost Summary",
+      "vipPackage": "VIP Package",
+      "total": "Total",
+      "insufficientBalance": "Insufficient balance. Balance top-up required."
     },
     "photos": {
-      "title": "Photos",
+      "title": "Photo Gallery",
+      "uploadTitle": "Upload Photos",
+      "uploadDesc": "Drag photos here or click the upload button",
+      "selectPhotos": "Select Photos",
+      "uploadedPhotos": "Uploaded Photos ({{count}})",
+      "recommendations": "Photo Upload Recommendations",
+      "rec1": "Use high-quality photos (minimum 1200x800 pixels)",
+      "rec2": "Upload photos taken from different angles",
+      "rec3": "Include photos of all rooms and important details",
+      "rec4": "Maximum file size: 10MB per photo",
+      "rec5": "Supported formats: JPG, PNG, WebP",
       "uploadPhotos": "Upload Photos",
       "dragDrop": "Drag and drop photos here or",
       "selectFiles": "select files",

@@ -7,6 +7,7 @@ import type { Property } from "@/pages/Index";
 import { Link } from "react-router-dom";
 import { FavoriteButton } from "./FavoriteButton";
 import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface PropertyCardProps {
   property: Property;
@@ -25,7 +26,7 @@ const VIP_LABELS = {
 };
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
-  const { t } = useTranslation('propertyCard');
+  const { t, i18n } = useTranslation('propertyCard');
   
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('ka-GE', {
@@ -118,7 +119,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   };
 
   return (
-    <Link to={`/property/${property.id}`} className="block w-full min-w-0 max-w-full">
+    <Link to={getLanguageUrl(`property/${property.id}`, i18n.language)} className="block w-full min-w-0 max-w-full">
 
       <Card 
         className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full min-w-0 max-w-full"

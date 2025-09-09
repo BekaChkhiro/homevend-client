@@ -9,13 +9,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 const Login = () => {
   const { toast } = useToast();
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t } = useTranslation('auth');
+  const { t, i18n } = useTranslation('auth');
   
   const [formData, setFormData] = useState({
     email: "",
@@ -52,7 +53,7 @@ const Login = () => {
         });
         
         // Redirect to dashboard after login
-        navigate("/dashboard");
+        navigate(getLanguageUrl("dashboard", i18n.language));
       } else {
         setError(t('login.invalidCredentials'));
       }
@@ -80,7 +81,7 @@ const Login = () => {
                 <Alert className="mb-4 border-green-200 bg-green-50">
                   <AlertDescription className="text-green-800">
                     {t('login.emailVerificationAlert')}
-                    <Link to="/resend-verification" className="ml-2 underline">
+                    <Link to={getLanguageUrl("resend-verification", i18n.language)} className="ml-2 underline">
                       {t('login.resendVerification')}
                     </Link>
                   </AlertDescription>
@@ -93,7 +94,7 @@ const Login = () => {
                     {error}
                     {error.includes('verification') && (
                       <div className="mt-2">
-                        <Link to="/resend-verification" className="underline">
+                        <Link to={getLanguageUrl("resend-verification", i18n.language)} className="underline">
                           {t('login.newVerificationRequest')}
                         </Link>
                       </div>
@@ -142,7 +143,7 @@ const Login = () => {
                 </div>
                 
                 <div className="flex items-center justify-end">
-                  <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                  <Link to={getLanguageUrl("forgot-password", i18n.language)} className="text-sm text-primary hover:underline">
                     {t('login.forgotPassword')}
                   </Link>
                 </div>
@@ -155,7 +156,7 @@ const Login = () => {
             <CardFooter className="flex justify-center">
               <div className="text-sm text-muted-foreground">
                 {t('login.noAccount')}{" "}
-                <Link to="/register" className="text-primary hover:underline">
+                <Link to={getLanguageUrl("register", i18n.language)} className="text-primary hover:underline">
                   {t('login.registerLink')}
                 </Link>
               </div>

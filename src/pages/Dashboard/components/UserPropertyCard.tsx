@@ -226,7 +226,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
 
   const formatDaysRemaining = (days: number): string => {
     if (days === 0) return t('vipStatus.expirestoday');
-    if (days === 1) return '1 ' + t('vip.days');
+    if (days === 1) return '1 ' + t('vipStatus.day');
     return t('vipStatus.daysRemainingShort', { days });
   };
 

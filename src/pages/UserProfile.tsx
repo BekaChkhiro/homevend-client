@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { propertyApi } from "@/lib/api";
 import axios from "axios";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -65,6 +67,7 @@ interface UserProperty {
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
+  const { i18n } = useTranslation();
   const [user, setUser] = useState<UserData | null>(null);
   const [properties, setProperties] = useState<UserProperty[]>([]);
   const [loading, setLoading] = useState(true);
@@ -194,7 +197,7 @@ const UserProfile = () => {
                 )}
                 {user.agency && (
                   <Link 
-                    to={`/agencies/${user.agencyId}`}
+                    to={getLanguageUrl(`agencies/${user.agencyId}`, i18n.language)}
                     className="flex items-center gap-2 text-primary hover:underline"
                   >
                     <Building2 className="h-4 w-4" />

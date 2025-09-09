@@ -18,6 +18,8 @@ import {
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertySearchHero } from "@/components/PropertySearchHero";
 import { agencyApi } from "@/lib/api";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 
 interface PropertySearchFilters {
   search: string;
@@ -133,6 +135,7 @@ interface AgencyProperty {
 
 const AgencyDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { i18n } = useTranslation();
   const [agency, setAgency] = useState<Agency | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -447,7 +450,7 @@ const AgencyDetail = () => {
                       <Mail className="h-4 w-4 mr-2 text-primary" />
                       <span className="truncate">{agent.email || 'ელფოსტა არ არის'}</span>
                     </div>
-                    <Link to={`/user/${agent.id}`} className="block mt-4">
+                    <Link to={getLanguageUrl(`user/${agent.id}`, i18n.language)} className="block mt-4">
                       <Button variant="outline" size="sm" className="w-full">
                         <Eye className="h-4 w-4 mr-2" />
                         პროფილის ნახვა

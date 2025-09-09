@@ -2,14 +2,14 @@ import { z } from "zod";
 
 export const propertyFormSchema = z.object({
   // Basic Info
-  title: z.string().min(1, "განცხადების სათაური აუცილებელია"),
-  propertyType: z.string().min(1, "უძრავი ქონების ტიპი აუცილებელია"),
-  dealType: z.string().min(1, "გარიგების ტიპი აუცილებელია"),
+  title: z.string().min(1, "Property title is required"),
+  propertyType: z.string().min(1, "Property type is required"),
+  dealType: z.string().min(1, "Deal type is required"),
   dailyRentalSubcategory: z.string().optional(),
   projectId: z.string().optional(),
   district: z.string().optional(),
-  city: z.string().min(1, "ქალაქი აუცილებელია"),
-  street: z.string().min(1, "ქუჩა აუცილებელია"),
+  city: z.string().min(1, "City is required"),
+  street: z.string().min(1, "Street is required"),
   streetNumber: z.string().optional(),
   cadastralCode: z.string().optional(),
 
@@ -66,13 +66,13 @@ export const propertyFormSchema = z.object({
   tags: z.array(z.string()).default([]),
 
   // Price & Area
-  area: z.string().min(1, "ფართი აუცილებელია"),
-  totalPrice: z.string().min(1, "სრული ფასი აუცილებელია"),
+  area: z.string().min(1, "Area is required"),
+  totalPrice: z.string().min(1, "Total price is required"),
   pricePerSqm: z.string().optional(),
 
   // Contact Info
-  contactName: z.string().min(1, "სახელი აუცილებელია"),
-  contactPhone: z.string().min(1, "ტელეფონის ნომერი აუცილებელია"),
+  contactName: z.string().min(1, "Name is required"),
+  contactPhone: z.string().min(1, "Phone number is required"),
 
   // Descriptions
   descriptionGeorgian: z.string().optional(),

@@ -22,6 +22,8 @@ import {
   Building2,
   Eye
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { getLanguageUrl } from '@/components/LanguageRoute';
 
 interface AgencyUser {
   id: number;
@@ -32,6 +34,7 @@ interface AgencyUser {
 }
 
 const AgencyUsers = () => {
+  const { i18n } = useTranslation();
   const [users, setUsers] = useState<AgencyUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [inviteEmail, setInviteEmail] = useState('');
@@ -289,7 +292,7 @@ const AgencyUsers = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Link to={`/user/${user.id}`}>
+                      <Link to={getLanguageUrl(`user/${user.id}`, i18n.language)}>
                         <Button variant="outline" size="sm" className="text-primary hover:text-primary">
                           <Eye className="h-4 w-4 mr-1" />
                           ნახვა
