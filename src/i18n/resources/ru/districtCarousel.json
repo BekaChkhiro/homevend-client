@@ -1,0 +1,12 @@
+{
+  "noPriceData": "Данные не найдены",
+  "noPriceDataDesc": "Информация о ценах по районам в настоящее время недоступна",
+  "priceLevel": {
+    "high": "Высокие",
+    "medium": "Средние", 
+    "low": "Низкие"
+  },
+  "pricePerSqm": "Цена за кв/м:",
+  "usdPerSqMeter": "USD / квадратный метр",
+  "lastUpdated": "Обновлено:"
+}

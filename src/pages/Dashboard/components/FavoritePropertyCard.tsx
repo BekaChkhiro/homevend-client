@@ -43,7 +43,7 @@ export const FavoritePropertyCard = ({
 }: FavoritePropertyCardProps) => {
 
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation('userDashboard');
+  const { t, i18n } = useTranslation(['userDashboard', 'propertyCard']);
 
   const handleRemoveFromFavorites = () => {
     if (onRemoveFromFavorites) {
@@ -141,7 +141,7 @@ export const FavoritePropertyCard = ({
             className="h-6 px-2 text-xs flex-1"
           >
             <Phone className="h-3 w-3 mr-1" />
-            {t('propertyCard.contact') || 'დარეკვა'}
+{t('propertyCard:contact')}
           </Button>
 
           <Button 

@@ -1,4 +1,4 @@
-import { AdminTranslations, UserDashboardTranslations, CommonTranslations, AuthTranslations, PropertyCardTranslations, AboutUsTranslations } from './resources';
+import { AdminTranslations, UserDashboardTranslations, CommonTranslations, AuthTranslations, PropertyCardTranslations, AboutUsTranslations, ServicesTranslations, HomeTranslations, AdvertisementsTranslations, FooterTranslations, DistrictCarouselTranslations } from './resources';
 
 declare module 'react-i18next' {
   interface CustomTypeOptions {
@@ -10,6 +10,11 @@ declare module 'react-i18next' {
       auth: AuthTranslations;
       propertyCard: PropertyCardTranslations;
       aboutUs: AboutUsTranslations;
+      services: ServicesTranslations;
+      home: HomeTranslations;
+      advertisements: AdvertisementsTranslations;
+      footer: FooterTranslations;
+      districtCarousel: DistrictCarouselTranslations;
     };
   }
 }

@@ -1,4 +1,44 @@
 {
+  "advertisements": {
+    "title": "Advertisement Management",
+    "subtitle": "Manage advertising blocks and placements",
+    "types": {
+      "banner": "Banner",
+      "sidebar": "Sidebar",
+      "popup": "Popup",
+      "footer": "Footer"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "stats": {
+      "totalPlacements": "Total Placements",
+      "activeCount": "Active",
+      "totalViews": "Total Views",
+      "thisMonth": "This Month",
+      "totalClicks": "Total Clicks",
+      "ctrIndicator": "CTR Indicator",
+      "averageCtr": "Average CTR"
+    },
+    "labels": {
+      "dimensions": "Dimensions",
+      "performance": "Performance",
+      "views": "Views",
+      "clicks": "Clicks",
+      "expires": "Expires",
+      "until": " until"
+    },
+    "buttons": {
+      "addNew": "Add New Advertisement",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "delete": "Delete"
+    },
+    "messages": {
+      "adAdded": "Advertisement added successfully"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

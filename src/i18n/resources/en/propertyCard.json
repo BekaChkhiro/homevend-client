@@ -6,6 +6,13 @@
     "sqMeter": "sq m",
     "vip": "VIP",
     "vipPlus": "VIP+",
-    "superVip": "SUPER VIP"
+    "superVip": "SUPER VIP",
+    "contact": "Call",
+    "views": "Views",
+    "rooms": "Rooms",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "area": "Area",
+    "price": "Price"
   }
 }

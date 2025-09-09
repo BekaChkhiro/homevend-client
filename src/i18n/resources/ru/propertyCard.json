@@ -6,6 +6,13 @@
     "sqMeter": "кв м",
     "vip": "VIP",
     "vipPlus": "VIP+",
-    "superVip": "SUPER VIP"
+    "superVip": "SUPER VIP",
+    "contact": "Позвонить",
+    "views": "Просмотры",
+    "rooms": "Комнаты",
+    "bedrooms": "Спальни",
+    "bathrooms": "Ванные",
+    "area": "Площадь",
+    "price": "Цена"
   }
 }

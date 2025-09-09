@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getLanguageUrl } from "@/components/LanguageRoute";
 
 export const Footer = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('footer');
   return (
     <footer className="bg-muted/50 border-t border-border mt-8 sm:mt-12 lg:mt-16">
       <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-10 lg:py-12">
@@ -17,8 +17,7 @@ export const Footer = () => {
               <span className="text-base sm:text-lg font-bold text-primary">HOMEVEND.ge</span>
             </div>
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-              საქართველოს წამყვანი უძრავი ქონების პლატფორმა. 
-              ჩვენ გაგეხმარებით იპოვოთ თქვენი სახლი.
+              {t('companyDescription')}
             </p>
             <div className="flex space-x-3">
               <Facebook className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hover:text-primary cursor-pointer transition-colors" />
@@ -29,24 +28,24 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div className="space-y-3 sm:space-y-4">
-            <h3 className="font-semibold text-foreground text-sm sm:text-base">სწრაფი ლინკები</h3>
+            <h3 className="font-semibold text-foreground text-sm sm:text-base">{t('quickLinks')}</h3>
             <ul className="space-y-2 text-xs sm:text-sm">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">მთავარი</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">ყიდვა</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">ქირავდება</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">ახალი პროექტები</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">სერვისები</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">{t('navigation.home')}</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">{t('navigation.sale')}</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">{t('navigation.rent')}</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">{t('navigation.newProjects')}</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">{t('navigation.services')}</a></li>
             </ul>
           </div>
 
 
           {/* Contact Info */}
           <div className="space-y-3 sm:space-y-4">
-            <h3 className="font-semibold text-foreground text-sm sm:text-base">კონტაქტი</h3>
+            <h3 className="font-semibold text-foreground text-sm sm:text-base">{t('contact')}</h3>
             <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-                <span className="text-muted-foreground">საკონტაქტო ნომერი</span>
+                <span className="text-muted-foreground">{t('contactPhone')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
@@ -54,7 +53,14 @@ export const Footer = () => {
               </div>
               <div className="flex items-start space-x-2">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                <span className="text-muted-foreground leading-relaxed">თბილისი, ბერბუკის ქ. N7<br />მე-2 სადარბაზო, სართული 11, ბინა N54</span>
+                <span className="text-muted-foreground leading-relaxed">
+                  {t('address').split('\n').map((line, index) => (
+                    <span key={index}>
+                      {line}
+                      {index < t('address').split('\n').length - 1 && <br />}
+                    </span>
+                  ))}
+                </span>
               </div>
             </div>
           </div>
@@ -62,9 +68,9 @@ export const Footer = () => {
 
         <div className="border-t border-border mt-6 sm:mt-8 pt-6 sm:pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-muted-foreground space-y-4 sm:space-y-0">
-            <p>&copy; 2024 HOMEVEND.ge. ყველა უფლება დაცულია.</p>
+            <p>&copy; 2024 HOMEVEND.ge. {t('copyright')}</p>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-center">
-              <Link to={getLanguageUrl('terms', i18n.language)} className="hover:text-primary transition-colors">წესები და პირობები</Link>
+              <Link to={getLanguageUrl('terms', i18n.language)} className="hover:text-primary transition-colors">{t('termsAndConditions')}</Link>
             </div>
           </div>
         </div>

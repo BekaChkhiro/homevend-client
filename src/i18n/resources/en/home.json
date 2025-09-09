@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "title": "Find Your Perfect Home",
+    "subtitle": "Thousands of real estate listings in one place"
+  },
+  "sections": {
+    "latestProperties": {
+      "title": "Latest Property Listings",
+      "subtitle": "View the newest real estate listings",
+      "viewAll": "View All",
+      "viewAllMobile": "All"
+    },
+    "agencies": {
+      "title": "Agencies",
+      "subtitle": "Find the best real estate agencies",
+      "viewAll": "View All",
+      "viewAllMobile": "All",
+      "owner": "Owner",
+      "ownerNotSpecified": "Not specified",
+      "agents": "Agent",
+      "properties": "Properties",
+      "sales": "Sales",
+      "details": "Details",
+      "website": "Website",
+      "socialMedia": "Social Media",
+      "founded": "Founded"
+    },
+    "services": {
+      "title": "Our Services",
+      "subtitle": "Get professional services in real estate",
+      "viewAll": "View All",
+      "viewAllMobile": "All",
+      "propertyValuation": {
+        "title": "Property Valuation",
+        "description": "Get accurate valuation for your property with current market prices"
+      },
+      "legalConsultation": {
+        "title": "Legal Consultation",
+        "description": "Professional legal assistance in real estate buying and selling"
+      },
+      "details": "Details"
+    },
+    "priceStatistics": {
+      "title": "Price Statistics",
+      "subtitle": "View average real estate prices in Tbilisi districts",
+      "viewAll": "View All",
+      "viewAllMobile": "All"
+    }
+  },
+  "placeholders": {
+    "locationNotSpecified": "Location not specified"
+  }
+}

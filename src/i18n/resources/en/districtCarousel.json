@@ -1,0 +1,12 @@
+{
+  "noPriceData": "No data found",
+  "noPriceDataDesc": "District pricing information is currently not available",
+  "priceLevel": {
+    "high": "High",
+    "medium": "Medium", 
+    "low": "Low"
+  },
+  "pricePerSqm": "Price per sq/m:",
+  "usdPerSqMeter": "USD / square meter",
+  "lastUpdated": "Last updated:"
+}

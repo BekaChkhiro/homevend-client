@@ -6,6 +6,13 @@
     "sqMeter": "მ²",
     "vip": "VIP",
     "vipPlus": "VIP+",
-    "superVip": "SUPER VIP"
+    "superVip": "SUPER VIP",
+    "contact": "დარეკვა",
+    "views": "ნახვები",
+    "rooms": "ოთახები",
+    "bedrooms": "საძინებელი",
+    "bathrooms": "სააბაზანო",
+    "area": "ფართობი",
+    "price": "ფასი"
   }
 }

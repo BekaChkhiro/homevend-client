@@ -1,0 +1,81 @@
+{
+  "adBanner": {
+    "advertisement": "რეკლამა",
+    "horizontal": "სარეკლამო ბანერი 728x90",
+    "vertical": "სარეკლამო ბანერი 300x250"
+  },
+  "advertisingPage": {
+    "title": "რეკლამის განთავსება",
+    "subtitle": "მიაღწიეთ ათასობით პოტენციურ მყიდველს და გაყიდველს საქართველოს ყველაზე პოპულარულ უძრავი ქონების პლატფორმაზე",
+    "stats": {
+      "users": "მომხმარებელი",
+      "viewsPerMonth": "ნახვა თვეში",
+      "averageCtr": "საშუალო CTR",
+      "monthlyViews": "ყოველთვიური ნახვები",
+      "growthThisMonth": "ზრდა ამ თვეში",
+      "registeredUsers": "რეგისტრირებული მომხმარებლები",
+      "activeUsers": "აქტიური მომხმარებლები",
+      "averageCtrStat": "საშუალო CTR",
+      "higherThanIndustry": "ინდუსტრიის საშუალოზე მაღალი",
+      "listings": "განცხადებები",
+      "activeListings": "აქტიური განცხადება"
+    },
+    "placements": {
+      "title": "რეკლამის ადგილები და ფასები",
+      "subtitle": "აირჩიეთ თქვენი ბიზნესისთვის ყველაზე შესაფერისი რეკლამის ადგილი",
+      "perMonth": "თვეში",
+      "size": "ზომა",
+      "viewsPerMonth": "ნახვა თვეში",
+      "averageCtr": "საშუალო CTR",
+      "banner": "ბანერი",
+      "sidebar": "გვერდითი ბარი"
+    },
+    "contactForm": {
+      "title": "რეკლამის განთავსების მოთხოვნა",
+      "subtitle": "შეავსეთ ფორმა და ჩვენ დაგიკავშირდებით რეკლამის პაკეტის დეტალებისთვის",
+      "nameLabel": "სახელი და გვარი",
+      "namePlaceholder": "თქვენი სახელი",
+      "companyLabel": "კომპანია",
+      "companyPlaceholder": "კომპანიის დასახელება",
+      "emailLabel": "ელექტრონული ფოსტა",
+      "emailPlaceholder": "example@company.com",
+      "phoneLabel": "ტელეფონის ნომერი",
+      "phonePlaceholder": "+995 555 123 456",
+      "selectedPlacements": "არჩეული რეკლამის ადგილები",
+      "additionalInfo": "დამატებითი ინფორმაცია",
+      "additionalInfoPlaceholder": "მიუთითეთ თქვენი რეკლამის მიზნები, ბიუჯეტი და სხვა მნიშვნელოვანი დეტალები...",
+      "sending": "იგზავნება...",
+      "sendRequest": "მოთხოვნის გაგზავნა",
+      "messageSent": "შეტყობინება გაგზავნილია",
+      "messageDescription": "ჩვენ დაგიკავშირდებით 24 საათში რეკლამის საკითხების შესახებ"
+    },
+    "contact": {
+      "title": "საკონტაქტო ინფორმაცია",
+      "advertisingDepartment": "რეკლამის განყოფილება",
+      "email": "ელექტრონული ფოსტა",
+      "workingHours": "სამუშაო საათები",
+      "mondayToFriday": "ორშ-პარ: 09:00 - 18:00",
+      "saturday": "შაბათი: 10:00 - 16:00"
+    },
+    "specialOffer": {
+      "title": "სპეციალური შეთავაზება",
+      "discount": "3+ თვიანი კონტრაქტისთვის 15% ფასდაკლება!",
+      "firstMonth": "პირველი თვე უფასოა ახალი კლიენტებისთვის."
+    }
+  },
+  "admin": {
+    "title": "რეკლამის მართვა",
+    "subtitle": "რეკლამის ბლოკების და განთავსებების მართვა",
+    "addNew": "ახალი რეკლამის დამატება",
+    "status": {
+      "active": "აქტიური",
+      "inactive": "არააქტიური"
+    },
+    "actions": {
+      "edit": "რედაქტირება",
+      "delete": "წაშლა",
+      "activate": "გააქტიურება",
+      "deactivate": "გათიშვა"
+    }
+  }
+}
