@@ -1,0 +1,81 @@
+{
+  "adBanner": {
+    "advertisement": "Advertisement",
+    "horizontal": "Ad Banner 728x90",
+    "vertical": "Ad Banner 300x250"
+  },
+  "advertisingPage": {
+    "title": "Advertising Placement",
+    "subtitle": "Reach thousands of potential buyers and sellers on Georgia's most popular real estate platform",
+    "stats": {
+      "users": "Users",
+      "viewsPerMonth": "Views per Month",
+      "averageCtr": "Average CTR",
+      "monthlyViews": "Monthly Views",
+      "growthThisMonth": "Growth This Month",
+      "registeredUsers": "Registered Users",
+      "activeUsers": "Active Users",
+      "averageCtrStat": "Average CTR",
+      "higherThanIndustry": "Higher Than Industry Average",
+      "listings": "Listings",
+      "activeListings": "Active Listings"
+    },
+    "placements": {
+      "title": "Advertising Placements and Prices",
+      "subtitle": "Choose the most suitable advertising placement for your business",
+      "perMonth": "per month",
+      "size": "Size",
+      "viewsPerMonth": "Views per Month",
+      "averageCtr": "Average CTR",
+      "banner": "Banner",
+      "sidebar": "Sidebar"
+    },
+    "contactForm": {
+      "title": "Advertising Placement Request",
+      "subtitle": "Fill out the form and we will contact you for advertising package details",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Your Name",
+      "companyLabel": "Company",
+      "companyPlaceholder": "Company Name",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "example@company.com",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "+995 555 123 456",
+      "selectedPlacements": "Selected Ad Placements",
+      "additionalInfo": "Additional Information",
+      "additionalInfoPlaceholder": "Please specify your advertising goals, budget and other important details...",
+      "sending": "Sending...",
+      "sendRequest": "Send Request",
+      "messageSent": "Message Sent",
+      "messageDescription": "We will contact you within 24 hours regarding advertising matters"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "advertisingDepartment": "Advertising Department",
+      "email": "Email Address",
+      "workingHours": "Working Hours",
+      "mondayToFriday": "Mon-Fri: 09:00 - 18:00",
+      "saturday": "Saturday: 10:00 - 16:00"
+    },
+    "specialOffer": {
+      "title": "Special Offer",
+      "discount": "15% discount for 3+ month contracts!",
+      "firstMonth": "First month is free for new clients."
+    }
+  },
+  "admin": {
+    "title": "Advertisement Management",
+    "subtitle": "Manage advertising blocks and placements",
+    "addNew": "Add New Advertisement",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "activate": "Activate",
+      "deactivate": "Deactivate"
+    }
+  }
+}

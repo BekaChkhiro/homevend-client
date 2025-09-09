@@ -1,4 +1,44 @@
 {
+  "advertisements": {
+    "title": "რეკლამის მართვა",
+    "subtitle": "რეკლამის ბლოკების და განთავსებების მართვა",
+    "types": {
+      "banner": "ბანერი",
+      "sidebar": "გვერდითი ბარი",
+      "popup": "პოპ-აპი",
+      "footer": "ქვედა ბლოკი"
+    },
+    "status": {
+      "active": "აქტიური",
+      "inactive": "არააქტიური"
+    },
+    "stats": {
+      "totalPlacements": "სულ განთავსებები",
+      "activeCount": "აქტიური",
+      "totalViews": "სულ ნახვები",
+      "thisMonth": "ამ თვეში",
+      "totalClicks": "სულ დაწკაპუნებები",
+      "ctrIndicator": "CTR მაჩვენებელი",
+      "averageCtr": "საშუალო CTR"
+    },
+    "labels": {
+      "dimensions": "ზომები",
+      "performance": "მაჩვენებლები",
+      "views": "ნახვა",
+      "clicks": "დაწკაპუნება",
+      "expires": "ვადა იწურება",
+      "until": "-მდე"
+    },
+    "buttons": {
+      "addNew": "ახალი რეკლამის დამატება",
+      "activate": "გააქტიურება",
+      "deactivate": "გათიშვა",
+      "delete": "წაშლა"
+    },
+    "messages": {
+      "adAdded": "რეკლამა წარმატებით დაემატა"
+    }
+  },
   "common": {
     "loading": "იტვირთება...",
     "error": "შეცდომა",

@@ -1,4 +1,44 @@
 {
+  "advertisements": {
+    "title": "Управление рекламой",
+    "subtitle": "Управление рекламными блоками и размещениями",
+    "types": {
+      "banner": "Баннер",
+      "sidebar": "Боковая панель",
+      "popup": "Всплывающее окно",
+      "footer": "Нижний блок"
+    },
+    "status": {
+      "active": "Активная",
+      "inactive": "Неактивная"
+    },
+    "stats": {
+      "totalPlacements": "Всего размещений",
+      "activeCount": "Активных",
+      "totalViews": "Всего просмотров",
+      "thisMonth": "В этом месяце",
+      "totalClicks": "Всего кликов",
+      "ctrIndicator": "Показатель CTR",
+      "averageCtr": "Средний CTR"
+    },
+    "labels": {
+      "dimensions": "Размеры",
+      "performance": "Показатели",
+      "views": "Просмотры",
+      "clicks": "Клики",
+      "expires": "Истекает",
+      "until": " до"
+    },
+    "buttons": {
+      "addNew": "Добавить новую рекламу",
+      "activate": "Активировать",
+      "deactivate": "Деактивировать",
+      "delete": "Удалить"
+    },
+    "messages": {
+      "adAdded": "Реклама успешно добавлена"
+    }
+  },
   "common": {
     "loading": "Загрузка...",
     "error": "Ошибка",

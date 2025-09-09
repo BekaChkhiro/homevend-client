@@ -1,0 +1,81 @@
+{
+  "adBanner": {
+    "advertisement": "Реклама",
+    "horizontal": "Рекламный баннер 728x90",
+    "vertical": "Рекламный баннер 300x250"
+  },
+  "advertisingPage": {
+    "title": "Размещение рекламы",
+    "subtitle": "Достигните тысяч потенциальных покупателей и продавцов на самой популярной платформе недвижимости в Грузии",
+    "stats": {
+      "users": "Пользователи",
+      "viewsPerMonth": "Просмотров в месяц",
+      "averageCtr": "Средний CTR",
+      "monthlyViews": "Ежемесячные просмотры",
+      "growthThisMonth": "Рост в этом месяце",
+      "registeredUsers": "Зарегистрированные пользователи",
+      "activeUsers": "Активные пользователи",
+      "averageCtrStat": "Средний CTR",
+      "higherThanIndustry": "Выше среднего по отрасли",
+      "listings": "Объявления",
+      "activeListings": "Активные объявления"
+    },
+    "placements": {
+      "title": "Рекламные места и цены",
+      "subtitle": "Выберите наиболее подходящее рекламное место для вашего бизнеса",
+      "perMonth": "в месяц",
+      "size": "Размер",
+      "viewsPerMonth": "Просмотров в месяц",
+      "averageCtr": "Средний CTR",
+      "banner": "Баннер",
+      "sidebar": "Боковая панель"
+    },
+    "contactForm": {
+      "title": "Запрос на размещение рекламы",
+      "subtitle": "Заполните форму и мы свяжемся с вами для уточнения деталей рекламного пакета",
+      "nameLabel": "Имя и фамилия",
+      "namePlaceholder": "Ваше имя",
+      "companyLabel": "Компания",
+      "companyPlaceholder": "Название компании",
+      "emailLabel": "Электронная почта",
+      "emailPlaceholder": "example@company.com",
+      "phoneLabel": "Номер телефона",
+      "phonePlaceholder": "+995 555 123 456",
+      "selectedPlacements": "Выбранные рекламные места",
+      "additionalInfo": "Дополнительная информация",
+      "additionalInfoPlaceholder": "Укажите ваши рекламные цели, бюджет и другие важные детали...",
+      "sending": "Отправляется...",
+      "sendRequest": "Отправить запрос",
+      "messageSent": "Сообщение отправлено",
+      "messageDescription": "Мы свяжемся с вами в течение 24 часов по вопросам рекламы"
+    },
+    "contact": {
+      "title": "Контактная информация",
+      "advertisingDepartment": "Отдел рекламы",
+      "email": "Электронная почта",
+      "workingHours": "Рабочие часы",
+      "mondayToFriday": "Пн-Пт: 09:00 - 18:00",
+      "saturday": "Суббота: 10:00 - 16:00"
+    },
+    "specialOffer": {
+      "title": "Специальное предложение",
+      "discount": "Скидка 15% для контрактов на 3+ месяца!",
+      "firstMonth": "Первый месяц бесплатно для новых клиентов."
+    }
+  },
+  "admin": {
+    "title": "Управление рекламой",
+    "subtitle": "Управление рекламными блоками и размещениями",
+    "addNew": "Добавить новую рекламу",
+    "status": {
+      "active": "Активная",
+      "inactive": "Неактивная"
+    },
+    "actions": {
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "activate": "Активировать",
+      "deactivate": "Деактивировать"
+    }
+  }
+}

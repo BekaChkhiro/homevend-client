@@ -1,0 +1,97 @@
+{
+  "title": "პროექტები",
+  "description": "იპოვეთ საუკეთესო განვითარების პროექტები თბილისში",
+  "filters": {
+    "title": "ფილტრები",
+    "clearFilters": "გასუფთავება",
+    "search": "ძიება...",
+    "projectType": "პროექტის ტიპი",
+    "deliveryStatus": "ჩაბარების სტატუსი",
+    "city": "ქალაქი",
+    "area": "რაიონი",
+    "allTypes": "ყველა ტიპი",
+    "allStatuses": "ყველა სტატუსი"
+  },
+  "projectTypes": {
+    "private_house": "კერძო სახლი",
+    "apartment_building": "საცხოვრებელი კომპლექსი"
+  },
+  "deliveryStatuses": {
+    "completed_with_renovation": "ჩაბარება რემონტით",
+    "green_frame": "მწვანე კარკასი",
+    "black_frame": "შავი კარკასი",
+    "white_frame": "თეთრი კარკასი"
+  },
+  "projectInfo": {
+    "type": "ტიპი:",
+    "buildings": "კორპუსები:",
+    "apartments": "ბინები:",
+    "floors": "სართულები:",
+    "priceFrom": "ფასი დაწყებული:",
+    "developerId": "დეველოპერი ID:",
+    "delivery": "ჩაბარება:"
+  },
+  "loading": "პროექტების ჩატვირთვა...",
+  "noProjects": {
+    "title": "პროექტები ვერ მოიძებნა",
+    "description": "სცადეთ სხვა ფილტრების გამოყენება"
+  },
+  "pagination": {
+    "previous": "წინა",
+    "next": "შემდეგი"
+  },
+  "error": {
+    "title": "შეცდომა",
+    "description": "პროექტების ჩატვირთვისას მოხდა შეცდომა"
+  },
+  "projectDetail": {
+    "backToProjects": "უკან პროექტებზე",
+    "loading": "პროექტის ჩატვირთვა...",
+    "notFound": "პროექტი ვერ მოიძებნა",
+    "loadingError": "პროექტის ჩატვირთვისას მოხდა შეცდომა",
+    "contact": {
+      "developer": "დეველოპერი",
+      "phone": "ტელეფონი",
+      "email": "ელ. ფოსტა",
+      "showPhone": "ტელეფონის ნახვა"
+    },
+    "details": {
+      "projectDetails": "პროექტის დეტალები",
+      "parkingSpaces": "პარკინგი:",
+      "totalArea": "მთლიანი ფართობი:",
+      "livingArea": "საცხოვრებელი ფართობი:"
+    },
+    "services": {
+      "title": "სერვისები და მომსახურება",
+      "security": "უსაფრთხოება",
+      "securityService": "უსაფრთხოების სერვისი",
+      "videoSurveillance": "ვიდეო კამერები",
+      "fireSystem": "ხანძარსაწინააღმდეგო სისტემა",
+      "mainDoorLock": "მთავარი კარის ჩაკეტვა",
+      "hasDoorman": "კარის მცველი",
+      "comfort": "კომფორტი",
+      "hasLobby": "ლობი",
+      "hasConcierge": "კონსიერჟი",
+      "maintenance": "ექსპლუატაცია",
+      "landscaping": "ლანდშაფტური დიზაინი",
+      "hasLighting": "განათება",
+      "yardCleaning": "ეზოს დასუფთავება",
+      "entranceCleaning": "შესასვლელის დასუფთავება"
+    },
+    "amenities": {
+      "title": "ინფრასტრუქტურა",
+      "nearby": "სიახლოვეს არის:"
+    },
+    "linkedProperties": {
+      "title": "ბინები ამ პროექტში",
+      "viewProperty": "ნახვა",
+      "noProperties": "ბინები ჯერ არ დაემატა"
+    },
+    "photos": {
+      "title": "ფოტოები",
+      "photoOf": "ფოტო",
+      "previousPhoto": "წინა ფოტო",
+      "nextPhoto": "შემდეგი ფოტო"
+    }
+  }
+}

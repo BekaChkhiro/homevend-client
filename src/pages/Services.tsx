@@ -4,61 +4,48 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { useTranslation } from "react-i18next";
 
 export const Services = () => {
+  const { t } = useTranslation('services');
+
   const services = [
     {
       id: 1,
-      title: "ქონების შეფასება",
-      description: "პროფესიონალური ქონების შეფასება გამოცდილი ექსპერტების მიერ",
+      titleKey: "services.propertyAppraisal.title",
+      descriptionKey: "services.propertyAppraisal.description",
+      detailsKey: "services.propertyAppraisal.details",
       icon: <Scale className="h-6 w-6" />,
-      status: "მალე",
-      statusColor: "bg-orange-100 text-orange-800",
-      details: [
-        "სრული ბაზრის ანალიზი",
-        "დეტალური შეფასების რეპორტი",
-        "სერტიფიცირებული შემფასებლები"
-      ]
+      status: "comingSoon",
+      statusColor: "bg-orange-100 text-orange-800"
     },
     {
       id: 2,
-      title: "ფოტო გადაღება",
-      description: "პროფესიონალური ფოტო გადაღება ქონების რეკლამისთვის",
+      titleKey: "services.photography.title",
+      descriptionKey: "services.photography.description",
+      detailsKey: "services.photography.details",
       icon: <Camera className="h-6 w-6" />,
-      status: "მალე",
-      statusColor: "bg-orange-100 text-orange-800",
-      details: [
-        "მაღალი ხარისხის ფოტოები",
-        "პროფესიონალური ფოტოგრაფი",
-        "სხვადასხვა რაკურსით გადაღება"
-      ]
+      status: "comingSoon",
+      statusColor: "bg-orange-100 text-orange-800"
     },
     {
       id: 3,
-      title: "იურიდიული კონსულტაცია",
-      description: "უძრავი ქონების იურიდიული მხარდაჭერა და კონსულტაცია",
+      titleKey: "services.legalConsultation.title",
+      descriptionKey: "services.legalConsultation.description",
+      detailsKey: "services.legalConsultation.details",
       icon: <Gavel className="h-6 w-6" />,
-      status: "ხელმისაწვდომია",
+      status: "available",
       statusColor: "bg-green-100 text-green-800",
-      phone: "+995 555 123 456",
-      details: [
-        "ხელშეკრულების მომზადება",
-        "იურიდიული ექსპერტიზა",
-        "სასამართლო წარმომადგენლობა"
-      ]
+      phone: "+995 555 123 456"
     },
     {
       id: 4,
-      title: "იპოთეკური დაფინანსება",
-      description: "იპოთეკური სესხის მიღების დახმარება და კონსულტაცია",
+      titleKey: "services.mortgageFinancing.title",
+      descriptionKey: "services.mortgageFinancing.description",
+      detailsKey: "services.mortgageFinancing.details",
       icon: <CreditCard className="h-6 w-6" />,
-      status: "ხელმისაწვდომია",
-      statusColor: "bg-green-100 text-green-800",
-      details: [
-        "საუკეთესო პირობების მოძებნა",
-        "განაცხადის მომზადება",
-        "ბანკთან მოლაპარაკება"
-      ]
+      status: "available",
+      statusColor: "bg-green-100 text-green-800"
     }
   ];
 
@@ -74,9 +61,9 @@ export const Services = () => {
                 <Settings className="h-8 w-8" />
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">ჩვენი სერვისები</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('title')}</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              უძრავი ქონების სფეროში სრული მომსახურების პაკეტი თქვენი საჭიროებისთვის
+              {t('subtitle')}
             </p>
           </div>
 
@@ -91,22 +78,22 @@ export const Services = () => {
                       {service.icon}
                     </div>
                     <div>
-                      <CardTitle className="text-xl">{service.title}</CardTitle>
+                      <CardTitle className="text-xl">{t(service.titleKey)}</CardTitle>
                       <Badge className={`mt-2 ${service.statusColor}`}>
-                        {service.status === "მალე" && <Clock className="h-3 w-3 mr-1" />}
-                        {service.status}
+                        {service.status === "comingSoon" && <Clock className="h-3 w-3 mr-1" />}
+                        {t(`status.${service.status}`)}
                       </Badge>
                     </div>
                   </div>
                 </div>
                 <CardDescription className="text-gray-600 mt-3">
-                  {service.description}
+                  {t(service.descriptionKey)}
                 </CardDescription>
               </CardHeader>
               
               <CardContent>
                 <ul className="space-y-2 mb-6">
-                  {service.details.map((detail, index) => (
+                  {(t(service.detailsKey, { returnObjects: true }) as string[]).map((detail, index) => (
                     <li key={index} className="flex items-center text-sm text-gray-600">
                       <div className="h-1.5 w-1.5 bg-primary rounded-full mr-2"></div>
                       {detail}
@@ -122,7 +109,7 @@ export const Services = () => {
                 ) : (
                   <Button className="w-full" disabled>
                     <Clock className="h-4 w-4 mr-2" />
-                    მალე ხელმისაწვდომი
+                    {t('buttons.comingSoon')}
                   </Button>
                 )}
               </CardContent>
@@ -135,14 +122,14 @@ export const Services = () => {
         <div className="container mx-auto px-4">
           <div className="text-center bg-white rounded-lg p-8 shadow-sm">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              გაქვთ კითხვები ჩვენი სერვისების შესახებ?
+              {t('contact.title')}
             </h2>
             <p className="text-muted-foreground mb-6">
-              დაგვიკავშირდით და ჩვენი ექსპერტები დაგეხმარებიან სწორი არჩევანის გაკეთებაში
+              {t('contact.description')}
             </p>
             <Button size="lg">
               <Phone className="h-5 w-5 mr-2" />
-              დაკავშირება
+              {t('buttons.contact')}
             </Button>
           </div>
         </div>

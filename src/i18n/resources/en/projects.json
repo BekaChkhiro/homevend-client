@@ -1,0 +1,97 @@
+{
+  "title": "Projects",
+  "description": "Find the best development projects in Tbilisi",
+  "filters": {
+    "title": "Filters",
+    "clearFilters": "Clear",
+    "search": "Search...",
+    "projectType": "Project Type",
+    "deliveryStatus": "Delivery Status",
+    "city": "City",
+    "area": "Area",
+    "allTypes": "All Types",
+    "allStatuses": "All Statuses"
+  },
+  "projectTypes": {
+    "private_house": "Private House",
+    "apartment_building": "Apartment Complex"
+  },
+  "deliveryStatuses": {
+    "completed_with_renovation": "Delivered with Renovation",
+    "green_frame": "Green Frame",
+    "black_frame": "Black Frame",
+    "white_frame": "White Frame"
+  },
+  "projectInfo": {
+    "type": "Type:",
+    "buildings": "Buildings:",
+    "apartments": "Apartments:",
+    "floors": "Floors:",
+    "priceFrom": "Starting Price:",
+    "developerId": "Developer ID:",
+    "delivery": "Delivery:"
+  },
+  "loading": "Loading projects...",
+  "noProjects": {
+    "title": "No projects found",
+    "description": "Try using different filters"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "error": {
+    "title": "Error",
+    "description": "An error occurred while loading projects"
+  },
+  "projectDetail": {
+    "backToProjects": "Back to Projects",
+    "loading": "Loading project...",
+    "notFound": "Project not found",
+    "loadingError": "An error occurred while loading project",
+    "contact": {
+      "developer": "Developer",
+      "phone": "Phone",
+      "email": "Email",
+      "showPhone": "Show Phone"
+    },
+    "details": {
+      "projectDetails": "Project Details",
+      "parkingSpaces": "Parking:",
+      "totalArea": "Total Area:",
+      "livingArea": "Living Area:"
+    },
+    "services": {
+      "title": "Services & Amenities",
+      "security": "Security",
+      "securityService": "Security Service",
+      "videoSurveillance": "Video Surveillance",
+      "fireSystem": "Fire Safety System",
+      "mainDoorLock": "Main Door Lock",
+      "hasDoorman": "Doorman",
+      "comfort": "Comfort",
+      "hasLobby": "Lobby",
+      "hasConcierge": "Concierge",
+      "maintenance": "Maintenance",
+      "landscaping": "Landscaping",
+      "hasLighting": "Lighting",
+      "yardCleaning": "Yard Cleaning",
+      "entranceCleaning": "Entrance Cleaning"
+    },
+    "amenities": {
+      "title": "Infrastructure",
+      "nearby": "Nearby:"
+    },
+    "linkedProperties": {
+      "title": "Properties in This Project",
+      "viewProperty": "View",
+      "noProperties": "No properties added yet"
+    },
+    "photos": {
+      "title": "Photos",
+      "photoOf": "Photo of",
+      "previousPhoto": "Previous Photo",
+      "nextPhoto": "Next Photo"
+    }
+  }
+}

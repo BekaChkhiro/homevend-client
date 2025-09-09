@@ -39,7 +39,7 @@ interface Agency {
 
 const Home = () => {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [properties, setProperties] = useState<Property[]>([]);
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
   const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -115,7 +115,7 @@ const Home = () => {
           } else if (prop.city && prop.city.trim()) {
             parts.push(prop.city);
           }
-          const address = parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
+          const address = parts.length > 0 ? parts.join(', ') : t('home:placeholders.locationNotSpecified');
           
           return {
             id: parseInt(prop.id) || prop.id,
@@ -202,16 +202,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  ბოლოს დამატებული განცხადებები
+                  {t('home:sections.latestProperties.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  ნახეთ უახლესი უძრავი ქონების განცხადებები
+                  {t('home:sections.latestProperties.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('properties', i18n.language)}>
-                  <span className="hidden sm:inline">ყველას ნახვა</span>
-                  <span className="sm:hidden">ყველა</span>
+                  <span className="hidden sm:inline">{t('home:sections.latestProperties.viewAll')}</span>
+                  <span className="sm:hidden">{t('home:sections.latestProperties.viewAllMobile')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -244,16 +244,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  სააგენტოები
+                  {t('home:sections.agencies.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  იპოვნეთ საუკეთესო უძრავი ქონების სააგენტოები
+                  {t('home:sections.agencies.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('agencies', i18n.language)}>
-                  <span className="hidden sm:inline">ყველას ნახვა</span>
-                  <span className="sm:hidden">ყველა</span>
+                  <span className="hidden sm:inline">{t('home:sections.agencies.viewAll')}</span>
+                  <span className="sm:hidden">{t('home:sections.agencies.viewAllMobile')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -296,7 +296,7 @@ const Home = () => {
                             )}
                           </div>
                           <p className="text-sm text-gray-600">
-                            მოღვაწე: {agency.owner?.fullName || 'არ არის მითითებული'}
+                            {t('home:sections.agencies.owner')}: {agency.owner?.fullName || t('home:sections.agencies.ownerNotSpecified')}
                           </p>
                         </div>
                       </div>
@@ -330,7 +330,7 @@ const Home = () => {
                               rel="noopener noreferrer"
                               className="text-primary hover:underline truncate"
                             >
-                              ვებსაიტი
+                              {t('home:sections.agencies.website')}
                             </a>
                           </div>
                         )}
@@ -343,7 +343,7 @@ const Home = () => {
                               rel="noopener noreferrer"
                               className="text-primary hover:underline truncate"
                             >
-                              სოციალური მედია
+                              {t('home:sections.agencies.socialMedia')}
                             </a>
                           </div>
                         )}
@@ -355,35 +355,35 @@ const Home = () => {
                             <Users className="h-3 w-3" />
                             {agency.agentCount || 0}
                           </div>
-                          <div className="text-xs text-gray-500">აგენტი</div>
+                          <div className="text-xs text-gray-500">{t('home:sections.agencies.agents')}</div>
                         </div>
                         <div className="text-center">
                           <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
                             <Building2 className="h-3 w-3" />
                             {agency.propertyCount || 0}
                           </div>
-                          <div className="text-xs text-gray-500">უძრავი ქონება</div>
+                          <div className="text-xs text-gray-500">{t('home:sections.agencies.properties')}</div>
                         </div>
                         <div className="text-center">
                           <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
                             <TrendingUp className="h-3 w-3" />
                             {agency.totalSales || 0}
                           </div>
-                          <div className="text-xs text-gray-500">გაყიდვა</div>
+                          <div className="text-xs text-gray-500">{t('home:sections.agencies.sales')}</div>
                         </div>
                       </div>
 
                       <div className="flex gap-2">
                         <Button asChild className="flex-1 text-xs sm:text-sm" size="sm">
                           <Link to={`/agencies/${agency.id}`}>
-                            დეტალები
+                            {t('home:sections.agencies.details')}
                           </Link>
                         </Button>
                       </div>
 
                       {agency.createdAt && (
                         <div className="mt-3 pt-3 border-t text-xs text-gray-500">
-                          დაარსდა: {new Date(agency.createdAt).toLocaleDateString('ka-GE')}
+                          {t('home:sections.agencies.founded')}: {new Date(agency.createdAt).toLocaleDateString('ka-GE')}
                         </div>
                       )}
                     </CardContent>
@@ -401,16 +401,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  ჩვენი სერვისები
+                  {t('home:sections.services.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  მიიღეთ პროფესიონალური სერვისები უძრავი ქონების სფეროში
+                  {t('home:sections.services.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to="/services">
-                  <span className="hidden sm:inline">ყველას ნახვა</span>
-                  <span className="sm:hidden">ყველა</span>
+                  <span className="hidden sm:inline">{t('home:sections.services.viewAll')}</span>
+                  <span className="sm:hidden">{t('home:sections.services.viewAllMobile')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -422,15 +422,15 @@ const Home = () => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
                     <HomeIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-lg sm:text-xl">ქონების შეფასება</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">{t('home:sections.services.propertyValuation.title')}</CardTitle>
                   <CardDescription className="text-sm sm:text-base">
-                    მიიღეთ ზუსტი შეფასება თქვენი უძრავი ქონებისთვის ბაზრის აქტუალური ფასებით
+                    {t('home:sections.services.propertyValuation.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                 <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
                   <Link to={getLanguageUrl('services', i18n.language)}>
-                    დეტალურად
+                    {t('home:sections.services.details')}
                   </Link>
                 </Button>
                 </CardContent>
@@ -441,15 +441,15 @@ const Home = () => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
                     <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-lg sm:text-xl">იურიდიული კონსულტაცია</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">{t('home:sections.services.legalConsultation.title')}</CardTitle>
                   <CardDescription className="text-sm sm:text-base">
-                    პროფესიონალური იურიდიული დახმარება უძრავი ქონების ყიდვა-გაყიდვაში
+                    {t('home:sections.services.legalConsultation.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                 <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
                   <Link to={getLanguageUrl('services', i18n.language)}>
-                    დეტალურად
+                    {t('home:sections.services.details')}
                   </Link>
                 </Button>
                 </CardContent>
@@ -464,16 +464,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  ფასების სტატისტიკა
+                  {t('home:sections.priceStatistics.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  იხილეთ თბილისის რაიონებში უძრავი ქონების საშუალო ფასები
+                  {t('home:sections.priceStatistics.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('price-statistics', i18n.language)}>
-                  <span className="hidden sm:inline">ყველას ნახვა</span>
-                  <span className="sm:hidden">ყველა</span>
+                  <span className="hidden sm:inline">{t('home:sections.priceStatistics.viewAll')}</span>
+                  <span className="sm:hidden">{t('home:sections.priceStatistics.viewAllMobile')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>

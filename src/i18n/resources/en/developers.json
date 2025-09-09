@@ -1,0 +1,19 @@
+{
+  "title": "Developers",
+  "subtitle": "Find trusted developers and explore their projects. All developers are verified and authorized.",
+  "searchPlaceholder": "Search for a developer...",
+  "developer": "Developer",
+  "verified": "Verified",
+  "viewDetails": "View Details",
+  "projectsCount": "projects",
+  "propertiesCount": "listings",
+  "totalSales": "total sales",
+  "foundDevelopers": "Found {count} developers",
+  "noDevelopersFound": "No developers found",
+  "noDevelopersDescription": "Try a different search term or check back later",
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "loading": "Loading..."
+}

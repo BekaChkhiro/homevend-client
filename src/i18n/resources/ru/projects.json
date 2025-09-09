@@ -1,0 +1,97 @@
+{
+  "title": "Проекты",
+  "description": "Найдите лучшие проекты развития в Тбилиси",
+  "filters": {
+    "title": "Фильтры",
+    "clearFilters": "Очистить",
+    "search": "Поиск...",
+    "projectType": "Тип проекта",
+    "deliveryStatus": "Статус сдачи",
+    "city": "Город",
+    "area": "Район",
+    "allTypes": "Все типы",
+    "allStatuses": "Все статусы"
+  },
+  "projectTypes": {
+    "private_house": "Частный дом",
+    "apartment_building": "Жилой комплекс"
+  },
+  "deliveryStatuses": {
+    "completed_with_renovation": "Сдача с ремонтом",
+    "green_frame": "Зеленый каркас",
+    "black_frame": "Черный каркас",
+    "white_frame": "Белый каркас"
+  },
+  "projectInfo": {
+    "type": "Тип:",
+    "buildings": "Корпуса:",
+    "apartments": "Квартиры:",
+    "floors": "Этажи:",
+    "priceFrom": "Цена от:",
+    "developerId": "ID застройщика:",
+    "delivery": "Сдача:"
+  },
+  "loading": "Загрузка проектов...",
+  "noProjects": {
+    "title": "Проекты не найдены",
+    "description": "Попробуйте использовать другие фильтры"
+  },
+  "pagination": {
+    "previous": "Предыдущая",
+    "next": "Следующая"
+  },
+  "error": {
+    "title": "Ошибка",
+    "description": "Произошла ошибка при загрузке проектов"
+  },
+  "projectDetail": {
+    "backToProjects": "Назад к проектам",
+    "loading": "Загрузка проекта...",
+    "notFound": "Проект не найден",
+    "loadingError": "Произошла ошибка при загрузке проекта",
+    "contact": {
+      "developer": "Застройщик",
+      "phone": "Телефон",
+      "email": "Email",
+      "showPhone": "Показать телефон"
+    },
+    "details": {
+      "projectDetails": "Детали проекта",
+      "parkingSpaces": "Парковка:",
+      "totalArea": "Общая площадь:",
+      "livingArea": "Жилая площадь:"
+    },
+    "services": {
+      "title": "Услуги и удобства",
+      "security": "Безопасность",
+      "securityService": "Служба охраны",
+      "videoSurveillance": "Видеонаблюдение",
+      "fireSystem": "Противопожарная система",
+      "mainDoorLock": "Замок главной двери",
+      "hasDoorman": "Консьерж",
+      "comfort": "Комфорт",
+      "hasLobby": "Лобби",
+      "hasConcierge": "Консьерж",
+      "maintenance": "Обслуживание",
+      "landscaping": "Ландшафтный дизайн",
+      "hasLighting": "Освещение",
+      "yardCleaning": "Уборка двора",
+      "entranceCleaning": "Уборка входа"
+    },
+    "amenities": {
+      "title": "Инфраструктура",
+      "nearby": "Рядом:"
+    },
+    "linkedProperties": {
+      "title": "Квартиры в этом проекте",
+      "viewProperty": "Посмотреть",
+      "noProperties": "Квартиры еще не добавлены"
+    },
+    "photos": {
+      "title": "Фотографии",
+      "photoOf": "Фото",
+      "previousPhoto": "Предыдущее фото",
+      "nextPhoto": "Следующее фото"
+    }
+  }
+}

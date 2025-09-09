@@ -1,0 +1,16 @@
+{
+  "companyDescription": "Georgia's leading real estate platform. We help you find your home.",
+  "quickLinks": "Quick Links",
+  "contact": "Contact",
+  "contactPhone": "Contact Number",
+  "address": "Tbilisi, Berbuki St. N7\n2nd Entrance, Floor 11, Apartment N54",
+  "copyright": "All rights reserved.",
+  "termsAndConditions": "Terms and Conditions",
+  "navigation": {
+    "home": "Home",
+    "sale": "For Sale", 
+    "rent": "For Rent",
+    "newProjects": "New Projects",
+    "services": "Services"
+  }
+}

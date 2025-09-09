@@ -1,0 +1,19 @@
+{
+  "title": "Застройщики",
+  "subtitle": "Найдите надежных застройщиков и ознакомьтесь с их проектами. Все застройщики проверены и авторизованы.",
+  "searchPlaceholder": "Поиск застройщика...",
+  "developer": "Застройщик",
+  "verified": "Проверен",
+  "viewDetails": "Подробнее",
+  "projectsCount": "проектов",
+  "propertiesCount": "объявлений",
+  "totalSales": "общие продажи",
+  "foundDevelopers": "Найдено {count} застройщиков",
+  "noDevelopersFound": "Застройщики не найдены",
+  "noDevelopersDescription": "Попробуйте другой поисковый запрос или проверьте позже",
+  "pagination": {
+    "previous": "Предыдущая",
+    "next": "Следующая"
+  },
+  "loading": "Загрузка..."
+}

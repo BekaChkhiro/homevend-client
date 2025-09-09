@@ -10,6 +10,7 @@ import { MapPin, Calendar, Building2, Eye, Filter, Search } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { projectApi } from "@/lib/api";
+import { useTranslation } from "react-i18next";
 
 interface Project {
   id: number;
@@ -65,6 +66,7 @@ interface ProjectFilters {
 const Projects = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation('projects');
   const [searchParams] = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -120,8 +122,8 @@ const Projects = () => {
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტების ჩატვირთვისას მოხდა შეცდომა",
+        title: t('error.title'),
+        description: t('error.description'),
         variant: "destructive",
       });
     } finally {
@@ -146,29 +148,11 @@ const Projects = () => {
   };
 
   const getProjectTypeLabel = (type: string) => {
-    switch (type) {
-      case 'private_house':
-        return 'კერძო სახლი';
-      case 'apartment_building':
-        return 'საცხოვრებელი კომპლექსი';
-      default:
-        return type;
-    }
+    return t(`projectTypes.${type}`, type);
   };
 
   const getDeliveryStatusLabel = (status: string) => {
-    switch (status) {
-      case 'completed_with_renovation':
-        return 'ჩაბარება რემონტით';
-      case 'green_frame':
-        return 'მწვანე კარკასი';
-      case 'black_frame':
-        return 'შავი კარკასი';
-      case 'white_frame':
-        return 'თეთრი კარკასი';
-      default:
-        return status;
-    }
+    return t(`deliveryStatuses.${status}`, status);
   };
 
   const getDeliveryStatusColor = (status: string) => {
@@ -208,10 +192,10 @@ const Projects = () => {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              პროექტები
+              {t('title')}
             </h1>
             <p className="text-gray-600">
-              იპოვეთ საუკეთესო განვითარების პროექტები თბილისში
+              {t('description')}
             </p>
           </div>
 
@@ -219,14 +203,14 @@ const Projects = () => {
           <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
             <div className="flex items-center gap-4 mb-4">
               <Filter className="h-5 w-5 text-gray-500" />
-              <h2 className="text-lg font-medium">ფილტრები</h2>
+              <h2 className="text-lg font-medium">{t('filters.title')}</h2>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={clearFilters}
                 className="ml-auto"
               >
-                გასუფთავება
+                {t('filters.clearFilters')}
               </Button>
             </div>
             
@@ -234,7 +218,7 @@ const Projects = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="ძიება..."
+                  placeholder={t('filters.search')}
                   value={filters.search}
                   onChange={(e) => handleFilterChange('search', e.target.value)}
                   className="pl-10"
@@ -243,36 +227,36 @@ const Projects = () => {
               
               <Select value={filters.projectType} onValueChange={(value) => handleFilterChange('projectType', value)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="პროექტის ტიპი" />
+                  <SelectValue placeholder={t('filters.projectType')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">ყველა ტიპი</SelectItem>
-                  <SelectItem value="private_house">კერძო სახლი</SelectItem>
-                  <SelectItem value="apartment_building">საცხოვრებელი კომპლექსი</SelectItem>
+                  <SelectItem value="all">{t('filters.allTypes')}</SelectItem>
+                  <SelectItem value="private_house">{t('projectTypes.private_house')}</SelectItem>
+                  <SelectItem value="apartment_building">{t('projectTypes.apartment_building')}</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={filters.deliveryStatus} onValueChange={(value) => handleFilterChange('deliveryStatus', value)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="ჩაბარების სტატუსი" />
+                  <SelectValue placeholder={t('filters.deliveryStatus')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">ყველა სტატუსი</SelectItem>
-                  <SelectItem value="completed_with_renovation">ჩაბარება რემონტით</SelectItem>
-                  <SelectItem value="green_frame">მწვანე კარკასი</SelectItem>
-                  <SelectItem value="black_frame">შავი კარკასი</SelectItem>
-                  <SelectItem value="white_frame">თეთრი კარკასი</SelectItem>
+                  <SelectItem value="all">{t('filters.allStatuses')}</SelectItem>
+                  <SelectItem value="completed_with_renovation">{t('deliveryStatuses.completed_with_renovation')}</SelectItem>
+                  <SelectItem value="green_frame">{t('deliveryStatuses.green_frame')}</SelectItem>
+                  <SelectItem value="black_frame">{t('deliveryStatuses.black_frame')}</SelectItem>
+                  <SelectItem value="white_frame">{t('deliveryStatuses.white_frame')}</SelectItem>
                 </SelectContent>
               </Select>
 
               <Input
-                placeholder="ქალაქი"
+                placeholder={t('filters.city')}
                 value={filters.city}
                 onChange={(e) => handleFilterChange('city', e.target.value)}
               />
 
               <Input
-                placeholder="რაიონი"
+                placeholder={t('filters.area')}
                 value={filters.area}
                 onChange={(e) => handleFilterChange('area', e.target.value)}
               />
@@ -284,17 +268,17 @@ const Projects = () => {
             <div className="flex items-center justify-center h-64">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">პროექტების ჩატვირთვა...</p>
+                <p className="text-gray-600">{t('loading')}</p>
               </div>
             </div>
           ) : projects.length === 0 ? (
             <div className="text-center py-12">
               <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-medium text-gray-900 mb-2">
-                პროექტები ვერ მოიძებნა
+                {t('noProjects.title')}
               </h3>
               <p className="text-gray-600">
-                სცადეთ სხვა ფილტრების გამოყენება
+                {t('noProjects.description')}
               </p>
             </div>
           ) : (
@@ -351,19 +335,19 @@ const Projects = () => {
                       {/* Project Info */}
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <span className="text-gray-500">ტიპი:</span>
+                          <span className="text-gray-500">{t('projectInfo.type')}</span>
                           <p className="font-medium">{getProjectTypeLabel(project.projectType)}</p>
                         </div>
                         <div>
-                          <span className="text-gray-500">კორპუსები:</span>
+                          <span className="text-gray-500">{t('projectInfo.buildings')}</span>
                           <p className="font-medium">{project.numberOfBuildings}</p>
                         </div>
                         <div>
-                          <span className="text-gray-500">ბინები:</span>
+                          <span className="text-gray-500">{t('projectInfo.apartments')}</span>
                           <p className="font-medium">{project.totalApartments}</p>
                         </div>
                         <div>
-                          <span className="text-gray-500">სართულები:</span>
+                          <span className="text-gray-500">{t('projectInfo.floors')}</span>
                           <p className="font-medium">{project.numberOfFloors}</p>
                         </div>
                       </div>
@@ -371,7 +355,7 @@ const Projects = () => {
                       {/* Price */}
                       {minPrice && (
                         <div className="pt-2 border-t">
-                          <span className="text-gray-500 text-sm">ფასი დაწყებული:</span>
+                          <span className="text-gray-500 text-sm">{t('projectInfo.priceFrom')}</span>
                           <p className="text-2xl font-bold text-primary">
                             {formatPrice(minPrice)}
                           </p>
@@ -380,7 +364,7 @@ const Projects = () => {
 
                       {/* Footer */}
                       <div className="flex items-center justify-between pt-2 border-t text-sm text-gray-500">
-                        <span>დეველოპერი ID: {project.developerId}</span>
+                        <span>{t('projectInfo.developerId')} {project.developer?.id || project.developerId}</span>
                         <div className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />
                           <span>{project.viewCount}</span>
@@ -390,7 +374,7 @@ const Projects = () => {
                       {project.deliveryDate && (
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <Calendar className="h-4 w-4" />
-                          <span>ჩაბარება: {new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</span>
+                          <span>{t('projectInfo.delivery')} {new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</span>
                         </div>
                       )}
                     </CardContent>
@@ -409,7 +393,7 @@ const Projects = () => {
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
                 >
-                  წინა
+                  {t('pagination.previous')}
                 </Button>
                 
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -428,7 +412,7 @@ const Projects = () => {
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                 >
-                  შემდეგი
+                  {t('pagination.next')}
                 </Button>
               </div>
             </div>

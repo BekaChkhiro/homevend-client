@@ -22,6 +22,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useTranslation } from "react-i18next";
 
 interface AdPlacement {
   id: string;
@@ -37,6 +38,7 @@ interface AdPlacement {
 
 const Advertising = () => {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [selectedPlacement, setSelectedPlacement] = useState<string | null>(null);
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -127,8 +129,8 @@ const Advertising = () => {
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'banner': return 'ბანერი';
-      case 'sidebar': return 'გვერდითი ბარი';
+      case 'banner': return t('advertisements:advertisingPage.placements.banner');
+      case 'sidebar': return t('advertisements:advertisingPage.placements.sidebar');
       default: return type;
     }
   };
@@ -160,8 +162,8 @@ const Advertising = () => {
     // Simulate form submission
     setTimeout(() => {
       toast({
-        title: "შეტყობინება გაგზავნილია",
-        description: "ჩვენ დაგიკავშირდებით 24 საათში რეკლამის საკითხების შესახებ",
+        title: t('advertisements:advertisingPage.contactForm.messageSent'),
+        description: t('advertisements:advertisingPage.contactForm.messageDescription'),
       });
       setContactForm({
         name: "",
@@ -185,23 +187,22 @@ const Advertising = () => {
         {/* Hero Section */}
         <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">რეკლამის განთავსება</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('advertisements:advertisingPage.title')}</h1>
             <p className="text-xl text-muted-foreground mb-8">
-              მიაღწიეთ ათასობით პოტენციურ მყიდველს და გაყიდველს 
-              საქართველოს ყველაზე პოპულარულ უძრავი ქონების პლატფორმაზე
+              {t('advertisements:advertisingPage.subtitle')}
             </p>
             <div className="flex justify-center gap-4 mb-8 flex-wrap">
               <Badge variant="secondary" className="px-4 py-2">
                 <Users className="h-4 w-4 mr-2" />
-                50,000+ მომხმარებელი
+                50,000+ {t('advertisements:advertisingPage.stats.users')}
               </Badge>
               <Badge variant="secondary" className="px-4 py-2">
                 <Eye className="h-4 w-4 mr-2" />
-                {totalViews.toLocaleString()} ნახვა თვეში
+                {totalViews.toLocaleString()} {t('advertisements:advertisingPage.stats.viewsPerMonth')}
               </Badge>
               <Badge variant="secondary" className="px-4 py-2">
                 <TrendingUp className="h-4 w-4 mr-2" />
-                {averageCTR.toFixed(1)}% საშუალო CTR
+                {averageCTR.toFixed(1)}% {t('advertisements:advertisingPage.stats.averageCtr')}
               </Badge>
             </div>
           </div>
@@ -212,45 +213,45 @@ const Advertising = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">ყოველთვიური ნახვები</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('advertisements:advertisingPage.stats.monthlyViews')}</CardTitle>
                 <Eye className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{totalViews.toLocaleString()}</div>
-                <p className="text-xs text-green-600">+15% ზრდა ამ თვეში</p>
+                <p className="text-xs text-green-600">+15% {t('advertisements:advertisingPage.stats.growthThisMonth')}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">რეგისტრირებული მომხმარებლები</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('advertisements:advertisingPage.stats.registeredUsers')}</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">50,000+</div>
-                <p className="text-xs text-muted-foreground">აქტიური მომხმარებლები</p>
+                <p className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.stats.activeUsers')}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">საშუალო CTR</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('advertisements:advertisingPage.stats.averageCtrStat')}</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{averageCTR.toFixed(1)}%</div>
-                <p className="text-xs text-green-600">ინდუსტრიის საშუალოზე მაღალი</p>
+                <p className="text-xs text-green-600">{t('advertisements:advertisingPage.stats.higherThanIndustry')}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">განცხადებები</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('advertisements:advertisingPage.stats.listings')}</CardTitle>
                 <MapPin className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">10,000+</div>
-                <p className="text-xs text-muted-foreground">აქტიური განცხადება</p>
+                <p className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.stats.activeListings')}</p>
               </CardContent>
             </Card>
           </div>
@@ -259,9 +260,9 @@ const Advertising = () => {
         {/* Advertising Placements */}
         <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">რეკლამის ადგილები და ფასები</h2>
+            <h2 className="text-3xl font-bold mb-4">{t('advertisements:advertisingPage.placements.title')}</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              აირჩიეთ თქვენი ბიზნესისთვის ყველაზე შესაფერისი რეკლამის ადგილი
+              {t('advertisements:advertisingPage.placements.subtitle')}
             </p>
           </div>
 
@@ -288,7 +289,7 @@ const Advertising = () => {
                     <div className="flex items-center gap-2">
                       <div className="text-right">
                         <div className="text-2xl font-bold text-primary">₾{placement.price}</div>
-                        <div className="text-xs text-muted-foreground">თვეში</div>
+                        <div className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.placements.perMonth')}</div>
                       </div>
                       {contactForm.interestedPlacements.includes(placement.id) && (
                         <CheckCircle className="h-5 w-5 text-primary" />
@@ -305,17 +306,17 @@ const Advertising = () => {
                         <Badge variant="outline" className="text-xs">{getTypeLabel(placement.type)}</Badge>
                       </div>
                       <p className="text-sm font-medium">{placement.dimensions}</p>
-                      <p className="text-xs text-muted-foreground">ზომა</p>
+                      <p className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.placements.size')}</p>
                     </div>
                     
                     <div className="text-center p-3 bg-muted rounded-lg">
                       <div className="text-lg font-bold">{placement.monthlyViews.toLocaleString()}</div>
-                      <p className="text-xs text-muted-foreground">ნახვა თვეში</p>
+                      <p className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.placements.viewsPerMonth')}</p>
                     </div>
                     
                     <div className="text-center p-3 bg-muted rounded-lg">
                       <div className="text-lg font-bold text-green-600">{placement.ctr}%</div>
-                      <p className="text-xs text-muted-foreground">საშუალო CTR</p>
+                      <p className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.placements.averageCtr')}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -333,35 +334,35 @@ const Advertising = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Send className="h-5 w-5" />
-                    რეკლამის განთავსების მოთხოვნა
+                    {t('advertisements:advertisingPage.contactForm.title')}
                   </CardTitle>
                   <CardDescription>
-                    შეავსეთ ფორმა და ჩვენ დაგიკავშირდებით რეკლამის პაკეტის დეტალებისთვის
+                    {t('advertisements:advertisingPage.contactForm.subtitle')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">სახელი და გვარი *</Label>
+                        <Label htmlFor="name">{t('advertisements:advertisingPage.contactForm.nameLabel')} *</Label>
                         <Input
                           id="name"
                           name="name"
                           value={contactForm.name}
                           onChange={handleInputChange}
-                          placeholder="თქვენი სახელი"
+                          placeholder={t('advertisements:advertisingPage.contactForm.namePlaceholder')}
                           required
                           className="mt-1"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="company">კომპანია *</Label>
+                        <Label htmlFor="company">{t('advertisements:advertisingPage.contactForm.companyLabel')} *</Label>
                         <Input
                           id="company"
                           name="company"
                           value={contactForm.company}
                           onChange={handleInputChange}
-                          placeholder="კომპანიის დასახელება"
+                          placeholder={t('advertisements:advertisingPage.contactForm.companyPlaceholder')}
                           required
                           className="mt-1"
                         />
@@ -370,27 +371,27 @@ const Advertising = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="email">ელექტრონული ფოსტა *</Label>
+                        <Label htmlFor="email">{t('advertisements:advertisingPage.contactForm.emailLabel')} *</Label>
                         <Input
                           id="email"
                           name="email"
                           type="email"
                           value={contactForm.email}
                           onChange={handleInputChange}
-                          placeholder="example@company.com"
+                          placeholder={t('advertisements:advertisingPage.contactForm.emailPlaceholder')}
                           required
                           className="mt-1"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="phone">ტელეფონის ნომერი *</Label>
+                        <Label htmlFor="phone">{t('advertisements:advertisingPage.contactForm.phoneLabel')} *</Label>
                         <Input
                           id="phone"
                           name="phone"
                           type="tel"
                           value={contactForm.phone}
                           onChange={handleInputChange}
-                          placeholder="+995 555 123 456"
+                          placeholder={t('advertisements:advertisingPage.contactForm.phonePlaceholder')}
                           required
                           className="mt-1"
                         />
@@ -399,13 +400,13 @@ const Advertising = () => {
 
                     {contactForm.interestedPlacements.length > 0 && (
                       <div>
-                        <Label>არჩეული რეკლამის ადგილები</Label>
+                        <Label>{t('advertisements:advertisingPage.contactForm.selectedPlacements')}</Label>
                         <div className="mt-2 flex flex-wrap gap-2">
                           {contactForm.interestedPlacements.map(placementId => {
                             const placement = adPlacements.find(p => p.id === placementId);
                             return (
                               <Badge key={placementId} variant="default">
-                                {placement?.name} - ₾{placement?.price}/თვე
+                                {placement?.name} - ₾{placement?.price}/{t('advertisements:advertisingPage.placements.perMonth')}
                               </Badge>
                             );
                           })}
@@ -414,13 +415,13 @@ const Advertising = () => {
                     )}
 
                     <div>
-                      <Label htmlFor="message">დამატებითი ინფორმაცია</Label>
+                      <Label htmlFor="message">{t('advertisements:advertisingPage.contactForm.additionalInfo')}</Label>
                       <Textarea
                         id="message"
                         name="message"
                         value={contactForm.message}
                         onChange={handleInputChange}
-                        placeholder="მიუთითეთ თქვენი რეკლამის მიზნები, ბიუჯეტი და სხვა მნიშვნელოვანი დეტალები..."
+                        placeholder={t('advertisements:advertisingPage.contactForm.additionalInfoPlaceholder')}
                         rows={4}
                         className="mt-1"
                       />
@@ -434,12 +435,12 @@ const Advertising = () => {
                       {isSubmitting ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          იგზავნება...
+                          {t('advertisements:advertisingPage.contactForm.sending')}
                         </>
                       ) : (
                         <>
                           <Send className="h-4 w-4 mr-2" />
-                          მოთხოვნის გაგზავნა
+                          {t('advertisements:advertisingPage.contactForm.sendRequest')}
                         </>
                       )}
                     </Button>
@@ -452,7 +453,7 @@ const Advertising = () => {
             <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>საკონტაქტო ინფორმაცია</CardTitle>
+                  <CardTitle>{t('advertisements:advertisingPage.contact.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-3">
@@ -460,7 +461,7 @@ const Advertising = () => {
                       <Phone className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <div className="font-semibold">რეკლამის განყოფილება</div>
+                      <div className="font-semibold">{t('advertisements:advertisingPage.contact.advertisingDepartment')}</div>
                       <div className="text-muted-foreground">+995 555 123 456</div>
                     </div>
                   </div>
@@ -470,7 +471,7 @@ const Advertising = () => {
                       <Mail className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <div className="font-semibold">ელექტრონული ფოსტა</div>
+                      <div className="font-semibold">{t('advertisements:advertisingPage.contact.email')}</div>
                       <div className="text-muted-foreground">advertising@homevend.ge</div>
                     </div>
                   </div>
@@ -480,10 +481,10 @@ const Advertising = () => {
                       <Clock className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <div className="font-semibold">სამუშაო საათები</div>
+                      <div className="font-semibold">{t('advertisements:advertisingPage.contact.workingHours')}</div>
                       <div className="text-muted-foreground">
-                        ორშ-პარ: 09:00 - 18:00<br />
-                        შაბათი: 10:00 - 16:00
+                        {t('advertisements:advertisingPage.contact.mondayToFriday')}<br />
+                        {t('advertisements:advertisingPage.contact.saturday')}
                       </div>
                     </div>
                   </div>
@@ -494,13 +495,13 @@ const Advertising = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <DollarSign className="h-4 w-4 text-primary" />
-                    <span className="font-semibold text-primary">სპეციალური შეთავაზება</span>
+                    <span className="font-semibold text-primary">{t('advertisements:advertisingPage.specialOffer.title')}</span>
                   </div>
                   <p className="text-sm text-muted-foreground mb-2">
-                    3+ თვიანი კონტრაქტისთვის 15% ფასდაკლება!
+                    {t('advertisements:advertisingPage.specialOffer.discount')}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    პირველი თვე უფასოა ახალი კლიენტებისთვის.
+                    {t('advertisements:advertisingPage.specialOffer.firstMonth')}
                   </p>
                 </CardContent>
               </Card>

@@ -6,6 +6,7 @@ import { getLanguageUrl } from "@/components/LanguageRoute";
 
 export const Footer = () => {
   const { t, i18n } = useTranslation('common');
+
   return (
     <footer className="bg-muted/50 border-t border-border mt-8 sm:mt-12 lg:mt-16">
       <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-10 lg:py-12">

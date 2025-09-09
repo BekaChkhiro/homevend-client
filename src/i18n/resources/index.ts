@@ -35,6 +35,31 @@ import projectFormEn from './en/projectForm.json';
 import projectFormKa from './ka/projectForm.json';
 import projectFormRu from './ru/projectForm.json';
 
+import servicesEn from './en/services.json';
+import servicesKa from './ka/services.json';
+import servicesRu from './ru/services.json';
+import homeEn from './en/home.json';
+import homeKa from './ka/home.json';
+import homeRu from './ru/home.json';
+import advertisementsEn from './en/advertisements.json';
+import advertisementsKa from './ka/advertisements.json';
+import advertisementsRu from './ru/advertisements.json';
+import footerEn from './en/footer.json';
+import footerKa from './ka/footer.json';
+import footerRu from './ru/footer.json';
+import districtCarouselEn from './en/districtCarousel.json';
+import districtCarouselKa from './ka/districtCarousel.json';
+import districtCarouselRu from './ru/districtCarousel.json';
+import priceStatisticsEn from './en/priceStatistics.json';
+import priceStatisticsKa from './ka/priceStatistics.json';
+import priceStatisticsRu from './ru/priceStatistics.json';
+import developersEn from './en/developers.json';
+import developersKa from './ka/developers.json';
+import developersRu from './ru/developers.json';
+import projectsEn from './en/projects.json';
+import projectsKa from './ka/projects.json';
+import projectsRu from './ru/projects.json';
+
 export const resources = {
   en: {
     admin: adminEn,
@@ -49,6 +74,14 @@ export const resources = {
     home: homeEn,
     agencies: agenciesEn,
     projectForm: projectFormEn,
+    services: servicesEn,
+    advertisements: advertisementsEn,
+    footer: footerEn,
+    districtCarousel: districtCarouselEn,
+    priceStatistics: priceStatisticsEn,
+    developers: developersEn,
+    projects: projectsEn,
+
   },
   ka: {
     admin: adminKa,
@@ -57,12 +90,21 @@ export const resources = {
     auth: authKa,
     propertyCard: propertyCardKa,
     aboutUs: aboutUsKa,
+
     propertyDetail: propertyDetailKa,
     properties: propertiesKa,
     adBanner: adBannerKa,
     home: homeKa,
     agencies: agenciesKa,
     projectForm: projectFormKa,
+    services: servicesKa,
+    home: homeKa,
+    advertisements: advertisementsKa,
+    footer: footerKa,
+    districtCarousel: districtCarouselKa,
+    priceStatistics: priceStatisticsKa,
+    developers: developersKa,
+    projects: projectsKa,
   },
   ru: {
     admin: adminRu,
@@ -77,6 +119,14 @@ export const resources = {
     home: homeRu,
     agencies: agenciesRu,
     projectForm: projectFormRu,
+    services: servicesRu,
+    home: homeRu,
+    advertisements: advertisementsRu,
+    footer: footerRu,
+    districtCarousel: districtCarouselRu,
+    priceStatistics: priceStatisticsRu,
+    developers: developersRu,
+    projects: projectsRu,
   },
 };
 
@@ -92,3 +142,11 @@ export type AdBannerTranslations = typeof adBannerEn;
 export type HomeTranslations = typeof homeEn;
 export type AgenciesTranslations = typeof agenciesEn;
 export type ProjectFormTranslations = typeof projectFormEn;
+export type ServicesTranslations = typeof servicesEn;
+export type HomeTranslations = typeof homeEn;
+export type AdvertisementsTranslations = typeof advertisementsEn;
+export type FooterTranslations = typeof footerEn;
+export type DistrictCarouselTranslations = typeof districtCarouselEn;
+export type PriceStatisticsTranslations = typeof priceStatisticsEn;
+export type DevelopersTranslations = typeof developersEn;
+export type ProjectsTranslations = typeof projectsEn;
