@@ -10,8 +10,6 @@ interface AdBannerProps {
 
 export const AdBanner = ({ type, className }: AdBannerProps) => {
   const { t } = useTranslation('adBanner');
-  
-  const { t } = useTranslation();
 
   const banners = {
     horizontal: {
@@ -39,3 +37,4 @@ export const AdBanner = ({ type, className }: AdBannerProps) => {
     </Card>
   );
 };
+
