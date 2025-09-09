@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhotoGallerySection } from "./AddProject/components/PhotoGallerySection";
+import { useTranslation } from "react-i18next";
 
 interface City {
   id: number;
@@ -30,6 +31,7 @@ export const EditProject: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useTranslation(['projectForm', 'common']);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
@@ -95,8 +97,8 @@ export const EditProject: React.FC = () => {
       if (!response.ok) {
         if (response.status === 404) {
           toast({
-            title: "შეცდომა",
-            description: "პროექტი ვერ მოიძებნა",
+            title: t('projectForm.error'),
+            description: t('projectForm.errors.projectNotFound'),
             variant: "destructive",
           });
           navigate('/dashboard');
@@ -169,8 +171,8 @@ export const EditProject: React.FC = () => {
     } catch (error) {
       console.error('Error fetching project:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტის ჩატვირთვისას მოხდა შეცდომა",
+        title: t('projectForm.error'),
+        description: t('projectForm.errors.loadingError'),
         variant: "destructive",
       });
       navigate('/dashboard');
@@ -244,8 +246,8 @@ export const EditProject: React.FC = () => {
     
     if (user?.role !== 'developer') {
       toast({
-        title: "შეცდომა",
-        description: "მხოლოდ დეველოპერებს შეუძლიათ პროექტების რედაქტირება",
+        title: t('projectForm.error'),
+        description: t('projectForm.errors.permissionError'),
         variant: "destructive",
       });
       return;
@@ -280,16 +282,16 @@ export const EditProject: React.FC = () => {
       }
 
       toast({
-        title: "წარმატება",
-        description: "პროექტი წარმატებით განახლდა",
+        title: t('projectForm.success'),
+        description: t('projectForm.success.updated'),
       });
 
       navigate('/dashboard');
     } catch (error: any) {
       console.error('Error updating project:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტის განახლებისას მოხდა შეცდომა",
+        title: t('projectForm.error'),
+        description: t('projectForm.errors.updateError'),
         variant: "destructive",
       });
     } finally {
@@ -302,15 +304,15 @@ export const EditProject: React.FC = () => {
       <div className="max-w-2xl mx-auto py-8">
         <Card>
           <CardHeader>
-            <CardTitle>წვდომა აკრძალულია</CardTitle>
+            <CardTitle>{t('projectForm.accessDenied.title')}</CardTitle>
             <CardDescription>
-              მხოლოდ დეველოპერებს შეუძლიათ პროექტების რედაქტირება
+              {t('projectForm.accessDenied.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => navigate('/dashboard')} variant="outline">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              უკან დაბრუნება
+              {t('projectForm.backButton')}
             </Button>
           </CardContent>
         </Card>
@@ -324,7 +326,7 @@ export const EditProject: React.FC = () => {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">პროექტის ჩატვირთვა...</p>
+            <p className="text-gray-600">{t('projectForm.loading')}</p>
           </div>
         </div>
       </div>
@@ -340,19 +342,19 @@ export const EditProject: React.FC = () => {
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          უკან დაბრუნება
+          {t('projectForm.backButton')}
         </Button>
         
-        <h1 className="text-2xl font-bold mb-2">პროექტის რედაქტირება</h1>
-        <p className="text-gray-600">შეცვალეთ პროექტის ინფორმაცია</p>
+        <h1 className="text-2xl font-bold mb-2">{t('projectForm.editTitle')}</h1>
+        <p className="text-gray-600">{t('projectForm.editSubtitle')}</p>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="basic" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="basic">ძირითადი ინფო</TabsTrigger>
-            <TabsTrigger value="amenities">კომფორტი</TabsTrigger>
-            <TabsTrigger value="services">სერვისები</TabsTrigger>
+            <TabsTrigger value="basic">{t('projectForm.tabs.basic')}</TabsTrigger>
+            <TabsTrigger value="amenities">{t('projectForm.tabs.amenities')}</TabsTrigger>
+            <TabsTrigger value="services">{t('projectForm.tabs.services')}</TabsTrigger>
           </TabsList>
 
           {/* Basic Information Tab */}
@@ -361,13 +363,13 @@ export const EditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  პროექტის ინფორმაცია
+                  {t('projectForm.projectInfo.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="projectName">პროექტის დასახელება *</Label>
+                    <Label htmlFor="projectName">{t('projectForm.projectInfo.projectNameRequired')}</Label>
                     <Input
                       id="projectName"
                       value={formData.projectName}
@@ -377,24 +379,24 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="projectType">პროექტის ტიპი *</Label>
+                    <Label htmlFor="projectType">{t('projectForm.projectInfo.projectTypeRequired')}</Label>
                     <Select
                       value={formData.projectType}
                       onValueChange={(value) => handleInputChange('projectType', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ ტიპი" />
+                        <SelectValue placeholder={t('projectForm.projectInfo.selectType')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="private_house">კერძო სახლი</SelectItem>
-                        <SelectItem value="apartment_building">საცხოვრებელი კომპლექსი</SelectItem>
+                        <SelectItem value="private_house">{t('projectForm.projectInfo.types.privateHouse')}</SelectItem>
+                        <SelectItem value="apartment_building">{t('projectForm.projectInfo.types.apartmentBuilding')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="description">აღწერა</Label>
+                    <Label htmlFor="description">{t('projectForm.projectInfo.description')}</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
@@ -410,20 +412,20 @@ export const EditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  ლოკაცია
+                  {t('projectForm.location.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="cityId">ქალაქი *</Label>
+                    <Label htmlFor="cityId">{t('projectForm.location.cityRequired')}</Label>
                     <Select
                       value={formData.cityId}
                       onValueChange={(value) => handleInputChange('cityId', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ ქალაქი" />
+                        <SelectValue placeholder={t('projectForm.location.selectCity')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(cities || []).map((city) => (
@@ -436,14 +438,14 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="areaId">რაიონი</Label>
+                    <Label htmlFor="areaId">{t('projectForm.location.area')}</Label>
                     <Select
                       value={formData.areaId}
                       onValueChange={(value) => handleInputChange('areaId', value)}
                       disabled={!formData.cityId}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ რაიონი" />
+                        <SelectValue placeholder={t('projectForm.location.selectArea')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(areas || []).map((area) => (
@@ -456,7 +458,7 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="street">ქუჩა *</Label>
+                    <Label htmlFor="street">{t('projectForm.location.streetRequired')}</Label>
                     <Input
                       id="street"
                       value={formData.street}
@@ -466,7 +468,7 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="streetNumber">ნომერი</Label>
+                    <Label htmlFor="streetNumber">{t('projectForm.location.streetNumber')}</Label>
                     <Input
                       id="streetNumber"
                       value={formData.streetNumber}
@@ -482,32 +484,32 @@ export const EditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
-                  პროექტის დეტალები
+                  {t('projectForm.projectDetails.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="deliveryStatus">ჩაბარების სტატუსი *</Label>
+                    <Label htmlFor="deliveryStatus">{t('projectForm.projectDetails.deliveryStatusRequired')}</Label>
                     <Select
                       value={formData.deliveryStatus}
                       onValueChange={(value) => handleInputChange('deliveryStatus', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="აირჩიეთ სტატუსი" />
+                        <SelectValue placeholder={t('projectForm.projectDetails.selectStatus')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="completed_with_renovation">ჩაბარება რემონტით</SelectItem>
-                        <SelectItem value="green_frame">მწვანე კარკასი</SelectItem>
-                        <SelectItem value="black_frame">შავი კარკასი</SelectItem>
-                        <SelectItem value="white_frame">თეთრი კარკასი</SelectItem>
+                        <SelectItem value="completed_with_renovation">{t('projectForm.projectDetails.deliveryStatuses.completedWithRenovation')}</SelectItem>
+                        <SelectItem value="green_frame">{t('projectForm.projectDetails.deliveryStatuses.greenFrame')}</SelectItem>
+                        <SelectItem value="black_frame">{t('projectForm.projectDetails.deliveryStatuses.blackFrame')}</SelectItem>
+                        <SelectItem value="white_frame">{t('projectForm.projectDetails.deliveryStatuses.whiteFrame')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
-                    <Label htmlFor="deliveryDate">ჩაბარების თარიღი</Label>
+                    <Label htmlFor="deliveryDate">{t('projectForm.projectDetails.deliveryDate')}</Label>
                     <Input
                       id="deliveryDate"
                       type="date"
@@ -517,7 +519,7 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfBuildings">კორპუსების რაოდენობა *</Label>
+                    <Label htmlFor="numberOfBuildings">{t('projectForm.projectDetails.numberOfBuildingsRequired')}</Label>
                     <Input
                       id="numberOfBuildings"
                       type="number"
@@ -529,7 +531,7 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="totalApartments">სულ ბინები *</Label>
+                    <Label htmlFor="totalApartments">{t('projectForm.projectDetails.totalApartmentsRequired')}</Label>
                     <Input
                       id="totalApartments"
                       type="number"
@@ -541,7 +543,7 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfFloors">სართულების რაოდენობა *</Label>
+                    <Label htmlFor="numberOfFloors">{t('projectForm.projectDetails.numberOfFloorsRequired')}</Label>
                     <Input
                       id="numberOfFloors"
                       type="number"
@@ -553,7 +555,7 @@ export const EditProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="parkingSpaces">პარკინგის ადგილები</Label>
+                    <Label htmlFor="parkingSpaces">{t('projectForm.projectDetails.parkingSpaces')}</Label>
                     <Input
                       id="parkingSpaces"
                       type="number"
@@ -581,58 +583,58 @@ export const EditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  მანძილის მიხედვით კომფორტი
+                  {t('projectForm.amenities.title')}
                 </CardTitle>
-                <CardDescription>აირჩიეთ რა არსებობს პროექტის გარშემო და მიუთითეთ მანძილი</CardDescription>
+                <CardDescription>{t('projectForm.amenities.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {(() => {
                   const amenityTypes = [
-                    { key: 'pharmacy', label: '💊 აფთიაქი' },
-                    { key: 'kindergarten', label: '👶 საბავშო ბაღი' },
-                    { key: 'school', label: '🎒 სკოლა' },
-                    { key: 'university', label: '🎓 უნივერსიტეტი' },
-                    { key: 'hospital', label: '🏥 საავადმყოფო' },
-                    { key: 'clinic', label: '🩺 კლინიკა' },
-                    { key: 'busStop', label: '🚌 ავტობუსის გაჩერება' },
-                    { key: 'metro', label: '🚇 მეტრო' },
-                    { key: 'groceryStore', label: '🛒 საყიდლების მაღაზია' },
-                    { key: 'supermarket', label: '🏬 სუპერმარკეტი' },
-                    { key: 'mall', label: '🏢 სავაჭრო ცენტრი' },
-                    { key: 'bank', label: '🏦 ბანკი' },
-                    { key: 'atm', label: '💳 ბანკომატი' },
-                    { key: 'restaurant', label: '🍽️ რესტორანი' },
-                    { key: 'cafe', label: '☕ კაფე' },
-                    { key: 'bakery', label: '🥖 საცხობი' },
-                    { key: 'sportsCenter', label: '🏋️ სპორტული ცენტრი' },
-                    { key: 'gym', label: '💪 სპორტული დარბაზი' },
-                    { key: 'stadium', label: '🏟️ სტადიონი' },
-                    { key: 'swimmingPool', label: '🏊 საცურაო აუზი' },
-                    { key: 'park', label: '🌳 პარკი' },
-                    { key: 'garden', label: '🌳 ბაღი' },
-                    { key: 'square', label: '🏛️ მოედანი' },
-                    { key: 'parking', label: '🚗 პარკინგი' },
-                    { key: 'bikePath', label: '🚴 ველოსიპედის ბილიკი' },
-                    { key: 'sportsField', label: '⚽ სპორტული მოედანი' },
-                    { key: 'childrenArea', label: '🎪 ბავშვთა მოედანი' },
-                    { key: 'laundry', label: '🧺 სამრეცხაო' },
-                    { key: 'storage', label: '📦 საწყობი' },
-                    { key: 'cinema', label: '🎬 კინო' },
-                    { key: 'theater', label: '🎭 თეატრი' },
-                    { key: 'library', label: '📚 ბიბლიოთეკა' },
-                    { key: 'postOffice', label: '📫 ფოსტის განყოფილება' },
-                    { key: 'gasStation', label: '⛽ ბენზინგასამართი სადგური' },
-                    { key: 'carWash', label: '🚗 ავტორეცხვა' },
-                    { key: 'veterinary', label: '🐕 ვეტერინარული კლინიკა' },
-                    { key: 'beautyCenter', label: '💄 სილამაზის სალონი' },
-                    { key: 'dentist', label: '🦷 სტომატოლოგია' }
+                    { key: 'pharmacy', label: t('projectForm.amenities.types.pharmacy') },
+                    { key: 'kindergarten', label: t('projectForm.amenities.types.kindergarten') },
+                    { key: 'school', label: t('projectForm.amenities.types.school') },
+                    { key: 'university', label: t('projectForm.amenities.types.university') },
+                    { key: 'hospital', label: t('projectForm.amenities.types.hospital') },
+                    { key: 'clinic', label: t('projectForm.amenities.types.clinic') },
+                    { key: 'busStop', label: t('projectForm.amenities.types.busStop') },
+                    { key: 'metro', label: t('projectForm.amenities.types.metro') },
+                    { key: 'groceryStore', label: t('projectForm.amenities.types.groceryStore') },
+                    { key: 'supermarket', label: t('projectForm.amenities.types.supermarket') },
+                    { key: 'mall', label: t('projectForm.amenities.types.mall') },
+                    { key: 'bank', label: t('projectForm.amenities.types.bank') },
+                    { key: 'atm', label: t('projectForm.amenities.types.atm') },
+                    { key: 'restaurant', label: t('projectForm.amenities.types.restaurant') },
+                    { key: 'cafe', label: t('projectForm.amenities.types.cafe') },
+                    { key: 'bakery', label: t('projectForm.amenities.types.bakery') },
+                    { key: 'sportsCenter', label: t('projectForm.amenities.types.sportsCenter') },
+                    { key: 'gym', label: t('projectForm.amenities.types.gym') },
+                    { key: 'stadium', label: t('projectForm.amenities.types.stadium') },
+                    { key: 'swimmingPool', label: t('projectForm.amenities.types.swimmingPool') },
+                    { key: 'park', label: t('projectForm.amenities.types.park') },
+                    { key: 'garden', label: t('projectForm.amenities.types.garden') },
+                    { key: 'square', label: t('projectForm.amenities.types.square') },
+                    { key: 'parking', label: t('projectForm.amenities.types.parking') },
+                    { key: 'bikePath', label: t('projectForm.amenities.types.bikePath') },
+                    { key: 'sportsField', label: t('projectForm.amenities.types.sportsField') },
+                    { key: 'childrenArea', label: t('projectForm.amenities.types.childrenArea') },
+                    { key: 'laundry', label: t('projectForm.amenities.types.laundry') },
+                    { key: 'storage', label: t('projectForm.amenities.types.storage') },
+                    { key: 'cinema', label: t('projectForm.amenities.types.cinema') },
+                    { key: 'theater', label: t('projectForm.amenities.types.theater') },
+                    { key: 'library', label: t('projectForm.amenities.types.library') },
+                    { key: 'postOffice', label: t('projectForm.amenities.types.postOffice') },
+                    { key: 'gasStation', label: t('projectForm.amenities.types.gasStation') },
+                    { key: 'carWash', label: t('projectForm.amenities.types.carWash') },
+                    { key: 'veterinary', label: t('projectForm.amenities.types.veterinary') },
+                    { key: 'beautyCenter', label: t('projectForm.amenities.types.beautyCenter') },
+                    { key: 'dentist', label: t('projectForm.amenities.types.dentist') }
                   ];
 
                   const distances = [
-                    { key: 'onSite', label: 'ტერიტორიაზე', color: 'bg-green-100 text-green-800' },
-                    { key: '300m', label: '300მ-მდე', color: 'bg-blue-100 text-blue-800' },
-                    { key: '500m', label: '500მ-მდე', color: 'bg-purple-100 text-purple-800' },
-                    { key: '1km', label: '1კმ-მდე', color: 'bg-orange-100 text-orange-800' }
+                    { key: 'onSite', label: t('projectForm.amenities.distances.onSite'), color: 'bg-green-100 text-green-800' },
+                    { key: '300m', label: t('projectForm.amenities.distances.300m'), color: 'bg-blue-100 text-blue-800' },
+                    { key: '500m', label: t('projectForm.amenities.distances.500m'), color: 'bg-purple-100 text-purple-800' },
+                    { key: '1km', label: t('projectForm.amenities.distances.1km'), color: 'bg-orange-100 text-orange-800' }
                   ];
 
                   return (
@@ -701,25 +703,25 @@ export const EditProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  ჩაბარების შემდგომ სერვისები
+                  {t('projectForm.services.title')}
                 </CardTitle>
-                <CardDescription>აირჩიეთ სერვისები, რომლებიც იქნება ხელმისაწვდომი პროექტის ჩაბარების შემდეგ</CardDescription>
+                <CardDescription>{t('projectForm.services.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {[
-                    { key: 'securityService', label: '🛡️ მცველის სერვისი' },
-                    { key: 'hasConcierge', label: '🛎️ კონსიერჟი' },
-                    { key: 'videoSurveillance', label: '📹 ვიდეო ზედამხედველობა' },
-                    { key: 'hasLobby', label: '🏛️ ლობი/მიღების ჰოლი' },
-                    { key: 'hasDoorman', label: '🚪 კარისკაცი' },
-                    { key: 'yardCleaning', label: '🧹 ეზოს დასუფთავება' },
-                    { key: 'entranceCleaning', label: '🚪 შესასვლელის დასუფთავება' },
-                    { key: 'landscaping', label: '🌺 ლანდშაფტის მოვლა' },
-                    { key: 'hasLighting', label: '💡 მუდმივი განათება' },
-                    { key: 'fireSystem', label: '🔥 ხანძრის ჩაქრობის სისტემა' },
-                    { key: 'mainDoorLock', label: '🔒 მთავარი კარის საკეტი' },
-                    { key: 'maintenance', label: '🔧 ტექნიკური მომსახურება' }
+                    { key: 'securityService', label: t('projectForm.services.types.securityService') },
+                    { key: 'hasConcierge', label: t('projectForm.services.types.hasConcierge') },
+                    { key: 'videoSurveillance', label: t('projectForm.services.types.videoSurveillance') },
+                    { key: 'hasLobby', label: t('projectForm.services.types.hasLobby') },
+                    { key: 'hasDoorman', label: t('projectForm.services.types.hasDoorman') },
+                    { key: 'yardCleaning', label: t('projectForm.services.types.yardCleaning') },
+                    { key: 'entranceCleaning', label: t('projectForm.services.types.entranceCleaning') },
+                    { key: 'landscaping', label: t('projectForm.services.types.landscaping') },
+                    { key: 'hasLighting', label: t('projectForm.services.types.hasLighting') },
+                    { key: 'fireSystem', label: t('projectForm.services.types.fireSystem') },
+                    { key: 'mainDoorLock', label: t('projectForm.services.types.mainDoorLock') },
+                    { key: 'maintenance', label: t('projectForm.services.types.maintenance') }
                   ].map((service) => (
                     <div key={service.key} className="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                       <Checkbox
@@ -743,10 +745,10 @@ export const EditProject: React.FC = () => {
             variant="outline"
             onClick={() => navigate('/dashboard')}
           >
-            გაუქმება
+            {t('projectForm.cancel')}
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "შენახვა..." : "ცვლილებების შენახვა"}
+            {isLoading ? t('projectForm.saving') : t('projectForm.saveChanges')}
           </Button>
         </div>
       </form>

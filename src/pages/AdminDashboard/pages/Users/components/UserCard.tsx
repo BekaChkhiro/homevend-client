@@ -40,7 +40,7 @@ export const UserCard = ({
 }: UserCardProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active": return "bg-green-100 text-green-800";

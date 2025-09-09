@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "title": "განცხადებები",
+    "showing": "ნაჩვენებია",
+    "of": "საერთოდან",
+    "totalProperties": "განცხადებიდან",
+    "propertiesFound": "განცხადება",
+    "noPropertiesFound": "განცხადებები ვერ მოიძებნა",
+    "noPropertiesDescription": "სცადეთ ფილტრების შეცვლა ან ძიების პარამეტრების მოდიფიცირება",
+    "clearFilters": "ფილტრების გასუფთავება",
+    "sortBy": {
+      "newest": "ყველაზე ახალი",
+      "priceAscending": "ფასი: ზრდადობით",
+      "priceDescending": "ფასი: კლებადობით",
+      "areaLargest": "ფართობი: დიდიდან პატარამდე",
+      "areaSmallest": "ფართობი: პატარიდან დიდამდე"
+    },
+    "dealTypes": {
+      "sale": "იყიდება",
+      "rent": "ქირავდება",
+      "mortgage": "გირავდება",
+      "lease": "გაიცემა იჯარით",
+      "daily": "ქირავდება დღიურად",
+      "rentToBuy": "ნასყიდობა გამოსყიდობის უფლებით"
+    },
+    "propertyTypes": {
+      "apartment": "ბინები",
+      "house": "სახლები",
+      "cottage": "აგარაკები",
+      "land": "მიწის ნაკვეთები",
+      "commercial": "კომერციული ფართები",
+      "office": "საოფისე ფართები",
+      "hotel": "სასტუმროები"
+    },
+    "errors": {
+      "rateLimitTitle": "მოთხოვნები ლიმიტი",
+      "rateLimitDescription": "ძალიან ბევრი მოთხოვნა. თუ შეძლება, გაიმეორეთ {seconds} წამის შემდეგ.",
+      "generalErrorTitle": "შეცდომა",
+      "generalErrorDescription": "განცხადებების ჩატვირთვისას მოხდა შეცდომა."
+    }
+  }
+}

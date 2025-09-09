@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, Upload, X, Image } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface PhotoGallerySectionProps {
   images: File[];
@@ -13,6 +14,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
   images,
   onImagesChange,
 }) => {
+  const { t } = useTranslation(['projectForm', 'common']);
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
@@ -34,7 +36,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <Camera className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">ფოტო გალერეა</h3>
+        <h3 className="text-xl font-semibold">{t('projectForm.photoGallery.title')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5 space-y-6">
@@ -45,9 +47,9 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
               <Upload className="h-8 w-8 text-muted-foreground" />
             </div>
             <div>
-              <h4 className="text-lg font-medium mb-2">ფოტოების ატვირთვა</h4>
+              <h4 className="text-lg font-medium mb-2">{t('projectForm.photoGallery.uploadTitle')}</h4>
               <p className="text-sm text-muted-foreground mb-4">
-                ჩააგდეთ ფოტოები აქ ან დააჭირეთ ატვირთვის ღილაკს
+                {t('projectForm.photoGallery.uploadDescription')}
               </p>
               <Input
                 type="file"
@@ -60,7 +62,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
               <Label htmlFor="project-photo-upload" asChild>
                 <Button variant="outline" className="cursor-pointer">
                   <Upload className="h-4 w-4 mr-2" />
-                  ფოტოების არჩევა
+                  {t('projectForm.photoGallery.selectPhotos')}
                 </Button>
               </Label>
             </div>
@@ -72,7 +74,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
           <div className="space-y-4">
             <Label className="font-medium flex items-center gap-2">
               <Image className="h-4 w-4 text-muted-foreground" />
-              <span>ატვირთული ფოტოები ({images.length})</span>
+              <span>{t('projectForm.photoGallery.uploadedPhotos')} ({images.length})</span>
             </Label>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -104,13 +106,13 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
 
         {/* Instructions */}
         <div className="bg-muted/50 rounded-lg p-4">
-          <h5 className="font-medium mb-2">ფოტოების ატვირთვის რეკომენდაციები:</h5>
+          <h5 className="font-medium mb-2">{t('projectForm.photoGallery.recommendations.title')}</h5>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• გამოიყენეთ მაღალი ხარისხის ფოტოები (მინიმუმ 1200x800 პიქსელი)</li>
-            <li>• ატვირთეთ სხვადასხვა კუთხიდან გადაღებული ფოტოები</li>
-            <li>• ჩართეთ ყველა კორპუსის და მნიშვნელოვანი დეტალის ფოტოები</li>
-            <li>• მაქსიმალური ფაილის ზომა: 10MB თითოეული ფოტოსთვის</li>
-            <li>• მხარდაჭერილი ფორმატები: JPG, PNG, WebP</li>
+            <li>• {t('projectForm.photoGallery.recommendations.highQuality')}</li>
+            <li>• {t('projectForm.photoGallery.recommendations.differentAngles')}</li>
+            <li>• {t('projectForm.photoGallery.recommendations.allBuildings')}</li>
+            <li>• {t('projectForm.photoGallery.recommendations.maxFileSize')}</li>
+            <li>• {t('projectForm.photoGallery.recommendations.supportedFormats')}</li>
           </ul>
         </div>
       </div>

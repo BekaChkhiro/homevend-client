@@ -5,7 +5,7 @@ import { Sofa, Bed, Table, ChefHat, Wind, Refrigerator, WashingMachine, Utensils
 import { useTranslation } from "react-i18next";
 
 export const FurnitureAppliancesSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext();
   const furnitureAppliances = form.watch("furnitureAppliances");
   

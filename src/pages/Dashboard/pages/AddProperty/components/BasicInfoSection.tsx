@@ -39,7 +39,7 @@ interface Project {
 }
 
 export const BasicInfoSection = () => {
-  const { t, i18n } = useTranslation('userDashboard');
+  const { t, i18n } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext<PropertyFormData>();
   const { user } = useAuth();
   const watchedDealType = form.watch("dealType");

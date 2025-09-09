@@ -35,7 +35,7 @@ interface AdPlacement {
 }
 
 const Advertisements = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('admin');
   const [selectedPlacement, setSelectedPlacement] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedPlacementForAd, setSelectedPlacementForAd] = useState<string | undefined>();

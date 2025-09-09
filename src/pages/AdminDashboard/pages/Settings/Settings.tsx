@@ -4,7 +4,7 @@ import { Settings as SettingsIcon, Users, Home } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Settings = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('admin');
   
   return (
     <div>

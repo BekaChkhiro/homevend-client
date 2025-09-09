@@ -1,0 +1,191 @@
+{
+  "errors": {
+    "title": "შეცდომა",
+    "propertyIdRequired": "საჭიროა ქონების ID",
+    "propertyNotFound": "ქონება ვერ მოიძებნა ან ვერ ჩაიტვირთა",
+    "loadingFailed": "განცხადების ჩატვირთვისას მოხდა შეცდომა"
+  },
+  "propertyNotFound": "განცხადება ვერ მოიძებნა",
+  "noDescription": "აღწერა არ არის მითითებული",
+  "perSquareMeter": "/მ²",
+  "bedrooms": "საძინებელი",
+  "bathrooms": "აბაზანა",
+  "squareMeters": "მ²",
+  "meters": "მ",
+  "yes": "კი",
+  "count": "ც",
+  "email": "ელფოსტა",
+  "similarProperties": "მსგავსი განცხადებები",
+  "contact": {
+    "contact": "დაუკავშირდით",
+    "contactAgent": "დაუკავშირდით აგენტს",
+    "contactDeveloper": "დაუკავშირდით დეველოპერს"
+  },
+  "userRoles": {
+    "agent": "აგენტი",
+    "developer": "დეველოპერი",
+    "user": "მომხმარებელი"
+  },
+  "linkedProject": "დაკავშირებული პროექტი",
+  "sections": {
+    "mainInformation": "მთავარი ინფორმაცია",
+    "propertyStructure": "ქონების სტრუქტურა",
+    "buildingInformation": "შენობის ინფორმაცია",
+    "infrastructure": "ინფრასტრუქტურა",
+    "additionalSpaces": "დამატებითი სივრცეები",
+    "features": "მახასიათებლები",
+    "advantages": "უპირატესობები",
+    "furnitureAppliances": "ავეჯი და ტექნიკა",
+    "tags": "ბეჯები",
+    "description": "აღწერა"
+  },
+  "fields": {
+    "listingTitle": "განცხადების სათაური *",
+    "propertyType": "უძრავი ქონების ტიპი *",
+    "dealType": "გარიგების ტიპი *",
+    "location": "მდებარეობა *",
+    "cadastralCode": "საკადასტრო კოდი",
+    "rooms": "ოთახები",
+    "bedrooms": "საძინებელი",
+    "bathrooms": "სველი წერტილი",
+    "totalFloors": "სართულები სულ",
+    "propertyFloor": "ქონების სართული",
+    "usableArea": "სარგო ფართი",
+    "status": "სტატუსი",
+    "constructionYear": "აშენების წელი",
+    "condition": "მდგომარეობა",
+    "projectType": "პროექტის ტიპი",
+    "ceilingHeight": "ჭერის სიმაღლე",
+    "buildingMaterial": "სამშენებლო მასალა",
+    "heating": "გათბობა",
+    "parking": "პარკირება",
+    "hotWater": "ცხელი წყალი",
+    "balcony": "აივანი",
+    "pool": "აუზი",
+    "livingRoom": "მისაღები",
+    "loggia": "ლოჯი",
+    "veranda": "ვერანდა",
+    "hasYard": "აქვს ეზო",
+    "storage": "სათავსო"
+  },
+  "buildingStatus": {
+    "old_built": "ძველი აშენება",
+    "new_built": "ახალი აშენება",
+    "under_construction": "მშენებლობის პროცესში"
+  },
+  "constructionYear": {
+    "before_1955": "1955 წლამდე",
+    "1955_2000": "1955-2000 წლები",
+    "after_2000": "2000 წლის შემდეგ"
+  },
+  "condition": {
+    "excellent": "შესანიშნავი",
+    "very_good": "ძალიან კარგი",
+    "good": "კარგი",
+    "needs_renovation": "საჭიროებს რემონტს",
+    "under_renovation": "რემონტის პროცესში",
+    "newly_renovated": "ახლადრემონტებული",
+    "old_renovated": "ძველი რემონტი",
+    "ongoing_renovation": "მიმდინარე რემონტი",
+    "black_frame": "შავი კარკასი",
+    "white_frame": "თეთრი კარკასი",
+    "green_frame": "მწვანე კარკასი"
+  },
+  "projectType": {
+    "standard": "სტანდარტული",
+    "non_standard": "არასტანდარტული",
+    "elite": "ელიტური"
+  },
+  "buildingMaterial": {
+    "brick": "აგური",
+    "block": "ბლოკი",
+    "panel": "პანელი",
+    "monolith": "მონოლითი"
+  },
+  "propertyType": {
+    "apartment": "ბინა",
+    "house": "სახლი",
+    "cottage": "კოტეჯი",
+    "land": "მიწა"
+  },
+  "dealType": {
+    "sale": "იყიდება",
+    "rent": "ქირავდება",
+    "daily": "დღიური ქირავნობა"
+  },
+  "parking": {
+    "garage": "გარაჟი",
+    "parking_space": "პარკინგი",
+    "no_parking": "პარკინგი არ არის"
+  },
+  "heating": {
+    "central_heating": "ცენტრალური გათბობა",
+    "gas_heating": "გაზით გათბობა"
+  },
+  "hotWater": {
+    "central_hot_water": "ცენტრალური ცხელი წყალი",
+    "solar_heater": "მზის კოლექტორი"
+  },
+  "poolType": {
+    "indoor": "შიდა აუზი",
+    "outdoor": "გარე აუზი",
+    "jacuzzi": "ჯაკუზი"
+  },
+  "features": {
+    "internet": "ინტერნეტი",
+    "elevator": "ლიფტი",
+    "tv": "ტელევიზორი",
+    "cargo_elevator": "სამუშაო ლიფტი",
+    "water": "წყალი",
+    "gas": "გაზი",
+    "kitchen_appliances": "სამზარეულო ტექნიკა",
+    "phone": "ტელეფონი",
+    "electricity": "ელექტროენერგია",
+    "intercom": "დომოფონი",
+    "fenced": "შემოღობილი",
+    "sewerage": "კანალიზაცია"
+  },
+  "advantages": {
+    "spa": "სპა",
+    "fireplace": "ბუხარი",
+    "bbq": "შაშლიკის ადგილი",
+    "bar": "ბარი",
+    "gym": "სპორტული დარბაზი",
+    "jacuzzi": "ჯაკუზი",
+    "fruit_trees": "ხილის ხეები",
+    "yard_lighting": "ეზოს განათება",
+    "sauna": "საუნა",
+    "alarm": "სიგნალიზაცია",
+    "security": "უსაფრთხოება",
+    "wine_cellar": "ღვინის მარანი",
+    "ventilation": "ვენტილაცია"
+  },
+  "furnitureAppliances": {
+    "refrigerator": "მაცივარი",
+    "dishwasher": "ჭურჭლის სარეცხი",
+    "oven": "ღუმელი",
+    "bed": "საწოლი",
+    "sofa": "დივანი",
+    "gas_stove": "გაზქურა",
+    "stove_gas": "გაზქურა",
+    "air_conditioner": "კონდიციონერი",
+    "washing_machine": "სარეცხი მანქანა",
+    "chairs": "სკამები",
+    "furniture": "ავეჯი",
+    "table": "მაგიდა",
+    "stove_electric": "ელექტრო ქურა"
+  },
+  "tags": {
+    "luxury": "ლუქსი",
+    "new": "ახალი",
+    "code_door": "კარი კოდით",
+    "airbnb_booking": "Airbnb/Booking ექაუნთი",
+    "investment": "საინვესტიციო",
+    "disability_friendly": "სსმპ"
+  },
+  "vipStatus": {
+    "vip": "VIP",
+    "vip_plus": "VIP+",
+    "super_vip": "SUPER VIP"
+  }
+}

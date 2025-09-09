@@ -128,125 +128,79 @@ interface Property {
 }
 
 // Translation functions moved outside component to prevent recreation on every render
-const translateBuildingStatus = (status: string) => {
-  const translations: Record<string, string> = {
-    'old-built': 'ძველი აშენება', 'new-built': 'ახალი აშენება', 'under-construction': 'მშენებლობის პროცესში'
-  };
-  return translations[status] || status;
+const translateBuildingStatus = (status: string, t: any) => {
+  const translationKey = `buildingStatus.${status.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: status });
 };
 
-const translateConstructionYear = (year: string) => {
-  const translations: Record<string, string> = {
-    'before-1955': '1955 წლამდე', '1955-2000': '1955-2000 წლები', 'after-2000': '2000 წლის შემდეგ'
-  };
-  return translations[year] || year;
+const translateConstructionYear = (year: string, t: any) => {
+  const translationKey = `constructionYear.${year.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: year });
 };
 
-const translateCondition = (condition: string) => {
-  const translations: Record<string, string> = {
-    'excellent': 'შესანიშნავი', 'very-good': 'ძალიან კარგი', 'good': 'კარგი',
-    'needs-renovation': 'საჭიროებს რემონტს', 'under-renovation': 'რემონტის პროცესში',
-    'black-frame': 'შავი კარკასი', 'white-frame': 'თეთრი კარკასი', 'green-frame': 'მწვანე კარკასი'
-  };
-  return translations[condition] || condition;
+const translateCondition = (condition: string, t: any) => {
+  const translationKey = `condition.${condition.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: condition });
 };
 
-const translateProjectType = (type: string) => {
-  const translations: Record<string, string> = {
-    'standard': 'სტანდარტული', 'non-standard': 'არასტანდარტული', 'elite': 'ელიტური'
-  };
-  return translations[type] || type;
+const translateProjectType = (type: string, t: any) => {
+  const translationKey = `projectType.${type.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: type });
 };
 
-const translateBuildingMaterial = (material: string) => {
-  const translations: Record<string, string> = {
-    'brick': 'აგური', 'block': 'ბლოკი', 'panel': 'პანელი', 'monolith': 'მონოლითი'
-  };
-  return translations[material] || material;
+const translateBuildingMaterial = (material: string, t: any) => {
+  const translationKey = `buildingMaterial.${material}`;
+  return t(translationKey, { defaultValue: material });
 };
 
-const translatePropertyType = (type: string) => {
-  const translations: Record<string, string> = {
-    'apartment': 'ბინა', 'house': 'სახლი', 'cottage': 'კოტეჯი', 'land': 'მიწა'
-  };
-  return translations[type] || type;
+const translatePropertyType = (type: string, t: any) => {
+  const translationKey = `propertyType.${type}`;
+  return t(translationKey, { defaultValue: type });
 };
 
-const translateDealType = (type: string) => {
-  const translations: Record<string, string> = {
-    'sale': 'იყიდება', 'rent': 'ქირავდება', 'daily': 'დღიური ქირავნობა'
-  };
-  return translations[type] || type;
+const translateDealType = (type: string, t: any) => {
+  const translationKey = `dealType.${type}`;
+  return t(translationKey, { defaultValue: type });
 };
 
-const translateParking = (parking: string) => {
-  const translations: Record<string, string> = {
-    'garage': 'გარაჟი', 'parking-space': 'პარკინგი', 'no-parking': 'პარკინგი არ არის'
-  };
-  return translations[parking] || parking;
+const translateParking = (parking: string, t: any) => {
+  const translationKey = `parking.${parking.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: parking });
 };
 
-const translateHeating = (heating: string) => {
-  const translations: Record<string, string> = {
-    'central-heating': 'ცენტრალური გათბობა', 'gas-heating': 'გაზით გათბობა'
-  };
-  return translations[heating] || heating;
+const translateHeating = (heating: string, t: any) => {
+  const translationKey = `heating.${heating.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: heating });
 };
 
-const translateHotWater = (hotWater: string) => {
-  const translations: Record<string, string> = {
-    'central-hot-water': 'ცენტრალური ცხელი წყალი', 'solar-heater': 'მზის კოლექტორი'
-  };
-  return translations[hotWater] || hotWater;
+const translateHotWater = (hotWater: string, t: any) => {
+  const translationKey = `hotWater.${hotWater.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: hotWater });
 };
 
-const translatePoolType = (poolType: string) => {
-  const translations: Record<string, string> = {
-    'indoor': 'შიდა აუზი', 'outdoor': 'გარე აუზი', 'jacuzzi': 'ჯაკუზი'
-  };
-  return translations[poolType] || poolType;
+const translatePoolType = (poolType: string, t: any) => {
+  const translationKey = `poolType.${poolType}`;
+  return t(translationKey, { defaultValue: poolType });
 };
 
-const translateFeature = (feature: string) => {
-  const translations: Record<string, string> = {
-    'internet': 'ინტერნეტი', 'elevator': 'ლიფტი', 'tv': 'ტელევიზორი',
-    'cargo-elevator': 'სამუშაო ლიფტი', 'water': 'წყალი', 'gas': 'გაზი',
-    'kitchen-appliances': 'სამზარეულო ტექნიკა', 'phone': 'ტელეფონი',
-    'electricity': 'ელექტროენერგია', 'intercom': 'დომოფონი',
-    'fenced': 'შემოღობილი', 'sewerage': 'კანალიზაცია'
-  };
-  return translations[feature] || feature;
+const translateFeature = (feature: string, t: any) => {
+  const translationKey = `features.${feature.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: feature });
 };
 
-const translateAdvantage = (advantage: string) => {
-  const translations: Record<string, string> = {
-    'spa': 'სპა', 'fireplace': 'ბუხარი', 'bbq': 'შაშლიკის ადგილი',
-    'bar': 'ბარი', 'gym': 'სპორტული დარბაზი', 'jacuzzi': 'ჯაკუზი',
-    'fruit-trees': 'ხილის ხეები', 'yard-lighting': 'ეზოს განათება',
-    'sauna': 'საუნა', 'alarm': 'სიგნალიზაცია', 'security': 'უსაფრთხოება',
-    'wine-cellar': 'ღვინის მარანი', 'ventilation': 'ვენტილაცია'
-  };
-  return translations[advantage] || advantage;
+const translateAdvantage = (advantage: string, t: any) => {
+  const translationKey = `advantages.${advantage.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: advantage });
 };
 
-const translateFurnitureAppliance = (item: string) => {
-  const translations: Record<string, string> = {
-    'refrigerator': 'მაცივარი', 'dishwasher': 'ჭურჭლის სარეცხი', 'oven': 'ღუმელი',
-    'bed': 'საწოლი', 'sofa': 'დივანი', 'gas-stove': 'გაზქურა',
-    'air-conditioner': 'კონდიციონერი', 'washing-machine': 'სარეცხი მანქანა',
-    'chairs': 'სკამები', 'furniture': 'ავეჯი', 'table': 'მაგიდა',
-    'stove-electric': 'ელექტრო ქურა'
-  };
-  return translations[item] || item;
+const translateFurnitureAppliance = (item: string, t: any) => {
+  const translationKey = `furnitureAppliances.${item.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: item });
 };
 
-const translateTag = (tag: string) => {
-  const translations: Record<string, string> = {
-    'luxury': 'ლუქსი', 'new': 'ახალი', 'code-door': 'კარი კოდით',
-    'airbnb-booking': 'Airbnb/Booking ექაუნთი', 'investment': 'საინვესტიციო',
-    'disability-friendly': 'სსმპ'
-  };
-  return translations[tag] || tag;
+const translateTag = (tag: string, t: any) => {
+  const translationKey = `tags.${tag.replace('-', '_')}`;
+  return t(translationKey, { defaultValue: tag });
 };
 
 const PropertyDetail = () => {
@@ -257,7 +211,7 @@ const PropertyDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('propertyDetail');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -266,7 +220,7 @@ const PropertyDetail = () => {
 
   const fetchProperty = async () => {
     if (!id) {
-      setError('Property ID is required');
+      setError(t('errors.propertyIdRequired'));
       setIsLoading(false);
       return;
     }
@@ -380,10 +334,10 @@ const PropertyDetail = () => {
 
     } catch (error: any) {
       console.error('Error fetching property:', error);
-      setError('Property not found or failed to load');
+      setError(t('errors.propertyNotFound'));
       toast({
-        title: "შეცდომა",
-        description: "განცხადების ჩატვირთვისას მოხდა შეცდომა",
+        title: t('errors.title'),
+        description: t('errors.loadingFailed'),
         variant: "destructive",
       });
     } finally {
@@ -404,11 +358,11 @@ const PropertyDetail = () => {
   const getContactTitle = (userRole?: string) => {
     switch (userRole) {
       case 'agency':
-        return 'დაუკავშირდით აგენტს';
+        return t('contact.contactAgent');
       case 'developer':
-        return 'დაუკავშირდით დეველოპერს';
+        return t('contact.contactDeveloper');
       default:
-        return 'დაუკავშირდით';
+        return t('contact.contact');
     }
   };
 
@@ -441,7 +395,7 @@ const PropertyDetail = () => {
         <Header />
         <div className="pt-16 flex items-center justify-center h-96">
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-2">განცხადება ვერ მოიძებნა</h2>
+            <h2 className="text-2xl font-bold mb-2">{t('propertyNotFound')}</h2>
             <p className="text-muted-foreground">{error}</p>
           </div>
         </div>
@@ -485,7 +439,7 @@ const PropertyDetail = () => {
     images: property.photos.length > 0 ? property.photos : [
       "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop"
     ],
-    description: property.descriptionGeorgian || property.descriptionEnglish || 'აღწერა არ არის მითითებული',
+    description: property.descriptionGeorgian || property.descriptionEnglish || t('noDescription'),
     features: property.features,
     advantages: property.advantages,
     furnitureAppliances: property.furnitureAppliances,
@@ -546,7 +500,7 @@ const PropertyDetail = () => {
                         {displayProperty.address}
                       </div>
                       <div className="flex items-center gap-2 mb-4">
-                        <Badge variant="secondary">{translatePropertyType(displayProperty.type)}</Badge>
+                        <Badge variant="secondary">{translatePropertyType(displayProperty.type, t)}</Badge>
                         {property.dailyRentalSubcategory && (
                           <Badge variant="outline">{property.dailyRentalSubcategory}</Badge>
                         )}
@@ -564,9 +518,9 @@ const PropertyDetail = () => {
                           };
                           
                           const vipLabels = {
-                            vip: 'VIP',
-                            vip_plus: 'VIP+',
-                            super_vip: 'SUPER VIP'
+                            vip: t('vipStatus.vip'),
+                            vip_plus: t('vipStatus.vip_plus'),
+                            super_vip: t('vipStatus.super_vip')
                           };
                           
                           const vipType = property.vipStatus!;
@@ -600,7 +554,7 @@ const PropertyDetail = () => {
                   </div>
                   {property.pricePerSqm && (
                     <div className="text-lg font-semibold text-muted-foreground mb-6">
-                      {formatPrice(property.pricePerSqm)}/მ²
+                      {formatPrice(property.pricePerSqm)}/{t('perSquareMeter')}
                     </div>
                   )}
 
@@ -608,17 +562,17 @@ const PropertyDetail = () => {
                     <div className="flex items-center justify-center sm:justify-start bg-gray-50 rounded-lg p-2 sm:bg-transparent sm:p-0">
                       <Bed className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-muted-foreground" />
                       <span className="font-semibold text-sm sm:text-base">{displayProperty.bedrooms}</span>
-                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">საძინებელი</span>
+                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">{t('bedrooms')}</span>
                     </div>
                     <div className="flex items-center justify-center sm:justify-start bg-gray-50 rounded-lg p-2 sm:bg-transparent sm:p-0">
                       <Bath className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-muted-foreground" />
                       <span className="font-semibold text-sm sm:text-base">{displayProperty.bathrooms}</span>
-                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">აბაზანა</span>
+                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">{t('bathrooms')}</span>
                     </div>
                     <div className="flex items-center justify-center sm:justify-start bg-gray-50 rounded-lg p-2 sm:bg-transparent sm:p-0">
                       <Square className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-muted-foreground" />
                       <span className="font-semibold text-sm sm:text-base">{displayProperty.area}</span>
-                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">მ²</span>
+                      <span className="text-muted-foreground ml-1 text-sm sm:text-base">{t('squareMeters')}</span>
                     </div>
                   </div>
 
@@ -627,7 +581,7 @@ const PropertyDetail = () => {
                     <CardContent className="p-4 md:p-6">
                       <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Info className="h-4 w-4" style={{ color: '#0f172a' }} />
-                        მთავარი ინფორმაცია
+                        {t('sections.mainInformation')}
                       </h3>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -637,7 +591,7 @@ const PropertyDetail = () => {
                               <Hash className="h-4 w-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>განცხადების სათაური *</span>
+                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.listingTitle')}</span>
                               <p className="font-semibold text-sm leading-tight break-words" style={{ color: '#0f172a' }}>{property.title}</p>
                             </div>
                           </div>
@@ -649,8 +603,8 @@ const PropertyDetail = () => {
                               <Building className="h-4 w-4" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>უძრავი ქონების ტიპი *</span>
-                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translatePropertyType(property.propertyType)}</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.propertyType')}</span>
+                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translatePropertyType(property.propertyType, t)}</p>
                             </div>
                           </div>
                         </div>
@@ -661,8 +615,8 @@ const PropertyDetail = () => {
                               <Briefcase className="h-4 w-4" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>გარიგების ტიპი *</span>
-                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateDealType(property.dealType)}</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.dealType')}</span>
+                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateDealType(property.dealType, t)}</p>
                             </div>
                           </div>
                         </div>
@@ -673,7 +627,7 @@ const PropertyDetail = () => {
                               <MapPin className="h-4 w-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>მდებარეობა *</span>
+                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.location')}</span>
                               <p className="font-semibold text-sm leading-tight break-words" style={{ color: '#0f172a' }}>{displayProperty.address}</p>
                             </div>
                           </div>
@@ -687,7 +641,7 @@ const PropertyDetail = () => {
                                 <Hash className="h-4 w-4" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>საკადასტრო კოდი</span>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.cadastralCode')}</span>
                                 <p className="font-semibold text-sm font-mono tracking-wider break-all" style={{ color: '#0f172a' }}>{property.cadastralCode}</p>
                               </div>
                             </div>
@@ -702,7 +656,7 @@ const PropertyDetail = () => {
                     <CardContent className="p-4 md:p-6">
                       <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Home className="h-4 w-4" style={{ color: '#0f172a' }} />
-                        ქონების სტრუქტურა
+                        {t('sections.propertyStructure')}
                       </h3>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -713,7 +667,7 @@ const PropertyDetail = () => {
                                 <Home className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ოთახები</span>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.rooms')}</span>
                                 <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.rooms}</p>
                               </div>
                             </div>
@@ -726,7 +680,7 @@ const PropertyDetail = () => {
                                 <Bed className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>საძინებელი</span>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.bedrooms')}</span>
                                 <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.bedrooms}</p>
                               </div>
                             </div>
@@ -739,7 +693,7 @@ const PropertyDetail = () => {
                                 <Bath className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სველი წერტილი</span>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.bathrooms')}</span>
                                 <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.bathrooms}</p>
                               </div>
                             </div>
@@ -752,7 +706,7 @@ const PropertyDetail = () => {
                                 <Layers className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სართულები სულ</span>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.totalFloors')}</span>
                                 <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.totalFloors}</p>
                               </div>
                             </div>
@@ -765,7 +719,7 @@ const PropertyDetail = () => {
                                 <Layers className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ქონების სართული</span>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.propertyFloor')}</span>
                                 <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.propertyFloor}</p>
                               </div>
                             </div>
@@ -777,8 +731,8 @@ const PropertyDetail = () => {
                               <Square className="h-4 w-4" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სარგო ფართი</span>
-                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.area} მ²</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.usableArea')}</span>
+                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.area} {t('squareMeters')}</p>
                             </div>
                           </div>
                         </div>
@@ -791,7 +745,7 @@ const PropertyDetail = () => {
                     <CardContent className="p-4 md:p-6">
                       <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Building className="h-4 w-4" style={{ color: '#0f172a' }} />
-                        შენობის ინფორმაცია
+                        {t('sections.buildingInformation')}
                       </h3>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -802,8 +756,8 @@ const PropertyDetail = () => {
                                 <Settings className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სტატუსი</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingStatus(property.buildingStatus)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.status')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingStatus(property.buildingStatus, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -815,8 +769,8 @@ const PropertyDetail = () => {
                                 <CalendarIcon className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აშენების წელი</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateConstructionYear(property.constructionYear)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.constructionYear')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateConstructionYear(property.constructionYear, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -828,8 +782,8 @@ const PropertyDetail = () => {
                                 <Wrench className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>მდგომარეობა</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateCondition(property.condition)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.condition')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateCondition(property.condition, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -841,8 +795,8 @@ const PropertyDetail = () => {
                                 <Building className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>პროექტის ტიპი</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateProjectType(property.projectType)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.projectType')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateProjectType(property.projectType, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -854,8 +808,8 @@ const PropertyDetail = () => {
                                 <Ruler className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ჭერის სიმაღლე</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.ceilingHeight} მ</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.ceilingHeight')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.ceilingHeight} {t('meters')}</p>
                               </div>
                             </div>
                           </div>
@@ -867,8 +821,8 @@ const PropertyDetail = () => {
                                 <Hammer className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სამშენებლო მასალა</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingMaterial(property.buildingMaterial)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.buildingMaterial')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingMaterial(property.buildingMaterial, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -882,7 +836,7 @@ const PropertyDetail = () => {
                     <CardContent className="p-4 md:p-6">
                       <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                         <Settings className="h-4 w-4" style={{ color: '#0f172a' }} />
-                        ინფრასტრუქტურა
+                        {t('sections.infrastructure')}
                       </h3>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -893,8 +847,8 @@ const PropertyDetail = () => {
                                 <Thermometer className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>გათბობა</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHeating(property.heating)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.heating')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHeating(property.heating, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -906,8 +860,8 @@ const PropertyDetail = () => {
                                 <Car className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>პარკირება</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateParking(property.parking)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.parking')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateParking(property.parking, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -919,8 +873,8 @@ const PropertyDetail = () => {
                                 <Droplets className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ცხელი წყალი</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHotWater(property.hotWater)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.hotWater')}</span>
+                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHotWater(property.hotWater, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -935,7 +889,7 @@ const PropertyDetail = () => {
                       <CardContent className="p-4 md:p-6">
                         <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Home className="h-4 w-4" style={{ color: '#0f172a' }} />
-                          დამატებითი სივრცეები
+                          {t('sections.additionalSpaces')}
                         </h3>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -946,13 +900,13 @@ const PropertyDetail = () => {
                                   <Home className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აივანი</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.balcony')}</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
                                   {(property.balconyCount || property.balconyArea) && (
                                     <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
-                                      {property.balconyCount && `${property.balconyCount}ც`}
+                                      {property.balconyCount && `${property.balconyCount}${t('count')}`}
                                       {property.balconyCount && property.balconyArea && ' • '}
-                                      {property.balconyArea && `${property.balconyArea}მ²`}
+                                      {property.balconyArea && `${property.balconyArea}${t('squareMeters')}`}
                                     </p>
                                   )}
                                 </div>
@@ -966,10 +920,10 @@ const PropertyDetail = () => {
                                   <Droplets className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აუზი</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.pool')}</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
                                   {property.poolType && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{translatePoolType(property.poolType)}</p>
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{translatePoolType(property.poolType, t)}</p>
                                   )}
                                 </div>
                               </div>
@@ -982,11 +936,11 @@ const PropertyDetail = () => {
                                   <Sofa className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>მისაღები</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.livingRoom')}</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
                                   {property.livingRoomArea && (
                                     <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
-                                      {property.livingRoomArea}მ²
+                                      {property.livingRoomArea}{t('squareMeters')}
                                     </p>
                                   )}
                                 </div>
@@ -1000,10 +954,10 @@ const PropertyDetail = () => {
                                   <Square className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ლოჯი</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.loggia')}</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
                                   {property.loggiaArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.loggiaArea}მ²</p>
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.loggiaArea}{t('squareMeters')}</p>
                                   )}
                                 </div>
                               </div>
@@ -1016,10 +970,10 @@ const PropertyDetail = () => {
                                   <Home className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>ვერანდა</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.veranda')}</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
                                   {property.verandaArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.verandaArea}მ²</p>
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.verandaArea}{t('squareMeters')}</p>
                                   )}
                                 </div>
                               </div>
@@ -1032,10 +986,10 @@ const PropertyDetail = () => {
                                   <Square className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>აქვს ეზო</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.hasYard')}</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
                                   {property.yardArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.yardArea}მ²</p>
+                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.yardArea}{t('squareMeters')}</p>
                                   )}
                                 </div>
                               </div>
@@ -1048,11 +1002,11 @@ const PropertyDetail = () => {
                                   <Square className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>სათავსო</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>კი</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.storage')}</span>
+                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
                                   {property.storageArea && (
                                     <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
-                                      {property.storageArea}მ²
+                                      {property.storageArea}{t('squareMeters')}
                                     </p>
                                   )}
                                 </div>
@@ -1072,14 +1026,14 @@ const PropertyDetail = () => {
                       <CardContent className="p-4 md:p-6">
                         <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Star className="h-4 w-4" style={{ color: '#0f172a' }} />
-                          მახასიათებლები
+                          {t('sections.features')}
                         </h3>
                         
                         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.features.map((feature, index) => (
                             <div key={`feature-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
                               <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
-                                {translateFeature(feature)}
+                                {translateFeature(feature, t)}
                               </span>
                             </div>
                           ))}
@@ -1094,14 +1048,14 @@ const PropertyDetail = () => {
                       <CardContent className="p-4 md:p-6">
                         <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Trophy className="h-4 w-4" style={{ color: '#0f172a' }} />
-                          უპირატესობები
+                          {t('sections.advantages')}
                         </h3>
                         
                         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.advantages.map((advantage, index) => (
                             <div key={`advantage-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
                               <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
-                                {translateAdvantage(advantage)}
+                                {translateAdvantage(advantage, t)}
                               </span>
                             </div>
                           ))}
@@ -1116,14 +1070,14 @@ const PropertyDetail = () => {
                       <CardContent className="p-4 md:p-6">
                         <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Sofa className="h-4 w-4" style={{ color: '#0f172a' }} />
-                          ავეჯი და ტექნიკა
+                          {t('sections.furnitureAppliances')}
                         </h3>
                         
                         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.furnitureAppliances.map((item, index) => (
                             <div key={`furniture-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
                               <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
-                                {translateFurnitureAppliance(item)}
+                                {translateFurnitureAppliance(item, t)}
                               </span>
                             </div>
                           ))}
@@ -1138,13 +1092,13 @@ const PropertyDetail = () => {
                       <CardContent className="p-4 md:p-6">
                         <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
                           <Tag className="h-4 w-4" style={{ color: '#0f172a' }} />
-                          ბეჯები
+                          {t('sections.tags')}
                         </h3>
                         
                         <div className="flex flex-wrap gap-2">
                           {displayProperty.tags.map((tag, index) => (
                             <Badge key={`tag-${index}`} className="text-white px-3 py-1 text-sm font-semibold hover:opacity-90 transition-opacity" style={{ backgroundColor: '#0f172a' }}>
-                              #{translateTag(tag)}
+                              #{translateTag(tag, t)}
                             </Badge>
                           ))}
                         </div>
@@ -1154,7 +1108,7 @@ const PropertyDetail = () => {
 
                   {/* Description Section - Moved to end */}
                   <div className="mb-4 md:mb-6">
-                    <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3">აღწერა</h3>
+                    <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3">{t('sections.description')}</h3>
                     <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                       {displayProperty.description}
                     </p>
@@ -1196,9 +1150,9 @@ const PropertyDetail = () => {
                         {displayProperty.agent.name}
                       </Link>
                       <p className="text-xs md:text-sm text-gray-500">
-                        {property.user.role === 'agency' ? 'აგენტი' : 
-                         property.user.role === 'developer' ? 'დეველოპერი' : 
-                         'მომხმარებელი'}
+                        {property.user.role === 'agency' ? t('userRoles.agent') : 
+                         property.user.role === 'developer' ? t('userRoles.developer') : 
+                         t('userRoles.user')}
                       </p>
                     </div>
                   </div>
@@ -1211,7 +1165,7 @@ const PropertyDetail = () => {
                           <Building2 className="h-3 w-3 md:h-4 md:w-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-xs font-medium block mb-1 text-blue-800">დაკავშირებული პროექტი</span>
+                          <span className="text-xs font-medium block mb-1 text-blue-800">{t('linkedProject')}</span>
                           <Link 
                             to={getLanguageUrl(`projects/${property.project.id}`, i18n.language)}
                             className="font-semibold text-xs md:text-sm leading-tight break-words text-blue-900 hover:text-blue-700 hover:underline transition-colors"
@@ -1233,7 +1187,7 @@ const PropertyDetail = () => {
                     </Button>
                     <Button className="w-full border-gray-300 text-primary hover:bg-primary/5 transition-all duration-200 py-3 md:py-5 font-medium text-sm md:text-base" variant="outline">
                       <Mail className="h-4 w-4 md:h-5 md:w-5 mr-2 md:mr-3" />
-                      ელფოსტა
+                      {t('email')}
                     </Button>
                   </div>
                 </CardContent>
@@ -1250,7 +1204,7 @@ const PropertyDetail = () => {
         {/* Similar Properties Carousel Section */}
         {similarProperties.length > 0 && (
           <div className="container mx-auto px-4 py-6 md:py-8">
-            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">მსგავსი განცხადებები</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">{t('similarProperties')}</h2>
             <div className="relative">
               <Carousel
                 opts={{
@@ -1308,14 +1262,14 @@ const PropertyDetail = () => {
                                 </div>
                                 <div className="flex items-center">
                                   <Square className="h-3 w-3 mr-1" />
-                                  {similarProperty.area} მ²
+                                  {similarProperty.area} {t('squareMeters')}
                                 </div>
                               </div>
                               <div className="flex justify-between items-center">
                                 <div className="font-bold text-primary text-sm md:text-base">
                                   {formatPrice(similarProperty.price)}
                                 </div>
-                                <Badge variant="secondary" className="text-xs">{translatePropertyType(similarProperty.type)}</Badge>
+                                <Badge variant="secondary" className="text-xs">{translatePropertyType(similarProperty.type, t)}</Badge>
                               </div>
                             </CardContent>
                           </Card>

@@ -8,7 +8,7 @@ import type { PropertyFormData } from "../types/propertyForm";
 import { useTranslation } from "react-i18next";
 
 export const ContactInfoSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext<PropertyFormData>();
   return (
     <div className="space-y-8">

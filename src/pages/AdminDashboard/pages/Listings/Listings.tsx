@@ -34,7 +34,7 @@ const Listings = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslation('admin');
 
   useEffect(() => {
     fetchAllProperties();

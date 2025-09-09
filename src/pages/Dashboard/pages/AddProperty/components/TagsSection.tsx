@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 // Tags will be defined inside the component to access translation function
 
 export const TagsSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext();
   const tags = form.watch("tags");
   

@@ -7,7 +7,7 @@ import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 export const DescriptionSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const { register, formState: { errors } } = useFormContext();
   return (
     <div className="space-y-8">

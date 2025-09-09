@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "title": "Properties",
+    "showing": "Showing",
+    "of": "of",
+    "totalProperties": "total properties",
+    "propertiesFound": "properties found",
+    "noPropertiesFound": "No properties found",
+    "noPropertiesDescription": "Try changing filters or modifying search parameters",
+    "clearFilters": "Clear filters",
+    "sortBy": {
+      "newest": "Newest",
+      "priceAscending": "Price: Low to High",
+      "priceDescending": "Price: High to Low", 
+      "areaLargest": "Area: Large to Small",
+      "areaSmallest": "Area: Small to Large"
+    },
+    "dealTypes": {
+      "sale": "For Sale",
+      "rent": "For Rent", 
+      "mortgage": "Mortgage",
+      "lease": "For Lease",
+      "daily": "Daily Rental",
+      "rentToBuy": "Rent to Buy"
+    },
+    "propertyTypes": {
+      "apartment": "Apartments",
+      "house": "Houses", 
+      "cottage": "Cottages",
+      "land": "Land Plots",
+      "commercial": "Commercial Spaces",
+      "office": "Office Spaces",
+      "hotel": "Hotels"
+    },
+    "errors": {
+      "rateLimitTitle": "Request Limit",
+      "rateLimitDescription": "Too many requests. Please try again in {seconds} seconds.",
+      "generalErrorTitle": "Error",
+      "generalErrorDescription": "An error occurred while loading properties."
+    }
+  }
+}
