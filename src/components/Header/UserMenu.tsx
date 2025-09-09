@@ -9,20 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 export const UserMenu = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
 
   const handleLogout = () => {
     logout({ redirectToLogin: false });
-    navigate('/');
+    navigate(getLanguageUrl("", i18n.language));
   };
 
   if (!isAuthenticated || !user) {
     return (
       <Button variant="outline" size="sm" className="border-primary/20 hover:bg-primary/5 hover:text-primary text-xs sm:text-sm px-2 py-1 min-w-0 flex-shrink-0" asChild>
-        <Link to="/login" className="flex items-center gap-1">
+        <Link to={getLanguageUrl("login", i18n.language)} className="flex items-center gap-1">
           <LogIn className="h-3 w-3 sm:h-4 sm:w-4" />
           <span>შესვლა</span>
         </Link>
@@ -43,7 +46,7 @@ export const UserMenu = () => {
         {user.role === 'admin' && (
           <>
             <DropdownMenuItem asChild>
-              <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
+              <Link to={getLanguageUrl("admin", i18n.language)} className="flex items-center gap-2 cursor-pointer">
                 <Shield className="h-4 w-4" />
                 <span>ადმინ პანელი</span>
               </Link>
@@ -52,7 +55,7 @@ export const UserMenu = () => {
           </>
         )}
         <DropdownMenuItem asChild>
-          <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
+          <Link to={getLanguageUrl("dashboard", i18n.language)} className="flex items-center gap-2 cursor-pointer">
             <User className="h-4 w-4" />
             <span>ჩემი კაბინეტი</span>
           </Link>

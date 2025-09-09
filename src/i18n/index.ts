@@ -33,7 +33,7 @@ i18n
     lng: initialLanguage,
     fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',
-    defaultNS: 'admin',
+    defaultNS: 'common',
     interpolation: {
       escapeValue: false,
     },

@@ -7,6 +7,8 @@ import { VipPurchaseModal } from "@/components/VipPurchaseModal";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 import { useBalanceRefresh } from "../Dashboard";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface Property {
   id: string;
@@ -78,13 +80,6 @@ const VIP_LABELS = {
   super_vip: 'SUPER VIP'
 };
 
-const SERVICE_LABELS_GEORGIAN = {
-  vip: 'VIP',
-  vip_plus: 'VIP+',
-  super_vip: 'სუპერ VIP',
-  auto_renew: 'ავტო-განახლება',
-  color_separation: 'ფერადი განცალკევება'
-};
 
 const DEFAULT_SERVICE_COLORS = {
   vip: '#3b82f6', // Blue
@@ -98,6 +93,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
   const navigate = useNavigate();
   const [isVipModalOpen, setIsVipModalOpen] = useState(false);
   const refreshBalance = useBalanceRefresh();
+  const { t, i18n } = useTranslation('userDashboard');
 
 
   const formatPrice = (price: string) => {
@@ -105,7 +101,9 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ka-GE');
+    const locale = i18n.language === 'en' ? 'en-US' : 
+                   i18n.language === 'ru' ? 'ru-RU' : 'ka-GE';
+    return new Date(dateString).toLocaleDateString(locale);
   };
 
   const getMainImage = () => {
@@ -118,21 +116,31 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
   const getLocationString = () => {
     const parts = [];
     
-    // Add district/area if available
-    if (property.areaData?.nameKa) {
-      parts.push(property.areaData.nameKa);
+    // Add district/area if available - use language-specific name
+    if (property.areaData) {
+      if (i18n.language === 'en' && property.areaData.nameEn) {
+        parts.push(property.areaData.nameEn);
+      } else if (i18n.language === 'ru' && property.areaData.nameRu) {
+        parts.push(property.areaData.nameRu);
+      } else if (property.areaData.nameKa) {
+        parts.push(property.areaData.nameKa);
+      }
     } else if (property.district) {
       parts.push(property.district);
     }
     
-    // Add city
-    if (property.cityData?.nameGeorgian) {
-      parts.push(property.cityData.nameGeorgian);
+    // Add city - use language-specific name
+    if (property.cityData) {
+      if (i18n.language === 'en' && property.cityData.nameEnglish) {
+        parts.push(property.cityData.nameEnglish);
+      } else if (property.cityData.nameGeorgian) {
+        parts.push(property.cityData.nameGeorgian);
+      }
     } else if (property.city) {
       parts.push(property.city);
     }
     
-    return parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
+    return parts.length > 0 ? parts.join(', ') : t('propertyCard.locationNotSpecified');
   };
 
   const handleDelete = () => {
@@ -160,19 +168,19 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
         case 'vip':
           return {
             className: "h-8 px-2 text-blue-700 bg-blue-100 hover:bg-blue-200 border border-blue-300",
-            text: "VIP აქტიური",
+            text: t('vipStatus.vipActive'),
             textColor: "text-blue-700"
           };
         case 'vip_plus':
           return {
             className: "h-8 px-2 text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-300",
-            text: "VIP+ აქტიური", 
+            text: t('vipStatus.vipPlusActive'), 
             textColor: "text-purple-700"
           };
         case 'super_vip':
           return {
             className: "h-8 px-2 text-yellow-700 bg-yellow-100 hover:bg-yellow-200 border border-yellow-300",
-            text: "SUPER VIP",
+            text: t('vipStatus.superVipActive'),
             textColor: "text-yellow-700"
           };
         default:
@@ -185,7 +193,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
     } else {
       return {
         className: "h-8 px-2 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50",
-        text: "VIP შეძენა",
+        text: t('vipStatus.purchaseVip'),
         textColor: "text-yellow-600"
       };
     }
@@ -198,9 +206,9 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
     const now = new Date();
     const daysLeft = Math.ceil((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (daysLeft <= 0) return 'დღეს იწურება';
-    if (daysLeft === 1) return '1 დღე დარჩა';
-    return `${daysLeft} დღე დარჩა`;
+    if (daysLeft <= 0) return t('vipStatus.expirestoday');
+    if (daysLeft === 1) return t('vipStatus.dayRemaining');
+    return t('vipStatus.daysRemaining', { days: daysLeft });
   };
 
   const getDaysRemaining = (expiresAt: string): number => {
@@ -212,13 +220,14 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
   };
 
   const getServiceLabel = (serviceType: string): string => {
-    return SERVICE_LABELS_GEORGIAN[serviceType as keyof typeof SERVICE_LABELS_GEORGIAN] || serviceType;
+    const key = `serviceLabels.${serviceType.replace('_', '').replace('-', '')}`;
+    return t(key) || serviceType;
   };
 
   const formatDaysRemaining = (days: number): string => {
-    if (days === 0) return 'დღეს იწურება';
-    if (days === 1) return '1 დღე';
-    return `${days} დღე`;
+    if (days === 0) return t('vipStatus.expirestoday');
+    if (days === 1) return '1 ' + t('vipStatus.day');
+    return t('vipStatus.daysRemainingShort', { days });
   };
 
   const getServiceColor = (serviceType: string, customColor?: string): string => {
@@ -242,7 +251,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
             <div className="relative flex-shrink-0">
               <img 
                 src={getMainImage()} 
-                alt={property.title || `${property.propertyType} ${property.city}-ში`}
+                alt={property.title || `${property.propertyType} ${property.city}`}
                 className="w-16 h-16 object-cover rounded-lg"
               />
             </div>
@@ -252,7 +261,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0 pr-2">
                   <h3 className="font-semibold text-base leading-tight truncate">
-                    {property.title || `${property.propertyType} ${property.city}-ში`}
+                    {property.title || `${property.propertyType} ${property.city}`}
                   </h3>
                   {/* Active Services under title */}
                   {services && services.length > 0 && (
@@ -309,7 +318,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
               )}
               <div className="flex items-center">
                 <Square className="h-4 w-4 mr-1.5 text-gray-500" />
-                <span className="font-medium">{property.area}მ²</span>
+                <span className="font-medium">{property.area} {t('common.squareMeters')}</span>
               </div>
             </div>
             <div className="flex items-center justify-between flex-wrap">
@@ -339,7 +348,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
             <div className="flex items-center text-gray-600 mb-3 text-sm bg-gray-50 rounded-lg px-3 py-2">
               <User className="h-4 w-4 mr-2 flex-shrink-0 text-gray-500" />
               <span className="truncate font-medium">
-                აგენტი: {property.owner.fullName}
+                {t('propertyCard.agent')}: {property.owner.fullName}
               </span>
             </div>
           )}
@@ -349,11 +358,11 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => navigate(`/property/${property.id}`)}
+              onClick={() => navigate(getLanguageUrl(`/property/${property.id}`, i18n.language))}
               className="h-10 px-4 py-2 text-sm flex-1 font-medium"
             >
               <Eye className="h-4 w-4 mr-2" />
-              ნახვა
+              {t('common.view')}
             </Button>
             
             {property.isOwnProperty !== false && (
@@ -361,11 +370,11 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
+                  onClick={() => navigate(getLanguageUrl(`/dashboard/edit-property/${property.id}`, i18n.language))}
                   className="h-10 px-4 py-2 text-sm flex-1 font-medium"
                 >
                   <Edit className="h-4 w-4 mr-2" />
-                  რედაქტირება
+                  {t('common.edit')}
                 </Button>
 
               </>
@@ -382,20 +391,20 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                   className="h-9 px-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 w-full font-medium border border-red-200 hover:border-red-300"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
-                  წაშლა
+                  {t('common.delete')}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                  <AlertDialogTitle>{t('propertyCard.deleteProperty')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                    {t('propertyCard.deleteConfirmation')}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                  <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                   <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                    წაშლა
+                    {t('common.delete')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -472,7 +481,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
               <div className="flex items-center text-gray-600 mb-2">
                 <User className="h-4 w-4 mr-1 flex-shrink-0" />
                 <span className="text-sm truncate">
-                  აგენტი: {property.owner.fullName}
+                  {t('propertyCard.agent')}: {property.owner.fullName}
                 </span>
               </div>
             )}
@@ -492,7 +501,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
               )}
               <div className="flex items-center">
                 <Square className="h-4 w-4 mr-1" />
-                <span>{property.area} მ²</span>
+                <span>{property.area} {t('common.squareMeters')}</span>
               </div>
               <Badge variant="outline" className="text-xs">
                 {property.propertyType}
@@ -506,7 +515,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
             <div className="flex items-center gap-4 text-xs text-gray-500">
               <div className="flex items-center">
                 <Eye className="h-3 w-3 mr-1" />
-                <span>{property.viewCount} ნახვა</span>
+                <span>{property.viewCount} {t('propertyCard.views')}</span>
               </div>
               <div className="flex items-center">
                 <Calendar className="h-3 w-3 mr-1" />
@@ -521,11 +530,11 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
               variant="ghost" 
               size="sm" 
               className="h-8 px-2"
-              onClick={() => navigate(`/property/${property.id}`)}
-              title="ნახვა"
+              onClick={() => navigate(getLanguageUrl(`/property/${property.id}`, i18n.language))}
+              title={t('common.view')}
             >
               <Eye className="h-4 w-4 mr-1" />
-              <span className="text-xs">ნახვა</span>
+              <span className="text-xs">{t('common.view')}</span>
             </Button>
             
             {property.isOwnProperty !== false && (
@@ -533,11 +542,11 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                 variant="ghost" 
                 size="sm" 
                 className="h-8 px-2"
-                onClick={() => navigate(`/dashboard/edit-property/${property.id}`)}
-                title="რედაქტირება"
+                onClick={() => navigate(getLanguageUrl(`/dashboard/edit-property/${property.id}`, i18n.language))}
+                title={t('common.edit')}
               >
                 <Edit className="h-4 w-4 mr-1" />
-                <span className="text-xs">რედაქტირება</span>
+                <span className="text-xs">{t('common.edit')}</span>
               </Button>
             )}
 
@@ -548,7 +557,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                   size="sm" 
                   className={getVipButtonStyle().className}
                   onClick={() => setIsVipModalOpen(true)}
-                  title={isVipActive() ? `${getVipButtonStyle().text} - ${getVipExpirationInfo()} - VIP გაგრძელება` : "VIP სტატუსის შეძენა"}
+                  title={isVipActive() ? `${getVipButtonStyle().text} - ${getVipExpirationInfo()} - ${t('vipStatus.purchaseVip')}` : t('vipStatus.purchaseVip')}
                 >
                   <Crown className={`h-4 w-4 mr-1 ${getVipButtonStyle().textColor}`} />
                   <span className="text-xs">{getVipButtonStyle().text}</span>
@@ -568,23 +577,23 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                     variant="ghost" 
                     size="sm" 
                     className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                    title="წაშლა"
+                    title={t('common.delete')}
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
-                    <span className="text-xs">წაშლა</span>
+                    <span className="text-xs">{t('common.delete')}</span>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>განცხადების წაშლა</AlertDialogTitle>
+                    <AlertDialogTitle>{t('propertyCard.deleteProperty')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      დარწმუნებული ხართ, რომ გსურთ ამ განცხადების წაშლა? ეს მოქმედება შეუქცევადია.
+                      {t('propertyCard.deleteConfirmation')}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>გაუქმება</AlertDialogCancel>
+                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                     <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-                      წაშლა
+                      {t('common.delete')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -599,7 +608,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
         isOpen={isVipModalOpen}
         onClose={() => setIsVipModalOpen(false)}
         propertyId={parseInt(property.id)}
-        propertyTitle={property.title || `${property.propertyType} ${property.city}-ში`}
+        propertyTitle={property.title || `${property.propertyType} ${property.city}`}
         onSuccess={handleVipSuccess}
         onBalanceChange={refreshBalance}
       />

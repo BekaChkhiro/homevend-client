@@ -18,6 +18,8 @@ import {
   TrendingUp
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 import { agencyApi } from "@/lib/api";
 
 interface Agency {
@@ -45,6 +47,7 @@ interface Agency {
 
 
 const Agencies = () => {
+  const { i18n } = useTranslation();
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -260,7 +263,7 @@ const Agencies = () => {
 
                     <div className="flex gap-2">
                       <Button asChild className="flex-1" size="sm">
-                        <Link to={`/agencies/${agency.id}`}>
+                        <Link to={getLanguageUrl(`agencies/${agency.id}`, i18n.language)}>
                           დეტალები
                         </Link>
                       </Button>

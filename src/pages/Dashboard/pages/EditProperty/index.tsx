@@ -18,6 +18,7 @@ import { PhotoGallerySection } from "../AddProperty/components/PhotoGallerySecti
 import { VipPurchaseSection } from "./components/VipPurchaseSection";
 import { propertyFormSchema, type PropertyFormData } from "../AddProperty/types/propertyForm";
 import { propertyApi, citiesApi, vipApi, balanceApi, servicesApi } from "@/lib/api";
+import { useTranslation } from "react-i18next";
 
 interface City {
   id: number;
@@ -29,6 +30,7 @@ interface City {
 }
 
 export const EditProperty = () => {
+  const { t } = useTranslation('userDashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [isPropertyLoading, setIsPropertyLoading] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
@@ -158,8 +160,8 @@ export const EditProperty = () => {
     const loadProperty = async () => {
       if (!id) {
         toast({
-          title: "შეცდომა",
-          description: "უძრავი ქონების ID არ არის მითითებული",
+          title: t('common.error'),
+          description: t('editProperty.propertyIdMissing'),
           variant: "destructive",
         });
         navigate('/dashboard/my-properties');
@@ -243,8 +245,8 @@ export const EditProperty = () => {
       } catch (error: any) {
         console.error("Property loading error:", error);
         toast({
-          title: "შეცდომა",
-          description: "შეცდომა მოხდა უძრავი ქონების ჩატვირთვისას",
+          title: t('common.error'),
+          description: t('editProperty.loadError'),
           variant: "destructive",
         });
         navigate('/dashboard/my-properties');
@@ -262,8 +264,8 @@ export const EditProperty = () => {
     // Ensure cities are loaded before submission
     if (cities.length === 0) {
       toast({
-        title: "შეცდომა",
-        description: "ქალაქები ჯერ არ ჩაიტვირთა. გთხოვთ მოიცადოთ.",
+        title: t('common.error'),
+        description: t('addProperty.citiesNotLoaded'),
         variant: "destructive",
       });
       return;
@@ -286,8 +288,8 @@ export const EditProperty = () => {
     // Days validation
     if (selectedVipType !== 'free' && (selectedVipDays < 1 || selectedVipDays > 30)) {
       toast({
-        title: "შეცდომა",
-        description: "VIP დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+        title: t('common.error'),
+        description: t('addProperty.vipDaysError'),
         variant: "destructive",
       });
       return;
@@ -297,8 +299,8 @@ export const EditProperty = () => {
     for (const service of selectedServices) {
       if (service.days < 1 || service.days > 30) {
         toast({
-          title: "შეცდომა",
-          description: "სერვისების დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+          title: t('common.error'),
+          description: t('addProperty.serviceDaysError'),
           variant: "destructive",
         });
         return;
@@ -308,8 +310,11 @@ export const EditProperty = () => {
     // Balance validation
     if (totalCost > 0 && userBalance < totalCost) {
       toast({
-        title: "არასაკმარისი ბალანსი",
-        description: `საჭიროა ${totalCost.toFixed(2)}₾, ხელმისაწვდომია ${userBalance.toFixed(2)}₾`,
+        title: t('addProperty.insufficientBalance'),
+        description: t('addProperty.insufficientBalanceDesc', { 
+          required: totalCost.toFixed(2), 
+          available: userBalance.toFixed(2) 
+        }),
         variant: "destructive",
       });
       return;
@@ -339,8 +344,8 @@ export const EditProperty = () => {
       const cityId = getCityId(data.city);
       if (!cityId) {
         toast({
-          title: "შეცდომა",
-          description: `ქალაქი "${data.city}" ვერ მოიძებნა. გთხოვთ აირჩიოთ სწორი ქალაქი.`,
+          title: t('common.error'),
+          description: t('addProperty.cityNotFound', { city: data.city }),
           variant: "destructive",
         });
         return;
@@ -440,13 +445,13 @@ export const EditProperty = () => {
         });
         
         toast({
-          title: "წარმატება!",
-          description: `განცხადება განახლდა და სერვისები შეძენილია: ${servicesText.join(', ')}`,
+          title: t('common.success'),
+          description: t('editProperty.successWithServices', { services: servicesText.join(', ') }),
         });
       } else {
         toast({
-          title: "წარმატება!",
-          description: "განცხადება წარმატებით განახლდა",
+          title: t('common.success'),
+          description: t('editProperty.successWithoutServices'),
         });
       }
       
@@ -456,8 +461,8 @@ export const EditProperty = () => {
       console.error("Error response:", error.response?.data);
       console.error("Error status:", error.response?.status);
       toast({
-        title: "შეცდომა",
-        description: error.response?.data?.message || error.response?.data?.errors?.join(', ') || "შეცდომა მოხდა განცხადების განახლებისას",
+        title: t('common.error'),
+        description: error.response?.data?.message || error.response?.data?.errors?.join(', ') || t('editProperty.updateError'),
         variant: "destructive",
       });
     } finally {
@@ -470,12 +475,12 @@ export const EditProperty = () => {
     return (
       <div className="w-full h-screen overflow-hidden flex flex-col relative">
         <div className="flex-1 overflow-auto p-6">
-          <h2 className="text-2xl font-bold mb-6">განცხადების რედაქტირება</h2>
+          <h2 className="text-2xl font-bold mb-6">{t('editProperty.title')}</h2>
           <Card className="p-6">
             <div className="flex items-center justify-center h-64">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                <p className="text-gray-600">მონაცემების ჩატვირთვა...</p>
+                <p className="text-gray-600">{t('common.loading')}</p>
               </div>
             </div>
           </Card>
@@ -487,7 +492,7 @@ export const EditProperty = () => {
   return (
     <div className="w-full h-screen overflow-hidden flex flex-col relative">
       <div className="flex-1 overflow-auto p-6 pb-32">
-        <h2 className="text-2xl font-bold mb-6">განცხადების რედაქტირება</h2>
+        <h2 className="text-2xl font-bold mb-6">{t('editProperty.title')}</h2>
       
       <Card className="p-6 mb-6">
         <Form {...form}>
@@ -559,10 +564,10 @@ export const EditProperty = () => {
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                განახლება...
+                {t('editProperty.updating')}
               </>
             ) : (
-              'განცხადების განახლება'
+              t('editProperty.updateProperty')
             )}
           </button>
         </div>

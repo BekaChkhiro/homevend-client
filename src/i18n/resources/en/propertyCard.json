@@ -1,0 +1,11 @@
+{
+  "propertyCard": {
+    "locationNotSpecified": "Location not specified",
+    "titleNotSpecified": "Title not specified",
+    "agent": "Agent:",
+    "sqMeter": "sq m",
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "superVip": "SUPER VIP"
+  }
+}

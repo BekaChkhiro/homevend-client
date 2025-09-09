@@ -5,8 +5,10 @@ import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/f
 import { useFormContext } from "react-hook-form";
 import { Calculator, DollarSign, Square, TrendingUp } from "lucide-react";
 import type { PropertyFormData } from "../types/propertyForm";
+import { useTranslation } from "react-i18next";
 
 export const PriceAreaSection = () => {
+  const { t } = useTranslation('userDashboard');
   const form = useFormContext<PropertyFormData>();
   const area = form.watch("area");
   const totalPrice = form.watch("totalPrice");
@@ -30,8 +32,8 @@ export const PriceAreaSection = () => {
           <DollarSign className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />
         </div>
         <div>
-          <h3 className="text-lg sm:text-xl font-semibold text-foreground">ფასი და ფართი</h3>
-          <p className="text-xs sm:text-sm text-muted-foreground">მიუთითეთ ქონების ფასი და ფართი</p>
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground">{t('addPropertyForm.pricing.title')}</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">{t('addPropertyForm.pricing.subtitle')}</p>
         </div>
       </div>
 
@@ -45,10 +47,10 @@ export const PriceAreaSection = () => {
               </div>
               <div>
                 <Label htmlFor="property-area" className="text-sm sm:text-base font-semibold text-foreground">
-                  ფართი (მ²)
+                  {t('addPropertyForm.pricing.totalArea')}
                   <span className="text-destructive ml-1">*</span>
                 </Label>
-                <p className="text-xs sm:text-sm text-muted-foreground">ქონების საერთო ფართი</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('addPropertyForm.pricing.totalAreaDesc')}</p>
               </div>
             </div>
             <FormField
@@ -62,12 +64,12 @@ export const PriceAreaSection = () => {
                         id="property-area" 
                         type="number" 
                         step="0.1"
-                        placeholder="ფართი კვადრატულ მეტრში" 
+                        placeholder={t('addPropertyForm.pricing.totalAreaPlaceholder')} 
                         className="h-12 sm:h-14 text-base sm:text-lg pl-4 pr-12 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                         {...field}
                       />
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
-                        მ²
+                        m²
                       </div>
                     </div>
                   </FormControl>
@@ -85,10 +87,10 @@ export const PriceAreaSection = () => {
               </div>
               <div>
                 <Label htmlFor="total-price" className="text-sm sm:text-base font-semibold text-foreground">
-                  სრული ფასი ($)
+                  {t('addPropertyForm.pricing.price')}
                   <span className="text-destructive ml-1">*</span>
                 </Label>
-                <p className="text-xs sm:text-sm text-muted-foreground">ქონების საერთო ღირებულება</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('addPropertyForm.pricing.totalValue')}</p>
               </div>
             </div>
             <FormField
@@ -101,7 +103,7 @@ export const PriceAreaSection = () => {
                       <Input 
                         id="total-price" 
                         type="number" 
-                        placeholder="სრული ფასი დოლარში" 
+                        placeholder={t('addPropertyForm.pricing.pricePlaceholder')} 
                         className="h-12 sm:h-14 text-base sm:text-lg pl-12 pr-4 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                         {...field}
                       />
@@ -125,9 +127,9 @@ export const PriceAreaSection = () => {
             </div>
             <div>
               <Label htmlFor="price-per-sqm" className="text-sm sm:text-base font-semibold text-foreground">
-                კვ. ფასი ($/მ²)
+                {t('addPropertyForm.pricing.pricePerSqm')}
               </Label>
-              <p className="text-xs sm:text-sm text-muted-foreground">ავტომატურად გამოითვლება</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{t('addPropertyForm.pricing.automaticallyCalculated')}</p>
             </div>
           </div>
           
@@ -142,13 +144,13 @@ export const PriceAreaSection = () => {
                       id="price-per-sqm" 
                       type="number" 
                       step="0.01"
-                      placeholder="გამოითვლება ავტომატურად" 
+                      placeholder={t('addPropertyForm.pricing.pricePerSqmPlaceholder')} 
                       className="h-12 sm:h-14 text-base sm:text-lg pl-4 pr-16 bg-green-50/50 border-green-200 text-green-800 font-semibold cursor-not-allowed" 
                       readOnly
                       {...field}
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-600 font-medium">
-                      $/მ²
+                      $/m²
                     </div>
                   </div>
                 </FormControl>
@@ -161,9 +163,9 @@ export const PriceAreaSection = () => {
             <div className="flex items-start gap-3">
               <TrendingUp className="h-4 sm:h-5 w-4 sm:w-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="font-medium text-blue-900 text-xs sm:text-sm mb-1">ფასის გამოთვლა</h4>
+                <h4 className="font-medium text-blue-900 text-xs sm:text-sm mb-1">{t('addPropertyForm.pricing.priceCalculation')}</h4>
                 <p className="text-xs text-blue-700 leading-relaxed">
-                  კვადრატული მეტრის ფასი გამოითვლება ავტომატურად სრული ფასისა და ფართის მიხედვით.
+                  {t('addPropertyForm.pricing.priceCalculationDesc')}
                 </p>
               </div>
             </div>

@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Crown, AlertCircle, RotateCcw, Palette, Calendar, Loader2 } from 'lucide-react';
 import { vipApi, balanceApi, servicesApi } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 
 const SERVICE_COLORS = {
   free: 'text-gray-600 bg-gray-50 border-gray-200 ring-gray-300',
@@ -17,14 +18,7 @@ const SERVICE_COLORS = {
   color_separation: 'text-orange-600 bg-orange-50 border-orange-200 ring-orange-300'
 };
 
-const SERVICE_LABELS = {
-  free: 'უფასო განცხადება',
-  vip: 'VIP',
-  vip_plus: 'VIP+',
-  super_vip: 'SUPER VIP',
-  auto_renew: 'ავტო განახლება',
-  color_separation: 'ფერადი გამოყოფა'
-};
+// Service labels will be handled by getServiceLabel function inside component
 
 const SERVICE_ICONS = {
   free: Crown,
@@ -78,9 +72,16 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
   additionalServices,
   freeServicePrice
 }) => {
+  const { t } = useTranslation('userDashboard');
   const [vipStatus, setVipStatus] = useState<VipStatus | null>(null);
   const [fetchingData, setFetchingData] = useState(true);
   const { toast } = useToast();
+
+  // Helper function to get service labels
+  const getServiceLabel = (serviceType: string): string => {
+    const key = `vip.serviceTypes.${serviceType}`;
+    return t(key) || serviceType;
+  };
 
   const selectedPricing = vipPricing.find(p => p.vipType === selectedVipType);
   const selectedServicePricing = additionalServices.filter(s => 
@@ -119,7 +120,7 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
   if (fetchingData) {
     return (
       <div className="space-y-2">
-        <h3 className="text-lg font-medium">სერვისები</h3>
+        <h3 className="text-lg font-medium">{t('vip.title')}</h3>
         <Card>
           <CardContent className="p-6">
             <div className="flex justify-center py-8">
@@ -133,12 +134,12 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-medium">სერვისები</h3>
+      <h3 className="text-lg font-medium">{t('vip.title')}</h3>
       <Card>
         <CardHeader>
-          <CardTitle>VIP სტატუსის და დამატებითი სერვისების შეძენა</CardTitle>
+          <CardTitle>{t('vip.purchaseTitle')}</CardTitle>
           {propertyTitle && (
-            <CardDescription>განცხადება: {propertyTitle}</CardDescription>
+            <CardDescription>{t('vip.property')}: {propertyTitle}</CardDescription>
           )}
         </CardHeader>
         
@@ -149,17 +150,17 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
               <div className="flex items-start space-x-3">
                 <Crown className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
-                  <h4 className="font-medium text-green-900">VIP სტატუსი აქტიურია</h4>
+                  <h4 className="font-medium text-green-900">{t('vip.activeStatus')}</h4>
                   <p className="text-sm text-green-700 mt-1">
-                    თქვენს განცხადებას აქვს {SERVICE_LABELS[vipStatus.vipStatus as keyof typeof SERVICE_LABELS]} სტატუსი
+                    {t('vip.propertyHasStatus', { status: getServiceLabel(vipStatus.vipStatus) })}
                   </p>
                   <div className="flex items-center space-x-4 mt-2 text-sm text-green-600">
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-1" />
                       <span>
                         {vipStatus.daysRemaining > 0 
-                          ? `${vipStatus.daysRemaining} დღე დარჩენილია`
-                          : 'დღეს იწურება'
+                          ? t('vip.daysRemaining', { days: vipStatus.daysRemaining })
+                          : t('vip.expirestoday')
                         }
                       </span>
                     </div>
@@ -171,13 +172,13 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
 
           {/* Balance Display */}
           <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-            <span className="text-sm text-gray-600">თქვენი ბალანსი:</span>
+            <span className="text-sm text-gray-600">{t('vip.yourBalance')}:</span>
             <span className="font-semibold text-lg">{userBalance.toFixed(2)}₾</span>
           </div>
 
           {/* VIP Package Selection */}
           <div>
-            <Label className="text-base font-medium">აირჩიეთ VIP პაკეტი</Label>
+            <Label className="text-base font-medium">{t('vip.selectPackage')}</Label>
             <RadioGroup value={selectedVipType} onValueChange={onVipTypeChange} className="mt-3">
               <div className="grid grid-cols-2 gap-4">
                 {/* Show hardcoded free option only if database free service price is 0 */}
@@ -199,12 +200,12 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
                             <div className="flex items-center space-x-3">
                               <Crown className={`h-5 w-5 ${selectedVipType === 'free' ? SERVICE_COLORS.free.split(' ')[0] : 'text-gray-400'}`} />
                               <Badge variant="outline" className={`text-base font-medium ${selectedVipType === 'free' ? SERVICE_COLORS.free : ''}`}>
-                                {SERVICE_LABELS.free}
+                                {t('vip.serviceTypes.free')}
                               </Badge>
                             </div>
-                            <span className="font-semibold text-lg">უფასო</span>
+                            <span className="font-semibold text-lg">{t('vip.free')}</span>
                           </div>
-                          <p className="text-sm text-gray-600 mt-3">სტანდარტული ხილვადობა</p>
+                          <p className="text-sm text-gray-600 mt-3">{t('vip.standardVisibility')}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -214,7 +215,7 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
                 {/* VIP Options - including database free service if it has a price > 0 */}
                 {vipPricing.map((pricing) => {
                   const colorClass = SERVICE_COLORS[pricing.vipType as keyof typeof SERVICE_COLORS];
-                  const label = SERVICE_LABELS[pricing.vipType as keyof typeof SERVICE_LABELS];
+                  const label = getServiceLabel(pricing.vipType);
                   const IconComponent = SERVICE_ICONS[pricing.vipType as keyof typeof SERVICE_ICONS];
                   const isSelected = selectedVipType === pricing.vipType;
                   
@@ -240,29 +241,29 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
                                   {label}
                                 </Badge>
                               </div>
-                              <span className="font-semibold text-lg">{pricing.pricePerDay.toFixed(2)}₾/დღე</span>
+                              <span className="font-semibold text-lg">{pricing.pricePerDay.toFixed(2)}₾/{t('common.day')}</span>
                             </div>
                             <p className="text-sm text-gray-600 mt-3">
-                              {pricing.vipType === 'vip' && 'პრიორიტეტული ჩვენება VIP ნიშნით'}
-                              {pricing.vipType === 'vip_plus' && 'გაუმჯობესებული VIP მაღალი პრიორიტეტით'}
-                              {pricing.vipType === 'super_vip' && 'უმაღლესი დონის VIP პრემიუმ ადგილით'}
+                              {pricing.vipType === 'vip' && t('vip.descriptions.vip')}
+                              {pricing.vipType === 'vip_plus' && t('vip.descriptions.vipplus')}
+                              {pricing.vipType === 'super_vip' && t('vip.descriptions.supervip')}
                             </p>
                             
                             {/* Day Selection for selected VIP */}
                             {isSelected && (
                               <div className="mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
-                                <Label className="text-sm font-medium">რამდენი დღით?</Label>
+                                <Label className="text-sm font-medium">{t('vip.howManyDays')}?</Label>
                                 <Select 
                                   value={selectedVipDays.toString()} 
                                   onValueChange={(value) => onVipDaysChange(parseInt(value))}
                                 >
                                   <SelectTrigger className="w-full mt-1">
-                                    <SelectValue placeholder="აირჩიეთ დღეები" />
+                                    <SelectValue placeholder={t('vip.selectDays')} />
                                   </SelectTrigger>
                                   <SelectContent>
                                     {Array.from({length: 30}, (_, i) => i + 1).map(day => (
                                       <SelectItem key={day} value={day.toString()}>
-                                        {day} დღე
+                                        {day} {t('common.day')}
                                       </SelectItem>
                                     ))}
                                   </SelectContent>
@@ -281,11 +282,11 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
 
           {/* Additional Services Selection */}
           <div>
-            <Label className="text-base font-medium">დამატებითი სერვისები (არჩევითი)</Label>
+            <Label className="text-base font-medium">{t('vip.additionalServices')} ({t('vip.optional')})</Label>
             <div className="grid grid-cols-2 gap-4 mt-3">
               {additionalServices.map((service) => {
                 const colorClass = SERVICE_COLORS[service.serviceType as keyof typeof SERVICE_COLORS];
-                const label = SERVICE_LABELS[service.serviceType as keyof typeof SERVICE_LABELS];
+                const label = getServiceLabel(service.serviceType);
                 const IconComponent = SERVICE_ICONS[service.serviceType as keyof typeof SERVICE_ICONS];
                 const isSelected = selectedServices.some(s => s.serviceType === service.serviceType);
                 const selectedService = selectedServices.find(s => s.serviceType === service.serviceType);
@@ -323,17 +324,17 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
                                 {label}
                               </Badge>
                             </div>
-                            <span className="font-semibold text-lg">{service.pricePerDay.toFixed(2)}₾/დღე</span>
+                            <span className="font-semibold text-lg">{service.pricePerDay.toFixed(2)}₾/{t('common.day')}</span>
                           </div>
                           <p className="text-sm text-gray-600 mt-3">
-                            {service.serviceType === 'auto_renew' && 'ყოველდღიური ავტომატური განახლება'}
-                            {service.serviceType === 'color_separation' && 'ფერადი ბორდერით გამოყოფა'}
+                            {service.serviceType === 'auto_renew' && t('vip.descriptions.autorenew')}
+                            {service.serviceType === 'color_separation' && t('vip.descriptions.colorseparation')}
                           </p>
                           
                           {/* Day Selection for selected service */}
                           {isSelected && (
                             <div className="mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
-                              <Label className="text-sm font-medium">რამდენი დღით?</Label>
+                              <Label className="text-sm font-medium">{t('vip.howManyDays')}?</Label>
                               <Select 
                                 value={(selectedService?.days || 7).toString()} 
                                 onValueChange={(value) => {
@@ -346,12 +347,12 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
                                 }}
                               >
                                 <SelectTrigger className="w-full mt-1">
-                                  <SelectValue placeholder="აირჩიეთ დღეები" />
+                                  <SelectValue placeholder={t('vip.selectDays')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                   {Array.from({length: 30}, (_, i) => i + 1).map(day => (
                                     <SelectItem key={day} value={day.toString()}>
-                                      {day} დღე
+                                      {day} {t('common.day')}
                                     </SelectItem>
                                   ))}
                                 </SelectContent>
@@ -372,17 +373,17 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
             <Card>
               <CardContent className="p-4">
                 <div className="space-y-2">
-                  <h4 className="font-semibold">ღირებულების ჯამი</h4>
+                  <h4 className="font-semibold">{t('vip.totalCost')}</h4>
                   
                   {/* VIP Cost */}
                   {selectedPricing && selectedVipType !== 'free' && (
                     <div className="space-y-1">
                       <div className="flex justify-between">
-                        <span>VIP პაკეტი:</span>
-                        <span>{SERVICE_LABELS[selectedPricing.vipType as keyof typeof SERVICE_LABELS]}</span>
+                        <span>{t('vip.vipPackage')}:</span>
+                        <span>{getServiceLabel(selectedPricing.vipType)}</span>
                       </div>
                       <div className="flex justify-between text-sm text-gray-600">
-                        <span>{selectedPricing.pricePerDay.toFixed(2)}₾/დღე × {selectedVipDays} დღე:</span>
+                        <span>{selectedPricing.pricePerDay.toFixed(2)}₾/{t('common.day')} × {selectedVipDays} {t('common.day')}:</span>
                         <span>{vipCost.toFixed(2)}₾</span>
                       </div>
                     </div>
@@ -391,10 +392,10 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
                   {/* Additional Services Cost */}
                   {selectedServicePricing.length > 0 && (
                     <div className="space-y-1">
-                      <div className="text-sm font-medium">დამატებითი სერვისები:</div>
+                      <div className="text-sm font-medium">{t('vip.additionalServices')}:</div>
                       {selectedServicePricing.map((service) => (
                         <div key={service.serviceType} className="flex justify-between text-sm text-gray-600">
-                          <span>{SERVICE_LABELS[service.serviceType as keyof typeof SERVICE_LABELS]} ({service.pricePerDay.toFixed(2)}₾/დღე × {selectedServices.find(s => s.serviceType === service.serviceType)?.days || 1} დღე):</span>
+                          <span>{getServiceLabel(service.serviceType)} ({service.pricePerDay.toFixed(2)}₾/{t('common.day')} × {selectedServices.find(s => s.serviceType === service.serviceType)?.days || 1} {t('common.day')}):</span>
                           <span>{(service.pricePerDay * (selectedServices.find(s => s.serviceType === service.serviceType)?.days || 1)).toFixed(2)}₾</span>
                         </div>
                       ))}
@@ -402,7 +403,7 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
                   )}
                   
                   <div className="border-t pt-2 flex justify-between font-semibold text-lg">
-                    <span>სულ:</span>
+                    <span>{t('vip.total')}:</span>
                     <span className={!canAfford ? 'text-red-600' : 'text-green-600'}>
                       {totalCost.toFixed(2)}₾
                     </span>
@@ -417,7 +418,7 @@ export const VipPurchaseSection: React.FC<VipPurchaseSectionProps> = ({
             <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg">
               <AlertCircle className="h-5 w-5 text-red-600" />
               <span className="text-red-700 text-sm">
-                არასაკმარისი ბალანსი. საჭიროა ბალანსის შევსება.
+                {t('vip.insufficientBalance')}. {t('vip.needRecharge')}.
               </span>
             </div>
           )}

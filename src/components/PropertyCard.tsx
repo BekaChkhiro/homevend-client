@@ -6,6 +6,8 @@ import { MapPin, Bed, Bath, Square, Crown } from "lucide-react";
 import type { Property } from "@/pages/Index";
 import { Link } from "react-router-dom";
 import { FavoriteButton } from "./FavoriteButton";
+import { useTranslation } from "react-i18next";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 
 interface PropertyCardProps {
   property: Property;
@@ -24,6 +26,7 @@ const VIP_LABELS = {
 };
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
+  const { t, i18n } = useTranslation('propertyCard');
   
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('ka-GE', {
@@ -89,7 +92,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     }
     
     // 2. Add street and street number from address
-    if (property.address && property.address !== 'მდებარეობა არ არის მითითებული') {
+    if (property.address && property.address !== t('propertyCard.locationNotSpecified')) {
       // Try to extract street part (first part before comma)
       const addressParts = property.address.split(', ');
       if (addressParts.length > 0) {
@@ -112,11 +115,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       }
     }
     
-    return parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
+    return parts.length > 0 ? parts.join(', ') : t('propertyCard.locationNotSpecified');
   };
 
   return (
-    <Link to={`/property/${property.id}`} className="block w-full min-w-0 max-w-full">
+    <Link to={getLanguageUrl(`property/${property.id}`, i18n.language)} className="block w-full min-w-0 max-w-full">
 
       <Card 
         className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full min-w-0 max-w-full"
@@ -159,7 +162,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           <div className="mb-1 sm:mb-2">
             <h3 className="font-semibold text-sm sm:text-base line-clamp-2 group-hover:text-primary transition-colors h-8 sm:h-10 flex items-start">
               <span className="line-clamp-2">
-                {property.title || 'სათაური არ არის მითითებული'}
+                {property.title || t('propertyCard.titleNotSpecified')}
               </span>
             </h3>
             <div className="flex items-start text-muted-foreground text-xs sm:text-sm mt-0.5">
@@ -168,7 +171,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </div>
             {property.agentName && (
               <div className="text-xs text-muted-foreground mt-1">
-                აგენტი: {property.agentName}
+                {t('propertyCard.agent')} {property.agentName}
               </div>
             )}
           </div>
@@ -194,7 +197,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </div>
             <div className="flex items-center space-x-0.5">
               <Square className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span>{property.area} მ²</span>
+              <span>{property.area} {t('propertyCard.sqMeter')}</span>
             </div>
           </div>
         </CardContent>

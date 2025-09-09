@@ -5,14 +5,16 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Eye, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const PrivacySettings: React.FC = () => {
+  const { t } = useTranslation('userDashboard');
   return (
     <div className="space-y-6">
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <Shield className="h-5 w-5" />
-          <h3 className="text-lg font-medium">კონფიდენციალურობა</h3>
+          <h3 className="text-lg font-medium">{t('profileSections.privacySettings.title')}</h3>
         </div>
         
         <div className="space-y-4">
@@ -45,7 +47,7 @@ export const PrivacySettings: React.FC = () => {
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <Eye className="h-5 w-5" />
-          <h3 className="text-lg font-medium">მონაცემთა გამოყენება</h3>
+          <h3 className="text-lg font-medium">{t('privacy.dataUsage') || 'მონაცემთა გამოყენება'}</h3>
         </div>
         
         <div className="space-y-4">
@@ -70,7 +72,7 @@ export const PrivacySettings: React.FC = () => {
       <Card className="p-6 border-red-200">
         <div className="flex items-center gap-2 mb-4">
           <Trash2 className="h-5 w-5 text-red-500" />
-          <h3 className="text-lg font-medium text-red-700">ანგარიშის წაშლა</h3>
+          <h3 className="text-lg font-medium text-red-700">{t('privacy.deleteAccount') || 'ანგარიშის წაშლა'}</h3>
         </div>
         
         <div className="space-y-4">
@@ -87,7 +89,7 @@ export const PrivacySettings: React.FC = () => {
           </div>
           
           <Button variant="destructive" size="sm">
-            ანგარიშის წაშლა
+            {t('privacy.deleteAccount') || 'ანგარიშის წაშლა'}
           </Button>
         </div>
       </Card>

@@ -2,8 +2,10 @@ import React from "react";
 import { FormField, FormItem } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { Wifi, Tv, Zap, Building, Truck, Droplets, Phone, Shield, DoorOpen, ChefHat, Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const FeaturesSection = () => {
+  const { t } = useTranslation('userDashboard');
   const form = useFormContext();
   const features = form.watch("features");
   
@@ -11,7 +13,7 @@ export const FeaturesSection = () => {
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <Zap className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">მახასიათებლები</h3>
+        <h3 className="text-xl font-semibold">{t('addPropertyForm.features.title')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5">
@@ -22,18 +24,18 @@ export const FeaturesSection = () => {
             <FormItem>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
-                  { id: "internet", label: "ინტერნეტი", icon: <Wifi className="h-4 w-4" /> },
-                  { id: "tv", label: "ტელევიზია", icon: <Tv className="h-4 w-4" /> },
-                  { id: "gas", label: "ბუნებრივი აირი", icon: <Zap className="h-4 w-4" /> },
-                  { id: "elevator", label: "ლიფტი", icon: <Building className="h-4 w-4" /> },
-                  { id: "cargo-elevator", label: "სატვირთო ლიფტი", icon: <Truck className="h-4 w-4" /> },
-                  { id: "water", label: "წყალი", icon: <Droplets className="h-4 w-4" /> },
-                  { id: "sewerage", label: "კანალიზაცია", icon: <Droplets className="h-4 w-4" /> },
-                  { id: "electricity", label: "ელექტრო ენერგია", icon: <Zap className="h-4 w-4" /> },
-                  { id: "phone", label: "ტელეფონი", icon: <Phone className="h-4 w-4" /> },
-                  { id: "fenced", label: "შემოღობილი", icon: <Shield className="h-4 w-4" /> },
-                  { id: "intercom", label: "ჭიშკარი", icon: <DoorOpen className="h-4 w-4" /> },
-                  { id: "kitchen-appliances", label: "სამზარეულო + ტექნიკა", icon: <ChefHat className="h-4 w-4" /> }
+                  { id: "internet", label: t('addPropertyForm.features.internet'), icon: <Wifi className="h-4 w-4" /> },
+                  { id: "tv", label: t('addPropertyForm.features.tv'), icon: <Tv className="h-4 w-4" /> },
+                  { id: "gas", label: t('addPropertyForm.features.naturalGas'), icon: <Zap className="h-4 w-4" /> },
+                  { id: "elevator", label: t('addPropertyForm.features.elevator'), icon: <Building className="h-4 w-4" /> },
+                  { id: "cargo-elevator", label: t('addPropertyForm.features.cargo-elevator'), icon: <Truck className="h-4 w-4" /> },
+                  { id: "water", label: t('addPropertyForm.features.water'), icon: <Droplets className="h-4 w-4" /> },
+                  { id: "sewerage", label: t('addPropertyForm.features.sewerage'), icon: <Droplets className="h-4 w-4" /> },
+                  { id: "electricity", label: t('addPropertyForm.features.electricity'), icon: <Zap className="h-4 w-4" /> },
+                  { id: "phone", label: t('addPropertyForm.features.telephone'), icon: <Phone className="h-4 w-4" /> },
+                  { id: "fenced", label: t('addPropertyForm.features.fenced'), icon: <Shield className="h-4 w-4" /> },
+                  { id: "intercom", label: t('addPropertyForm.features.intercom'), icon: <DoorOpen className="h-4 w-4" /> },
+                  { id: "kitchen-appliances", label: t('addPropertyForm.features.kitchen-appliances'), icon: <ChefHat className="h-4 w-4" /> }
                 ].map((feature) => (
                   <FormField
                     key={feature.id}

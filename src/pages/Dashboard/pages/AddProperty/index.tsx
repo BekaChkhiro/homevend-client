@@ -158,8 +158,8 @@ export const AddProperty = () => {
     // Ensure cities are loaded before submission
     if (cities.length === 0) {
       toast({
-        title: "შეცდომა",
-        description: "ქალაქები ჯერ არ ჩაიტვირთა. გთხოვთ მოიცადოთ.",
+        title: t('common.error'),
+        description: t('addProperty.citiesNotLoaded'),
         variant: "destructive",
       });
       return;
@@ -182,8 +182,8 @@ export const AddProperty = () => {
     // Days validation
     if (selectedVipType !== 'free' && (selectedVipDays < 1 || selectedVipDays > 30)) {
       toast({
-        title: "შეცდომა",
-        description: "VIP დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+        title: t('common.error'),
+        description: t('addProperty.vipDaysError'),
         variant: "destructive",
       });
       return;
@@ -193,8 +193,8 @@ export const AddProperty = () => {
     for (const service of selectedServices) {
       if (service.days < 1 || service.days > 30) {
         toast({
-          title: "შეცდომა",
-          description: "სერვისების დღეების რაოდენობა უნდა იყოს 1-დან 30-მდე",
+          title: t('common.error'),
+          description: t('addProperty.serviceDaysError'),
           variant: "destructive",
         });
         return;
@@ -204,8 +204,8 @@ export const AddProperty = () => {
     // Balance validation
     if (totalCost > 0 && userBalance < totalCost) {
       toast({
-        title: "არასაკმარისი ბალანსი",
-        description: `საჭიროა ${totalCost.toFixed(2)}₾, ხელმისაწვდომია ${userBalance.toFixed(2)}₾`,
+        title: t('addProperty.insufficientBalance'),
+        description: t('addProperty.insufficientBalanceDesc', { required: totalCost.toFixed(2), available: userBalance.toFixed(2) }),
         variant: "destructive",
       });
       return;
@@ -234,8 +234,8 @@ export const AddProperty = () => {
       const cityId = getCityId(data.city);
       if (!cityId) {
         toast({
-          title: "შეცდომა",
-          description: `ქალაქი "${data.city}" ვერ მოიძებნა. გთხოვთ აირჩიოთ სწორი ქალაქი.`,
+          title: t('common.error'),
+          description: t('addProperty.cityNotFound', { city: data.city }),
           variant: "destructive",
         });
         return;
@@ -311,13 +311,13 @@ export const AddProperty = () => {
         await vipApi.purchaseVipStatus(result.id, selectedVipType, daysNum);
         
         toast({
-          title: "წარმატება!",
-          description: `განცხადება წარმატებით დაემატა და VIP სტატუსი შეძენილია ${daysNum} დღით`,
+          title: t('common.success'),
+          description: t('addProperty.successWithVip', { days: daysNum }),
         });
       } else {
         toast({
-          title: "წარმატება!",
-          description: "განცხადება წარმატებით დაემატა",
+          title: t('common.success'),
+          description: t('addProperty.successWithoutVip'),
         });
       }
       

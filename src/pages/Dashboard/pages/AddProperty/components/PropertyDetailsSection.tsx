@@ -7,8 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, FormItem, FormControl } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { Home, Thermometer, Car, Droplets, Building, Waves, Sofa, TreePine, Warehouse, Sailboat, Tally4, Landmark } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const PropertyDetailsSection = () => {
+  const { t } = useTranslation('userDashboard');
   const form = useFormContext();
 
   // Watch form values for conditional rendering
@@ -26,12 +28,12 @@ export const PropertyDetailsSection = () => {
     <div className="space-y-4 sm:space-y-6 md:space-y-8">
       <div className="flex items-center space-x-2 border-b pb-2 sm:pb-3 mb-2">
         <Home className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />
-        <h3 className="text-lg sm:text-xl font-semibold">განცხადების დეტალები</h3>
+        <h3 className="text-lg sm:text-xl font-semibold">{t('addPropertyForm.propertyDetails.title')}</h3>
       </div>
 
       {/* Rooms */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">ოთახები</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.roomCount')}</Label>
         <FormField
           control={form.control}
           name="rooms"
@@ -69,7 +71,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Bedrooms */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">საძინებელი</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.bedroomCount')}</Label>
         <FormField
           control={form.control}
           name="bedrooms"
@@ -109,7 +111,7 @@ export const PropertyDetailsSection = () => {
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Droplets className="h-4 w-4 text-muted-foreground" />
-          <span>სველი წერტილი</span>
+          <span>{t('addPropertyForm.propertyDetails.bathroomCount')}</span>
         </Label>
         <FormField
           control={form.control}
@@ -126,7 +128,7 @@ export const PropertyDetailsSection = () => {
                     { value: "1", label: "1" },
                     { value: "2", label: "2" },
                     { value: "3", label: "3+" },
-                    { value: "shared", label: "საერთო" }
+                    { value: "shared", label: t('addPropertyForm.propertyDetails.bathroomTypes.shared') }
                   ].map((option) => {
                     const isSelected = field.value === option.value;
                     return (
@@ -153,7 +155,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Total Floors */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">სართულები სულ</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.totalFloors')}</Label>
         <FormField
           control={form.control}
           name="totalFloors"
@@ -163,7 +165,7 @@ export const PropertyDetailsSection = () => {
                 <Input
                   {...field}
                   type="number"
-                  placeholder="სართულები"
+                  placeholder={t('addPropertyForm.propertyDetails.floorsPlaceholder')}
                   className="h-11 sm:h-12 text-sm sm:text-base border-input focus:ring-ring focus:ring-1"
                 />
               </FormControl>
@@ -176,7 +178,7 @@ export const PropertyDetailsSection = () => {
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Building className="h-4 w-4 text-muted-foreground" />
-          <span>სტატუსი</span>
+          <span>{t('addPropertyForm.propertyDetails.buildingStatus')}</span>
         </Label>
         <FormField
           control={form.control}
@@ -190,9 +192,9 @@ export const PropertyDetailsSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                   {[
-                    { value: "old-built", label: "ძველი აშენებული" },
-                    { value: "new-built", label: "ახალი აშენებული" },
-                    { value: "under-construction", label: "მშენებარე" }
+                    { value: "old-built", label: t('addPropertyForm.propertyDetails.buildingStatuses.old-built') },
+                    { value: "new-built", label: t('addPropertyForm.propertyDetails.buildingStatuses.new-built') },
+                    { value: "under-construction", label: t('addPropertyForm.propertyDetails.buildingStatuses.under-construction') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -212,7 +214,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Construction Year */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">აშენების წელი</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.constructionYear')}</Label>
         <FormField
           control={form.control}
           name="constructionYear"
@@ -247,7 +249,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Condition */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">მდგომარეობა</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.condition')}</Label>
         <FormField
           control={form.control}
           name="condition"
@@ -260,14 +262,14 @@ export const PropertyDetailsSection = () => {
                   className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
                 >
                   {[
-                    { value: "newly-renovated", label: "ახალი გარემონტებული" },
-                    { value: "old-renovated", label: "ძველი გარემონტებული" },
-                    { value: "ongoing-renovation", label: "მიმდინარე რემონტი" },
-                    { value: "needs-renovation", label: "სარემონტო" },
-                    { value: "white-frame", label: "თეთრი კარკასი" },
-                    { value: "black-frame", label: "შავი კარკასი" },
-                    { value: "green-frame", label: "მწვანე კარკასი" },
-                    { value: "white-plus", label: "თეთრი პლიუსი" }
+                    { value: "newly-renovated", label: t('addPropertyForm.propertyDetails.conditions.newly-renovated') },
+                    { value: "old-renovated", label: t('addPropertyForm.propertyDetails.conditions.old-renovated') },
+                    { value: "ongoing-renovation", label: t('addPropertyForm.propertyDetails.conditions.ongoing-renovation') },
+                    { value: "needs-renovation", label: t('addPropertyForm.propertyDetails.conditions.needs-renovation') },
+                    { value: "white-frame", label: t('addPropertyForm.propertyDetails.conditions.white-frame') },
+                    { value: "black-frame", label: t('addPropertyForm.propertyDetails.conditions.black-frame') },
+                    { value: "green-frame", label: t('addPropertyForm.propertyDetails.conditions.green-frame') },
+                    { value: "white-plus", label: t('addPropertyForm.propertyDetails.conditions.white-plus') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -287,7 +289,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Project Type */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">პროექტის ტიპი</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.projectType')}</Label>
         <FormField
           control={form.control}
           name="projectType"
@@ -300,9 +302,9 @@ export const PropertyDetailsSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                   {[
-                    { value: "non-standard", label: "არასტანდარტული" },
-                    { value: "villa", label: "ვილა" },
-                    { value: "townhouse", label: "თაუნჰაუსი" }
+                    { value: "non-standard", label: t('addPropertyForm.propertyDetails.propertyStyles.non-standard') },
+                    { value: "villa", label: t('addPropertyForm.propertyDetails.propertyStyles.villa') },
+                    { value: "townhouse", label: t('addPropertyForm.propertyDetails.propertyStyles.townhouse') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -322,7 +324,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Ceiling Height */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">ჭერის სიმაღლე</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.ceilingHeight')}</Label>
         <FormField
           control={form.control}
           name="ceilingHeight"
@@ -333,7 +335,7 @@ export const PropertyDetailsSection = () => {
                   {...field}
                   type="number"
                   step="0.1"
-                  placeholder="მეტრი"
+                  placeholder={t('addPropertyForm.propertyDetails.ceilingHeightPlaceholder')}
                   className="h-11 sm:h-12 text-sm sm:text-base border-input focus:ring-ring focus:ring-1"
                 />
               </FormControl>
@@ -346,7 +348,7 @@ export const PropertyDetailsSection = () => {
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Thermometer className="h-4 w-4 text-muted-foreground" />
-          <span>გათბობა</span>
+          <span>{t('addPropertyForm.propertyDetails.heatingType')}</span>
         </Label>
         <FormField
           control={form.control}
@@ -360,13 +362,13 @@ export const PropertyDetailsSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
-                    { value: "central-heating", label: "ცენტრალური გათბობა" },
-                    { value: "gas-heater", label: "გაზის გამათბობელი" },
-                    { value: "electric-heater", label: "დენის გამათბობელი" },
-                    { value: "central-floor", label: "ცენტრალური+იატაკის გათბობა" },
-                    { value: "no-heating", label: "გათბობის გარეშე" },
-                    { value: "individual", label: "ინდივიდუალური" },
-                    { value: "floor-heating", label: "იატაკის გათბობა" }
+                    { value: "central-heating", label: t('addPropertyForm.propertyDetails.heatingTypes.central-heating') },
+                    { value: "gas-heater", label: t('addPropertyForm.propertyDetails.heatingTypes.gas-heater') },
+                    { value: "electric-heater", label: t('addPropertyForm.propertyDetails.heatingTypes.electric-heater') },
+                    { value: "central-floor", label: t('addPropertyForm.propertyDetails.heatingTypes.central-floor') },
+                    { value: "no-heating", label: t('addPropertyForm.propertyDetails.heatingTypes.no-heating') },
+                    { value: "individual", label: t('addPropertyForm.propertyDetails.heatingTypes.individual') },
+                    { value: "floor-heating", label: t('addPropertyForm.propertyDetails.heatingTypes.floor-heating') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -388,7 +390,7 @@ export const PropertyDetailsSection = () => {
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Car className="h-4 w-4 text-muted-foreground" />
-          <span>პარკირება</span>
+          <span>{t('addPropertyForm.propertyDetails.parkingType')}</span>
         </Label>
         <FormField
           control={form.control}
@@ -402,12 +404,12 @@ export const PropertyDetailsSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
-                    { value: "garage", label: "ავტოფარეხი" },
-                    { value: "parking-space", label: "პარკინგის ადგილი" },
-                    { value: "yard-parking", label: "ეზოს პარკინგი" },
-                    { value: "underground-parking", label: "მიწისქვეშა პარკინგი" },
-                    { value: "paid-parking", label: "ფასიანი ავტოსადგომი" },
-                    { value: "no-parking", label: "პარკინგის გარეშე" }
+                    { value: "garage", label: t('addPropertyForm.propertyDetails.parkingTypes.garage') },
+                    { value: "parking-space", label: t('addPropertyForm.propertyDetails.parkingTypes.parking-space') },
+                    { value: "yard-parking", label: t('addPropertyForm.propertyDetails.parkingTypes.yard-parking') },
+                    { value: "underground-parking", label: t('addPropertyForm.propertyDetails.parkingTypes.underground-parking') },
+                    { value: "paid-parking", label: t('addPropertyForm.propertyDetails.parkingTypes.paid-parking') },
+                    { value: "no-parking", label: t('addPropertyForm.propertyDetails.parkingTypes.no-parking') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -429,7 +431,7 @@ export const PropertyDetailsSection = () => {
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
         <Label className="block mb-3 font-medium flex items-center gap-2">
           <Droplets className="h-4 w-4 text-muted-foreground" />
-          <span>ცხელი წყალი</span>
+          <span>{t('addPropertyForm.propertyDetails.hotWaterType')}</span>
         </Label>
         <FormField
           control={form.control}
@@ -443,14 +445,14 @@ export const PropertyDetailsSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
-                    { value: "gas-water-heater", label: "გაზის გამაცხელებელი" },
-                    { value: "boiler", label: "ავზი" },
-                    { value: "electric-water-heater", label: "დენის გამაცხელებელი" },
-                    { value: "solar-heater", label: "მზის გამაცხელებელი" },
-                    { value: "no-hot-water", label: "ცხელი წყლის გარეშე" },
-                    { value: "central-hot-water", label: "ცენტრალური ცხელი წყალი" },
-                    { value: "natural-hot-water", label: "ბუნებრივი ცხელი წყალი" },
-                    { value: "individual", label: "ინდივიდუალური" }
+                    { value: "gas-water-heater", label: t('addPropertyForm.propertyDetails.hotWaterTypes.gas-water-heater') },
+                    { value: "boiler", label: t('addPropertyForm.propertyDetails.hotWaterTypes.boiler') },
+                    { value: "electric-water-heater", label: t('addPropertyForm.propertyDetails.hotWaterTypes.electric-water-heater') },
+                    { value: "solar-heater", label: t('addPropertyForm.propertyDetails.hotWaterTypes.solar-heater') },
+                    { value: "no-hot-water", label: t('addPropertyForm.propertyDetails.hotWaterTypes.no-hot-water') },
+                    { value: "central-hot-water", label: t('addPropertyForm.propertyDetails.hotWaterTypes.central-hot-water') },
+                    { value: "natural-hot-water", label: t('addPropertyForm.propertyDetails.hotWaterTypes.natural-hot-water') },
+                    { value: "individual", label: t('addPropertyForm.propertyDetails.hotWaterTypes.individual') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -470,7 +472,7 @@ export const PropertyDetailsSection = () => {
 
       {/* Building Material */}
       <div className="rounded-md border border-border p-2 sm:p-3 md:p-4 lg:p-5">
-        <Label className="block mb-3 font-medium text-sm sm:text-base">სამშენებლო მასალა</Label>
+        <Label className="block mb-3 font-medium text-sm sm:text-base">{t('addPropertyForm.propertyDetails.wallMaterial')}</Label>
         <FormField
           control={form.control}
           name="buildingMaterial"
@@ -483,11 +485,11 @@ export const PropertyDetailsSection = () => {
                   className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                 >
                   {[
-                    { value: "block", label: "ბლოკი" },
-                    { value: "brick", label: "აგური" },
-                    { value: "wood", label: "ხის მასალა" },
-                    { value: "reinforced-concrete", label: "რკინა-ბეტონი" },
-                    { value: "combined", label: "კომბინირებული" }
+                    { value: "block", label: t('addPropertyForm.propertyDetails.wallMaterials.block') },
+                    { value: "brick", label: t('addPropertyForm.propertyDetails.wallMaterials.brick') },
+                    { value: "wood", label: t('addPropertyForm.propertyDetails.wallMaterials.wood') },
+                    { value: "reinforced-concrete", label: t('addPropertyForm.propertyDetails.wallMaterials.reinforced-concrete') },
+                    { value: "combined", label: t('addPropertyForm.propertyDetails.wallMaterials.combined') }
                   ].map((option) => (
                     <label
                       key={option.value}
@@ -521,7 +523,7 @@ export const PropertyDetailsSection = () => {
                   />
                 </FormControl>
                 <Tally4 className="h-4 w-4 text-muted-foreground" />
-                <Label htmlFor="has-balcony" className="font-medium">აივანი</Label>
+                <Label htmlFor="has-balcony" className="font-medium">{t('addPropertyForm.propertyDetails.balcony')}</Label>
               </div>
             </FormItem>
           )}
@@ -533,9 +535,9 @@ export const PropertyDetailsSection = () => {
               name="balconyCount"
               render={({ field }) => (
                 <FormItem>
-                  <Label className="text-sm mb-2 block">აივნის რაოდენობა</Label>
+                  <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.balconyCount')}</Label>
                   <FormControl>
-                    <Input {...field} type="number" placeholder="რაოდენობა" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" placeholder={t('addPropertyForm.propertyDetails.storageCountPlaceholder')} className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -545,9 +547,9 @@ export const PropertyDetailsSection = () => {
               name="balconyArea"
               render={({ field }) => (
                 <FormItem>
-                  <Label className="text-sm mb-2 block">აივნის ფართობი (მ²)</Label>
+                  <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.balconyArea')}</Label>
                   <FormControl>
-                    <Input {...field} type="number" step="0.1" placeholder="ფართობი" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" step="0.1" placeholder={t('addPropertyForm.propertyDetails.storageAreaPlaceholder')} className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -573,7 +575,7 @@ export const PropertyDetailsSection = () => {
                 </FormControl>
                 <Label htmlFor="has-pool" className="font-medium flex items-center gap-2">
                   <Waves className="h-4 w-4 text-muted-foreground" />
-                  <span>აუზი</span>
+                  <span>{t('addPropertyForm.propertyDetails.pool')}</span>
                 </Label>
               </div>
             </FormItem>
@@ -585,7 +587,7 @@ export const PropertyDetailsSection = () => {
             name="poolType"
             render={({ field }) => (
               <FormItem>
-                <Label className="text-sm mb-2 block">აუზის ტიპი</Label>
+                <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.poolType')}</Label>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -593,8 +595,8 @@ export const PropertyDetailsSection = () => {
                     className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                   >
                     {[
-                      { value: "outdoor", label: "ღია" },
-                      { value: "indoor", label: "დახურული" }
+                      { value: "outdoor", label: t('addPropertyForm.propertyDetails.poolTypes.outdoor') },
+                      { value: "indoor", label: t('addPropertyForm.propertyDetails.poolTypes.indoor') }
                     ].map((option) => (
                       <label
                         key={option.value}
@@ -630,7 +632,7 @@ export const PropertyDetailsSection = () => {
                 </FormControl>
                 <Label htmlFor="has-living-room" className="font-medium flex items-center gap-2">
                   <Sofa className="h-4 w-4 text-muted-foreground" />
-                  <span>მისაღები</span>
+                  <span>{t('addPropertyForm.propertyDetails.livingRoom')}</span>
                 </Label>
               </div>
             </FormItem>
@@ -643,9 +645,9 @@ export const PropertyDetailsSection = () => {
               name="livingRoomArea"
               render={({ field }) => (
                 <FormItem>
-                  <Label className="text-sm mb-2 block">მისაღების ფართი (მ²)</Label>
+                  <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.livingRoomArea')}</Label>
                   <FormControl>
-                    <Input {...field} type="number" step="0.1" placeholder="ფართი" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" step="0.1" placeholder={t('addPropertyForm.propertyDetails.verandaAreaPlaceholder')} className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -655,7 +657,7 @@ export const PropertyDetailsSection = () => {
               name="livingRoomType"
               render={({ field }) => (
                 <FormItem>
-                  <Label className="text-sm mb-2 block">მისაღების ტიპი</Label>
+                  <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.livingRoomType')}</Label>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -663,8 +665,8 @@ export const PropertyDetailsSection = () => {
                       className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                     >
                       {[
-                        { value: "separate", label: "გამოყოფილი" },
-                        { value: "studio", label: "სტუდიო" }
+                        { value: "separate", label: t('addPropertyForm.propertyDetails.verandaTypes.separate') },
+                        { value: "studio", label: t('addPropertyForm.propertyDetails.verandaTypes.studio') }
                       ].map((option) => (
                         <label
                           key={option.value}
@@ -700,7 +702,7 @@ export const PropertyDetailsSection = () => {
                   />
                 </FormControl>
                 <Landmark className="h-4 w-4 text-muted-foreground"/>
-                <Label htmlFor="has-loggia" className="font-medium">ლოჯი</Label>
+                <Label htmlFor="has-loggia" className="font-medium">{t('addPropertyForm.propertyDetails.loggia')}</Label>
               </div>
             </FormItem>
           )}
@@ -711,9 +713,9 @@ export const PropertyDetailsSection = () => {
             name="loggiaArea"
             render={({ field }) => (
               <FormItem>
-                <Label className="text-sm mb-2 block">ლოჯის ფართი (მ²)</Label>
+                <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.loggiaArea')}</Label>
                 <FormControl>
-                  <Input {...field} type="number" step="0.1" placeholder="ფართი" className="border-input focus:ring-ring focus:ring-1" />
+                  <Input {...field} type="number" step="0.1" placeholder={t('addPropertyForm.propertyDetails.verandaAreaPlaceholder')} className="border-input focus:ring-ring focus:ring-1" />
                 </FormControl>
               </FormItem>
             )}
@@ -737,7 +739,7 @@ export const PropertyDetailsSection = () => {
                   />
                 </FormControl>
                 <Sailboat className="h-4 w-4 text-muted-foreground" />
-                <Label htmlFor="has-veranda" className="font-medium">ვერანდა</Label>
+                <Label htmlFor="has-veranda" className="font-medium">{t('addPropertyForm.propertyDetails.veranda')}</Label>
               </div>
             </FormItem>
           )}
@@ -748,9 +750,9 @@ export const PropertyDetailsSection = () => {
             name="verandaArea"
             render={({ field }) => (
               <FormItem>
-                <Label className="text-sm mb-2 block">ვერანდის ფართი (მ²)</Label>
+                <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.verandaArea')}</Label>
                 <FormControl>
-                  <Input {...field} type="number" step="0.1" placeholder="ფართი" className="border-input focus:ring-ring focus:ring-1" />
+                  <Input {...field} type="number" step="0.1" placeholder={t('addPropertyForm.propertyDetails.verandaAreaPlaceholder')} className="border-input focus:ring-ring focus:ring-1" />
                 </FormControl>
               </FormItem>
             )}
@@ -775,7 +777,7 @@ export const PropertyDetailsSection = () => {
                 </FormControl>
                 <Label htmlFor="has-yard" className="font-medium flex items-center gap-2">
                   <TreePine className="h-4 w-4 text-muted-foreground" />
-                  <span>აქვს ეზო</span>
+                  <span>{t('addPropertyForm.propertyDetails.hasYard')}</span>
                 </Label>
               </div>
             </FormItem>
@@ -787,9 +789,9 @@ export const PropertyDetailsSection = () => {
             name="yardArea"
             render={({ field }) => (
               <FormItem>
-                <Label className="text-sm mb-2 block">ეზოს ფართი (მ²)</Label>
+                <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.yardArea')}</Label>
                 <FormControl>
-                  <Input {...field} type="number" step="0.1" placeholder="ფართი" className="border-input focus:ring-ring focus:ring-1" />
+                  <Input {...field} type="number" step="0.1" placeholder={t('addPropertyForm.propertyDetails.verandaAreaPlaceholder')} className="border-input focus:ring-ring focus:ring-1" />
                 </FormControl>
               </FormItem>
             )}
@@ -814,7 +816,7 @@ export const PropertyDetailsSection = () => {
                 </FormControl>
                 <Label htmlFor="has-storage" className="font-medium flex items-center gap-2">
                   <Warehouse className="h-4 w-4 text-muted-foreground" />
-                  <span>სათავსოს ტიპი</span>
+                  <span>{t('addPropertyForm.propertyDetails.storageType')}</span>
                 </Label>
               </div>
             </FormItem>
@@ -827,9 +829,9 @@ export const PropertyDetailsSection = () => {
               name="storageArea"
               render={({ field }) => (
                 <FormItem>
-                  <Label className="text-sm mb-2 block">სათავსოს ფართი (მ²)</Label>
+                  <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.storageArea')}</Label>
                   <FormControl>
-                    <Input {...field} type="number" step="0.1" placeholder="ფართი" className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
+                    <Input {...field} type="number" step="0.1" placeholder={t('addPropertyForm.propertyDetails.verandaAreaPlaceholder')} className="h-10 sm:h-11 text-sm sm:text-base border-input focus:ring-ring focus:ring-1" />
                   </FormControl>
                 </FormItem>
               )}
@@ -839,7 +841,7 @@ export const PropertyDetailsSection = () => {
               name="storageType"
               render={({ field }) => (
                 <FormItem>
-                  <Label className="text-sm mb-2 block">სათავსოს ტიპი</Label>
+                  <Label className="text-sm mb-2 block">{t('addPropertyForm.propertyDetails.storageTypeLabel')}</Label>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -847,12 +849,12 @@ export const PropertyDetailsSection = () => {
                       className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                     >
                       {[
-                        { value: "basement", label: "სარდაფი" },
-                        { value: "attic", label: "სხვენი" },
-                        { value: "pantry", label: "საკუჭნაო" },
-                        { value: "external-storage", label: "გარე სათავსო" },
-                        { value: "shared-storage", label: "საერთო სათავსო" },
-                        { value: "basement-attic", label: "სარდაფი + სხვენი" }
+                        { value: "basement", label: t('addPropertyForm.propertyDetails.storageTypes.basement') },
+                        { value: "attic", label: t('addPropertyForm.propertyDetails.storageTypes.attic') },
+                        { value: "pantry", label: t('addPropertyForm.propertyDetails.storageTypes.pantry') },
+                        { value: "external-storage", label: t('addPropertyForm.propertyDetails.storageTypes.external-storage') },
+                        { value: "shared-storage", label: t('addPropertyForm.propertyDetails.storageTypes.shared-storage') },
+                        { value: "basement-attic", label: t('addPropertyForm.propertyDetails.storageTypes.basement-attic') }
                       ].map((option) => (
                         <label
                           key={option.value}

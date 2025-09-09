@@ -12,6 +12,8 @@ import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { PropertyDetailSkeleton, SimilarPropertiesSkeleton } from "@/components/PropertyDetailSkeleton";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 import {
   Carousel,
   CarouselContent,
@@ -254,6 +256,8 @@ const PropertyDetail = () => {
   const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1186,7 +1190,7 @@ const PropertyDetail = () => {
                     </div>
                     <div className="min-w-0 flex-1">
                       <Link 
-                        to={`/user/${property.user.id}`}
+                        to={getLanguageUrl(`user/${property.user.id}`, i18n.language)}
                         className="font-bold text-base md:text-lg hover:text-primary transition-colors cursor-pointer block truncate"
                       >
                         {displayProperty.agent.name}
@@ -1209,7 +1213,7 @@ const PropertyDetail = () => {
                         <div className="flex-1 min-w-0">
                           <span className="text-xs font-medium block mb-1 text-blue-800">დაკავშირებული პროექტი</span>
                           <Link 
-                            to={`/projects/${property.project.id}`}
+                            to={getLanguageUrl(`projects/${property.project.id}`, i18n.language)}
                             className="font-semibold text-xs md:text-sm leading-tight break-words text-blue-900 hover:text-blue-700 hover:underline transition-colors"
                           >
                             {property.project.projectName}
@@ -1272,7 +1276,7 @@ const PropertyDetail = () => {
 
                     return (
                       <CarouselItem key={similarProperty.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                        <Link to={`/property/${similarProperty.id}`}>
+                        <Link to={getLanguageUrl(`property/${similarProperty.id}`, i18n.language)}>
                           <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-300 h-full">
                             <div className="relative h-48">
                               <img

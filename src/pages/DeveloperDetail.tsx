@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { developerApi } from "@/lib/api";
 import { PropertyCard } from "@/components/PropertyCard";
+import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useTranslation } from "react-i18next";
 
 interface Developer {
   id: number;
@@ -73,6 +75,7 @@ interface Property {
 
 const DeveloperDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { i18n } = useTranslation();
   const [developer, setDeveloper] = useState<Developer | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
@@ -139,7 +142,7 @@ const DeveloperDetail = () => {
               მოთხოვნილი დეველოპერი არ არსებობს ან წაშლილია
             </p>
             <Button asChild>
-              <Link to="/developers">
+              <Link to={getLanguageUrl("developers", i18n.language)}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 უკან დაბრუნება
               </Link>
@@ -158,7 +161,7 @@ const DeveloperDetail = () => {
         {/* Back Navigation */}
         <div className="mb-6">
           <Button variant="ghost" asChild>
-            <Link to="/developers">
+            <Link to={getLanguageUrl("developers", i18n.language)}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               დეველოპერები
             </Link>
@@ -392,7 +395,7 @@ const DeveloperDetail = () => {
                         )}
 
                         <Button asChild className="w-full" size="sm">
-                          <Link to={`/projects/${project.id}`}>
+                          <Link to={getLanguageUrl(`projects/${project.id}`, i18n.language)}>
                             დეტალურად
                           </Link>
                         </Button>

@@ -3,8 +3,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, Upload, X, Image } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const PhotoGallerySection = () => {
+  const { t } = useTranslation('userDashboard');
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +29,7 @@ export const PhotoGallerySection = () => {
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <Camera className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">ფოტო გალერეა</h3>
+        <h3 className="text-xl font-semibold">{t('addPropertyForm.photos.title')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5 space-y-6">
@@ -38,9 +40,9 @@ export const PhotoGallerySection = () => {
               <Upload className="h-8 w-8 text-muted-foreground" />
             </div>
             <div>
-              <h4 className="text-lg font-medium mb-2">ფოტოების ატვირთვა</h4>
+              <h4 className="text-lg font-medium mb-2">{t('addPropertyForm.photos.uploadTitle')}</h4>
               <p className="text-sm text-muted-foreground mb-4">
-                ჩააგდეთ ფოტოები აქ ან დააჭირეთ ატვირთვის ღილაკს
+                {t('addPropertyForm.photos.uploadDesc')}
               </p>
               <Input
                 type="file"
@@ -53,7 +55,7 @@ export const PhotoGallerySection = () => {
               <Label htmlFor="photo-upload" asChild>
                 <Button variant="outline" className="cursor-pointer">
                   <Upload className="h-4 w-4 mr-2" />
-                  ფოტოების არჩევა
+                  {t('addPropertyForm.photos.selectPhotos')}
                 </Button>
               </Label>
             </div>
@@ -65,7 +67,7 @@ export const PhotoGallerySection = () => {
           <div className="space-y-4">
             <Label className="font-medium flex items-center gap-2">
               <Image className="h-4 w-4 text-muted-foreground" />
-              <span>ატვირთული ფოტოები ({uploadedImages.length})</span>
+              <span>{t('addPropertyForm.photos.uploadedPhotos', { count: uploadedImages.length })}</span>
             </Label>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -97,13 +99,13 @@ export const PhotoGallerySection = () => {
 
         {/* Instructions */}
         <div className="bg-muted/50 rounded-lg p-4">
-          <h5 className="font-medium mb-2">ფოტოების ატვირთვის რეკომენდაციები:</h5>
+          <h5 className="font-medium mb-2">{t('addPropertyForm.photos.recommendations')}:</h5>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• გამოიყენეთ მაღალი ხარისხის ფოტოები (მინიმუმ 1200x800 პიქსელი)</li>
-            <li>• ატვირთეთ სხვადასხვა კუთხიდან გადაღებული ფოტოები</li>
-            <li>• ჩართეთ ყველა ოთახის და მნიშვნელოვანი დეტალის ფოტოები</li>
-            <li>• მაქსიმალური ფაილის ზომა: 10MB თითოეული ფოტოსთვის</li>
-            <li>• მხარდაჭერილი ფორმატები: JPG, PNG, WebP</li>
+            <li>• {t('addPropertyForm.photos.rec1')}</li>
+            <li>• {t('addPropertyForm.photos.rec2')}</li>
+            <li>• {t('addPropertyForm.photos.rec3')}</li>
+            <li>• {t('addPropertyForm.photos.rec4')}</li>
+            <li>• {t('addPropertyForm.photos.rec5')}</li>
           </ul>
         </div>
       </div>

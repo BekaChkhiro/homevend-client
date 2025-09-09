@@ -1,0 +1,11 @@
+{
+  "propertyCard": {
+    "locationNotSpecified": "Местоположение не указано",
+    "titleNotSpecified": "Заголовок не указан",
+    "agent": "Агент:",
+    "sqMeter": "кв м",
+    "vip": "VIP",
+    "vipPlus": "VIP+",
+    "superVip": "SUPER VIP"
+  }
+}

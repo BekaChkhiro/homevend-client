@@ -2,8 +2,10 @@ import React from "react";
 import { FormField, FormItem } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { Sofa, Bed, Table, ChefHat, Wind, Refrigerator, WashingMachine, Utensils, Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const FurnitureAppliancesSection = () => {
+  const { t } = useTranslation('userDashboard');
   const form = useFormContext();
   const furnitureAppliances = form.watch("furnitureAppliances");
   
@@ -12,7 +14,7 @@ export const FurnitureAppliancesSection = () => {
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <Sofa className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">ავეჯი და ტექნიკა</h3>
+        <h3 className="text-xl font-semibold">{t('addPropertyForm.furniture.title')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5">
@@ -23,18 +25,18 @@ export const FurnitureAppliancesSection = () => {
             <FormItem>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
-                  { id: "furniture", label: "ავეჯი", icon: <Sofa className="h-4 w-4" /> },
-                  { id: "bed", label: "საწოლი", icon: <Bed className="h-4 w-4" /> },
-                  { id: "sofa", label: "დივანი", icon: <Sofa className="h-4 w-4" /> },
-                  { id: "table", label: "მაგიდა", icon: <Table className="h-4 w-4" /> },
-                  { id: "chairs", label: "სკამები", icon: <Table className="h-4 w-4" /> },
-                  { id: "stove-gas", label: "ქურა (გაზის)", icon: <ChefHat className="h-4 w-4" /> },
-                  { id: "stove-electric", label: "ქურა (ელექტრო)", icon: <ChefHat className="h-4 w-4" /> },
-                  { id: "oven", label: "ღუმელი", icon: <ChefHat className="h-4 w-4" /> },
-                  { id: "air-conditioner", label: "კონდიციონერი", icon: <Wind className="h-4 w-4" /> },
-                  { id: "refrigerator", label: "მაცივარი", icon: <Refrigerator className="h-4 w-4" /> },
-                  { id: "washing-machine", label: "სარეცხი მანქანა", icon: <WashingMachine className="h-4 w-4" /> },
-                  { id: "dishwasher", label: "ჭურჭლის სარეცხი მანქანა", icon: <Utensils className="h-4 w-4" /> }
+                  { id: "furniture", label: t('addPropertyForm.furniture.furnished'), icon: <Sofa className="h-4 w-4" /> },
+                  { id: "bed", label: t('addPropertyForm.furniture.bed'), icon: <Bed className="h-4 w-4" /> },
+                  { id: "sofa", label: t('addPropertyForm.furniture.sofa'), icon: <Sofa className="h-4 w-4" /> },
+                  { id: "table", label: t('addPropertyForm.furniture.table'), icon: <Table className="h-4 w-4" /> },
+                  { id: "chairs", label: t('addPropertyForm.furniture.chairs'), icon: <Table className="h-4 w-4" /> },
+                  { id: "stove-gas", label: t('addPropertyForm.furniture.stove-gas'), icon: <ChefHat className="h-4 w-4" /> },
+                  { id: "stove-electric", label: t('addPropertyForm.furniture.stove-electric'), icon: <ChefHat className="h-4 w-4" /> },
+                  { id: "oven", label: t('addPropertyForm.furniture.oven'), icon: <ChefHat className="h-4 w-4" /> },
+                  { id: "air-conditioner", label: t('addPropertyForm.furniture.air-conditioner'), icon: <Wind className="h-4 w-4" /> },
+                  { id: "refrigerator", label: t('addPropertyForm.furniture.refrigerator'), icon: <Refrigerator className="h-4 w-4" /> },
+                  { id: "washing-machine", label: t('addPropertyForm.furniture.washingMachine'), icon: <WashingMachine className="h-4 w-4" /> },
+                  { id: "dishwasher", label: t('addPropertyForm.furniture.dishwasher'), icon: <Utensils className="h-4 w-4" /> }
                 ].map((item) => (
                   <FormField
                     key={item.id}

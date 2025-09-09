@@ -23,23 +23,23 @@ const DashboardContent = () => {
   const sidebarRef = useRef<SidebarRef>(null);
   const { t } = useTranslation('userDashboard');
 
-  // თუ მომხმარებელი არ არის ავტორიზებული, გადავამისამართოთ შესვლის გვერდზე
+  // If user is not authenticated, redirect to login page
   useEffect(() => {
-    // მხოლოდ მას შემდეგ რაც ავთენტიკაციის ჩატვირთვა დასრულდება
+    // Only after authentication loading is complete
     if (!isLoading) {
       if (!user) {
         navigate("/login");
         return;
       }
 
-      // თუ /dashboard-ზე ვართ, გადავამისამართოთ დეფოლტ გვერდზე
+      // If we're on /dashboard, redirect to default page
       if (location.pathname === "/dashboard" || location.pathname === "/dashboard/") {
         navigate("/dashboard/my-properties", { replace: true });
       }
     }
   }, [user, isLoading, location.pathname, navigate]);
 
-  // ჩატვირთვის დროს ან როცა მომხმარებელი არ არის, დაბრუნდეს ჩატვირთვის ინდიკატორი
+  // During loading or when user is not authenticated, return loading indicator
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -59,18 +59,18 @@ const DashboardContent = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* ძირითადი ჰედერი */}
+      {/* Main header */}
       <Header />
 
-      {/* მთავარი კონტენტი */}
+      {/* Main content */}
 
       <div className="flex-1 container mx-auto flex pt-20 md:pt-24 lg:pt-32 pb-6 lg:pb-6 px-3 sm:px-4">
-        {/* მენიუ სიდებარი - ფიქსირებული */}
+        {/* Menu sidebar - fixed */}
         <div className="flex-shrink-0">
           <Sidebar ref={sidebarRef} user={user} />
         </div>
 
-        {/* კონტენტის ნაწილი */}
+        {/* Content section */}
         <div className="flex-1 bg-white rounded-lg border p-6 min-h-0">
           <BalanceRefreshContext.Provider value={() => {
             console.log('🏦 Dashboard: refreshBalance called via context');

@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreditCard, Wallet, History, Loader2, ExternalLink, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
 import { balanceApi } from '@/lib/api';
+import { useTranslation } from 'react-i18next';
 
 interface PaymentProvider {
   id: string;
@@ -42,6 +43,7 @@ interface BalanceData {
 }
 
 export const BalancePage = () => {
+  const { t } = useTranslation('userDashboard');
   const [balanceData, setBalanceData] = useState<BalanceData | null>(null);
   const [paymentProviders, setPaymentProviders] = useState<PaymentProvider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState<string>('test');
@@ -96,12 +98,12 @@ export const BalancePage = () => {
     const provider = paymentProviders.find(p => p.id === selectedProvider);
     
     if (!provider) {
-      alert('გთხოვთ აირჩიოთ გადახდის მეთოდი');
+      alert(t('payment.selectPaymentMethod'));
       return;
     }
 
     if (!amount || amount < provider.minAmount || amount > provider.maxAmount) {
-      alert(`გთხოვთ შეიყვანოთ სწორი თანხა (${provider.minAmount}-${provider.maxAmount}₾)`);
+      alert(`${t('payment.invalidAmountAlert')} (${provider.minAmount}-${provider.maxAmount}₾)`);
       return;
     }
 
@@ -111,16 +113,16 @@ export const BalancePage = () => {
       
       if (result.provider === 'test') {
         // Test payment completed immediately
-        alert(`შევსება წარმატებით შესრულდა! ახალი ბალანსი: ${result.data.newBalance}₾`);
+        alert(`${t('payment.topUpSuccessAlert')}: ${result.data.newBalance}₾`);
         setTopUpAmount('');
         fetchBalance();
       } else if (result.provider === 'flitt') {
         // Redirect to Flitt payment page
         if (result.data.checkoutUrl) {
           window.open(result.data.checkoutUrl, '_blank');
-          alert('გადახდის გვერდი გაიხსნა ახალ ტაბში. გადახდის შემდეგ ბალანსი ავტომატურად განახლდება.');
+          alert(t('payment.paymentPageOpened'));
         } else {
-          alert('გადახდის ლინკის შექმნა ვერ მოხერხდა');
+          alert(t('payment.paymentLinkError'));
         }
       } else if (result.provider === 'bog') {
         // Redirect to BOG payment page
@@ -129,8 +131,8 @@ export const BalancePage = () => {
           setPaymentStatusDialog({
             show: true,
             type: 'processing',
-            title: 'გადამისამართება BOG-ზე',
-            message: 'თქვენ გადამისამართდებით BOG-ის გადახდის გვერდზე. გადახდის შემდეგ ავტომატურად დაბრუნდებით ბალანსის გვერდზე.',
+            title: t('payment.redirectToBOG'),
+            message: t('payment.redirectMessage'),
             amount: amount
           });
           
@@ -139,13 +141,13 @@ export const BalancePage = () => {
             window.location.href = result.data.checkoutUrl;
           }, 2000);
         } else {
-          alert('BOG გადახდის ლინკის შექმნა ვერ მოხერხდა');
+          alert(t('payment.paymentLinkError'));
         }
       }
     } catch (error: any) {
       console.error('Error during top-up:', error);
-      const errorMessage = error.response?.data?.message || 'შეცდომა შევსების დროს';
-      alert(`შეცდომა: ${errorMessage}`);
+      const errorMessage = error.response?.data?.message || t('payment.errorDuringTopUp');
+      alert(`${t('payment.errorAlert')}: ${errorMessage}`);
     } finally {
       setTopUpLoading(false);
     }
@@ -156,24 +158,22 @@ export const BalancePage = () => {
   };
 
   const getServiceLabel = (serviceType: string) => {
-    const labels: Record<string, string> = {
-      'vip': 'VIP',
-      'vip_plus': 'VIP+',
-      'super_vip': 'SUPER VIP',
-      'auto_renew': 'ავტო განახლება',
-      'color_separation': 'ფერადი გამოყოფა'
-    };
-    return labels[serviceType] || serviceType;
+    const normalizedType = serviceType.replace(/_/g, '');
+    const key = `serviceLabels.${normalizedType}`;
+    const translated = t(key);
+    if (translated === key) {
+      // Fallback for service-specific labels
+      const paymentKey = `payment.serviceLabels.${serviceType}`;
+      const paymentTranslated = t(paymentKey);
+      return paymentTranslated !== paymentKey ? paymentTranslated : serviceType;
+    }
+    return translated;
   };
   
   const getTransactionTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      'top_up': 'ბალანსის შევსება',
-      'vip_purchase': 'VIP სერვისი',
-      'service_purchase': 'დამატებითი სერვისი',
-      'property_post': 'განცხადების განთავსება'
-    };
-    return labels[type] || type;
+    const key = `payment.transactionTypes.${type}`;
+    const translated = t(key);
+    return translated !== key ? translated : type;
   };
 
   const getTransactionDescription = (transaction: any) => {
@@ -185,14 +185,16 @@ export const BalancePage = () => {
       if (transaction.metadata.vipService) {
         const vipService = transaction.metadata.vipService;
         const vipLabel = getServiceLabel(vipService.serviceType);
-        services.push(`${vipLabel} (${vipService.days} დღე)`);
+        const daysLabel = vipService.days === 1 ? t('payment.day') : t('payment.days');
+        services.push(`${vipLabel} (${vipService.days} ${daysLabel})`);
       }
       
       // Add additional services
       if (transaction.metadata.additionalServices) {
         transaction.metadata.additionalServices.forEach((service: any) => {
           const serviceLabel = getServiceLabel(service.serviceType);
-          services.push(`${serviceLabel} (${service.days} დღე)`);
+          const daysLabel = service.days === 1 ? t('payment.day') : t('payment.days');
+          services.push(`${serviceLabel} (${service.days} ${daysLabel})`);
         });
       }
       
@@ -227,8 +229,8 @@ export const BalancePage = () => {
       setPaymentStatusDialog({
         show: true,
         type: 'processing',
-        title: 'გადახდა დაიწყო',
-        message: 'თქვენი გადახდა წარმატებით შესრულდა BOG-ის მხრიდან. ბალანსი ახლა ვერიფიცირდება და ავტომატურად განახლდება...'
+        title: t('payment.paymentStarted'),
+        message: t('payment.paymentVerifying')
       });
       
       // Start polling for balance updates
@@ -248,8 +250,8 @@ export const BalancePage = () => {
             setPaymentStatusDialog({
               show: true,
               type: 'success',
-              title: 'ბალანსი წარმატებით შევსდა!',
-              message: `თქვენი ბალანსი შევსდა ${increase.toFixed(2)}₾-ით. ახალი ბალანსი: ${data.balance.toFixed(2)}₾`,
+              title: t('payment.balanceSuccessfullyToppedUp'),
+              message: t('payment.balanceUpdated', { amount: increase.toFixed(2), balance: data.balance.toFixed(2) }),
               amount: increase,
               newBalance: data.balance
             });
@@ -266,8 +268,8 @@ export const BalancePage = () => {
             setPaymentStatusDialog({
               show: true,
               type: 'success',
-              title: 'გადახდა განხორციელდა',
-              message: 'თქვენი გადახდა წარმატებით დასრულდა. თუ ბალანსი ჯერ არ განახლდა, გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე.',
+              title: t('payment.paymentCompleted'),
+              message: t('payment.paymentCompletedMessage'),
             });
             window.history.replaceState({}, '', window.location.pathname);
           }
@@ -279,8 +281,8 @@ export const BalancePage = () => {
             setPaymentStatusDialog({
               show: true,
               type: 'success',
-              title: 'გადახდა განხორციელდა',
-              message: 'თქვენი გადახდა განხორციელდა. გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე ბალანსის შესამოწმებლად.',
+              title: t('payment.paymentCompleted'),
+              message: t('payment.paymentCompletedCheckBalance'),
             });
             window.history.replaceState({}, '', window.location.pathname);
           }
@@ -295,8 +297,8 @@ export const BalancePage = () => {
       setPaymentStatusDialog({
         show: true,
         type: 'failed',
-        title: 'გადახდა ვერ განხორციელდა',
-        message: 'თქვენი გადახდა ვერ შესრულდა. გთხოვთ სცადოთ ხელახლა ან გამოიყენოთ სხვა გადახდის მეთოდი.'
+        title: t('payment.paymentFailed'),
+        message: t('payment.paymentFailedMessage')
       });
       window.history.replaceState({}, '', window.location.pathname);
     }
@@ -313,13 +315,13 @@ export const BalancePage = () => {
   return (
     <div className="w-full">
       <div className="p-6">
-        <h2 className="text-2xl font-bold mb-6">ბალანსის შევსება</h2>
+        <h2 className="text-2xl font-bold mb-6">{t('payment.balancePageTitle')}</h2>
         
         <div className="grid gap-6 md:grid-cols-2">
           {/* მიმდინარე ბალანსი */}
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium">მიმდინარე ბალანსი</h3>
+              <h3 className="text-lg font-medium">{t('payment.currentBalance')}</h3>
               <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
@@ -335,14 +337,14 @@ export const BalancePage = () => {
             </div>
             <div className="text-3xl font-bold text-primary">{balanceData?.balance?.toFixed(2) || '0.00'} ₾</div>
             <p className="text-sm text-gray-500 mt-2">
-              ხელმისაწვდომი თანხა განცხადებების განთავსებისთვის
+              {t('payment.availableForAds')}
             </p>
           </Card>
           
           {/* ბოლო ტრანზაქცია */}
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium">ბოლო შევსება</h3>
+              <h3 className="text-lg font-medium">{t('payment.lastTopUp')}</h3>
               <History className="h-5 w-5 text-gray-400" />
             </div>
             {balanceData?.lastTopUp ? (
@@ -353,19 +355,19 @@ export const BalancePage = () => {
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-gray-500">ჯერ არ გაქვთ შევსებული</p>
+              <p className="text-sm text-gray-500">{t('payment.noTopUpsYet')}</p>
             )}
           </Card>
         </div>
         
         {/* შევსების ფორმა */}
         <Card className="mt-6 p-6">
-          <h3 className="text-lg font-medium mb-4">ბალანსის შევსება</h3>
+          <h3 className="text-lg font-medium mb-4">{t('payment.topUpBalance')}</h3>
           
           <div className="space-y-6">
             {/* Payment Provider Selection */}
             <div>
-              <Label className="text-base font-medium">გადახდის მეთოდი</Label>
+              <Label className="text-base font-medium">{t('payment.paymentMethod')}</Label>
               <RadioGroup 
                 value={selectedProvider} 
                 onValueChange={setSelectedProvider}
@@ -382,7 +384,7 @@ export const BalancePage = () => {
                         <p className="text-sm text-gray-500 mt-1">{provider.description}</p>
                       )}
                       <p className="text-xs text-gray-400">
-                        ლიმიტი: {provider.minAmount}₾ - {provider.maxAmount}₾
+                        {t('payment.limit')}: {provider.minAmount}₾ - {provider.maxAmount}₾
                       </p>
                     </div>
                     {(provider.id === 'flitt' || provider.id === 'bog') && (
@@ -394,7 +396,7 @@ export const BalancePage = () => {
             </div>
 
             <div>
-              <Label htmlFor="amount">თანხა (₾)</Label>
+              <Label htmlFor="amount">{t('payment.amount')} (₾)</Label>
               <Input 
                 id="amount" 
                 type="number" 
@@ -407,16 +409,16 @@ export const BalancePage = () => {
               />
               {paymentProviders.find(p => p.id === selectedProvider) && (
                 <p className="text-xs text-gray-500 mt-1">
-                  მინ. {paymentProviders.find(p => p.id === selectedProvider)!.minAmount}₾ - 
-                  მაქს. {paymentProviders.find(p => p.id === selectedProvider)!.maxAmount}₾
+                  {t('common.min')} {paymentProviders.find(p => p.id === selectedProvider)!.minAmount}₾ - 
+                  {t('common.max')} {paymentProviders.find(p => p.id === selectedProvider)!.maxAmount}₾
                 </p>
               )}
             </div>
             
             <div className="grid grid-cols-3 gap-2">
-              <Button variant="outline" type="button" onClick={() => setQuickAmount(50)}>50₾</Button>
-              <Button variant="outline" type="button" onClick={() => setQuickAmount(100)}>100₾</Button>
-              <Button variant="outline" type="button" onClick={() => setQuickAmount(200)}>200₾</Button>
+              <Button variant="outline" type="button" onClick={() => setQuickAmount(50)}>{t('payment.quickAmounts.50')}</Button>
+              <Button variant="outline" type="button" onClick={() => setQuickAmount(100)}>{t('payment.quickAmounts.100')}</Button>
+              <Button variant="outline" type="button" onClick={() => setQuickAmount(200)}>{t('payment.quickAmounts.200')}</Button>
             </div>
             
             <Button 
@@ -430,16 +432,16 @@ export const BalancePage = () => {
               ) : (
                 <CreditCard className="h-4 w-4 mr-2" />
               )}
-              {topUpLoading ? 'შევსება...' : 
-               selectedProvider === 'flitt' ? 'ბანკის ბარათით გადახდა (Flitt)' :
-               selectedProvider === 'bog' ? 'ბანკის ბარათით გადახდა (BOG)' : 'შევსება (ტესტისთვის)'}
+              {topUpLoading ? t('payment.topping') : 
+               selectedProvider === 'flitt' ? t('payment.payWithCardFlitt') :
+               selectedProvider === 'bog' ? t('payment.payWithCardBOG') : t('payment.topUpForTest')}
             </Button>
           </div>
         </Card>
         
         {/* ტრანზაქციების ისტორია */}
         <Card className="mt-6 p-6">
-          <h3 className="text-lg font-medium mb-4">ტრანზაქციების ისტორია</h3>
+          <h3 className="text-lg font-medium mb-4">{t('payment.transactionHistory')}</h3>
           {balanceData?.recentTransactions && balanceData.recentTransactions.length > 0 ? (
             <div className="space-y-3">
               {balanceData.recentTransactions.map((transaction) => (
@@ -457,9 +459,9 @@ export const BalancePage = () => {
                       {transaction.type === 'top_up' ? '+' : '-'}{transaction.amount.toFixed(2)} ₾
                     </div>
                     <div className="text-sm text-gray-500">
-                      {transaction.status === 'completed' ? 'დასრულებული' : 
-                       transaction.status === 'pending' ? 'მიმდინარე' : 
-                       transaction.status === 'failed' ? 'ვერ შესრულდა' : 'გაუქმებული'}
+                      {transaction.status === 'completed' ? t('payment.statuses.completed') : 
+                       transaction.status === 'pending' ? t('payment.statuses.pending') : 
+                       transaction.status === 'failed' ? t('payment.statuses.failed') : t('payment.statuses.cancelled')}
                     </div>
                   </div>
                 </div>
@@ -468,7 +470,7 @@ export const BalancePage = () => {
           ) : (
             <div className="text-center py-8 text-gray-500">
               <History className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-              <p>ჯერ არ გაქვთ ტრანზაქციები</p>
+              <p>{t('payment.noTransactions')}</p>
             </div>
           )}
         </Card>
@@ -499,11 +501,11 @@ export const BalancePage = () => {
                   disabled={balanceRefreshing}
                 >
                   {balanceRefreshing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-                  ბალანსის განახლება
+                  {t('payment.refreshBalance')}
                 </Button>
               )}
               <Button onClick={() => setPaymentStatusDialog({ ...paymentStatusDialog, show: false })}>
-                {paymentStatusDialog.type === 'failed' ? 'ხელახლა ცდა' : 'კარგი'}
+                {paymentStatusDialog.type === 'failed' ? t('payment.tryAgain') : t('payment.ok')}
               </Button>
             </div>
           )}
