@@ -37,6 +37,9 @@ import priceStatisticsRu from './ru/priceStatistics.json';
 import developersEn from './en/developers.json';
 import developersKa from './ka/developers.json';
 import developersRu from './ru/developers.json';
+import projectsEn from './en/projects.json';
+import projectsKa from './ka/projects.json';
+import projectsRu from './ru/projects.json';
 
 export const resources = {
   en: {
@@ -53,6 +56,7 @@ export const resources = {
     districtCarousel: districtCarouselEn,
     priceStatistics: priceStatisticsEn,
     developers: developersEn,
+    projects: projectsEn,
   },
   ka: {
     admin: adminKa,
@@ -68,6 +72,7 @@ export const resources = {
     districtCarousel: districtCarouselKa,
     priceStatistics: priceStatisticsKa,
     developers: developersKa,
+    projects: projectsKa,
   },
   ru: {
     admin: adminRu,
@@ -83,6 +88,7 @@ export const resources = {
     districtCarousel: districtCarouselRu,
     priceStatistics: priceStatisticsRu,
     developers: developersRu,
+    projects: projectsRu,
   },
 };
 
@@ -99,3 +105,4 @@ export type FooterTranslations = typeof footerEn;
 export type DistrictCarouselTranslations = typeof districtCarouselEn;
 export type PriceStatisticsTranslations = typeof priceStatisticsEn;
 export type DevelopersTranslations = typeof developersEn;
+export type ProjectsTranslations = typeof projectsEn;

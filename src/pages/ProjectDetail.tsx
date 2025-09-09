@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import { useTranslation } from "react-i18next";
 import {
   MapPin,
   Calendar,
@@ -118,6 +119,7 @@ const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation('projects');
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -152,8 +154,8 @@ const ProjectDetail = () => {
       if (!response.ok) {
         if (response.status === 404) {
           toast({
-            title: "შეცდომა",
-            description: "პროექტი ვერ მოიძებნა",
+            title: t('error.title'),
+            description: t('projectDetail.notFound'),
             variant: "destructive",
           });
           navigate('/projects');
@@ -182,8 +184,8 @@ const ProjectDetail = () => {
     } catch (error) {
       console.error('Error fetching project:', error);
       toast({
-        title: "შეცდომა",
-        description: "პროექტის ჩატვირთვისას მოხდა შეცდომა",
+        title: t('error.title'),
+        description: t('projectDetail.loadingError'),
         variant: "destructive",
       });
     } finally {
@@ -192,29 +194,11 @@ const ProjectDetail = () => {
   };
 
   const getProjectTypeLabel = (type: string) => {
-    switch (type) {
-      case 'private_house':
-        return 'კერძო სახლი';
-      case 'apartment_building':
-        return 'საცხოვრებელი კომპლექსი';
-      default:
-        return type;
-    }
+    return t(`projectTypes.${type}`, type);
   };
 
   const getDeliveryStatusLabel = (status: string) => {
-    switch (status) {
-      case 'completed_with_renovation':
-        return 'ჩაბარება რემონტით';
-      case 'green_frame':
-        return 'მწვანე კარკასი';
-      case 'black_frame':
-        return 'შავი კარკასი';
-      case 'white_frame':
-        return 'თეთრი კარკასი';
-      default:
-        return status;
-    }
+    return t(`deliveryStatuses.${status}`, status);
   };
 
   const getDeliveryStatusColor = (status: string) => {
