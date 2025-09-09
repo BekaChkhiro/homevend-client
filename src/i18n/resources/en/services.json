@@ -1,0 +1,54 @@
+{
+  "title": "Our Services",
+  "subtitle": "Complete service package in real estate for your needs",
+  "services": {
+    "propertyAppraisal": {
+      "title": "Property Appraisal",
+      "description": "Professional property appraisal by experienced experts",
+      "details": [
+        "Complete market analysis",
+        "Detailed appraisal report",
+        "Certified appraisers"
+      ]
+    },
+    "photography": {
+      "title": "Photography",
+      "description": "Professional photography for property advertising",
+      "details": [
+        "High quality photos",
+        "Professional photographer",
+        "Various angle shots"
+      ]
+    },
+    "legalConsultation": {
+      "title": "Legal Consultation",
+      "description": "Legal support and consultation for real estate",
+      "details": [
+        "Contract preparation",
+        "Legal expertise",
+        "Court representation"
+      ]
+    },
+    "mortgageFinancing": {
+      "title": "Mortgage Financing",
+      "description": "Assistance and consultation for obtaining mortgage loans",
+      "details": [
+        "Finding the best conditions",
+        "Application preparation",
+        "Bank negotiations"
+      ]
+    }
+  },
+  "status": {
+    "comingSoon": "Coming Soon",
+    "available": "Available"
+  },
+  "buttons": {
+    "comingSoon": "Coming Soon",
+    "contact": "Contact"
+  },
+  "contact": {
+    "title": "Have questions about our services?",
+    "description": "Contact us and our experts will help you make the right choice"
+  }
+}

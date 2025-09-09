@@ -16,6 +16,9 @@ import propertyCardRu from './ru/propertyCard.json';
 import aboutUsEn from './en/aboutUs.json';
 import aboutUsKa from './ka/aboutUs.json';
 import aboutUsRu from './ru/aboutUs.json';
+import servicesEn from './en/services.json';
+import servicesKa from './ka/services.json';
+import servicesRu from './ru/services.json';
 
 export const resources = {
   en: {
@@ -25,6 +28,7 @@ export const resources = {
     auth: authEn,
     propertyCard: propertyCardEn,
     aboutUs: aboutUsEn,
+    services: servicesEn,
   },
   ka: {
     admin: adminKa,
@@ -33,6 +37,7 @@ export const resources = {
     auth: authKa,
     propertyCard: propertyCardKa,
     aboutUs: aboutUsKa,
+    services: servicesKa,
   },
   ru: {
     admin: adminRu,
@@ -41,6 +46,7 @@ export const resources = {
     auth: authRu,
     propertyCard: propertyCardRu,
     aboutUs: aboutUsRu,
+    services: servicesRu,
   },
 };
 
@@ -50,3 +56,4 @@ export type CommonTranslations = typeof commonEn;
 export type AuthTranslations = typeof authEn;
 export type PropertyCardTranslations = typeof propertyCardEn;
 export type AboutUsTranslations = typeof aboutUsEn;
+export type ServicesTranslations = typeof servicesEn;
