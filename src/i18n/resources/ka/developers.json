@@ -1,0 +1,19 @@
+{
+  "title": "დეველოპერები",
+  "subtitle": "იპოვნეთ სანდო დეველოპერები და გაეცანით მათ პროექტებს. ყველა დეველოპერი გადამოწმებულია და ავტორიზებულია.",
+  "searchPlaceholder": "მოძებნეთ დეველოპერი...",
+  "developer": "დეველოპერი",
+  "verified": "დადასტურებული",
+  "viewDetails": "დეტალურად",
+  "projectsCount": "პროექტი",
+  "propertiesCount": "განცხადება",
+  "totalSales": "მბრძანებლობა",
+  "foundDevelopers": "ნაპოვნია {count} დეველოპერი",
+  "noDevelopersFound": "დეველოპერები ვერ მოიძებნა",
+  "noDevelopersDescription": "სცადეთ სხვა საძიებო ფრაზა ან მოგვიანებით შეამოწმეთ",
+  "pagination": {
+    "previous": "წინა",
+    "next": "შემდეგი"
+  },
+  "loading": "იტვირთება..."
+}

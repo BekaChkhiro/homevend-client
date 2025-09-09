@@ -45,7 +45,7 @@ interface Developer {
 }
 
 const Developers = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation('developers');
   const [developers, setDevelopers] = useState<Developer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,7 +122,7 @@ const Developers = () => {
                 {developer.isVerified && (
                   <CheckCircle className="h-4 w-4 text-green-500" />
                 )}
-                <span className="text-sm text-muted-foreground">დეველოპერი</span>
+                <span className="text-sm text-muted-foreground">{t('developer')}</span>
               </div>
             </div>
           </div>
@@ -139,11 +139,11 @@ const Developers = () => {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center space-x-2">
             <Construction className="h-4 w-4 text-muted-foreground" />
-            <span>{developer.projectCount} პროექტი</span>
+            <span>{developer.projectCount} {t('projectsCount')}</span>
           </div>
           <div className="flex items-center space-x-2">
             <Building2 className="h-4 w-4 text-muted-foreground" />
-            <span>{developer.propertyCount} განცხადება</span>
+            <span>{developer.propertyCount} {t('propertiesCount')}</span>
           </div>
         </div>
         
@@ -185,7 +185,7 @@ const Developers = () => {
           
           <Link to={getLanguageUrl(`developers/${developer.id}`, i18n.language)}>
             <Button variant="outline" size="sm">
-              დეტალურად
+              {t('viewDetails')}
             </Button>
           </Link>
         </div>
@@ -200,9 +200,9 @@ const Developers = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col space-y-6">
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-foreground">დეველოპერები</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              იპოვნეთ სანდო დეველოპერები და გაეცანით მათ პროექტებს. ყველა დეველოპერი გადამოწმებულია და ავტორიზებულია.
+              {t('subtitle')}
             </p>
           </div>
 
@@ -210,7 +210,7 @@ const Developers = () => {
             <div className="flex w-full max-w-md space-x-2">
               <Input
                 type="text"
-                placeholder="მოძებნეთ დეველოპერი..."
+                placeholder={t('searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -247,7 +247,7 @@ const Developers = () => {
           ) : developers.length > 0 ? (
             <>
               <div className="text-center text-sm text-muted-foreground">
-                ნაპოვნია {pagination.total} დეველოპერი
+                {t('foundDevelopers', { count: pagination.total })}
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -263,7 +263,7 @@ const Developers = () => {
                     disabled={currentPage === 1}
                     onClick={() => handlePageChange(currentPage - 1)}
                   >
-                    წინა
+                    {t('pagination.previous')}
                   </Button>
                   
                   {[...Array(Math.min(5, pagination.pages))].map((_, i) => {
@@ -286,7 +286,7 @@ const Developers = () => {
                     disabled={currentPage === pagination.pages}
                     onClick={() => handlePageChange(currentPage + 1)}
                   >
-                    შემდეგი
+                    {t('pagination.next')}
                   </Button>
                 </div>
               )}
@@ -294,9 +294,9 @@ const Developers = () => {
           ) : (
             <div className="text-center py-12">
               <Construction className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">დეველოპერები ვერ მოიძებნა</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2">{t('noDevelopersFound')}</h3>
               <p className="text-muted-foreground">
-                სცადეთ სხვა საძიებო ფრაზა ან მოგვიანებით შეამოწმეთ
+                {t('noDevelopersDescription')}
               </p>
             </div>
           )}
