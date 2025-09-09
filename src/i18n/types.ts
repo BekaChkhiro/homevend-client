@@ -1,4 +1,4 @@
-import { AdminTranslations, UserDashboardTranslations, CommonTranslations, AuthTranslations, PropertyCardTranslations, AboutUsTranslations, ServicesTranslations, HomeTranslations, AdvertisementsTranslations, FooterTranslations, DistrictCarouselTranslations } from './resources';
+import { AdminTranslations, UserDashboardTranslations, CommonTranslations, AuthTranslations, PropertyCardTranslations, AboutUsTranslations, ServicesTranslations, HomeTranslations, AdvertisementsTranslations, FooterTranslations, DistrictCarouselTranslations, PriceStatisticsTranslations } from './resources';
 
 declare module 'react-i18next' {
   interface CustomTypeOptions {
@@ -15,6 +15,7 @@ declare module 'react-i18next' {
       advertisements: AdvertisementsTranslations;
       footer: FooterTranslations;
       districtCarousel: DistrictCarouselTranslations;
+      priceStatistics: PriceStatisticsTranslations;
     };
   }
 }

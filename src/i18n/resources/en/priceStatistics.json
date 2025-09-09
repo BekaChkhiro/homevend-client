@@ -1,0 +1,20 @@
+{
+  "title": "District Prices",
+  "subtitle": "Average real estate prices per square meter in Tbilisi districts",
+  "expensiveDistrict": "Most Expensive District",
+  "averagePrice": "Average Price",
+  "allDistricts": "All Districts",
+  "cheapestDistrict": "Cheapest District",
+  "pricePerSqm": "Price per 1 sqm:",
+  "usdPerSqm": "USD / square meter",
+  "updated": "Updated:",
+  "priceLevel": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "noData": {
+    "title": "No Data Found",
+    "subtitle": "Currently no district price information is available"
+  }
+}
