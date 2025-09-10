@@ -20,5 +20,41 @@
       "previous": "Previous",
       "next": "Next"
     }
+  },
+  "agencyDetail": {
+    "loading": "Loading...",
+    "error": "Error",
+    "loadError": "Failed to load agency details",
+    "notFound": "Agency not found",
+    "verified": "Verified",
+    "addressNotSpecified": "Address not specified",
+    "phoneNotSpecified": "Phone not specified",
+    "emailNotSpecified": "Email not specified",
+    "website": "Website",
+    "socialMedia": "Social Media",
+    "locationNotSpecified": "Location not specified",
+    "stats": {
+      "agents": "Agents",
+      "properties": "Properties",
+      "totalSales": "Total Sales",
+      "memberSince": "Member Since"
+    },
+    "agents": {
+      "title": "Agents",
+      "noPhone": "No phone",
+      "noEmail": "No email",
+      "viewProfile": "View Profile",
+      "noAgentsFound": "No agents found",
+      "noAgentsDescription": "This agency currently has no listed agents."
+    },
+    "properties": {
+      "title": "{{agencyName}}'s and their agents' properties",
+      "allProperties": "All properties ({{count}})",
+      "filteredProperties": "{{filtered}} properties out of {{total}}",
+      "noPropertiesFound": "No properties found",
+      "noPropertiesDescription": "This agency currently has no properties.",
+      "noFilterResults": "No properties match the filters",
+      "noFilterResultsDescription": "Try different filters or clear existing filters."
+    }
   }
 }

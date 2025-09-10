@@ -20,5 +20,41 @@
       "previous": "Предыдущая",
       "next": "Следующая"
     }
+  },
+  "agencyDetail": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "loadError": "Не удалось загрузить детали агентства",
+    "notFound": "Агентство не найдено",
+    "verified": "Верифицировано",
+    "addressNotSpecified": "Адрес не указан",
+    "phoneNotSpecified": "Телефон не указан",
+    "emailNotSpecified": "Email не указан",
+    "website": "Веб-сайт",
+    "socialMedia": "Социальные сети",
+    "locationNotSpecified": "Местоположение не указано",
+    "stats": {
+      "agents": "Агенты",
+      "properties": "Объявления",
+      "totalSales": "Всего продаж",
+      "memberSince": "Участник с"
+    },
+    "agents": {
+      "title": "Агенты",
+      "noPhone": "Нет телефона",
+      "noEmail": "Нет email",
+      "viewProfile": "Просмотр профиля",
+      "noAgentsFound": "Агенты не найдены",
+      "noAgentsDescription": "У этого агентства в настоящее время нет указанных агентов."
+    },
+    "properties": {
+      "title": "Объявления {{agencyName}} и их агентов",
+      "allProperties": "Все объявления ({{count}})",
+      "filteredProperties": "{{filtered}} объявлений из {{total}}",
+      "noPropertiesFound": "Объявления не найдены",
+      "noPropertiesDescription": "У этого агентства в настоящее время нет объявлений.",
+      "noFilterResults": "Нет объявлений, соответствующих фильтрам",
+      "noFilterResultsDescription": "Попробуйте другие фильтры или очистите существующие фильтры."
+    }
   }
 }

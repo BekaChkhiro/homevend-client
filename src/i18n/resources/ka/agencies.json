@@ -20,5 +20,41 @@
       "previous": "წინა",
       "next": "შემდეგი"
     }
+  },
+  "agencyDetail": {
+    "loading": "იტვირთება...",
+    "error": "შეცდომა",
+    "loadError": "სააგენტოს დეტალების ჩატვირთვა ვერ მოხერხდა",
+    "notFound": "სააგენტო არ მოიძებნა",
+    "verified": "ვერიფიცირებული",
+    "addressNotSpecified": "მისამართი მითითებული არ არის",
+    "phoneNotSpecified": "ტელეფონი მითითებული არ არის",
+    "emailNotSpecified": "ელ.ფოსტა მითითებული არ არის",
+    "website": "ვებსაიტი",
+    "socialMedia": "სოციალური მედია",
+    "locationNotSpecified": "მდებარეობა არ არის მითითებული",
+    "stats": {
+      "agents": "აგენტები",
+      "properties": "განცხადებები",
+      "totalSales": "სულ გაყიდვები",
+      "memberSince": "წევრია"
+    },
+    "agents": {
+      "title": "აგენტები",
+      "noPhone": "ტელეფონი არ არის",
+      "noEmail": "ელფოსტა არ არის",
+      "viewProfile": "პროფილის ნახვა",
+      "noAgentsFound": "აგენტები არ მოიძებნა",
+      "noAgentsDescription": "ამ სააგენტოს ამჟამად არ ჰყავს მითითებული აგენტები."
+    },
+    "properties": {
+      "title": "{{agencyName}}-ს და მისი აგენტების განცხადებები",
+      "allProperties": "ყველა განცხადება ({{count}})",
+      "filteredProperties": "{{filtered}} განცხადება {{total}}-დან",
+      "noPropertiesFound": "განცხადებები არ მოიძებნა",
+      "noPropertiesDescription": "ამ სააგენტოს ამჟამად არ აქვს განცხადებები.",
+      "noFilterResults": "ფილტრებთან შესაბამისი განცხადებები არ მოიძებნა",
+      "noFilterResultsDescription": "სცადეთ სხვა ფილტრები ან წაშალეთ არსებული ფილტრები."
+    }
   }
 }

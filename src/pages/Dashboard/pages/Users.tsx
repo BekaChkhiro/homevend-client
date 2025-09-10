@@ -34,7 +34,7 @@ interface AgencyUser {
 }
 
 const AgencyUsers = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('userDashboard');
   const [users, setUsers] = useState<AgencyUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [inviteEmail, setInviteEmail] = useState('');
@@ -50,8 +50,8 @@ const AgencyUsers = () => {
     } catch (error: any) {
       console.error('Error fetching agency users:', error);
       toast({
-        title: 'შეცდომა',
-        description: error.response?.data?.message || 'ვერ მოხერხდა მომხმარებლების ჩატვირთვა',
+        title: t('common.error'),
+        description: error.response?.data?.message || t('agencyUsers.messages.loadError'),
         variant: 'destructive',
       });
     } finally {
@@ -66,8 +66,8 @@ const AgencyUsers = () => {
   const handleInviteUser = async () => {
     if (!inviteEmail) {
       toast({
-        title: 'შეცდომა',
-        description: 'გთხოვთ, შეიყვანოთ ელ.ფოსტა მომხმარებლის დასამატებლად.',
+        title: t('common.error'),
+        description: t('agencyUsers.messages.emailRequired'),
         variant: 'destructive',
       });
       return;
@@ -78,8 +78,8 @@ const AgencyUsers = () => {
       const result = await agencyApi.addUserToMyAgency(inviteEmail);
       
       toast({
-        title: 'წარმატება',
-        description: result.message || 'მომხმარებელი წარმატებით დაემატა სააგენტოს',
+        title: t('common.success'),
+        description: result.message || t('agencyUsers.messages.addSuccess'),
       });
       
       setInviteEmail('');
@@ -88,8 +88,8 @@ const AgencyUsers = () => {
     } catch (error: any) {
       console.error('Error adding user to agency:', error);
       toast({
-        title: 'შეცდომა',
-        description: error.response?.data?.message || 'ვერ მოხერხდა მომხმარებლის დამატება',
+        title: t('common.error'),
+        description: error.response?.data?.message || t('agencyUsers.messages.addError'),
         variant: 'destructive',
       });
     } finally {
@@ -98,7 +98,7 @@ const AgencyUsers = () => {
   };
 
   const handleRemoveUser = async (userId: number, userName: string) => {
-    if (!confirm(`ნამდვილად გსურთ ${userName}-ის წაშლა სააგენტოდან?`)) {
+    if (!confirm(t('agencyUsers.actions.confirmRemove', { userName }))) {
       return;
     }
 
@@ -107,8 +107,8 @@ const AgencyUsers = () => {
       const result = await agencyApi.removeUserFromMyAgency(userId);
       
       toast({
-        title: 'წარმატება',
-        description: result.message || 'აგენტი წარმატებით წაიშალა სააგენტოდან',
+        title: t('common.success'),
+        description: result.message || t('agencyUsers.messages.removeSuccess'),
       });
       
       // Refresh the users list
@@ -116,8 +116,8 @@ const AgencyUsers = () => {
     } catch (error: any) {
       console.error('Error removing user from agency:', error);
       toast({
-        title: 'შეცდომა',
-        description: error.response?.data?.message || 'ვერ მოხერხდა აგენტის წაშლა',
+        title: t('common.error'),
+        description: error.response?.data?.message || t('agencyUsers.messages.removeError'),
         variant: 'destructive',
       });
     } finally {
@@ -131,27 +131,27 @@ const AgencyUsers = () => {
         return (
           <Badge variant="secondary" className="bg-purple-100 text-purple-700 border-purple-200">
             <Crown className="h-3 w-3 mr-1" />
-            სააგენტო
+            {t('agencyUsers.roles.agency')}
           </Badge>
         );
       case 'agent':
         return (
           <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
             <Shield className="h-3 w-3 mr-1" />
-            აგენტი
+            {t('agencyUsers.roles.agent')}
           </Badge>
         );
       case 'admin':
         return (
           <Badge variant="secondary" className="bg-red-100 text-red-700 border-red-200">
             <Shield className="h-3 w-3 mr-1" />
-            ადმინი
+            {t('agencyUsers.roles.admin')}
           </Badge>
         );
       default:
         return (
           <Badge variant="outline">
-            მომხმარებელი
+            {t('agencyUsers.roles.user')}
           </Badge>
         );
     }
@@ -162,7 +162,7 @@ const AgencyUsers = () => {
       <div className="flex items-center justify-center py-12">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-gray-600">აგენტების სია იტვირთება...</p>
+          <p className="text-gray-600">{t('agencyUsers.messages.loading')}</p>
         </div>
       </div>
     );
@@ -176,8 +176,8 @@ const AgencyUsers = () => {
           <Users className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">აგენტების მართვა</h1>
-          <p className="text-gray-600">დაამატეთ და მართეთ თქვენი სააგენტოს აგენტები</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('agencyUsers.title')}</h1>
+          <p className="text-gray-600">{t('agencyUsers.subtitle')}</p>
         </div>
       </div>
 
@@ -186,10 +186,10 @@ const AgencyUsers = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-primary">
             <UserPlus className="h-5 w-5" />
-            ახალი აგენტის დამატება
+            {t('agencyUsers.addAgent.title')}
           </CardTitle>
           <p className="text-sm text-gray-600">
-            შეიყვანეთ არსებული მომხმარებლის ელ-ფოსტა რომ დაამატოთ იგი აგენტად
+            {t('agencyUsers.addAgent.description')}
           </p>
         </CardHeader>
         <CardContent>
@@ -197,7 +197,7 @@ const AgencyUsers = () => {
             <div className="flex-1">
               <Input
                 type="email"
-                placeholder="agent@example.com"
+                placeholder={t('agencyUsers.addAgent.emailPlaceholder')}
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 disabled={isAddingUser}
@@ -212,12 +212,12 @@ const AgencyUsers = () => {
               {isAddingUser ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  დამატება...
+                  {t('agencyUsers.addAgent.adding')}
                 </>
               ) : (
                 <>
                   <UserPlus className="h-4 w-4" />
-                  დამატება
+                  {t('agencyUsers.addAgent.addButton')}
                 </>
               )}
             </Button>
@@ -231,11 +231,11 @@ const AgencyUsers = () => {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              მიმდინარე აგენტები
+              {t('agencyUsers.currentAgents.title')}
             </CardTitle>
             {users.length > 0 && (
               <Badge variant="secondary" className="px-3 py-1">
-                სულ: {users.length}
+                {t('agencyUsers.currentAgents.total')}: {users.length}
               </Badge>
             )}
           </div>
@@ -249,14 +249,14 @@ const AgencyUsers = () => {
                 </div>
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                აგენტები არ არის დამატებული
+                {t('agencyUsers.currentAgents.noAgents')}
               </h3>
               <p className="text-gray-600 mb-4">
-                დაიწყეთ აგენტების დამატება თქვენს სააგენტოში
+                {t('agencyUsers.currentAgents.noAgentsDesc')}
               </p>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                 <AlertCircle className="h-4 w-4" />
-                აგენტები ხელს შეუწყობენ უძრავი ქონების მართვასა და გაყიდვას
+                {t('agencyUsers.currentAgents.noAgentsTip')}
               </div>
             </div>
           ) : (
@@ -295,7 +295,7 @@ const AgencyUsers = () => {
                       <Link to={getLanguageUrl(`user/${user.id}`, i18n.language)}>
                         <Button variant="outline" size="sm" className="text-primary hover:text-primary">
                           <Eye className="h-4 w-4 mr-1" />
-                          ნახვა
+                          {t('agencyUsers.actions.view')}
                         </Button>
                       </Link>
                       <Button 
@@ -308,12 +308,12 @@ const AgencyUsers = () => {
                         {removingUserId === user.id ? (
                           <>
                             <Loader2 className="h-4 w-4 animate-spin mr-1" />
-                            წაშლა...
+                            {t('agencyUsers.actions.removing')}
                           </>
                         ) : (
                           <>
                             <Trash2 className="h-4 w-4 mr-1" />
-                            წაშლა
+                            {t('agencyUsers.actions.remove')}
                           </>
                         )}
                       </Button>
