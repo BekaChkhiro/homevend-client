@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { balanceApi } from "@/lib/api";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface Balance {
   balance: number;
@@ -19,6 +20,8 @@ export const BalanceSection = forwardRef<BalanceSectionRef>((props, ref) => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout>();
   const lastFetchTimeRef = useRef<number>(0);
   const { t } = useTranslation('userDashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchBalance = useCallback(async () => {
     const now = Date.now();
@@ -102,7 +105,12 @@ export const BalanceSection = forwardRef<BalanceSectionRef>((props, ref) => {
           </div>
         </div>
       </div>
-      <Button variant="default" size="sm" className="w-full mt-2">
+      <Button variant="default" size="sm" className="w-full mt-2" onClick={() => {
+        // Get the current language from the path
+        const pathParts = location.pathname.split('/');
+        const lang = pathParts[1] || 'en'; // Default to 'en' if no language found
+        navigate(`/${lang}/dashboard/balance`);
+      }}>
         {t('balance.topUp')}
       </Button>
     </div>
