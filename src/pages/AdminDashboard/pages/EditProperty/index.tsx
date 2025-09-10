@@ -40,7 +40,7 @@ const AdminEditProperty = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),

@@ -51,7 +51,7 @@ interface ApartmentCardProps {
 
 export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
   
   if (!property) {
     return null;

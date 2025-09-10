@@ -51,7 +51,7 @@ const Overview = () => {
   const [recentUsers, setRecentUsers] = useState<RecentUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslation('admin');
 
   useEffect(() => {
     fetchDashboardData();

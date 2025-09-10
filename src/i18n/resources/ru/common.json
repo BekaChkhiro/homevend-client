@@ -11,7 +11,25 @@
     "contact": "Контакт",
     "projects": "Проекты",
     "addProperty": "Добавить недвижимость",
-    "addProject": "Добавить проект"
+    "addProject": "Добавить проект",
+    "categories": {
+      "analytics": "Аналитика",
+      "content": "Управление контентом",
+      "data": "Управление данными",
+      "system": "Система"
+    },
+    "menu": {
+      "overview": "Обзор",
+      "listings": "Объявления",
+      "projects": "Проекты",
+      "agencies": "Агентства",
+      "users": "Пользователи",
+      "advertisements": "Реклама",
+      "districts": "Районы",
+      "servicePricing": "Цены на услуги",
+      "settings": "Настройки"
+    },
+    "administrator": "Администратор"
   },
   "common": {
     "loading": "Загрузка...",

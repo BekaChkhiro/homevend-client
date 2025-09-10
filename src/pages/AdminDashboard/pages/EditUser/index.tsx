@@ -27,7 +27,7 @@ const EditUser = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
   
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);

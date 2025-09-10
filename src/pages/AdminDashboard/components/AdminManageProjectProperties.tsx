@@ -57,7 +57,7 @@ export const AdminManageProjectProperties: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
 
   const [project, setProject] = useState<Project | null>(null);
   const [allProperties, setAllProperties] = useState<UserProperty[]>([]);

@@ -11,7 +11,25 @@
     "contact": "Contact",
     "projects": "Projects",
     "addProperty": "Add Property",
-    "addProject": "Add Project"
+    "addProject": "Add Project",
+    "categories": {
+      "analytics": "Analytics",
+      "content": "Content Management",
+      "data": "Data Management",
+      "system": "System"
+    },
+    "menu": {
+      "overview": "Overview",
+      "listings": "Listings",
+      "projects": "Projects",
+      "agencies": "Agencies",
+      "users": "Users",
+      "advertisements": "Advertisements",
+      "districts": "Districts",
+      "servicePricing": "Service Pricing",
+      "settings": "Settings"
+    },
+    "administrator": "Administrator"
   },
   "common": {
     "loading": "Loading...",

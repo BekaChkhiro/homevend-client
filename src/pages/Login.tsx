@@ -13,7 +13,7 @@ import { getLanguageUrl } from "@/components/LanguageRoute";
 
 const Login = () => {
   const { toast } = useToast();
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { t, i18n } = useTranslation('auth');
@@ -52,8 +52,13 @@ const Login = () => {
           description: t('login.successDesc'),
         });
         
-        // Redirect to dashboard after login
-        navigate(getLanguageUrl("dashboard", i18n.language));
+        // Check user role and redirect accordingly
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        if (userData.role === 'admin') {
+          navigate(getLanguageUrl("admin", i18n.language));
+        } else {
+          navigate(getLanguageUrl("dashboard", i18n.language));
+        }
       } else {
         setError(t('login.invalidCredentials'));
       }

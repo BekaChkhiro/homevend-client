@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import Login from './Login';
 
@@ -22,7 +22,8 @@ const mockNavigate = vi.fn();
 vi.mock('@/contexts/AuthContext', () => ({
   useAuth: () => ({
     login: mockLogin,
-    isLoading: false
+    isLoading: false,
+    user: null
   })
 }));
 
@@ -30,9 +31,23 @@ vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useNavigate: () => mockNavigate
+    useNavigate: () => mockNavigate,
+    useSearchParams: () => [new URLSearchParams()]
   };
 });
+
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { language: 'en' }
+  })
+}));
+
+// Mock LanguageRoute
+vi.mock('@/components/LanguageRoute', () => ({
+  getLanguageUrl: (path: string, lang: string) => `/${lang}/${path}`
+}));
 
 const renderLogin = () => {
   return render(
@@ -51,17 +66,17 @@ describe('Login Component', () => {
     renderLogin();
     
     expect(screen.getByTestId('header')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /შესვლა/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/ელ-ფოსტა/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/პაროლი/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /შესვლა/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /login.title/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/login.email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/login.password/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login.loginButton/i })).toBeInTheDocument();
   });
 
   it('updates form data when user types', () => {
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
     
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
@@ -75,9 +90,9 @@ describe('Login Component', () => {
     
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
-    const submitButton = screen.getByRole('button', { name: /შესვლა/i });
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
+    const submitButton = screen.getByRole('button', { name: /login.loginButton/i });
     
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
@@ -88,21 +103,51 @@ describe('Login Component', () => {
     });
   });
 
-  it('navigates to dashboard on successful login', async () => {
+  it('navigates to dashboard on successful login for regular user', async () => {
     mockLogin.mockResolvedValue(true);
+    // Mock localStorage to return regular user
+    const mockGetItem = vi.fn().mockReturnValue(JSON.stringify({ role: 'user' }));
+    Object.defineProperty(window, 'localStorage', {
+      value: { getItem: mockGetItem },
+      writable: true
+    });
     
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
-    const submitButton = screen.getByRole('button', { name: /შესვლა/i });
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
+    const submitButton = screen.getByRole('button', { name: /login.loginButton/i });
     
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
     fireEvent.click(submitButton);
     
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+      expect(mockNavigate).toHaveBeenCalledWith('/en/dashboard');
+    });
+  });
+
+  it('navigates to admin dashboard on successful login for admin user', async () => {
+    mockLogin.mockResolvedValue(true);
+    // Mock localStorage to return admin user
+    const mockGetItem = vi.fn().mockReturnValue(JSON.stringify({ role: 'admin' }));
+    Object.defineProperty(window, 'localStorage', {
+      value: { getItem: mockGetItem },
+      writable: true
+    });
+    
+    renderLogin();
+    
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
+    const submitButton = screen.getByRole('button', { name: /login.loginButton/i });
+    
+    fireEvent.change(emailInput, { target: { value: 'admin@test.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'admin123456' } });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/en/admin');
     });
   });
 
@@ -111,16 +156,16 @@ describe('Login Component', () => {
     
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
-    const submitButton = screen.getByRole('button', { name: /შესვლა/i });
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
+    const submitButton = screen.getByRole('button', { name: /login.loginButton/i });
     
     fireEvent.change(emailInput, { target: { value: 'wrong@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'wrongpassword' } });
     fireEvent.click(submitButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/არასწორი ელ-ფოსტა ან პაროლი/i)).toBeInTheDocument();
+      expect(screen.getByText(/login.invalidCredentials/i)).toBeInTheDocument();
     });
   });
 
@@ -129,16 +174,16 @@ describe('Login Component', () => {
     
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
-    const submitButton = screen.getByRole('button', { name: /შესვლა/i });
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
+    const submitButton = screen.getByRole('button', { name: /login.loginButton/i });
     
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
     fireEvent.click(submitButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/შესვლისას დაფიქსირდა შეცდომა/i)).toBeInTheDocument();
+      expect(screen.getByText(/login.loginError/i)).toBeInTheDocument();
     });
   });
 
@@ -147,9 +192,9 @@ describe('Login Component', () => {
     
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
-    const submitButton = screen.getByRole('button', { name: /შესვლა/i });
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
+    const submitButton = screen.getByRole('button', { name: /login.loginButton/i });
     
     // First submission - failure
     fireEvent.change(emailInput, { target: { value: 'wrong@example.com' } });
@@ -157,7 +202,7 @@ describe('Login Component', () => {
     fireEvent.click(submitButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/არასწორი ელ-ფოსტა ან პაროლი/i)).toBeInTheDocument();
+      expect(screen.getByText(/login.invalidCredentials/i)).toBeInTheDocument();
     });
     
     // Second submission - should clear error
@@ -166,23 +211,23 @@ describe('Login Component', () => {
     fireEvent.click(submitButton);
     
     await waitFor(() => {
-      expect(screen.queryByText(/არასწორი ელ-ფოსტა ან პაროლი/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/login.invalidCredentials/i)).not.toBeInTheDocument();
     });
   });
 
   it('has link to registration page', () => {
     renderLogin();
     
-    const registerLink = screen.getByRole('link', { name: /რეგისტრაცია/i });
+    const registerLink = screen.getByRole('link', { name: /login.registerLink/i });
     expect(registerLink).toBeInTheDocument();
-    expect(registerLink).toHaveAttribute('href', '/register');
+    expect(registerLink).toHaveAttribute('href', '/en/register');
   });
 
   it('prevents form submission with empty fields', () => {
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
     
     expect(emailInput).toHaveAttribute('required');
     expect(passwordInput).toHaveAttribute('required');
@@ -191,8 +236,8 @@ describe('Login Component', () => {
   it('has proper input types', () => {
     renderLogin();
     
-    const emailInput = screen.getByLabelText(/ელ-ფოსტა/i);
-    const passwordInput = screen.getByLabelText(/პაროლი/i);
+    const emailInput = screen.getByLabelText(/login.email/i);
+    const passwordInput = screen.getByLabelText(/login.password/i);
     
     expect(emailInput).toHaveAttribute('type', 'email');
     expect(passwordInput).toHaveAttribute('type', 'password');

@@ -11,7 +11,25 @@
     "contact": "კონტაქტი",
     "projects": "პროექტები",
     "addProperty": "განცხადების დამატება",
-    "addProject": "პროექტის დამატება"
+    "addProject": "პროექტის დამატება",
+    "categories": {
+      "analytics": "ანალიტიკა",
+      "content": "კონტენტის მართვა",
+      "data": "მონაცემების მართვა",
+      "system": "სისტემა"
+    },
+    "menu": {
+      "overview": "მიმოხილვა",
+      "listings": "განცხადებები",
+      "projects": "პროექტები",
+      "agencies": "სააგენტოები",
+      "users": "მომხმარებლები",
+      "advertisements": "რეკლამები",
+      "districts": "რაიონები",
+      "servicePricing": "სერვისის ფასები",
+      "settings": "პარამეტრები"
+    },
+    "administrator": "ადმინისტრატორი"
   },
   "common": {
     "loading": "იტვირთება...",

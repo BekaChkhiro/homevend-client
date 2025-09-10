@@ -16,7 +16,7 @@ interface AdminMenuItem {
 
 export const AdminSidebarMenu: React.FC = () => {
   const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('common');
   
   // Define menu items with categories (paths without language prefix)
   const menuItems: AdminMenuItem[] = [
