@@ -327,6 +327,45 @@
     "servicePurchase": "Additional service",
     "propertyPost": "Property posting"
   },
+  "agencyUsers": {
+    "title": "Manage Agents",
+    "subtitle": "Add and manage your agency agents",
+    "addAgent": {
+      "title": "Add New Agent",
+      "description": "Enter an existing user's email to add them as an agent",
+      "emailPlaceholder": "agent@example.com",
+      "addButton": "Add",
+      "adding": "Adding..."
+    },
+    "currentAgents": {
+      "title": "Current Agents",
+      "total": "Total",
+      "noAgents": "No agents added",
+      "noAgentsDesc": "Start adding agents to your agency",
+      "noAgentsTip": "Agents will help manage and sell real estate"
+    },
+    "roles": {
+      "agency": "Agency",
+      "agent": "Agent",
+      "admin": "Admin",
+      "user": "User"
+    },
+    "actions": {
+      "view": "View",
+      "remove": "Remove",
+      "removing": "Removing...",
+      "confirmRemove": "Are you sure you want to remove {{userName}} from the agency?"
+    },
+    "messages": {
+      "loadError": "Failed to load users",
+      "addSuccess": "User successfully added to agency",
+      "addError": "Failed to add user",
+      "removeSuccess": "Agent successfully removed from agency",
+      "removeError": "Failed to remove agent",
+      "emailRequired": "Please enter an email to add user",
+      "loading": "Loading agents list..."
+    }
+  },
   "vipStatus": {
     "vipActive": "VIP Active",
     "vipPlusActive": "VIP+ Active",

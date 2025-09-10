@@ -38,9 +38,6 @@ import projectFormRu from './ru/projectForm.json';
 import servicesEn from './en/services.json';
 import servicesKa from './ka/services.json';
 import servicesRu from './ru/services.json';
-import homeEn from './en/home.json';
-import homeKa from './ka/home.json';
-import homeRu from './ru/home.json';
 import advertisementsEn from './en/advertisements.json';
 import advertisementsKa from './ka/advertisements.json';
 import advertisementsRu from './ru/advertisements.json';
@@ -98,7 +95,6 @@ export const resources = {
     agencies: agenciesKa,
     projectForm: projectFormKa,
     services: servicesKa,
-    home: homeKa,
     advertisements: advertisementsKa,
     footer: footerKa,
     districtCarousel: districtCarouselKa,
@@ -120,7 +116,6 @@ export const resources = {
     agencies: agenciesRu,
     projectForm: projectFormRu,
     services: servicesRu,
-    home: homeRu,
     advertisements: advertisementsRu,
     footer: footerRu,
     districtCarousel: districtCarouselRu,
@@ -143,7 +138,6 @@ export type HomeTranslations = typeof homeEn;
 export type AgenciesTranslations = typeof agenciesEn;
 export type ProjectFormTranslations = typeof projectFormEn;
 export type ServicesTranslations = typeof servicesEn;
-export type HomeTranslations = typeof homeEn;
 export type AdvertisementsTranslations = typeof advertisementsEn;
 export type FooterTranslations = typeof footerEn;
 export type DistrictCarouselTranslations = typeof districtCarouselEn;
