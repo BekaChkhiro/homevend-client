@@ -318,7 +318,7 @@ export const BalancePage = () => {
         <h2 className="text-2xl font-bold mb-6">{t('payment.balancePageTitle')}</h2>
         
         <div className="grid gap-6 md:grid-cols-2">
-          {/* მიმდინარე ბალანსი */}
+          {/* Current Balance */}
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium">{t('payment.currentBalance')}</h3>
@@ -341,7 +341,7 @@ export const BalancePage = () => {
             </p>
           </Card>
           
-          {/* ბოლო ტრანზაქცია */}
+          {/* Last Transaction */}
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium">{t('payment.lastTopUp')}</h3>
@@ -360,7 +360,7 @@ export const BalancePage = () => {
           </Card>
         </div>
         
-        {/* შევსების ფორმა */}
+        {/* Top-up Form */}
         <Card className="mt-6 p-6">
           <h3 className="text-lg font-medium mb-4">{t('payment.topUpBalance')}</h3>
           
@@ -378,10 +378,12 @@ export const BalancePage = () => {
                     <RadioGroupItem value={provider.id} id={provider.id} />
                     <div className="flex-1">
                       <Label htmlFor={provider.id} className="cursor-pointer font-medium">
-                        {provider.displayName}
+                        {t(`payment.paymentProviders.${provider.displayName}`, { defaultValue: provider.displayName })}
                       </Label>
                       {provider.description && (
-                        <p className="text-sm text-gray-500 mt-1">{provider.description}</p>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {t(`payment.paymentProviders.${provider.description}`, { defaultValue: provider.description })}
+                        </p>
                       )}
                       <p className="text-xs text-gray-400">
                         {t('payment.limit')}: {provider.minAmount}₾ - {provider.maxAmount}₾
@@ -439,7 +441,7 @@ export const BalancePage = () => {
           </div>
         </Card>
         
-        {/* ტრანზაქციების ისტორია */}
+        {/* Transaction History */}
         <Card className="mt-6 p-6">
           <h3 className="text-lg font-medium mb-4">{t('payment.transactionHistory')}</h3>
           {balanceData?.recentTransactions && balanceData.recentTransactions.length > 0 ? (

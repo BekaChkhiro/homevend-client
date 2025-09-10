@@ -248,6 +248,28 @@
     "info": "Information"
   },
   "payment": {
+    "balancePageTitle": "Balance Management",
+    "currentBalance": "Current Balance",
+    "availableForAds": "Available for advertisements",
+    "lastTopUp": "Last Top-up",
+    "noTopUpsYet": "No top-ups yet",
+    "topUpBalance": "Top Up Balance",
+    "paymentMethod": "Payment Method",
+    "amount": "Amount",
+    "limit": "Limit",
+    "min": "Min",
+    "max": "Max",
+    "quickAmounts": {
+      "50": "50₾",
+      "100": "100₾",
+      "200": "200₾"
+    },
+    "transactionHistory": "Transaction History",
+    "noTransactions": "No transactions yet",
+    "refreshBalance": "Refresh Balance",
+    "invalidAmountAlert": "Invalid amount",
+    "topUpSuccessAlert": "Top-up successful! New balance",
+    "errorAlert": "Error",
     "selectPaymentMethod": "Please select a payment method",
     "paymentPageOpened": "Payment page opened in a new tab. Balance will be automatically updated after payment.",
     "paymentLinkError": "Failed to create payment link",
@@ -257,6 +279,7 @@
     "paymentStarted": "Payment started",
     "paymentVerifying": "Your payment was successfully completed by BOG. Balance is now being verified and will be automatically updated...",
     "balanceSuccessfullyToppedUp": "Balance successfully topped up!",
+    "balanceUpdated": "Your balance has been topped up by {{amount}}₾. New balance: {{balance}}₾",
     "paymentCompleted": "Payment completed",
     "paymentCompletedMessage": "Your payment was successfully completed. If the balance has not been updated yet, please click the refresh button in a few minutes.",
     "paymentCompletedCheckBalance": "Your payment has been completed. Please click the refresh button in a few minutes to check your balance.",
@@ -268,32 +291,8 @@
     "topUpForTest": "Top up (for testing)",
     "tryAgain": "Try again",
     "ok": "OK",
-    "statuses": {
-      "completed": "Completed",
-      "pending": "Pending",
-      "failed": "Failed",
-      "cancelled": "Cancelled"
-    },
-    "balancePageTitle": "Top Up Balance",
-    "currentBalance": "Current Balance",
-    "availableForAds": "Available amount for posting ads",
-    "lastTopUp": "Last Top-up",
-    "noTopUpsYet": "No top-ups yet",
-    "topUpBalance": "Top Up Balance",
-    "paymentMethod": "Payment Method",
-    "amount": "Amount",
-    "limit": "Limit",
-    "quickAmounts": {
-      "50": "50₾",
-      "100": "100₾",
-      "200": "200₾"
-    },
-    "transactionHistory": "Transaction History",
-    "noTransactions": "No transactions yet",
-    "refreshBalance": "Refresh Balance",
-    "invalidAmountAlert": "Please enter a valid amount",
-    "topUpSuccessAlert": "Top-up successful! New balance",
-    "errorAlert": "Error",
+    "day": "day",
+    "days": "days",
     "transactionTypes": {
       "top_up": "Balance Top-up",
       "vip_purchase": "VIP Service",
@@ -304,9 +303,20 @@
       "auto_renew": "Auto Renewal",
       "color_separation": "Color Highlighting"
     },
-    "days": "days",
-    "day": "day",
-    "balanceUpdated": "Your balance has been topped up by {{amount}}₾. New balance: {{balance}}₾"
+    "paymentProviders": {
+      "Test (Development)": "Test (Development)",
+      "Bank Card (Flitt)": "Bank Card (Flitt)",
+      "Bank of Georgia (BOG)": "Bank of Georgia (BOG)",
+      "For testing - instant top-up": "For testing - instant top-up",
+      "Online payment with Visa/Mastercard": "Online payment with Visa/Mastercard",
+      "Online payment with card, Apple Pay, Google Pay, installments": "Online payment with card, Apple Pay, Google Pay, installments"
+    },
+    "statuses": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    }
   },
   "serviceLabels": {
     "vip": "VIP",
