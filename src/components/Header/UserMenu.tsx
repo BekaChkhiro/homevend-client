@@ -15,7 +15,7 @@ import { getLanguageUrl } from "@/components/LanguageRoute";
 export const UserMenu = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation('auth');
 
   const handleLogout = () => {
     logout({ redirectToLogin: false });
@@ -27,7 +27,7 @@ export const UserMenu = () => {
       <Button variant="outline" size="sm" className="border-primary/20 hover:bg-primary/5 hover:text-primary text-xs sm:text-sm px-2 py-1 min-w-0 flex-shrink-0" asChild>
         <Link to={getLanguageUrl("login", i18n.language)} className="flex items-center gap-1">
           <LogIn className="h-3 w-3 sm:h-4 sm:w-4" />
-          <span>შესვლა</span>
+          <span>{t('login.loginButton')}</span>
         </Link>
       </Button>
     );
