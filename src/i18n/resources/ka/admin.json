@@ -87,31 +87,64 @@
       "activeListings": "აქტიური განცხადებები",
       "projects": "პროექტები",
       "administrators": "ადმინისტრატორები",
+      "agencies": "სააგენტოები",
+      "developers": "დეველოპერები",
       "thisMonth": "+{{count}} ამ თვეში",
       "totalProjects": "სულ პროექტები",
-      "systemAdmins": "სისტემის ადმინები"
+      "systemAdmins": "სისტემის ადმინები",
+      "totalAgencies": "სულ სააგენტოები",
+      "totalDevelopers": "სულ დეველოპერები"
     },
     "recent": {
       "listings": "უახლესი განცხადებები",
       "users": "ახალი მომხმარებლები",
+      "projects": "უახლესი პროექტები",
+      "developers": "ახალი დეველოპერები",
+      "agencies": "ახალი სააგენტოები",
       "listingsSubtitle": "ბოლოს დამატებული 5 განცხადება ({{count}} ნაჩვენებია)",
-      "usersSubtitle": "ბოლოს დარეგისტრირებული 5 მომხმარებელი ({{count}} ნაჩვენებია)"
+      "usersSubtitle": "ბოლოს დარეგისტრირებული 5 მომხმარებელი ({{count}} ნაჩვენებია)",
+      "projectsSubtitle": "ბოლოს დამატებული 5 პროექტი ({{count}} ნაჩვენებია)",
+      "developersSubtitle": "ბოლოს დარეგისტრირებული 5 დეველოპერი ({{count}} ნაჩვენებია)",
+      "agenciesSubtitle": "ბოლოს დარეგისტრირებული 5 სააგენტო ({{count}} ნაჩვენებია)"
     },
     "labels": {
       "user": "მომხმარებელი:",
-      "location": "მდებარეობა:"
+      "location": "მდებარეობა:",
+      "developer": "დეველოპერი:",
+      "city": "ქალაქი:",
+      "company": "კომპანია:",
+      "owner": "მფლობელი:",
+      "projects": "{{count}} პროექტი",
+      "agents": "{{count}} აგენტი",
+      "listings": "{{count}} განცხადება"
     },
     "messages": {
       "noListings": "განცხადებები ვერ მოიძებნა",
       "noUsers": "მომხმარებლები ვერ მოიძებნა",
+      "noProjects": "პროექტები ვერ მოიძებნა",
+      "noDevelopers": "დეველოპერები ვერ მოიძებნა",
+      "noAgencies": "სააგენტოები ვერ მოიძებნა",
       "loadingData": "მონაცემების ჩატვირთვა...",
       "errorLoadingData": "მონაცემების ჩატვირთვისას მოხდა შეცდომა"
+    },
+    "deliveryStatus": {
+      "completed_with_renovation": "დასრულებული რემონტით",
+      "green_frame": "მწვანე კარკასი",
+      "black_frame": "შავი კარკასი",
+      "white_frame": "თეთრი კარკასი",
+      "active": "აქტიური",
+      "completed": "დასრულებული",
+      "planned": "დაგეგმილი"
     },
     "roles": {
       "admin": "ადმინი",
       "developer": "დეველოპერი",
       "agency": "სააგენტო",
       "user": "მომხმარებელი"
+    },
+    "buttons": {
+      "view": "ნახვა",
+      "manage": "მართვა"
     }
   },
   "users": {
