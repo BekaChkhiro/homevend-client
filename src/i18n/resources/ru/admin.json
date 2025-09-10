@@ -87,31 +87,64 @@
       "activeListings": "Активные объявления",
       "projects": "Проекты",
       "administrators": "Администраторы",
+      "agencies": "Агентства",
+      "developers": "Застройщики",
       "thisMonth": "+{{count}} в этом месяце",
       "totalProjects": "Всего проектов",
-      "systemAdmins": "Системные администраторы"
+      "systemAdmins": "Системные администраторы",
+      "totalAgencies": "Всего агентств",
+      "totalDevelopers": "Всего застройщиков"
     },
     "recent": {
       "listings": "Последние объявления",
       "users": "Новые пользователи",
+      "projects": "Последние проекты",
+      "developers": "Новые застройщики",
+      "agencies": "Новые агентства",
       "listingsSubtitle": "Последние 5 добавленных объявлений (показано {{count}})",
-      "usersSubtitle": "Последние 5 зарегистрированных пользователей (показано {{count}})"
+      "usersSubtitle": "Последние 5 зарегистрированных пользователей (показано {{count}})",
+      "projectsSubtitle": "Последние 5 добавленных проектов (показано {{count}})",
+      "developersSubtitle": "Последние 5 зарегистрированных застройщиков (показано {{count}})",
+      "agenciesSubtitle": "Последние 5 зарегистрированных агентств (показано {{count}})"
     },
     "labels": {
       "user": "Пользователь:",
-      "location": "Местоположение:"
+      "location": "Местоположение:",
+      "developer": "Застройщик:",
+      "city": "Город:",
+      "company": "Компания:",
+      "owner": "Владелец:",
+      "projects": "{{count}} проектов",
+      "agents": "{{count}} агентов",
+      "listings": "{{count}} объявлений"
     },
     "messages": {
       "noListings": "Объявления не найдены",
       "noUsers": "Пользователи не найдены",
+      "noProjects": "Проекты не найдены",
+      "noDevelopers": "Застройщики не найдены",
+      "noAgencies": "Агентства не найдены",
       "loadingData": "Загрузка данных...",
       "errorLoadingData": "Ошибка загрузки данных"
+    },
+    "deliveryStatus": {
+      "completed_with_renovation": "Завершен с ремонтом",
+      "green_frame": "Зеленый каркас",
+      "black_frame": "Черный каркас",
+      "white_frame": "Белый каркас",
+      "active": "Активный",
+      "completed": "Завершен",
+      "planned": "Запланирован"
     },
     "roles": {
       "admin": "Админ",
       "developer": "Застройщик",
       "agency": "Агентство",
       "user": "Пользователь"
+    },
+    "buttons": {
+      "view": "Просмотр",
+      "manage": "Управление"
     }
   },
   "users": {

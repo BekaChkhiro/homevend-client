@@ -87,31 +87,64 @@
       "activeListings": "Active Listings",
       "projects": "Projects",
       "administrators": "Administrators",
+      "agencies": "Agencies",
+      "developers": "Developers",
       "thisMonth": "+{{count}} this month",
       "totalProjects": "Total projects",
-      "systemAdmins": "System administrators"
+      "systemAdmins": "System administrators",
+      "totalAgencies": "Total agencies",
+      "totalDevelopers": "Total developers"
     },
     "recent": {
       "listings": "Recent Listings",
       "users": "New Users",
+      "projects": "Recent Projects",
+      "developers": "New Developers",
+      "agencies": "New Agencies",
       "listingsSubtitle": "Last 5 added listings ({{count}} shown)",
-      "usersSubtitle": "Last 5 registered users ({{count}} shown)"
+      "usersSubtitle": "Last 5 registered users ({{count}} shown)",
+      "projectsSubtitle": "Last 5 added projects ({{count}} shown)",
+      "developersSubtitle": "Last 5 registered developers ({{count}} shown)",
+      "agenciesSubtitle": "Last 5 registered agencies ({{count}} shown)"
     },
     "labels": {
       "user": "User:",
-      "location": "Location:"
+      "location": "Location:",
+      "developer": "Developer:",
+      "city": "City:",
+      "company": "Company:",
+      "owner": "Owner:",
+      "projects": "{{count}} projects",
+      "agents": "{{count}} agents",
+      "listings": "{{count}} listings"
     },
     "messages": {
       "noListings": "No listings found",
       "noUsers": "No users found",
+      "noProjects": "No projects found",
+      "noDevelopers": "No developers found",
+      "noAgencies": "No agencies found",
       "loadingData": "Loading data...",
       "errorLoadingData": "Error loading data"
+    },
+    "deliveryStatus": {
+      "completed_with_renovation": "Completed with Renovation",
+      "green_frame": "Green Frame",
+      "black_frame": "Black Frame",
+      "white_frame": "White Frame",
+      "active": "Active",
+      "completed": "Completed",
+      "planned": "Planned"
     },
     "roles": {
       "admin": "Admin",
       "developer": "Developer",
       "agency": "Agency", 
       "user": "User"
+    },
+    "buttons": {
+      "view": "View",
+      "manage": "Manage"
     }
   },
   "users": {
