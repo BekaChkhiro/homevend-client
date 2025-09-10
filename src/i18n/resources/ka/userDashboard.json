@@ -247,6 +247,28 @@
     "info": "ინფორმაცია"
   },
   "payment": {
+    "balancePageTitle": "ბალანსის მართვა",
+    "currentBalance": "მიმდინარე ბალანსი",
+    "availableForAds": "ხელმისაწვდომია განცხადებებისთვის",
+    "lastTopUp": "ბოლო შევსება",
+    "noTopUpsYet": "შევსებები ჯერ არ ყოფილა",
+    "topUpBalance": "ბალანსის შევსება",
+    "paymentMethod": "გადახდის მეთოდი",
+    "amount": "თანხა",
+    "limit": "ლიმიტი",
+    "min": "მინ",
+    "max": "მაქს",
+    "quickAmounts": {
+      "50": "50₾",
+      "100": "100₾",
+      "200": "200₾"
+    },
+    "transactionHistory": "ტრანზაქციების ისტორია",
+    "noTransactions": "ტრანზაქციები არ არის",
+    "refreshBalance": "ბალანსის განახლება",
+    "invalidAmountAlert": "არასწორი თანხა",
+    "topUpSuccessAlert": "შევსება წარმატებულია! ახალი ბალანსი",
+    "errorAlert": "შეცდომა",
     "selectPaymentMethod": "გთხოვთ აირჩიოთ გადახდის მეთოდი",
     "paymentPageOpened": "გადახდის გვერდი გაიხსნა ახალ ტაბში. გადახდის შემდეგ ბალანსი ავტომატურად განახლდება.",
     "paymentLinkError": "გადახდის ლინკის შექმნა ვერ მოხერხდა",
@@ -256,6 +278,7 @@
     "paymentStarted": "გადახდა დაიწყო",
     "paymentVerifying": "თქვენი გადახდა წარმატებით შესრულდა BOG-ის მხრიდან. ბალანსი ახლა ვერიფიცირდება და ავტომატურად განახლდება...",
     "balanceSuccessfullyToppedUp": "ბალანსი წარმატებით შევსდა!",
+    "balanceUpdated": "თქვენი ბალანსი შეივსო {{amount}}₾-ით. ახალი ბალანსი: {{balance}}₾",
     "paymentCompleted": "გადახდა განხორციელდა",
     "paymentCompletedMessage": "თქვენი გადახდა წარმატებით დასრულდა. თუ ბალანსი ჯერ არ განახლდა, გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე.",
     "paymentCompletedCheckBalance": "თქვენი გადახდა განხორციელდა. გთხოვთ რამდენიმე წუთში გაამტკიცოთ განახლების ღილაკზე ბალანსის შესამოწმებლად.",
@@ -267,6 +290,26 @@
     "topUpForTest": "შევსება (ტესტისთვის)",
     "tryAgain": "ხელახლა ცდა",
     "ok": "კარგი",
+    "day": "დღე",
+    "days": "დღე",
+    "transactionTypes": {
+      "top_up": "ბალანსის შევსება",
+      "vip_purchase": "VIP სერვისი",
+      "service_purchase": "დამატებითი სერვისი",
+      "property_post": "განცხადების განთავსება"
+    },
+    "serviceLabels": {
+      "auto_renew": "ავტო განახლება",
+      "color_separation": "ფერადი გამოყოფა"
+    },
+    "paymentProviders": {
+      "Test (Development)": "ტესტი (დეველოპმენტისთვის)",
+      "Bank Card (Flitt)": "ბანკის ბარათი (Flitt)",
+      "Bank of Georgia (BOG)": "საქართველოს ბანკი (BOG)",
+      "For testing - instant top-up": "ტესტისთვის - მყისიერი შევსება",
+      "Online payment with Visa/Mastercard": "ონლაინ გადახდა ვიზა/მასტერკარდით",
+      "Online payment with card, Apple Pay, Google Pay, installments": "ონლაინ გადახდა ბარათით, Apple Pay, Google Pay, განვადება"
+    },
     "statuses": {
       "completed": "დასრულებული",
       "pending": "მიმდინარე",

@@ -248,6 +248,28 @@
     "info": "Информация"
   },
   "payment": {
+    "balancePageTitle": "Управление балансом",
+    "currentBalance": "Текущий баланс",
+    "availableForAds": "Доступно для объявлений",
+    "lastTopUp": "Последнее пополнение",
+    "noTopUpsYet": "Пополнений еще не было",
+    "topUpBalance": "Пополнить баланс",
+    "paymentMethod": "Способ оплаты",
+    "amount": "Сумма",
+    "limit": "Лимит",
+    "min": "Мин",
+    "max": "Макс",
+    "quickAmounts": {
+      "50": "50₾",
+      "100": "100₾",
+      "200": "200₾"
+    },
+    "transactionHistory": "История транзакций",
+    "noTransactions": "Транзакций еще нет",
+    "refreshBalance": "Обновить баланс",
+    "invalidAmountAlert": "Неверная сумма",
+    "topUpSuccessAlert": "Пополнение успешно! Новый баланс",
+    "errorAlert": "Ошибка",
     "selectPaymentMethod": "Пожалуйста, выберите способ оплаты",
     "paymentPageOpened": "Страница оплаты открыта в новой вкладке. Баланс будет автоматически обновлен после оплаты.",
     "paymentLinkError": "Не удалось создать ссылку для оплаты",
@@ -257,6 +279,7 @@
     "paymentStarted": "Оплата начата",
     "paymentVerifying": "Ваша оплата успешно завершена BOG. Баланс сейчас проверяется и будет автоматически обновлен...",
     "balanceSuccessfullyToppedUp": "Баланс успешно пополнен!",
+    "balanceUpdated": "Ваш баланс пополнен на {{amount}}₾. Новый баланс: {{balance}}₾",
     "paymentCompleted": "Оплата завершена",
     "paymentCompletedMessage": "Ваша оплата успешно завершена. Если баланс еще не обновился, нажмите кнопку обновления через несколько минут.",
     "paymentCompletedCheckBalance": "Ваша оплата завершена. Пожалуйста, нажмите кнопку обновления через несколько минут для проверки баланса.",
@@ -268,32 +291,8 @@
     "topUpForTest": "Пополнение (для тестирования)",
     "tryAgain": "Попробовать снова",
     "ok": "OK",
-    "statuses": {
-      "completed": "Завершено",
-      "pending": "В процессе",
-      "failed": "Не удалось",
-      "cancelled": "Отменено"
-    },
-    "balancePageTitle": "Пополнение баланса",
-    "currentBalance": "Текущий баланс",
-    "availableForAds": "Доступная сумма для размещения объявлений",
-    "lastTopUp": "Последнее пополнение",
-    "noTopUpsYet": "Пополнений еще не было",
-    "topUpBalance": "Пополнить баланс",
-    "paymentMethod": "Способ оплаты",
-    "amount": "Сумма",
-    "limit": "Лимит",
-    "quickAmounts": {
-      "50": "50₾",
-      "100": "100₾",
-      "200": "200₾"
-    },
-    "transactionHistory": "История транзакций",
-    "noTransactions": "Транзакций еще нет",
-    "refreshBalance": "Обновить баланс",
-    "invalidAmountAlert": "Пожалуйста, введите корректную сумму",
-    "topUpSuccessAlert": "Пополнение успешно! Новый баланс",
-    "errorAlert": "Ошибка",
+    "day": "день",
+    "days": "дней",
     "transactionTypes": {
       "top_up": "Пополнение баланса",
       "vip_purchase": "VIP сервис",
@@ -304,9 +303,20 @@
       "auto_renew": "Автообновление",
       "color_separation": "Цветное выделение"
     },
-    "days": "дней",
-    "day": "день",
-    "balanceUpdated": "Ваш баланс пополнен на {{amount}}₾. Новый баланс: {{balance}}₾"
+    "paymentProviders": {
+      "Test (Development)": "Тест (Для разработки)",
+      "Bank Card (Flitt)": "Банковская карта (Flitt)",
+      "Bank of Georgia (BOG)": "Банк Грузии (BOG)",
+      "For testing - instant top-up": "Для тестирования - мгновенное пополнение",
+      "Online payment with Visa/Mastercard": "Онлайн оплата через Visa/Mastercard",
+      "Online payment with card, Apple Pay, Google Pay, installments": "Онлайн оплата картой, Apple Pay, Google Pay, рассрочка"
+    },
+    "statuses": {
+      "completed": "Завершено",
+      "pending": "В процессе",
+      "failed": "Не удалось",
+      "cancelled": "Отменено"
+    }
   },
   "serviceLabels": {
     "vip": "VIP",
