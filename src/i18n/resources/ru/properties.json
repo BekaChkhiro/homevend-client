@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "title": "Недвижимость",
+    "showing": "Показано",
+    "of": "из",
+    "totalProperties": "всего объектов",
+    "propertiesFound": "объектов найдено",
+    "noPropertiesFound": "Объекты не найдены",
+    "noPropertiesDescription": "Попробуйте изменить фильтры или модифицировать параметры поиска",
+    "clearFilters": "Очистить фильтры",
+    "sortBy": {
+      "newest": "Самые новые",
+      "priceAscending": "Цена: по возрастанию",
+      "priceDescending": "Цена: по убыванию",
+      "areaLargest": "Площадь: от большой к малой",
+      "areaSmallest": "Площадь: от малой к большой"
+    },
+    "dealTypes": {
+      "sale": "Продается",
+      "rent": "Сдается в аренду",
+      "mortgage": "Под залог",
+      "lease": "Сдается в аренду",
+      "daily": "Посуточная аренда",
+      "rentToBuy": "Аренда с правом выкупа"
+    },
+    "propertyTypes": {
+      "apartment": "Квартиры",
+      "house": "Дома",
+      "cottage": "Дачи",
+      "land": "Земельные участки",
+      "commercial": "Коммерческие помещения",
+      "office": "Офисные помещения",
+      "hotel": "Гостиницы"
+    },
+    "errors": {
+      "rateLimitTitle": "Лимит запросов",
+      "rateLimitDescription": "Слишком много запросов. Попробуйте снова через {seconds} секунд.",
+      "generalErrorTitle": "Ошибка",
+      "generalErrorDescription": "Произошла ошибка при загрузке объектов недвижимости."
+    }
+  }
+}

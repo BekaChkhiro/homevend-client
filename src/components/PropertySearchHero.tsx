@@ -1,12 +1,13 @@
 import { Search, MapPin, Home, CreditCard, Building2, Warehouse, TreePine, Factory, Hotel, Coins, X, SlidersHorizontal, Filter, Car, Thermometer, Droplets, Loader2, Check, ChevronsUpDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import { transactionTypes, propertyTypes } from "@/pages/Home/components/FilterTypes";
+import { useState, useEffect, forwardRef, useImperativeHandle, useRef } from "react";
+import { transactionTypes, propertyTypes, getTransactionTypes, getPropertyTypes } from "@/pages/Home/components/FilterTypes";
 import { AdvancedFiltersModal } from "@/components/AdvancedFiltersModal";
 import { LocationFilter } from "@/components/LocationFilter";
 import { ActiveFilters } from "@/components/ActiveFilters";
@@ -18,13 +19,21 @@ interface City {
   code: string;
   nameGeorgian: string;
   nameEnglish?: string;
+  nameRussian?: string;
+  name_georgian?: string;
+  name_english?: string;
+  name_russian?: string;
 }
 
 interface Area {
   id: number;
   nameKa: string;
   nameEn: string;
+  nameRu?: string;
   cityId: number;
+  name_georgian?: string;
+  name_english?: string;
+  name_russian?: string;
 }
 
 
@@ -33,6 +42,7 @@ interface PropertySearchFilters {
   transactionType: string;
   propertyType: string | string[];
   city: string;
+  areaId?: number;
   priceMin: string;
   priceMax: string;
   areaMin: string;
@@ -90,6 +100,37 @@ export interface PropertySearchHeroRef {
 }
 
 export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySearchHeroProps>(({ onSearch, totalProperties = 0, filteredCount = 0, variant = 'default', initialFilters, isSearching = false, onRemoveFilter, onClearAllFilters, renderAdvancedFilters }, ref) => {
+  const { t, i18n } = useTranslation('common');
+  
+  // Get translated filter options
+  const translatedTransactionTypes = getTransactionTypes(t);
+  const translatedPropertyTypes = getPropertyTypes(t);
+  
+  // Helper functions to get localized names
+  const getCityName = (city: City): string => {
+    switch (i18n.language) {
+      case 'en':
+        return city.name_english || city.nameEnglish || city.name_georgian || city.nameGeorgian;
+      case 'ru':
+        return city.name_russian || city.nameRussian || city.name_georgian || city.nameGeorgian;
+      case 'ka':
+      default:
+        return city.name_georgian || city.nameGeorgian;
+    }
+  };
+  
+  const getAreaName = (area: Area): string => {
+    switch (i18n.language) {
+      case 'en':
+        return area.name_english || area.nameEn || area.name_georgian || area.nameKa;
+      case 'ru':
+        return area.name_russian || area.nameRu || area.name_georgian || area.nameKa;
+      case 'ka':
+      default:
+        return area.name_georgian || area.nameKa;
+    }
+  };
+  
   // API data state
   const [cities, setCities] = useState<City[]>([]);
   const [areas, setAreas] = useState<Area[]>([]);
@@ -103,12 +144,14 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
   const [propertyTypePopoverOpen, setPropertyTypePopoverOpen] = useState(false);
   const [mobileTransactionTypePopoverOpen, setMobileTransactionTypePopoverOpen] = useState(false);
   const [mobilePropertyTypePopoverOpen, setMobilePropertyTypePopoverOpen] = useState(false);
+  const processedLocationRef = useRef<string | null>(null);
 
   const getDefaultFilters = (): PropertySearchFilters => ({
     search: "",
     transactionType: "all",
     propertyType: [],
     city: "all",
+    areaId: undefined,
     priceMin: "",
     priceMax: "",
     areaMin: "",
@@ -197,6 +240,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
   // Update filters when initialFilters prop changes
   useEffect(() => {
     if (initialFilters) {
+      console.log('🔄 Updating from initialFilters:', initialFilters);
       const newFilters = {
         ...getDefaultFilters(),
         ...initialFilters
@@ -207,11 +251,32 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
       if (initialFilters.city && initialFilters.city !== 'all' && cities.length > 0) {
         const foundCity = cities.find(c => c.nameGeorgian === initialFilters.city);
         if (foundCity) {
+          console.log('🏙️ Setting selectedCityId to:', foundCity.id);
           setSelectedCityId(foundCity.id);
         }
       }
+      
+      // Update area selection if areaId is provided
+      if (initialFilters.areaId && typeof initialFilters.areaId === 'number') {
+        console.log('🗺️ Setting selectedAreaId from areaId:', initialFilters.areaId);
+        setSelectedAreaId(initialFilters.areaId);
+      } else if (initialFilters.location && areas.length > 0 && processedLocationRef.current !== initialFilters.location) {
+        // Fallback: try to extract area from location string
+        console.log('🗺️ Trying to extract area from location string:', initialFilters.location);
+        processedLocationRef.current = initialFilters.location;
+        const locationParts = initialFilters.location.split(',').map(part => part.replace(/\+/g, ' ').trim());
+        if (locationParts.length > 1) {
+          const areaName = locationParts[1]; // Second part should be area name
+          console.log('🗺️ Looking for area:', areaName);
+          const foundArea = areas.find(a => getAreaName(a) === areaName);
+          if (foundArea && selectedAreaId !== foundArea.id) {
+            console.log('🗺️ Found area, setting selectedAreaId to:', foundArea.id);
+            setSelectedAreaId(foundArea.id);
+          }
+        }
+      }
     }
-  }, [initialFilters, cities]);
+  }, [initialFilters, cities, areas, selectedAreaId]);
 
   // Expose clearAllFilters function to parent via ref
   useImperativeHandle(ref, () => ({
@@ -220,18 +285,22 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
 
   const handleSearch = (customFilters?: Partial<PropertySearchFilters>) => {
     console.log('🔍 PropertySearchHero handleSearch called', { customFilters });
+    console.log('🔍 selectedCityId:', selectedCityId);
+    console.log('🔍 selectedAreaId:', selectedAreaId);
     const currentFilters = customFilters ? { ...filters, ...customFilters } : filters;
     console.log('🔍 Current filters:', currentFilters);
     
     // Build location from selected city and area
     const searchLocation = buildLocationString();
+    console.log('🔍 Built location string:', searchLocation);
     
     const searchFilters = {
       ...currentFilters,
-      location: searchLocation
+      location: searchLocation,
+      areaId: selectedAreaId || undefined
     };
     
-    console.log('🔍 Calling onSearch with:', searchFilters);
+    console.log('🔍 Final search filters with areaId:', searchFilters);
     onSearch(searchFilters);
     setShowAdditionalFilters(false);
   };
@@ -239,8 +308,8 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
 
   // Helper function to build location string from city and area selection
   const buildLocationString = () => {
-    const cityName = selectedCityId ? cities.find(c => c.id === selectedCityId)?.nameGeorgian : '';
-    const areaName = selectedAreaId ? areas.find(a => a.id === selectedAreaId)?.nameKa : '';
+    const cityName = selectedCityId ? getCityName(cities.find(c => c.id === selectedCityId)!) : '';
+    const areaName = selectedAreaId ? getAreaName(areas.find(a => a.id === selectedAreaId)!) : '';
     
     const locationParts = [cityName, areaName].filter(Boolean);
     return locationParts.join(', ');
@@ -255,7 +324,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
     setCityPopoverOpen(false); // Close popover
     
     // Update filters
-    const cityName = numericCityId ? cities.find(c => c.id === numericCityId)?.nameGeorgian || value : 'all';
+    const cityName = numericCityId ? getCityName(cities.find(c => c.id === numericCityId)!) || value : 'all';
     const updatedFilters = {...filters, city: cityName, search: ''};
     setFilters(updatedFilters);
   };
@@ -308,6 +377,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
       transactionType: "all",
       propertyType: [],
       city: "all",
+      areaId: undefined,
       priceMin: "",
       priceMax: "",
       areaMin: "",
@@ -424,7 +494,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-primary" />
                   <label className="text-xs font-semibold text-slate-700">
-                    გარიგების ტიპი
+                    {t('propertySearchHero.transactionType')}
                   </label>
                 </div>
                 <Popover open={mobileTransactionTypePopoverOpen} onOpenChange={setMobileTransactionTypePopoverOpen}>
@@ -451,21 +521,21 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                           };
                           return getIcon(filters.transactionType);
                         })()}
-                        {transactionTypes.find((type) => type.value === filters.transactionType)?.label}
+                        {translatedTransactionTypes.find((type) => type.value === filters.transactionType)?.label}
                       </div>
                     ) : (
-                      "აირჩიეთ ტიპი"
+                      t('propertySearchHero.chooseType')
                     )}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[240px] p-0 z-50" align="start">
                   <Command>
-                    <CommandInput placeholder="მოძებნეთ გარიგების ტიპი..." />
+                    <CommandInput placeholder={t('propertySearchHero.searchTransactionType')} />
                     <CommandList>
-                      <CommandEmpty>გარიგების ტიპი ვერ მოიძებნა</CommandEmpty>
+                      <CommandEmpty>{t('propertySearchHero.noTransactionTypeFound')}</CommandEmpty>
                       <CommandGroup>
-                        {transactionTypes.map((type) => {
+                        {translatedTransactionTypes.map((type) => {
                           const getIcon = (value: string) => {
                             switch(value) {
                               case 'sale': return <Coins className="h-4 w-4 text-primary" />;
@@ -506,7 +576,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                 <div className="flex items-center gap-2">
                   <Home className="h-4 w-4 text-primary" />
                   <label className="text-xs font-semibold text-slate-700">
-                    ქონების ტიპი
+                    {t('propertySearchHero.propertyType')}
                   </label>
                 </div>
                 <Popover open={mobilePropertyTypePopoverOpen} onOpenChange={setMobilePropertyTypePopoverOpen}>
@@ -521,8 +591,8 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                         <div className="flex items-center gap-2">
                           <Home className="h-4 w-4 text-primary" />
                           {filters.propertyType.length === 1 
-                            ? propertyTypes.find((type) => type.value === filters.propertyType[0])?.label 
-                            : `${filters.propertyType.length} არჩეული`
+                            ? translatedPropertyTypes.find((type) => type.value === filters.propertyType[0])?.label 
+                            : `${filters.propertyType.length} ${t('propertySearchHero.selected')}`
                           }
                         </div>
                       ) : (
@@ -533,11 +603,11 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                   </PopoverTrigger>
                   <PopoverContent className="w-[240px] p-0 z-50" align="start">
                     <Command>
-                      <CommandInput placeholder="მოძებნეთ ქონების ტიპი..." />
+                      <CommandInput placeholder={t('propertySearchHero.searchPropertyType')} />
                       <CommandList>
-                        <CommandEmpty>ქონების ტიპი ვერ მოიძებნა</CommandEmpty>
+                        <CommandEmpty>{t('propertySearchHero.noPropertyTypeFound')}</CommandEmpty>
                         <CommandGroup>
-                          {propertyTypes.map((type) => {
+                          {translatedPropertyTypes.map((type) => {
                             const getIcon = (value: string) => {
                               switch(value) {
                                 case 'apartment': return <Building2 className="h-4 w-4 text-primary" />;
@@ -582,7 +652,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
               <div className="flex items-center gap-2">
                 <CreditCard className="h-4 w-4 text-primary" />
                 <label className="text-sm font-semibold text-slate-700">
-                  გარიგების ტიპი
+                  {t('propertySearchHero.transactionType')}
                 </label>
               </div>
               <Popover open={transactionTypePopoverOpen} onOpenChange={setTransactionTypePopoverOpen}>
@@ -609,21 +679,21 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                           };
                           return getIcon(filters.transactionType);
                         })()}
-                        {transactionTypes.find((type) => type.value === filters.transactionType)?.label}
+                        {translatedTransactionTypes.find((type) => type.value === filters.transactionType)?.label}
                       </div>
                     ) : (
-                      "აირჩიეთ ტიპი"
+                      t('propertySearchHero.chooseType')
                     )}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[240px] p-0 z-50" align="start">
                   <Command>
-                    <CommandInput placeholder="მოძებნეთ გარიგების ტიპი..." />
+                    <CommandInput placeholder={t('propertySearchHero.searchTransactionType')} />
                     <CommandList>
-                      <CommandEmpty>გარიგების ტიპი ვერ მოიძებნა</CommandEmpty>
+                      <CommandEmpty>{t('propertySearchHero.noTransactionTypeFound')}</CommandEmpty>
                       <CommandGroup>
-                        {transactionTypes.map((type) => {
+                        {translatedTransactionTypes.map((type) => {
                           const getIcon = (value: string) => {
                             switch(value) {
                               case 'sale': return <Coins className="h-4 w-4 text-primary" />;
@@ -664,7 +734,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
               <div className="flex items-center gap-2">
                 <Home className="h-4 w-4 text-primary" />
                 <label className="text-sm font-semibold text-slate-700">
-                  ქონების ტიპი
+                  {t('propertySearchHero.propertyType')}
                 </label>
               </div>
               <Popover open={propertyTypePopoverOpen} onOpenChange={setPropertyTypePopoverOpen}>
@@ -684,18 +754,18 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                         }
                       </div>
                     ) : (
-                      "აირჩიეთ ტიპი"
+                      t('propertySearchHero.chooseType')
                     )}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[240px] p-0 z-50" align="start">
                   <Command>
-                    <CommandInput placeholder="მოძებნეთ ქონების ტიპი..." />
+                    <CommandInput placeholder={t('propertySearchHero.searchPropertyType')} />
                     <CommandList>
                       <CommandEmpty>ქონების ტიპი ვერ მოიძებნა</CommandEmpty>
                       <CommandGroup>
-                        {propertyTypes.map((type) => {
+                        {translatedPropertyTypes.map((type) => {
                           const getIcon = (value: string) => {
                             switch(value) {
                               case 'apartment': return <Building2 className="h-4 w-4 text-primary" />;
@@ -739,7 +809,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
                 <label className="text-xs sm:text-sm font-semibold text-slate-700">
-                  მდებარეობა
+                  {t('propertySearchHero.location')}
                 </label>
               </div>
               <div className="flex flex-row gap-2">
@@ -755,23 +825,23 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                         disabled={isLoadingCities}
                       >
                         {isLoadingCities ? (
-                          "იტვირთება..."
+                          t('common.loading')
                         ) : selectedCityId ? (
                           <div className="flex items-center gap-2">
                             <MapPin className="h-3 w-3 text-primary" />
-                            {cities.find((city) => city.id === selectedCityId)?.nameGeorgian}
+                            {selectedCityId ? getCityName(cities.find((city) => city.id === selectedCityId)!) : ''}
                           </div>
                         ) : (
-                          "ქალაქი"
+                          t('propertySearchHero.city')
                         )}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[200px] p-0 z-50" align="start">
                       <Command>
-                        <CommandInput placeholder="მოძებნეთ ქალაქი..." />
+                        <CommandInput placeholder={t('propertySearchHero.searchCity')} />
                         <CommandList>
-                          <CommandEmpty>ქალაქი ვერ მოიძებნა</CommandEmpty>
+                          <CommandEmpty>{t('propertySearchHero.noCityFound')}</CommandEmpty>
                           <CommandGroup>
                             <CommandItem
                               key="all"
@@ -784,7 +854,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                                   selectedCityId === null ? "opacity-100" : "opacity-0"
                                 )}
                               />
-                              ყველა ქალაქი
+                              {t('propertySearchHero.allCities')}
                             </CommandItem>
                             {cities.map((city) => (
                               <CommandItem
@@ -799,7 +869,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                                   )}
                                 />
                                 <MapPin className="mr-2 h-3 w-3 text-primary" />
-                                {city.nameGeorgian}
+                                {getCityName(city)}
                               </CommandItem>
                             ))}
                           </CommandGroup>
@@ -822,23 +892,23 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                           disabled={isLoadingAreas}
                         >
                           {isLoadingAreas ? (
-                            "იტვირთება..."
+                            t('common.loading')
                           ) : selectedAreaId ? (
                             <div className="flex items-center gap-2">
                               <MapPin className="h-3 w-3 text-primary" />
-                              {areas.find((area) => area.id === selectedAreaId)?.nameKa}
+                              {selectedAreaId ? getAreaName(areas.find((area) => area.id === selectedAreaId)!) : ''}
                             </div>
                           ) : (
-                            "უბანი"
+                            t('propertySearchHero.area')
                           )}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-[200px] p-0 z-50" align="start">
                         <Command>
-                          <CommandInput placeholder="მოძებნეთ უბანი..." />
+                          <CommandInput placeholder={t('propertySearchHero.searchArea')} />
                           <CommandList>
-                            <CommandEmpty>უბანი ვერ მოიძებნა</CommandEmpty>
+                            <CommandEmpty>{t('propertySearchHero.noAreaFound')}</CommandEmpty>
                             <CommandGroup>
                               <CommandItem
                                 key="all"
@@ -851,7 +921,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                                     selectedAreaId === null ? "opacity-100" : "opacity-0"
                                   )}
                                 />
-                                ყველა უბანი
+                                {t('propertySearchHero.allAreas')}
                               </CommandItem>
                               {areas.map((area) => (
                                 <CommandItem
@@ -866,7 +936,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                                     )}
                                   />
                                   <MapPin className="mr-2 h-3 w-3 text-primary" />
-                                  {area.nameKa}
+                                  {getAreaName(area)}
                                 </CommandItem>
                               ))}
                             </CommandGroup>
@@ -937,7 +1007,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
               {hasActiveFilters ? (
                 <div className="flex-1">
                   <Button 
-                    onClick={handleSearch}
+                    onClick={() => handleSearch()}
                     size="lg" 
                     className={`${buttonClasses} w-full text-sm sm:text-base h-12`}
                     disabled={isSearching}
@@ -946,12 +1016,12 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                     {isSearching ? (
                       <>
                         <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                        ძიება...
+                        {t('propertySearchHero.searching')}
                       </>
                     ) : (
                       <>
                         <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                        ძიება
+                        {t('common.search')}
                       </>
                     )}
                   </Button>
@@ -959,7 +1029,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
               ) : (
                 <div className="flex-1">
                   <Button 
-                    onClick={handleSearch}
+                    onClick={() => handleSearch()}
                     size="lg" 
                     className={`${buttonClasses} w-full text-sm sm:text-base h-12`}
                     disabled={isSearching}
@@ -968,12 +1038,12 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                     {isSearching ? (
                       <>
                         <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                        ძიება...
+                        {t('propertySearchHero.searching')}
                       </>
                     ) : (
                       <>
                         <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                        ძიება
+                        {t('common.search')}
                       </>
                     )}
                   </Button>

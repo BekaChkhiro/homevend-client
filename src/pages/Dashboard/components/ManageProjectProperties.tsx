@@ -26,9 +26,13 @@ interface UserProperty {
   projectId?: number;
   cityData?: {
     nameGeorgian: string;
+    nameEnglish?: string;
+    nameRussian?: string;
   };
   areaData?: {
     nameKa: string;
+    nameEn?: string;
+    nameRu?: string;
   };
 }
 
@@ -37,6 +41,8 @@ interface Project {
   projectName: string;
   city: {
     nameGeorgian: string;
+    nameEnglish?: string;
+    nameRussian?: string;
   };
   street: string;
 }
@@ -49,6 +55,36 @@ export const ManageProjectProperties: React.FC = () => {
   const { t, i18n } = useTranslation('userDashboard');
 
   const [project, setProject] = useState<Project | null>(null);
+
+  // Helper function to get translated city name
+  const getCityName = (cityData: any, fallback: string = '') => {
+    if (!cityData) return fallback;
+    
+    switch (i18n.language) {
+      case 'en':
+        return cityData.nameEnglish || cityData.nameGeorgian || fallback;
+      case 'ru':
+        return cityData.nameRussian || cityData.nameGeorgian || fallback;
+      case 'ka':
+      default:
+        return cityData.nameGeorgian || fallback;
+    }
+  };
+
+  // Helper function to get translated area name
+  const getAreaName = (areaData: any) => {
+    if (!areaData) return '';
+    
+    switch (i18n.language) {
+      case 'en':
+        return areaData.nameEn || areaData.nameKa || '';
+      case 'ru':
+        return areaData.nameRu || areaData.nameKa || '';
+      case 'ka':
+      default:
+        return areaData.nameKa || '';
+    }
+  };
   const [userProperties, setUserProperties] = useState<UserProperty[]>([]);
   const [linkedProperties, setLinkedProperties] = useState<UserProperty[]>([]);
   const [selectedToLink, setSelectedToLink] = useState<number[]>([]);
@@ -134,8 +170,8 @@ export const ManageProjectProperties: React.FC = () => {
   const handleSaveChanges = async () => {
     if (selectedToLink.length === 0 && selectedToUnlink.length === 0) {
       toast({
-        title: "შეტყობინება",
-        description: "არანაირი ცვლილება არ არის შერჩეული",
+        title: t('manageProjectProperties.messages.noChanges'),
+        description: t('manageProjectProperties.messages.noChangesDescription'),
       });
       return;
     }
@@ -177,8 +213,11 @@ export const ManageProjectProperties: React.FC = () => {
       }));
 
       toast({
-        title: "წარმატება",
-        description: `${selectedToLink.length} განცხადება მიმაგრდა${selectedToUnlink.length > 0 ? ` და ${selectedToUnlink.length} მოხსნილია` : ''}`,
+        title: t('manageProjectProperties.messages.success'),
+        description: t('manageProjectProperties.messages.successDescription', { 
+          linked: selectedToLink.length, 
+          unlinked: selectedToUnlink.length 
+        }),
       });
 
       // Reset selections and refresh data
@@ -188,8 +227,8 @@ export const ManageProjectProperties: React.FC = () => {
     } catch (error) {
       console.error('Error updating property links:', error);
       toast({
-        title: "შეცდომა",
-        description: "ცვლილებების შენახვისას მოხდა შეცდომა",
+        title: t('manageProjectProperties.messages.error'),
+        description: t('manageProjectProperties.messages.errorDescription'),
         variant: "destructive",
       });
     } finally {
@@ -230,8 +269,7 @@ export const ManageProjectProperties: React.FC = () => {
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4" />
               <span>
-                {property.cityData?.nameGeorgian || property.city}
-                {property.areaData && `, ${property.areaData.nameKa}`}
+                {getCityName(property.cityData, property.city)}{property.areaData && `, ${getAreaName(property.areaData)}`}
                 , {property.street}
                 {property.streetNumber && ` ${property.streetNumber}`}
               </span>
@@ -240,12 +278,12 @@ export const ManageProjectProperties: React.FC = () => {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <Square className="h-4 w-4" />
-                <span>{property.area} მ²</span>
+                <span>{property.area} {t('common.squareMeters')}</span>
               </div>
               {property.rooms && (
                 <div className="flex items-center gap-1">
                   <Bed className="h-4 w-4" />
-                  <span>{property.rooms} ოთახი</span>
+                  <span>{property.rooms} {t('manageProjectProperties.propertyDetails.rooms')}</span>
                 </div>
               )}
               <div className="flex items-center gap-1">
@@ -263,15 +301,15 @@ export const ManageProjectProperties: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex gap-2">
                 <Badge variant="outline" className="text-xs">
-                  {property.propertyType === 'apartment' ? 'ბინა' :
-                   property.propertyType === 'house' ? 'სახლი' :
-                   property.propertyType === 'commercial' ? 'კომერციული' :
+                  {property.propertyType === 'apartment' ? t('favorites.propertyTypes.apartment') :
+                   property.propertyType === 'house' ? t('favorites.propertyTypes.house') :
+                   property.propertyType === 'commercial' ? t('favorites.propertyTypes.commercial') :
                    property.propertyType}
                 </Badge>
                 <Badge variant="secondary" className="text-xs">
-                  {property.dealType === 'sale' ? 'იყიდება' :
-                   property.dealType === 'rent' ? 'ქირავდება' :
-                   property.dealType === 'daily' ? 'დღიური' :
+                  {property.dealType === 'sale' ? t('favorites.dealTypes.sale') :
+                   property.dealType === 'rent' ? t('favorites.dealTypes.rent') :
+                   property.dealType === 'daily' ? t('favorites.dealTypes.daily') :
                    property.dealType}
                 </Badge>
               </div>
@@ -295,7 +333,7 @@ export const ManageProjectProperties: React.FC = () => {
     return (
       <div className="text-center py-8">
         <Building2 className="mx-auto w-16 h-16 opacity-50 text-gray-400 mb-4" />
-        <p>მხოლოდ დეველოპერებს შეუძლიათ განცხადებების მართვა</p>
+        <p>{t('manageProjectProperties.onlyDevelopersCanManage')}</p>
       </div>
     );
   }
@@ -305,7 +343,7 @@ export const ManageProjectProperties: React.FC = () => {
       <div className="flex items-center justify-center h-64">
         <div className="flex items-center space-x-2">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-          <span>მონაცემების ჩატვირთვა...</span>
+          <span>{t('manageProjectProperties.loading')}</span>
         </div>
       </div>
     );
@@ -323,9 +361,9 @@ export const ManageProjectProperties: React.FC = () => {
           {t('common.back') || 'უკან'}
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">განცხადების მართვა</h1>
+          <h1 className="text-2xl font-bold">{t('manageProjectProperties.title')}</h1>
           {project && (
-            <p className="text-gray-600">პროექტი: {project.projectName}</p>
+            <p className="text-gray-600">{t('manageProjectProperties.projectTitle', { projectName: project.projectName })}</p>
           )}
         </div>
       </div>
@@ -336,25 +374,25 @@ export const ManageProjectProperties: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Link className="h-5 w-5" />
-              მიმაგრების ხელმისაწვდომი განცხადებები
+              {t('manageProjectProperties.availableToLink.title')}
             </CardTitle>
             <CardDescription>
-              აირჩიეთ განცხადებები რომლებიც გსურთ ამ პროექტთან მიამაგროთ
+              {t('manageProjectProperties.availableToLink.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {userProperties.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>არ არის ხელმისაწვდომი განცხადებები მიმაგრებისთვის</p>
-                <p className="text-sm mt-2">ყველა თქვენი განცხადება უკვე მიმაგრებულია პროექტებზე</p>
+                <p>{t('manageProjectProperties.availableToLink.noProperties')}</p>
+                <p className="text-sm mt-2">{t('manageProjectProperties.availableToLink.noPropertiesDesc')}</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {selectedToLink.length > 0 && (
                   <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <p className="text-sm text-blue-800">
-                      <strong>{selectedToLink.length}</strong> განცხადება არჩეულია მიმაგრებისთვის
+                      {t('manageProjectProperties.availableToLink.selectedCount', { count: selectedToLink.length })}
                     </p>
                   </div>
                 )}
@@ -369,25 +407,25 @@ export const ManageProjectProperties: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Unlink className="h-5 w-5" />
-              მიმაგრებული განცხადებები ({linkedProperties.length})
+              {t('manageProjectProperties.linkedProperties.title', { count: linkedProperties.length })}
             </CardTitle>
             <CardDescription>
-              აირჩიეთ განცხადებები რომლებიც გსურთ ამ პროექტისგან მოხსნათ
+              {t('manageProjectProperties.linkedProperties.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {linkedProperties.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>არ არის მიმაგრებული განცხადებები</p>
-                <p className="text-sm mt-2">ამ პროექტზე ჯერ არ არის მიმაგრებული განცხადებები</p>
+                <p>{t('manageProjectProperties.linkedProperties.noProperties')}</p>
+                <p className="text-sm mt-2">{t('manageProjectProperties.linkedProperties.noPropertiesDesc')}</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {selectedToUnlink.length > 0 && (
                   <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-sm text-red-800">
-                      <strong>{selectedToUnlink.length}</strong> განცხადება არჩეულია მოსახსნელად
+                      {t('manageProjectProperties.linkedProperties.selectedCount', { count: selectedToUnlink.length })}
                     </p>
                   </div>
                 )}
@@ -408,10 +446,10 @@ export const ManageProjectProperties: React.FC = () => {
               setSelectedToUnlink([]);
             }}
           >
-            გაუქმება
+            {t('manageProjectProperties.actions.cancel')}
           </Button>
           <Button onClick={handleSaveChanges} disabled={saving}>
-            {saving ? "შენახვა..." : "ცვლილებების შენახვა"}
+            {saving ? t('manageProjectProperties.actions.saving') : t('manageProjectProperties.actions.saveChanges')}
           </Button>
         </div>
       )}

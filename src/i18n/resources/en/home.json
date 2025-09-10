@@ -1,53 +1,74 @@
 {
-  "hero": {
-    "title": "Find Your Perfect Home",
-    "subtitle": "Thousands of real estate listings in one place"
-  },
-  "sections": {
-    "latestProperties": {
-      "title": "Latest Property Listings",
-      "subtitle": "View the newest real estate listings",
-      "viewAll": "View All",
-      "viewAllMobile": "All"
-    },
-    "agencies": {
-      "title": "Agencies",
-      "subtitle": "Find the best real estate agencies",
-      "viewAll": "View All",
-      "viewAllMobile": "All",
-      "owner": "Owner",
-      "ownerNotSpecified": "Not specified",
-      "agents": "Agent",
-      "properties": "Properties",
-      "sales": "Sales",
-      "details": "Details",
-      "website": "Website",
-      "socialMedia": "Social Media",
-      "founded": "Founded"
-    },
-    "services": {
-      "title": "Our Services",
-      "subtitle": "Get professional services in real estate",
-      "viewAll": "View All",
-      "viewAllMobile": "All",
-      "propertyValuation": {
-        "title": "Property Valuation",
-        "description": "Get accurate valuation for your property with current market prices"
+  "home": {
+    "sections": {
+      "latestProperties": {
+        "title": "Latest Properties",
+        "subtitle": "See the newest real estate listings",
+        "viewAll": "View All"
       },
-      "legalConsultation": {
-        "title": "Legal Consultation",
-        "description": "Professional legal assistance in real estate buying and selling"
+      "agencies": {
+        "title": "Agencies",
+        "subtitle": "Find the best real estate agencies",
+        "viewAll": "View All",
+        "owner": "Owner:",
+        "notSpecified": "Not specified",
+        "agents": "agents",
+        "properties": "properties",
+        "sales": "sales",
+        "details": "Details",
+        "founded": "Founded:",
+        "website": "Website",
+        "socialMedia": "Social Media"
       },
-      "details": "Details"
+      "services": {
+        "title": "Our Services",
+        "subtitle": "Get professional services in real estate",
+        "viewAll": "View All",
+        "propertyValuation": {
+          "title": "Property Valuation",
+          "description": "Get accurate valuation of your property with current market prices"
+        },
+        "legalConsultation": {
+          "title": "Legal Consultation", 
+          "description": "Professional legal assistance in buying and selling real estate"
+        },
+        "learnMore": "Learn More"
+      },
+      "priceStatistics": {
+        "title": "Price Statistics",
+        "subtitle": "View average real estate prices in Tbilisi districts",
+        "viewAll": "View All"
+      }
     },
-    "priceStatistics": {
-      "title": "Price Statistics",
-      "subtitle": "View average real estate prices in Tbilisi districts",
-      "viewAll": "View All",
-      "viewAllMobile": "All"
+    "propertyTypes": {
+      "apartment": "Apartment",
+      "house": "House",
+      "cottage": "Cottage",
+      "land": "Land",
+      "commercial": "Commercial",
+      "office": "Office",
+      "hotel": "Hotel"
+    },
+    "dealTypes": {
+      "sale": "For Sale",
+      "rent": "For Rent",
+      "mortgage": "Mortgage",
+      "lease": "For Lease",
+      "daily": "Daily Rental",
+      "rentToBuy": "Rent to Buy"
+    },
+    "locationNotSpecified": "Location not specified",
+    "districtCarousel": {
+      "priceLevel": {
+        "high": "High",
+        "medium": "Medium", 
+        "low": "Low"
+      },
+      "pricePerSqm": "Price per sq/m:",
+      "currency": "USD / square meter",
+      "updated": "Updated:",
+      "noDataFound": "No data found",
+      "noDataDescription": "District price information is currently not available"
     }
-  },
-  "placeholders": {
-    "locationNotSpecified": "Location not specified"
   }
 }

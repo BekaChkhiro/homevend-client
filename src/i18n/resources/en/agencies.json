@@ -1,0 +1,24 @@
+{
+  "agencies": {
+    "title": "Agencies",
+    "subtitle": "Find the best real estate agencies in Georgia",
+    "searchPlaceholder": "Search by agency name...",
+    "searchButton": "Search",
+    "loading": "Loading...",
+    "showing": "Showing {{count}} agencies out of {{total}}",
+    "noAgenciesFound": "No agencies found",
+    "noAgenciesDescription": "Try different search parameters",
+    "owner": "Owner: {{name}}",
+    "agents": "agents",
+    "properties": "properties", 
+    "sales": "sales",
+    "detailsButton": "Details",
+    "founded": "Founded: {{date}}",
+    "website": "Website",
+    "socialMedia": "Social Media",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    }
+  }
+}

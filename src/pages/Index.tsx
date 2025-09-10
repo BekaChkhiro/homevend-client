@@ -218,6 +218,7 @@ export interface FilterState {
   priceMax: string;
   location: string;
   city?: string;
+  areaId?: number;
   propertyType: string | string[];
   transactionType: string;
   dailyRentalSubcategory?: string;

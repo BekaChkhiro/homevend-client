@@ -6,9 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { transactionTypes, propertyTypes } from "@/pages/Home/components/FilterTypes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const cities = [
-  { value: "all", label: "ქალაქი" },
+const getCities = (t: any) => [
+  { value: "all", label: t('heroSection.city') },
   { value: "თბილისი", label: "თბილისი" },
   { value: "ბათუმი", label: "ბათუმი" },
   { value: "ქუთაისი", label: "ქუთაისი" },
@@ -150,6 +151,7 @@ interface HeroSectionProps {
 
 export const HeroSection = ({ onSearch }: HeroSectionProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
   const [filters, setFilters] = useState<HeroSearchFilters>({
     search: "",
     transactionType: "all",
@@ -188,10 +190,10 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
       <div className="container mx-auto px-4">
         <div className="text-center container mx-auto">
           <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
-            იპოვე შენი <span className="text-primary">სახლი</span>
+            {t('heroSection.title')} <span className="text-primary">{t('heroSection.titleHighlight')}</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-10">
-            საუკეთესო უძრავი ქონების შეთავაზებები თბილისში და მთელ საქართველოში
+            {t('heroSection.subtitle')}
           </p>
           
           <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 mx-auto">
@@ -209,7 +211,7 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
                   onValueChange={(value) => setFilters({...filters, transactionType: value})}
                 >
                   <SelectTrigger className="h-14 text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors">
-                    <SelectValue placeholder="აირჩიეთ ტიპი" />
+                    <SelectValue placeholder={t('heroSection.chooseType')} />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
                     {transactionTypes.map((type) => {
@@ -250,7 +252,7 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
                   onValueChange={(value) => setFilters({...filters, propertyType: value})}
                 >
                   <SelectTrigger className="h-14 text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors">
-                    <SelectValue placeholder="აირჩიეთ ტიპი" />
+                    <SelectValue placeholder={t('heroSection.chooseType')} />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
                     {propertyTypes.map((type) => {
@@ -303,10 +305,10 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
                       onValueChange={(value) => setFilters({...filters, city: value})}
                     >
                       <SelectTrigger className="h-10 w-48 text-sm border border-slate-300 hover:border-primary/50 focus:border-primary rounded-lg transition-colors bg-white/90 backdrop-blur-sm">
-                        <SelectValue placeholder="ქალაქი" />
+                        <SelectValue placeholder={t('heroSection.city')} />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl max-h-60 w-64">
-                        {cities.map((city) => (
+                        {getCities(t).map((city) => (
                           <SelectItem key={city.value} value={city.value} className="text-sm py-2">
                             <div className="flex items-center gap-2">
                               <MapPin className="h-3 w-3 text-primary" />
@@ -331,7 +333,7 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
                       className="group h-14 col-span-7 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base"
                     >
                       <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                      ძიება
+                      {t('heroSection.search')}
                     </Button>
                     
                     <Button 
@@ -344,7 +346,7 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
                       variant="outline" 
                       size="lg"
                       className="h-14 col-span-3 flex items-center justify-center border border-slate-300 hover:bg-slate-100 rounded-xl transition-all duration-300"
-                      aria-label="გასუფთავება"
+                      aria-label={t('heroSection.clear')}
                     >
                       <X className="h-6 w-6 text-red-500" />
                     </Button>
@@ -356,7 +358,7 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
                     className="group h-14 w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base"
                   >
                     <Search className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-                    ძიება
+                    {t('heroSection.search')}
                   </Button>
                 )}
               </div>
@@ -364,25 +366,32 @@ export const HeroSection = ({ onSearch }: HeroSectionProps) => {
           </div>
           
           <div className="mt-8 text-center">
-            <p className="text-sm text-slate-600 mb-4">პოპულარული ძებნები:</p>
+            <p className="text-sm text-slate-600 mb-4">{t('heroSection.popularSearches')}:</p>
             <div className="flex flex-wrap justify-center gap-3">
-              {['ვაკე', 'საბურთალო', 'ისანი', 'გლდანი', 'ძველი თბილისი', 'მთაწმინდა'].map((location) => (
+              {[
+                { key: 'vake', label: t('heroSection.districts.vake') },
+                { key: 'saburtalo', label: t('heroSection.districts.saburtalo') },
+                { key: 'isani', label: t('heroSection.districts.isani') },
+                { key: 'gldani', label: t('heroSection.districts.gldani') },
+                { key: 'oldTbilisi', label: t('heroSection.districts.oldTbilisi') },
+                { key: 'mtasminda', label: t('heroSection.districts.mtasminda') }
+              ].map((location) => (
                 <button
-                  key={location}
+                  key={location.key}
                   onClick={() => {
                     if (onSearch) {
-                      setFilters({...filters, search: location});
+                      setFilters({...filters, search: location.label});
                     } else {
                       // Navigate directly to properties page with this location filter
                       const searchParams = new URLSearchParams();
-                      searchParams.set('search', location);
+                      searchParams.set('search', location.label);
                       navigate(`/properties?${searchParams.toString()}`);
                     }
                   }}
                   className="px-4 py-2 bg-white/80 hover:bg-primary/10 border border-slate-200 hover:border-primary/30 rounded-full text-sm text-slate-700 hover:text-primary transition-all duration-200 backdrop-blur-sm"
                 >
                   <MapPin className="inline h-3 w-3 mr-1" />
-                  {location}
+                  {location.label}
                 </button>
               ))}
             </div>

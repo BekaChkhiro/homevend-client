@@ -53,7 +53,7 @@ export const AddProject: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t, i18n } = useTranslation('userDashboard');
+  const { t, i18n } = useTranslation(['projectForm', 'common']);
   const [isLoading, setIsLoading] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
   const [areas, setAreas] = useState<Area[]>([]);
@@ -329,18 +329,16 @@ export const AddProject: React.FC = () => {
 
 
       toast({
-        title: t('common.success'),
-        description: selectedProperties.length > 0 
-          ? t('addProject.successWithProperties', { count: selectedProperties.length })
-          : t('addProject.success'),
+        title: t('projectForm.success'),
+        description: t('projectForm.success.created'),
       });
 
       navigate(getLanguageUrl('/dashboard', i18n.language));
     } catch (error: any) {
       console.error('Error creating project:', error);
       toast({
-        title: t('common.error'),
-        description: t('addProject.createError'),
+        title: t('projectForm.error'),
+        description: t('projectForm.errors.updateError'),
         variant: "destructive",
       });
     } finally {
@@ -361,7 +359,7 @@ export const AddProject: React.FC = () => {
           <CardContent>
             <Button onClick={() => navigate(getLanguageUrl('/dashboard', i18n.language))} variant="outline">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {t('addProject.backToDashboard')}
+              {t('projectForm.addProject.backToDashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -378,20 +376,21 @@ export const AddProject: React.FC = () => {
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          {t('addProject.backToDashboard')}
+          {t('projectForm.addProject.backToDashboard')}
         </Button>
         
-        <h1 className="text-2xl font-bold mb-2">{t('addProject.title')}</h1>
-        <p className="text-gray-600">{t('addProject.subtitle')}</p>
+        <h1 className="text-2xl font-bold mb-2">{t('projectForm.addProject.title')}</h1>
+        <p className="text-gray-600">{t('projectForm.addProject.subtitle')}</p>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="basic">{t('addProject.tabs.basic')}</TabsTrigger>
-            <TabsTrigger value="amenities">{t('addProject.tabs.amenities')}</TabsTrigger>
-            <TabsTrigger value="services">{t('addProject.tabs.services')}</TabsTrigger>
-            <TabsTrigger value="properties">{t('addProject.tabs.properties')}</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="basic">{t('projectForm.tabs.basic')}</TabsTrigger>
+            <TabsTrigger value="photos">{t('projectForm.tabs.photos')}</TabsTrigger>
+            <TabsTrigger value="amenities">{t('projectForm.tabs.amenities')}</TabsTrigger>
+            <TabsTrigger value="services">{t('projectForm.tabs.services')}</TabsTrigger>
+            <TabsTrigger value="properties">{t('projectForm.tabs.properties')}</TabsTrigger>
           </TabsList>
 
           {/* Basic Information Tab */}
@@ -400,13 +399,13 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  {t('addProject.sections.projectInfo')}
+                  {t('projectForm.sections.projectInfo')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="projectName">{t('addProject.fields.projectName')} *</Label>
+                    <Label htmlFor="projectName">{t('projectForm.fields.projectName')} *</Label>
                     <Input
                       id="projectName"
                       value={formData.projectName}
@@ -416,24 +415,24 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="projectType">{t('addProject.fields.projectType')} *</Label>
+                    <Label htmlFor="projectType">{t('projectForm.fields.projectType')} *</Label>
                     <Select
                       value={formData.projectType}
                       onValueChange={(value) => handleInputChange('projectType', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t('addProject.placeholders.selectType')} />
+                        <SelectValue placeholder={t('projectForm.placeholders.selectType')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="private_house">{t('addProject.projectTypes.privateHouse')}</SelectItem>
-                        <SelectItem value="apartment_building">{t('addProject.projectTypes.apartmentBuilding')}</SelectItem>
+                        <SelectItem value="private_house">{t('projectForm.projectTypes.privateHouse')}</SelectItem>
+                        <SelectItem value="apartment_building">{t('projectForm.projectTypes.apartmentBuilding')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="description">{t('addProject.fields.description')}</Label>
+                    <Label htmlFor="description">{t('projectForm.fields.description')}</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
@@ -449,20 +448,20 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  {t('addProject.sections.location')}
+                  {t('projectForm.sections.location')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="cityId">{t('addProject.fields.city')} *</Label>
+                    <Label htmlFor="cityId">{t('projectForm.fields.city')} *</Label>
                     <Select
                       value={formData.cityId}
                       onValueChange={(value) => handleInputChange('cityId', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t('addProject.placeholders.selectCity')} />
+                        <SelectValue placeholder={t('projectForm.placeholders.selectCity')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(cities || []).map((city) => (
@@ -475,14 +474,14 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="areaId">{t('addProject.fields.district')}</Label>
+                    <Label htmlFor="areaId">{t('projectForm.fields.district')}</Label>
                     <Select
                       value={formData.areaId}
                       onValueChange={(value) => handleInputChange('areaId', value)}
                       disabled={!formData.cityId}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t('addProject.placeholders.selectDistrict')} />
+                        <SelectValue placeholder={t('projectForm.placeholders.selectDistrict')} />
                       </SelectTrigger>
                       <SelectContent>
                         {(areas || []).map((area) => (
@@ -495,7 +494,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="street">{t('addProject.fields.street')} *</Label>
+                    <Label htmlFor="street">{t('projectForm.fields.street')} *</Label>
                     <Input
                       id="street"
                       value={formData.street}
@@ -505,7 +504,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="streetNumber">{t('addProject.fields.streetNumber')}</Label>
+                    <Label htmlFor="streetNumber">{t('projectForm.fields.streetNumber')}</Label>
                     <Input
                       id="streetNumber"
                       value={formData.streetNumber}
@@ -521,32 +520,32 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
-                  {t('addProject.sections.projectDetails')}
+                  {t('projectForm.sections.projectDetails')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="deliveryStatus">{t('addProject.fields.deliveryStatus')} *</Label>
+                    <Label htmlFor="deliveryStatus">{t('projectForm.fields.deliveryStatus')} *</Label>
                     <Select
                       value={formData.deliveryStatus}
                       onValueChange={(value) => handleInputChange('deliveryStatus', value)}
                       required
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t('addProject.placeholders.selectStatus')} />
+                        <SelectValue placeholder={t('projectForm.placeholders.selectStatus')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="completed_with_renovation">{t('addProject.deliveryStatuses.completedWithRenovation')}</SelectItem>
-                        <SelectItem value="green_frame">{t('addProject.deliveryStatuses.greenFrame')}</SelectItem>
-                        <SelectItem value="black_frame">{t('addProject.deliveryStatuses.blackFrame')}</SelectItem>
-                        <SelectItem value="white_frame">{t('addProject.deliveryStatuses.whiteFrame')}</SelectItem>
+                        <SelectItem value="completed_with_renovation">{t('projectForm.deliveryStatuses.completedWithRenovation')}</SelectItem>
+                        <SelectItem value="green_frame">{t('projectForm.deliveryStatuses.greenFrame')}</SelectItem>
+                        <SelectItem value="black_frame">{t('projectForm.deliveryStatuses.blackFrame')}</SelectItem>
+                        <SelectItem value="white_frame">{t('projectForm.deliveryStatuses.whiteFrame')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
-                    <Label htmlFor="deliveryDate">{t('addProject.fields.deliveryDate')}</Label>
+                    <Label htmlFor="deliveryDate">{t('projectForm.fields.deliveryDate')}</Label>
                     <Input
                       id="deliveryDate"
                       type="date"
@@ -556,7 +555,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfBuildings">{t('addProject.fields.buildingsCount')} *</Label>
+                    <Label htmlFor="numberOfBuildings">{t('projectForm.fields.buildingsCount')} *</Label>
                     <Input
                       id="numberOfBuildings"
                       type="number"
@@ -568,7 +567,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="totalApartments">{t('addProject.fields.totalApartments')} *</Label>
+                    <Label htmlFor="totalApartments">{t('projectForm.fields.totalApartments')} *</Label>
                     <Input
                       id="totalApartments"
                       type="number"
@@ -580,7 +579,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="numberOfFloors">{t('addProject.fields.floorsCount')} *</Label>
+                    <Label htmlFor="numberOfFloors">{t('projectForm.fields.floorsCount')} *</Label>
                     <Input
                       id="numberOfFloors"
                       type="number"
@@ -592,7 +591,7 @@ export const AddProject: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="parkingSpaces">{t('addProject.fields.parkingSpaces')}</Label>
+                    <Label htmlFor="parkingSpaces">{t('projectForm.fields.parkingSpaces')}</Label>
                     <Input
                       id="parkingSpaces"
                       type="number"
@@ -604,8 +603,10 @@ export const AddProject: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
 
-            {/* Photo Gallery Section */}
+          {/* Photos Tab */}
+          <TabsContent value="photos" className="space-y-6">
             <PhotoGallerySection
               images={projectImages}
               onImagesChange={setProjectImages}
@@ -620,58 +621,58 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  {t('addProject.sections.amenitiesByDistance')}
+                  {t('projectForm.amenities.title')}
                 </CardTitle>
-                <CardDescription>{t('addProject.sections.amenitiesDesc')}</CardDescription>
+                <CardDescription>{t('projectForm.amenities.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {(() => {
                   const amenityTypes = [
-                    { key: 'pharmacy', label: `💊 ${t('addProject.amenities.pharmacy')}` },
-                    { key: 'kindergarten', label: `👶 ${t('addProject.amenities.kindergarten')}` },
-                    { key: 'school', label: `🎒 ${t('addProject.amenities.school')}` },
-                    { key: 'university', label: `🎓 ${t('addProject.amenities.university')}` },
-                    { key: 'hospital', label: `🏥 ${t('addProject.amenities.hospital')}` },
-                    { key: 'clinic', label: `🩺 ${t('addProject.amenities.clinic')}` },
-                    { key: 'busStop', label: `🚌 ${t('addProject.amenities.busStop')}` },
-                    { key: 'metro', label: `🚇 ${t('addProject.amenities.metro')}` },
-                    { key: 'groceryStore', label: `🛒 ${t('addProject.amenities.groceryStore')}` },
-                    { key: 'supermarket', label: `🏬 ${t('addProject.amenities.supermarket')}` },
-                    { key: 'mall', label: `🏢 ${t('addProject.amenities.mall')}` },
-                    { key: 'bank', label: `🏦 ${t('addProject.amenities.bank')}` },
-                    { key: 'atm', label: `💳 ${t('addProject.amenities.atm')}` },
-                    { key: 'restaurant', label: `🍽️ ${t('addProject.amenities.restaurant')}` },
-                    { key: 'cafe', label: `☕ ${t('addProject.amenities.cafe')}` },
-                    { key: 'bakery', label: '🥖 საცხობი' },
-                    { key: 'sportsCenter', label: '🏋️ სპორტული ცენტრი' },
-                    { key: 'gym', label: '💪 სპორტული დარბაზი' },
-                    { key: 'stadium', label: '🏟️ სტადიონი' },
-                    { key: 'swimmingPool', label: '🏊 საცურაო აუზი' },
-                    { key: 'park', label: '🌳 პარკი' },
-                    { key: 'garden', label: '🌳 ბაღი' },
-                    { key: 'square', label: '🏛️ მოედანი' },
-                    { key: 'parking', label: '🚗 პარკინგი' },
-                    { key: 'bikePath', label: '🚴 ველოსიპედის ბილიკი' },
-                    { key: 'sportsField', label: '⚽ სპორტული მოედანი' },
-                    { key: 'childrenArea', label: '🎪 ბავშვთა მოედანი' },
-                    { key: 'laundry', label: '🧺 სამრეცხაო' },
-                    { key: 'storage', label: '📦 საწყობი' },
-                    { key: 'cinema', label: '🎬 კინო' },
-                    { key: 'theater', label: '🎭 თეატრი' },
-                    { key: 'library', label: '📚 ბიბლიოთეკა' },
-                    { key: 'postOffice', label: '📫 ფოსტის განყოფილება' },
-                    { key: 'gasStation', label: '⛽ ბენზინგასამართი სადგური' },
-                    { key: 'carWash', label: '🚗 ავტორეცხვა' },
-                    { key: 'veterinary', label: '🐕 ვეტერინარული კლინიკა' },
-                    { key: 'beautyCenter', label: '💄 სილამაზის სალონი' },
-                    { key: 'dentist', label: '🦷 სტომატოლოგია' }
+                    { key: 'pharmacy', label: t('projectForm.amenities.types.pharmacy') },
+                    { key: 'kindergarten', label: t('projectForm.amenities.types.kindergarten') },
+                    { key: 'school', label: t('projectForm.amenities.types.school') },
+                    { key: 'university', label: t('projectForm.amenities.types.university') },
+                    { key: 'hospital', label: t('projectForm.amenities.types.hospital') },
+                    { key: 'clinic', label: t('projectForm.amenities.types.clinic') },
+                    { key: 'busStop', label: t('projectForm.amenities.types.busStop') },
+                    { key: 'metro', label: t('projectForm.amenities.types.metro') },
+                    { key: 'groceryStore', label: t('projectForm.amenities.types.groceryStore') },
+                    { key: 'supermarket', label: `${t('projectForm.amenities.types.supermarket')}` },
+                    { key: 'mall', label: `${t('projectForm.amenities.types.mall')}` },
+                    { key: 'bank', label: `${t('projectForm.amenities.types.bank')}` },
+                    { key: 'atm', label: `${t('projectForm.amenities.types.atm')}` },
+                    { key: 'restaurant', label: `${t('projectForm.amenities.types.restaurant')}` },
+                    { key: 'cafe', label: `${t('projectForm.amenities.types.cafe')}` },
+                    { key: 'bakery', label: `${t('projectForm.amenities.types.bakery')}` },
+                    { key: 'sportsCenter', label: `${t('projectForm.amenities.types.sportsCenter')}` },
+                    { key: 'gym', label: `${t('projectForm.amenities.types.gym')}` },
+                    { key: 'stadium', label: `${t('projectForm.amenities.types.stadium')}` },
+                    { key: 'swimmingPool', label: `${t('projectForm.amenities.types.swimmingPool')}` },
+                    { key: 'park', label: `${t('projectForm.amenities.types.park')}` },
+                    { key: 'garden', label: `${t('projectForm.amenities.types.garden')}` },
+                    { key: 'square', label: `${t('projectForm.amenities.types.square')}` },
+                    { key: 'parking', label: `${t('projectForm.amenities.types.parking')}` },
+                    { key: 'bikePath', label: `${t('projectForm.amenities.types.bikePath')}` },
+                    { key: 'sportsField', label: `${t('projectForm.amenities.types.sportsField')}` },
+                    { key: 'childrenArea', label: `${t('projectForm.amenities.types.childrenArea')}` },
+                    { key: 'laundry', label: `${t('projectForm.amenities.types.laundry')}` },
+                    { key: 'storage', label: `${t('projectForm.amenities.types.storage')}` },
+                    { key: 'cinema', label: `${t('projectForm.amenities.types.cinema')}` },
+                    { key: 'theater', label: `${t('projectForm.amenities.types.theater')}` },
+                    { key: 'library', label: `${t('projectForm.amenities.types.library')}` },
+                    { key: 'postOffice', label: `${t('projectForm.amenities.types.postOffice')}` },
+                    { key: 'gasStation', label: `${t('projectForm.amenities.types.gasStation')}` },
+                    { key: 'carWash', label: `${t('projectForm.amenities.types.carWash')}` },
+                    { key: 'veterinary', label: `${t('projectForm.amenities.types.veterinary')}` },
+                    { key: 'beautyCenter', label: `${t('projectForm.amenities.types.beautyCenter')}` },
+                    { key: 'dentist', label: `${t('projectForm.amenities.types.dentist')}` }
                   ];
 
                   const distances = [
-                    { key: 'onSite', label: t('addProject.distances.onSite'), color: 'bg-green-100 text-green-800' },
-                    { key: '300m', label: t('addProject.distances.within300m'), color: 'bg-blue-100 text-blue-800' },
-                    { key: '500m', label: t('addProject.distances.within500m'), color: 'bg-purple-100 text-purple-800' },
-                    { key: '1km', label: t('addProject.distances.within1km'), color: 'bg-orange-100 text-orange-800' }
+                    { key: 'onSite', label: t('projectForm.amenities.distances.onSite'), color: 'bg-green-100 text-green-800' },
+                    { key: '300m', label: t('projectForm.amenities.distances.300m'), color: 'bg-blue-100 text-blue-800' },
+                    { key: '500m', label: t('projectForm.amenities.distances.500m'), color: 'bg-purple-100 text-purple-800' },
+                    { key: '1km', label: t('projectForm.amenities.distances.1km'), color: 'bg-orange-100 text-orange-800' }
                   ];
 
                   return (
@@ -740,25 +741,25 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  {t('addProject.sections.servicesAfterDelivery')}
+                  {t('projectForm.services.title')}
                 </CardTitle>
-                <CardDescription>{t('addProject.sections.servicesDesc')}</CardDescription>
+                <CardDescription>{t('projectForm.services.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {[
-                    { key: 'securityService', label: `🛡️ ${t('addProject.services.securityService')}` },
-                    { key: 'hasConcierge', label: `🛎️ ${t('addProject.services.concierge')}` },
-                    { key: 'videoSurveillance', label: `📹 ${t('addProject.services.videoSurveillance')}` },
-                    { key: 'hasLobby', label: `🏛️ ${t('addProject.services.lobby')}` },
-                    { key: 'hasDoorman', label: `🚪 ${t('addProject.services.doorman')}` },
-                    { key: 'yardCleaning', label: '🧹 ეზოს დასუფთავება' },
-                    { key: 'entranceCleaning', label: '🚪 შესასვლელის დასუფთავება' },
-                    { key: 'landscaping', label: '🌺 ლანდშაფტის მოვლა' },
-                    { key: 'hasLighting', label: '💡 მუდმივი განათება' },
-                    { key: 'fireSystem', label: '🔥 ხანძრის ჩაქრობის სისტემა' },
-                    { key: 'mainDoorLock', label: '🔒 მთავარი კარის საკეტი' },
-                    { key: 'maintenance', label: '🔧 ტექნიკური მომსახურება' }
+                    { key: 'securityService', label: `${t('projectForm.services.types.securityService')}` },
+                    { key: 'hasConcierge', label: `${t('projectForm.services.types.hasConcierge')}` },
+                    { key: 'videoSurveillance', label: `${t('projectForm.services.types.videoSurveillance')}` },
+                    { key: 'hasLobby', label: `${t('projectForm.services.types.hasLobby')}` },
+                    { key: 'hasDoorman', label: `${t('projectForm.services.types.hasDoorman')}` },
+                    { key: 'yardCleaning', label: t('projectForm.services.types.yardCleaning') },
+                    { key: 'entranceCleaning', label: t('projectForm.services.types.entranceCleaning') },
+                    { key: 'landscaping', label: t('projectForm.services.types.landscaping') },
+                    { key: 'hasLighting', label: t('projectForm.services.types.hasLighting') },
+                    { key: 'fireSystem', label: t('projectForm.services.types.fireSystem') },
+                    { key: 'mainDoorLock', label: t('projectForm.services.types.mainDoorLock') },
+                    { key: 'maintenance', label: t('projectForm.services.types.maintenance') }
                   ].map((service) => (
                     <div key={service.key} className="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                       <Checkbox
@@ -780,30 +781,30 @@ export const AddProject: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  განცხადების მიმაგრება პროექტზე
+                  {t('projectForm.attachProperties.title')}
                 </CardTitle>
                 <CardDescription>
-                  აირჩიეთ თქვენი არსებული განცხადებები რომლებიც გსურთ ამ პროექტთან დაკავშირება
+                  {t('projectForm.attachProperties.description')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {propertiesLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <span className="ml-2">განცხადებების ჩატვირთვა...</span>
+                    <span className="ml-2">{t('projectForm.loading')}</span>
                   </div>
                 ) : userProperties.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>თქვენ არ გაქვთ არსებული განცხადებები რომლებიც შეიძლება მიამაგროთ</p>
-                    <p className="text-sm mt-2">ჯერ შექმენით განცხადება, შემდეგ მოახერხებთ მის მიმაგრებას პროექტზე</p>
+                    <p>{t('projectForm.attachProperties.noProperties')}</p>
+                    <p className="text-sm mt-2">{t('projectForm.attachProperties.noPropertiesDescription')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     <div className="text-sm text-gray-600 mb-4">
                       {selectedProperties.length > 0 
-                        ? `${selectedProperties.length} განცხადება არჩეულია მიმაგრებისთვის`
-                        : 'აირჩიეთ განცხადებები რომლებიც გსურთ პროექტთან მიამაგროთ'
+                        ? `${selectedProperties.length} properties selected for attachment`
+                        : 'Choose properties to attach to this project'
                       }
                     </div>
                     
@@ -843,12 +844,12 @@ export const AddProject: React.FC = () => {
                                 <div className="flex items-center gap-4">
                                   <div className="flex items-center gap-1">
                                     <Square className="h-4 w-4" />
-                                    <span>{property.area} მ²</span>
+                                    <span>{property.area} m²</span>
                                   </div>
                                   {property.rooms && (
                                     <div className="flex items-center gap-1">
                                       <Bed className="h-4 w-4" />
-                                      <span>{property.rooms} ოთახი</span>
+                                      <span>{property.rooms} rooms</span>
                                     </div>
                                   )}
                                   <div className="flex items-center gap-1">
@@ -866,15 +867,15 @@ export const AddProject: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                   <div className="flex gap-2">
                                     <Badge variant="outline" className="text-xs">
-                                      {property.propertyType === 'apartment' ? 'ბინა' :
-                                       property.propertyType === 'house' ? 'სახლი' :
-                                       property.propertyType === 'commercial' ? 'კომერციული' :
+                                      {property.propertyType === 'apartment' ? 'Apartment' :
+                                       property.propertyType === 'house' ? 'House' :
+                                       property.propertyType === 'commercial' ? 'Commercial' :
                                        property.propertyType}
                                     </Badge>
                                     <Badge variant="secondary" className="text-xs">
-                                      {property.dealType === 'sale' ? 'იყიდება' :
-                                       property.dealType === 'rent' ? 'ქირავდება' :
-                                       property.dealType === 'daily' ? 'დღიური' :
+                                      {property.dealType === 'sale' ? 'For Sale' :
+                                       property.dealType === 'rent' ? 'For Rent' :
+                                       property.dealType === 'daily' ? 'Daily' :
                                        property.dealType}
                                     </Badge>
                                   </div>
@@ -892,7 +893,7 @@ export const AddProject: React.FC = () => {
                     {selectedProperties.length > 0 && (
                       <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <p className="text-sm text-blue-800">
-                          <strong>{selectedProperties.length}</strong> განცხადება მიმაგრდება ამ პროექტზე პროექტის შექმნის შემდეგ
+                          <strong>{selectedProperties.length}</strong> properties will be attached to this project after creation
                         </p>
                       </div>
                     )}
@@ -910,10 +911,10 @@ export const AddProject: React.FC = () => {
             variant="outline"
             onClick={() => navigate('/dashboard')}
           >
-            გაუქმება
+            {t('projectForm.cancel')}
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "შენახვა..." : "პროექტის შენახვა"}
+            {isLoading ? t('projectForm.saving') : t('projectForm.createProject')}
           </Button>
         </div>
       </form>

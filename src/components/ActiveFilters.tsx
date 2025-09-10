@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { FilterState } from "@/pages/Index";
 
 interface ActiveFiltersProps {
@@ -10,121 +11,55 @@ interface ActiveFiltersProps {
 }
 
 export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFiltersProps) => {
-  // Helper function to get Georgian labels for filter values
+  const { t, i18n } = useTranslation('common');
+
+  // Helper function to get translated labels for filter values
   const getTransactionTypeLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'sale': 'იყიდება',
-      'rent': 'ქირავდება',
-      'mortgage': 'გირავდება',
-      'lease': 'გაიცემა იჯარით',
-      'daily': 'ქირავდება დღიურად',
-      'rent-to-buy': 'ნასყიდობა გამოსყიდობის უფლებით'
-    };
-    return mapping[value] || value;
+    const key = value === 'rent-to-buy' ? 'rentToBuy' : value;
+    return t(`filters.transactionTypes.${key}`, value);
   };
 
   const getPropertyTypeLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'apartment': 'ბინები',
-      'house': 'სახლები',
-      'cottage': 'აგარაკები',
-      'land': 'მიწის ნაკვეთები',
-      'commercial': 'კომერციული ფართები',
-      'office': 'საოფისე ფართები',
-      'hotel': 'სასტუმროები'
-    };
-    return mapping[value] || value;
+    return t(`filters.propertyTypes.${value}`, value);
   };
 
   const getConditionLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'newly-renovated': 'ახალი გარემონტებული',
-      'old-renovated': 'ძველი გარემონტებული',
-      'ongoing-renovation': 'მიმდინარე რემონტი',
-      'needs-renovation': 'სარემონტო',
-      'white-frame': 'თეთრი კარკასი',
-      'black-frame': 'შავი კარკასი',
-      'green-frame': 'მწვანე კარკასი',
-      'white-plus': 'თეთრი პლიუსი'
-    };
-    return mapping[value] || value;
+    const camelCase = value.replace(/-(.)/g, (_, char) => char.toUpperCase());
+    return t(`filters.condition.${camelCase}`, value);
   };
 
   const getHeatingLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'central-heating': 'ცენტრალური გათბობა',
-      'gas-heater': 'გაზის გამათბობელი',
-      'electric-heater': 'დენის გამათბობელი',
-      'central-floor': 'ცენტრალური+იატაკის გათბობა',
-      'no-heating': 'გათბობის გარეშე',
-      'individual': 'ინდივიდუალური',
-      'floor-heating': 'იატაკის გათბობა'
-    };
-    return mapping[value] || value;
+    const camelCase = value.replace(/-(.)/g, (_, char) => char.toUpperCase());
+    return t(`filters.heating.${camelCase}`, value);
   };
 
   const getBuildingStatusLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'old-built': 'ძველი აშენებული',
-      'new-built': 'ახალი აშენებული',
-      'under-construction': 'მშენებარე'
-    };
-    return mapping[value] || value;
+    const camelCase = value.replace(/-(.)/g, (_, char) => char.toUpperCase());
+    return t(`filters.buildingStatus.${camelCase}`, value);
   };
 
   const getParkingLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'garage': 'ავტოფარეხი',
-      'parking-space': 'პარკინგის ადგილი',
-      'yard-parking': 'ეზოს პარკინგი',
-      'underground-parking': 'მიწისქვეშა პარკინგი',
-      'paid-parking': 'ფასიანი ავტოსადგომი',
-      'no-parking': 'პარკინგის გარეშე'
-    };
-    return mapping[value] || value;
+    const camelCase = value.replace(/-(.)/g, (_, char) => char.toUpperCase());
+    return t(`filters.parking.${camelCase}`, value);
   };
 
   const getProjectTypeLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'non-standard': 'არასტანდარტული',
-      'villa': 'ვილა',
-      'townhouse': 'თაუნჰაუსი'
-    };
-    return mapping[value] || value;
+    const camelCase = value.replace(/-(.)/g, (_, char) => char.toUpperCase());
+    return t(`filters.projectType.${camelCase}`, value);
   };
 
   const getBuildingMaterialLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'block': 'ბლოკი',
-      'brick': 'აგური',
-      'wood': 'ხის მასალა',
-      'reinforced-concrete': 'რკინა-ბეტონი',
-      'combined': 'კომბინირებული'
-    };
-    return mapping[value] || value;
+    const camelCase = value.replace(/-(.)/g, (_, char) => char.toUpperCase());
+    return t(`filters.buildingMaterial.${camelCase}`, value);
   };
 
   const getHotWaterLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'gas-water-heater': 'გაზის გამაცხელებელი',
-      'boiler': 'ავზი',
-      'electric-water-heater': 'დენის გამაცხელებელი',
-      'solar-heater': 'მზის გამაცხელებელი',
-      'no-hot-water': 'ცხელი წყლის გარეშე',
-      'central-hot-water': 'ცენტრალური ცხელი წყალი',
-      'natural-hot-water': 'ბუნებრივი ცხელი წყალი',
-      'individual': 'ინდივიდუალური'
-    };
-    return mapping[value] || value;
+    const camelCase = value.replace(/-(.)/g, (_, char) => char.toUpperCase());
+    return t(`filters.hotWater.${camelCase}`, value);
   };
 
   const getDailyRentalLabel = (value: string): string => {
-    const mapping: { [key: string]: string } = {
-      'sea': 'ზღვასთან დღიური ქირაობა',
-      'mountains': 'მთაში დღიური ქირაობა',
-      'villa': 'დღიური ვილები'
-    };
-    return mapping[value] || value;
+    return t(`filters.dailyRental.${value}`, value);
   };
 
   // Collect all active filters
@@ -132,17 +67,17 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
 
   // Basic filters
   if (filters.search) {
-    activeFilters.push({ key: 'search', label: 'ძიება', value: filters.search });
+    activeFilters.push({ key: 'search', label: t('activeFilters.labels.search'), value: filters.search });
   }
   if (filters.location && filters.location !== filters.search) {
-    activeFilters.push({ key: 'location', label: 'მდებარეობა', value: filters.location });
+    activeFilters.push({ key: 'location', label: t('activeFilters.labels.location'), value: filters.location });
   } else if (filters.city && filters.city !== 'all') {
-    activeFilters.push({ key: 'city', label: 'ქალაქი', value: filters.city });
+    activeFilters.push({ key: 'city', label: t('activeFilters.labels.city'), value: filters.city });
   }
   if (filters.transactionType && filters.transactionType !== 'all') {
     activeFilters.push({ 
       key: 'transactionType', 
-      label: 'გარიგების ტიპი', 
+      label: t('activeFilters.labels.transactionType'), 
       value: getTransactionTypeLabel(filters.transactionType) 
     });
   }
@@ -151,14 +86,14 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
       filters.propertyType.forEach((type, index) => {
         activeFilters.push({ 
           key: `propertyType-${index}`, 
-          label: 'ქონების ტიპი', 
+          label: t('activeFilters.labels.propertyType'), 
           value: getPropertyTypeLabel(type) 
         });
       });
     } else if (typeof filters.propertyType === 'string' && filters.propertyType !== 'all') {
       activeFilters.push({ 
         key: 'propertyType', 
-        label: 'ქონების ტიპი', 
+        label: t('activeFilters.labels.propertyType'), 
         value: getPropertyTypeLabel(filters.propertyType) 
       });
     }
@@ -168,20 +103,20 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
   if (filters.priceMin && filters.priceMax) {
     activeFilters.push({ 
       key: 'price-range', 
-      label: 'ფასი', 
-      value: `${filters.priceMin} - ${filters.priceMax} ლარი` 
+      label: t('activeFilters.labels.price'), 
+      value: `${filters.priceMin} - ${filters.priceMax} ${t('activeFilters.values.gel')}` 
     });
   } else if (filters.priceMin) {
     activeFilters.push({ 
       key: 'priceMin', 
-      label: 'მინ. ფასი', 
-      value: `${filters.priceMin} ლარი` 
+      label: t('activeFilters.labels.minPrice'), 
+      value: `${filters.priceMin} ${t('activeFilters.values.gel')}` 
     });
   } else if (filters.priceMax) {
     activeFilters.push({ 
       key: 'priceMax', 
-      label: 'მაქს. ფასი', 
-      value: `${filters.priceMax} ლარი` 
+      label: t('activeFilters.labels.maxPrice'), 
+      value: `${filters.priceMax} ${t('activeFilters.values.gel')}` 
     });
   }
 
@@ -189,20 +124,20 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
   if (filters.areaMin && filters.areaMax) {
     activeFilters.push({ 
       key: 'area-range', 
-      label: 'ფართობი', 
-      value: `${filters.areaMin} - ${filters.areaMax} მ²` 
+      label: t('activeFilters.labels.area'), 
+      value: `${filters.areaMin} - ${filters.areaMax} ${t('activeFilters.values.sqm')}` 
     });
   } else if (filters.areaMin) {
     activeFilters.push({ 
       key: 'areaMin', 
-      label: 'მინ. ფართობი', 
-      value: `${filters.areaMin} მ²` 
+      label: t('activeFilters.labels.minArea'), 
+      value: `${filters.areaMin} ${t('activeFilters.values.sqm')}` 
     });
   } else if (filters.areaMax) {
     activeFilters.push({ 
       key: 'areaMax', 
-      label: 'მაქს. ფართობი', 
-      value: `${filters.areaMax} მ²` 
+      label: t('activeFilters.labels.maxArea'), 
+      value: `${filters.areaMax} ${t('activeFilters.values.sqm')}` 
     });
   }
 
@@ -212,15 +147,15 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
       filters.bedrooms.forEach((bedroom, index) => {
         activeFilters.push({ 
           key: `bedrooms-${index}`, 
-          label: 'საძინებელი', 
-          value: `${bedroom} ოთახი` 
+          label: t('activeFilters.labels.bedrooms'), 
+          value: `${bedroom} ${t('activeFilters.values.rooms')}` 
         });
       });
     } else if (typeof filters.bedrooms === 'string' && filters.bedrooms !== 'all') {
       activeFilters.push({ 
         key: 'bedrooms', 
-        label: 'საძინებელი', 
-        value: `${filters.bedrooms} ოთახი` 
+        label: t('activeFilters.labels.bedrooms'), 
+        value: `${filters.bedrooms} ${t('activeFilters.values.rooms')}` 
       });
     }
   }
@@ -228,18 +163,18 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
   if (filters.bathrooms) {
     if (Array.isArray(filters.bathrooms) && filters.bathrooms.length > 0) {
       filters.bathrooms.forEach((bathroom, index) => {
-        const displayValue = bathroom === 'shared' ? 'საერთო' : `${bathroom} ოთახი`;
+        const displayValue = bathroom === 'shared' ? t('activeFilters.values.shared') : `${bathroom} ${t('activeFilters.values.rooms')}`;
         activeFilters.push({ 
           key: `bathrooms-${index}`, 
-          label: 'სააბაზანო', 
+          label: t('activeFilters.labels.bathrooms'), 
           value: displayValue 
         });
       });
     } else if (typeof filters.bathrooms === 'string' && filters.bathrooms !== 'all') {
-      const displayValue = filters.bathrooms === 'shared' ? 'საერთო' : `${filters.bathrooms} ოთახი`;
+      const displayValue = filters.bathrooms === 'shared' ? t('activeFilters.values.shared') : `${filters.bathrooms} ${t('activeFilters.values.rooms')}`;
       activeFilters.push({ 
         key: 'bathrooms', 
-        label: 'სააბაზანო', 
+        label: t('activeFilters.labels.bathrooms'), 
         value: displayValue 
       });
     }
@@ -250,15 +185,15 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
       filters.rooms.forEach((room, index) => {
         activeFilters.push({ 
           key: `rooms-${index}`, 
-          label: 'ოთახები', 
-          value: `${room} ოთახი` 
+          label: t('activeFilters.labels.rooms'), 
+          value: `${room} ${t('activeFilters.values.rooms')}` 
         });
       });
     } else if (typeof filters.rooms === 'string' && filters.rooms !== 'all') {
       activeFilters.push({ 
         key: 'rooms', 
-        label: 'ოთახები', 
-        value: `${filters.rooms} ოთახი` 
+        label: t('activeFilters.labels.rooms'), 
+        value: `${filters.rooms} ${t('activeFilters.values.rooms')}` 
       });
     }
   }
@@ -267,102 +202,102 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
   if (filters.condition && filters.condition !== 'all') {
     activeFilters.push({ 
       key: 'condition', 
-      label: 'მდგომარეობა', 
+      label: t('activeFilters.labels.condition'), 
       value: getConditionLabel(filters.condition) 
     });
   }
   if (filters.buildingStatus && filters.buildingStatus !== 'all') {
     activeFilters.push({ 
       key: 'buildingStatus', 
-      label: 'შენობის სტატუსი', 
+      label: t('activeFilters.labels.buildingStatus'), 
       value: getBuildingStatusLabel(filters.buildingStatus) 
     });
   }
   if (filters.heating && filters.heating !== 'all') {
     activeFilters.push({ 
       key: 'heating', 
-      label: 'გათბობა', 
+      label: t('activeFilters.labels.heating'), 
       value: getHeatingLabel(filters.heating) 
     });
   }
   if (filters.parking && filters.parking !== 'all') {
     activeFilters.push({ 
       key: 'parking', 
-      label: 'პარკინგი', 
+      label: t('activeFilters.labels.parking'), 
       value: getParkingLabel(filters.parking) 
     });
   }
   if (filters.hotWater && filters.hotWater !== 'all') {
     activeFilters.push({ 
       key: 'hotWater', 
-      label: 'ცხელი წყალი', 
+      label: t('activeFilters.labels.hotWater'), 
       value: getHotWaterLabel(filters.hotWater) 
     });
   }
   if (filters.buildingMaterial && filters.buildingMaterial !== 'all') {
     activeFilters.push({ 
       key: 'buildingMaterial', 
-      label: 'მშენებლობის მასალა', 
+      label: t('activeFilters.labels.buildingMaterial'), 
       value: getBuildingMaterialLabel(filters.buildingMaterial) 
     });
   }
   if (filters.projectType && filters.projectType !== 'all') {
     activeFilters.push({ 
       key: 'projectType', 
-      label: 'პროექტის ტიპი', 
+      label: t('activeFilters.labels.projectType'), 
       value: getProjectTypeLabel(filters.projectType) 
     });
   }
   if (filters.dailyRentalSubcategory && filters.dailyRentalSubcategory !== 'all') {
     activeFilters.push({ 
       key: 'dailyRentalSubcategory', 
-      label: 'დღიური ქირის კატეგორია', 
+      label: t('activeFilters.labels.dailyRentalCategory'), 
       value: getDailyRentalLabel(filters.dailyRentalSubcategory) 
     });
   }
   if (filters.totalFloors && filters.totalFloors !== 'all') {
     activeFilters.push({ 
       key: 'totalFloors', 
-      label: 'სართულები', 
-      value: `${filters.totalFloors} სართული` 
+      label: t('activeFilters.labels.floors'), 
+      value: `${filters.totalFloors} ${t('activeFilters.values.floors')}` 
     });
   }
   if (filters.constructionYearMin && filters.constructionYearMax) {
     activeFilters.push({ 
       key: 'construction-year-range', 
-      label: 'მშენებლობის წელი', 
+      label: t('activeFilters.labels.constructionYear'), 
       value: `${filters.constructionYearMin} - ${filters.constructionYearMax}` 
     });
   } else if (filters.constructionYearMin) {
     activeFilters.push({ 
       key: 'constructionYearMin', 
-      label: 'მშენებლობის წელი', 
-      value: `${filters.constructionYearMin} წლიდან` 
+      label: t('activeFilters.labels.constructionYear'), 
+      value: `${filters.constructionYearMin} ${t('activeFilters.values.from')}` 
     });
   } else if (filters.constructionYearMax) {
     activeFilters.push({ 
       key: 'constructionYearMax', 
-      label: 'მშენებლობის წელი', 
-      value: `${filters.constructionYearMax} წლამდე` 
+      label: t('activeFilters.labels.constructionYear'), 
+      value: `${filters.constructionYearMax} ${t('activeFilters.values.to')}` 
     });
   }
   if (filters.ceilingHeightMin && filters.ceilingHeightMax) {
     activeFilters.push({ 
       key: 'ceiling-height-range', 
-      label: 'ჭერის სიმაღლე', 
-      value: `${filters.ceilingHeightMin} - ${filters.ceilingHeightMax} მ` 
+      label: t('activeFilters.labels.ceilingHeight'), 
+      value: `${filters.ceilingHeightMin} - ${filters.ceilingHeightMax} ${t('activeFilters.values.meters')}` 
     });
   } else if (filters.ceilingHeightMin) {
     activeFilters.push({ 
       key: 'ceilingHeightMin', 
-      label: 'ჭერის სიმაღლე', 
-      value: `${filters.ceilingHeightMin} მ-დან` 
+      label: t('activeFilters.labels.ceilingHeight'), 
+      value: `${filters.ceilingHeightMin} ${t('activeFilters.values.meters')}-${t('activeFilters.values.from')}` 
     });
   } else if (filters.ceilingHeightMax) {
     activeFilters.push({ 
       key: 'ceilingHeightMax', 
-      label: 'ჭერის სიმაღლე', 
-      value: `${filters.ceilingHeightMax} მ-მდე` 
+      label: t('activeFilters.labels.ceilingHeight'), 
+      value: `${filters.ceilingHeightMax} ${t('activeFilters.values.meters')}-${t('activeFilters.values.to')}` 
     });
   }
 
@@ -392,17 +327,17 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
   // Features, Advantages, Furniture arrays
   if (filters.selectedFeatures && filters.selectedFeatures.length > 0) {
     filters.selectedFeatures.forEach(feature => {
-      activeFilters.push({ key: `feature-${feature}`, label: 'თვისება', value: feature });
+      activeFilters.push({ key: `feature-${feature}`, label: t('activeFilters.labels.feature'), value: feature });
     });
   }
   if (filters.selectedAdvantages && filters.selectedAdvantages.length > 0) {
     filters.selectedAdvantages.forEach(advantage => {
-      activeFilters.push({ key: `advantage-${advantage}`, label: 'უპირატესობა', value: advantage });
+      activeFilters.push({ key: `advantage-${advantage}`, label: t('activeFilters.labels.advantage'), value: advantage });
     });
   }
   if (filters.selectedFurnitureAppliances && filters.selectedFurnitureAppliances.length > 0) {
     filters.selectedFurnitureAppliances.forEach(furniture => {
-      activeFilters.push({ key: `furniture-${furniture}`, label: 'ავეჯი/ტექნიკა', value: furniture });
+      activeFilters.push({ key: `furniture-${furniture}`, label: t('activeFilters.labels.furniture'), value: furniture });
     });
   }
 
@@ -464,7 +399,7 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-            <span className="text-sm font-semibold text-slate-700">აქტიური ფილტრები</span>
+            <span className="text-sm font-semibold text-slate-700">{t('activeFilters.title')}</span>
           </div>
           
           {activeFilters.length > 0 && (
@@ -475,7 +410,7 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }: ActiveFil
               className="text-xs font-medium border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 hover:shadow-sm transition-all duration-200 rounded-xl px-4 py-2"
             >
               <X className="h-3 w-3 mr-1" />
-              ყველას გასუფთავება
+              {t('activeFilters.clearAll')}
             </Button>
           )}
         </div>

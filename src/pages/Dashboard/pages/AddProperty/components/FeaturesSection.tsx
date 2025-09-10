@@ -5,7 +5,7 @@ import { Wifi, Tv, Zap, Building, Truck, Droplets, Phone, Shield, DoorOpen, Chef
 import { useTranslation } from "react-i18next";
 
 export const FeaturesSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext();
   const features = form.watch("features");
   

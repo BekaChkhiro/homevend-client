@@ -55,5 +55,398 @@
     "no": "Нет",
     "ok": "ОК",
     "tryAgain": "Попробовать снова"
+  },
+  "addProject": {
+    "title": "Добавить новый проект",
+    "subtitle": "Создать новый проект с подробной информацией",
+    "backToDashboard": "Назад к панели управления",
+    "onlyDevelopers": "Только разработчики могут создавать проекты",
+    "accessDenied": "Доступ запрещен",
+    "accessDeniedDesc": "Только разработчики могут получить доступ к этой странице"
+  },
+  "footer": {
+    "description": "Ведущая платформа недвижимости Грузии. Мы поможем найти ваш дом.",
+    "quickLinks": "Быстрые ссылки",
+    "links": {
+      "home": "Главная",
+      "forSale": "Продается",
+      "forRent": "Сдается",
+      "newProjects": "Новые проекты",
+      "services": "Услуги"
+    },
+    "contact": {
+      "title": "Контакт",
+      "phoneNumber": "Номер телефона",
+      "address": "Тбилиси, ул. Бербуки №7<br />2-е здание, 11-й этаж, кв. №54"
+    },
+    "rights": "Все права защищены.",
+    "termsAndConditions": "Правила и условия"
+  },
+  "heroSection": {
+    "title": "Найдите свой",
+    "titleHighlight": "дом",
+    "subtitle": "Лучшие предложения недвижимости в Тбилиси и по всей Грузии",
+    "transactionType": "Тип сделки",
+    "propertyType": "Тип недвижимости",
+    "address": "Адрес",
+    "city": "Город",
+    "chooseType": "Выберите тип",
+    "addressPlaceholder": "Введите адрес, район...",
+    "search": "Поиск",
+    "clear": "Очистить",
+    "popularSearches": "Популярные поиски",
+    "districts": {
+      "vake": "Ваке",
+      "saburtalo": "Сабурталo",
+      "isani": "Исани", 
+      "gldani": "Глдани",
+      "oldTbilisi": "Старый Тбилиси",
+      "mtasminda": "Мтацминда"
+    }
+  },
+  "propertySearchHero": {
+    "transactionType": "Тип сделки",
+    "propertyType": "Тип недвижимости",
+    "location": "Местоположение",
+    "chooseType": "Выберите тип",
+    "city": "Город",
+    "area": "Район",
+    "searchTransactionType": "Найти тип сделки...",
+    "searchPropertyType": "Найти тип недвижимости...",
+    "searchCity": "Найти город...",
+    "searchArea": "Найти район...",
+    "noTransactionTypeFound": "Тип сделки не найден",
+    "noPropertyTypeFound": "Тип недвижимости не найден",
+    "noCityFound": "Город не найден",
+    "noAreaFound": "Район не найден",
+    "searching": "Поиск...",
+    "selected": "выбрано",
+    "allCities": "Все города",
+    "allAreas": "Все районы"
+  },
+  "filters": {
+    "transactionTypes": {
+      "all": "Все",
+      "sale": "Продажа",
+      "rent": "Аренда",
+      "mortgage": "Залог",
+      "lease": "Лизинг",
+      "daily": "Посуточная аренда",
+      "rentToBuy": "Аренда с правом выкупа"
+    },
+    "propertyTypes": {
+      "all": "Все",
+      "apartment": "Квартиры",
+      "house": "Дома",
+      "cottage": "Коттеджи",
+      "land": "Участки",
+      "commercial": "Коммерческая недвижимость",
+      "office": "Офисные помещения",
+      "hotel": "Отели"
+    },
+    "condition": {
+      "newlyRenovated": "Новый ремонт",
+      "oldRenovated": "Старый ремонт",
+      "ongoingRenovation": "Текущий ремонт",
+      "needsRenovation": "Требует ремонта",
+      "whiteFrame": "Белый каркас",
+      "blackFrame": "Черный каркас",
+      "greenFrame": "Зеленый каркас",
+      "whitePlus": "Белый плюс"
+    },
+    "heating": {
+      "centralHeating": "Центральное отопление",
+      "gasHeater": "Газовый обогреватель",
+      "electricHeater": "Электрический обогреватель",
+      "centralFloor": "Центральное+теплый пол",
+      "noHeating": "Без отопления",
+      "individual": "Индивидуальное",
+      "floorHeating": "Теплый пол"
+    },
+    "buildingStatus": {
+      "oldBuilt": "Старая постройка",
+      "newBuilt": "Новая постройка",
+      "underConstruction": "Строящееся"
+    },
+    "parking": {
+      "garage": "Гараж",
+      "parkingSpace": "Парковочное место",
+      "yardParking": "Парковка во дворе",
+      "undergroundParking": "Подземная парковка",
+      "paidParking": "Платная парковка",
+      "noParking": "Без парковки"
+    },
+    "hotWater": {
+      "gasWaterHeater": "Газовый нагреватель",
+      "boiler": "Бойлер",
+      "electricWaterHeater": "Электрический нагреватель",
+      "solarHeater": "Солнечный нагреватель",
+      "noHotWater": "Без горячей воды",
+      "centralHotWater": "Центральная горячая вода",
+      "naturalHotWater": "Природная горячая вода",
+      "individual": "Индивидуальное"
+    },
+    "buildingMaterial": {
+      "block": "Блок",
+      "brick": "Кирпич",
+      "wood": "Дерево",
+      "reinforcedConcrete": "Железобетон",
+      "combined": "Комбинированный"
+    },
+    "projectType": {
+      "nonStandard": "Нестандартный",
+      "villa": "Вилла",
+      "townhouse": "Таунхаус"
+    },
+    "dailyRental": {
+      "sea": "Суточная аренда у моря",
+      "mountains": "Суточная аренда в горах",
+      "villa": "Суточные виллы"
+    }
+  },
+  "advancedFilters": {
+    "title": "Расширенные фильтры",
+    "subtitle": "Найдите идеальную недвижимость",
+    "properties": "недвижимость",
+    "tabs": {
+      "basic": "Основные",
+      "basicShort": "Основ",
+      "building": "Здание",
+      "buildingShort": "Здан",
+      "amenities": "Удобства",
+      "amenitiesShort": "Удоб",
+      "features": "Характеристики",
+      "featuresShort": "Хар-ки",
+      "saved": "Сохраненные",
+      "savedShort": "Сохр"
+    },
+    "price": {
+      "title": "Цена (лари)",
+      "minPrice": "Минимальная цена",
+      "maxPrice": "Максимальная цена"
+    },
+    "area": {
+      "title": "Площадь (м²)",
+      "minArea": "Минимальная площадь",
+      "maxArea": "Максимальная площадь"
+    },
+    "rooms": {
+      "title": "Количество комнат",
+      "rooms": "Комнаты",
+      "bedrooms": "Спальни",
+      "bathrooms": "Ванные комнаты",
+      "selected": "выбрано",
+      "chooseRooms": "Выберите комнаты",
+      "searchRooms": "Поиск комнат...",
+      "noRoomsFound": "Комнаты не найдены",
+      "chooseBedrooms": "Выберите спальни",
+      "searchBedrooms": "Поиск спален...",
+      "noBedroomsFound": "Спальни не найдены",
+      "chooseBathrooms": "Выберите ванные",
+      "searchBathrooms": "Поиск ванных...",
+      "noBathroomsFound": "Ванные не найдены",
+      "shared": "Общая"
+    },
+    "dailyRental": {
+      "title": "Тип посуточной аренды",
+      "chooseType": "Выберите тип",
+      "sea": "Суточная аренда у моря",
+      "mountains": "Суточная аренда в горах",
+      "villa": "Суточные виллы"
+    },
+    "building": {
+      "totalFloors": "Всего этажей",
+      "floors13": "1-3 этажа",
+      "floors49": "4-9 этажей",
+      "floors1016": "10-16 этажей",
+      "floors17plus": "17+ этажей",
+      "buildingStatus": "Статус здания",
+      "constructionYear": "Год постройки",
+      "from": "С",
+      "to": "До",
+      "condition": "Состояние",
+      "projectType": "Тип проекта",
+      "ceilingHeight": "Высота потолка (м)",
+      "minimum": "Минимум",
+      "maximum": "Максимум",
+      "buildingMaterial": "Строительный материал"
+    },
+    "amenities": {
+      "systemsTitle": "Системы и коммуникации",
+      "heating": "Отопление",
+      "parking": "Парковка",
+      "hotWater": "Горячая вода",
+      "additionalComfort": "Дополнительный комфорт",
+      "balcony": "Балкон",
+      "pool": "Бассейн",
+      "livingRoom": "Гостиная",
+      "loggia": "Лоджия",
+      "veranda": "Веранда",
+      "yard": "Двор",
+      "storage": "Кладовая"
+    },
+    "features": {
+      "title": "Характеристики",
+      "elevator": "Лифт",
+      "airConditioning": "Кондиционер",
+      "internet": "Интернет",
+      "cableTv": "Кабельное ТВ",
+      "securitySystem": "Система безопасности",
+      "videoSurveillance": "Видеонаблюдение",
+      "concierge": "Консьерж",
+      "washingMachine": "Стиральная машина",
+      "dishwasher": "Посудомоечная машина",
+      "naturalGas": "Природный газ",
+      "gasStove": "Газовая плита",
+      "electricStove": "Электрическая плита",
+      "microwave": "Микроволновка",
+      "separateEntrance": "Отдельный вход"
+    },
+    "advantages": {
+      "title": "Преимущества",
+      "downtown": "Центр города",
+      "nearMetro": "Рядом с метро",
+      "quietArea": "Тихий район",
+      "developedInfrastructure": "Развитая инфраструктура",
+      "nearPark": "Рядом с парком",
+      "nearSchool": "Рядом со школой",
+      "nearMall": "Рядом с торговым центром",
+      "nearBusStop": "Рядом с автобусной остановкой",
+      "nearUniversity": "Рядом с университетом",
+      "nearHospital": "Рядом с больницей",
+      "nearSea": "Рядом с морем",
+      "nearMountains": "Рядом с горами"
+    },
+    "furniture": {
+      "title": "Мебель и техника",
+      "wardrobe": "Шкаф",
+      "bed": "Кровать",
+      "refrigerator": "Холодильник",
+      "stove": "Плита",
+      "washingMachine": "Стиральная машина",
+      "tv": "Телевизор",
+      "microwave": "Микроволновка",
+      "dishwasher": "Посудомоечная машина",
+      "sofa": "Диван",
+      "table": "Стол",
+      "chairs": "Стулья",
+      "balconyFurniture": "Мебель для балкона",
+      "airConditioner": "Кондиционер",
+      "heater": "Обогреватель"
+    },
+    "saved": {
+      "saveCurrent": "Сохранить текущий фильтр",
+      "filters": "фильтров",
+      "filterNamePlaceholder": "Название фильтра",
+      "saveFilter": "Сохранить фильтр",
+      "savedFiltersTitle": "Сохраненные фильтры",
+      "noSavedFilters": "Нет сохраненных фильтров",
+      "load": "Загрузить"
+    },
+    "actions": {
+      "clearAll": "Очистить все",
+      "clear": "Очистить",
+      "filtersApplied": "фильтров применено"
+    }
+  },
+  "activeFilters": {
+    "title": "Активные фильтры",
+    "clearAll": "Очистить все",
+    "labels": {
+      "search": "Поиск",
+      "location": "Местоположение", 
+      "city": "Город",
+      "transactionType": "Тип сделки",
+      "propertyType": "Тип недвижимости",
+      "price": "Цена",
+      "minPrice": "Мин. цена",
+      "maxPrice": "Макс. цена",
+      "area": "Площадь",
+      "minArea": "Мин. площадь",
+      "maxArea": "Макс. площадь",
+      "bedrooms": "Спальни",
+      "bathrooms": "Ванные",
+      "rooms": "Комнаты",
+      "condition": "Состояние",
+      "buildingStatus": "Статус здания",
+      "heating": "Отопление",
+      "parking": "Парковка",
+      "hotWater": "Горячая вода",
+      "buildingMaterial": "Материал строительства",
+      "projectType": "Тип проекта",
+      "dailyRentalCategory": "Категория суточной аренды",
+      "floors": "Этажи",
+      "constructionYear": "Год постройки",
+      "ceilingHeight": "Высота потолков",
+      "balcony": "Балкон",
+      "pool": "Бассейн",
+      "livingRoom": "Гостиная",
+      "loggia": "Лоджия",
+      "veranda": "Веранда",
+      "yard": "Двор",
+      "storage": "Кладовка",
+      "feature": "Особенность",
+      "advantage": "Преимущество",
+      "furniture": "Мебель/Техника"
+    },
+    "values": {
+      "yes": "Да",
+      "rooms": "комнат",
+      "gel": "лари",
+      "sqm": "м²",
+      "meters": "м",
+      "shared": "Общая",
+      "floor": "этаж",
+      "floors": "этажей",
+      "from": "с года",
+      "to": "до года"
+    }
+  },
+  "projects": {
+    "title": "Проекты",
+    "subtitle": "Найдите лучшие девелоперские проекты в Тбилиси",
+    "filters": {
+      "title": "Фильтры",
+      "searchPlaceholder": "Поиск...",
+      "projectType": "Тип проекта",
+      "deliveryStatus": "Статус сдачи", 
+      "city": "Город",
+      "area": "Район",
+      "clearFilters": "Очистить",
+      "allTypes": "Все типы",
+      "allStatuses": "Все статусы"
+    },
+    "projectTypes": {
+      "private_house": "Частный дом",
+      "apartment_building": "Жилой комплекс"
+    },
+    "deliveryStatuses": {
+      "completed_with_renovation": "Сдача с ремонтом",
+      "green_frame": "Зеленый каркас",
+      "black_frame": "Черный каркас",
+      "white_frame": "Белый каркас"
+    },
+    "loading": "Загрузка проектов...",
+    "noProjects": {
+      "title": "Проекты не найдены",
+      "description": "Попробуйте использовать другие фильтры"
+    },
+    "card": {
+      "type": "Тип:",
+      "buildings": "Корпуса:",
+      "apartments": "Квартиры:",
+      "floors": "Этажи:",
+      "priceFrom": "Цена от:",
+      "developer": "Застройщик:",
+      "delivery": "Сдача:",
+      "views": "Просмотры"
+    },
+    "pagination": {
+      "previous": "Предыдущий",
+      "next": "Следующий"
+    },
+    "errors": {
+      "loadingError": "Произошла ошибка при загрузке проектов"
+    }
   }
 }

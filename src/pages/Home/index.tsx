@@ -39,7 +39,7 @@ interface Agency {
 
 const Home = () => {
   const navigate = useNavigate();
-  const { i18n, t } = useTranslation();
+  const { t, i18n } = useTranslation(['home', 'common']);
   const [properties, setProperties] = useState<Property[]>([]);
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
   const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -115,7 +115,7 @@ const Home = () => {
           } else if (prop.city && prop.city.trim()) {
             parts.push(prop.city);
           }
-          const address = parts.length > 0 ? parts.join(', ') : t('home:placeholders.locationNotSpecified');
+          const address = parts.length > 0 ? parts.join(', ') : t('home.locationNotSpecified');
           
           return {
             id: parseInt(prop.id) || prop.id,
@@ -129,8 +129,8 @@ const Home = () => {
             bedrooms: parseInt(prop.bedrooms) || 1,
             bathrooms: parseInt(prop.bathrooms) || 1,
             area: parseInt(prop.area) || 0,
-            type: prop.propertyType || 'ბინა',
-            transactionType: prop.dealType || 'იყიდება',
+            type: prop.propertyType || t('home.propertyTypes.apartment'),
+            transactionType: prop.dealType || t('home.dealTypes.sale'),
             image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
             featured: prop.viewCount > 10 || Math.random() > 0.7,
             // VIP status fields
@@ -167,7 +167,23 @@ const Home = () => {
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ka-GE', {
+    // Use appropriate locale for number formatting based on current language
+    let locale = 'ka-GE';
+    switch (i18n.language) {
+      case 'ka':
+        locale = 'ka-GE';
+        break;
+      case 'en':
+        locale = 'en-US';
+        break;
+      case 'ru':
+        locale = 'ru-RU';
+        break;
+      default:
+        locale = 'ka-GE';
+    }
+    
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'GEL',
       minimumFractionDigits: 0
@@ -202,16 +218,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  {t('home:sections.latestProperties.title')}
+                  {t('home.sections.latestProperties.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home:sections.latestProperties.subtitle')}
+                  {t('home.sections.latestProperties.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('properties', i18n.language)}>
-                  <span className="hidden sm:inline">{t('home:sections.latestProperties.viewAll')}</span>
-                  <span className="sm:hidden">{t('home:sections.latestProperties.viewAllMobile')}</span>
+                  <span className="hidden sm:inline">{t('home.sections.latestProperties.viewAll')}</span>
+                  <span className="sm:hidden">{t('common.common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -244,16 +260,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  {t('home:sections.agencies.title')}
+                  {t('home.sections.agencies.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home:sections.agencies.subtitle')}
+                  {t('home.sections.agencies.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('agencies', i18n.language)}>
-                  <span className="hidden sm:inline">{t('home:sections.agencies.viewAll')}</span>
-                  <span className="sm:hidden">{t('home:sections.agencies.viewAllMobile')}</span>
+                  <span className="hidden sm:inline">{t('home.sections.agencies.viewAll')}</span>
+                  <span className="sm:hidden">{t('common.common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -296,7 +312,7 @@ const Home = () => {
                             )}
                           </div>
                           <p className="text-sm text-gray-600">
-                            {t('home:sections.agencies.owner')}: {agency.owner?.fullName || t('home:sections.agencies.ownerNotSpecified')}
+                            {t('home.sections.agencies.owner')} {agency.owner?.fullName || t('home.sections.agencies.notSpecified')}
                           </p>
                         </div>
                       </div>
@@ -330,7 +346,7 @@ const Home = () => {
                               rel="noopener noreferrer"
                               className="text-primary hover:underline truncate"
                             >
-                              {t('home:sections.agencies.website')}
+                              {t('home.sections.agencies.website')}
                             </a>
                           </div>
                         )}
@@ -343,7 +359,7 @@ const Home = () => {
                               rel="noopener noreferrer"
                               className="text-primary hover:underline truncate"
                             >
-                              {t('home:sections.agencies.socialMedia')}
+                              {t('home.sections.agencies.socialMedia')}
                             </a>
                           </div>
                         )}
@@ -355,35 +371,35 @@ const Home = () => {
                             <Users className="h-3 w-3" />
                             {agency.agentCount || 0}
                           </div>
-                          <div className="text-xs text-gray-500">{t('home:sections.agencies.agents')}</div>
+                          <div className="text-xs text-gray-500">{t('home.sections.agencies.agents')}</div>
                         </div>
                         <div className="text-center">
                           <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
                             <Building2 className="h-3 w-3" />
                             {agency.propertyCount || 0}
                           </div>
-                          <div className="text-xs text-gray-500">{t('home:sections.agencies.properties')}</div>
+                          <div className="text-xs text-gray-500">{t('home.sections.agencies.properties')}</div>
                         </div>
                         <div className="text-center">
                           <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
                             <TrendingUp className="h-3 w-3" />
                             {agency.totalSales || 0}
                           </div>
-                          <div className="text-xs text-gray-500">{t('home:sections.agencies.sales')}</div>
+                          <div className="text-xs text-gray-500">{t('home.sections.agencies.sales')}</div>
                         </div>
                       </div>
 
                       <div className="flex gap-2">
                         <Button asChild className="flex-1 text-xs sm:text-sm" size="sm">
                           <Link to={`/agencies/${agency.id}`}>
-                            {t('home:sections.agencies.details')}
+                            {t('home.sections.agencies.details')}
                           </Link>
                         </Button>
                       </div>
 
                       {agency.createdAt && (
                         <div className="mt-3 pt-3 border-t text-xs text-gray-500">
-                          {t('home:sections.agencies.founded')}: {new Date(agency.createdAt).toLocaleDateString('ka-GE')}
+                          {t('home.sections.agencies.founded')} {new Date(agency.createdAt).toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : i18n.language === 'ru' ? 'ru-RU' : 'en-US')}
                         </div>
                       )}
                     </CardContent>
@@ -401,16 +417,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  {t('home:sections.services.title')}
+                  {t('home.sections.services.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home:sections.services.subtitle')}
+                  {t('home.sections.services.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to="/services">
-                  <span className="hidden sm:inline">{t('home:sections.services.viewAll')}</span>
-                  <span className="sm:hidden">{t('home:sections.services.viewAllMobile')}</span>
+                  <span className="hidden sm:inline">{t('home.sections.services.viewAll')}</span>
+                  <span className="sm:hidden">{t('common.common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -422,15 +438,15 @@ const Home = () => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
                     <HomeIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-lg sm:text-xl">{t('home:sections.services.propertyValuation.title')}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">{t('home.sections.services.propertyValuation.title')}</CardTitle>
                   <CardDescription className="text-sm sm:text-base">
-                    {t('home:sections.services.propertyValuation.description')}
+                    {t('home.sections.services.propertyValuation.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                 <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
                   <Link to={getLanguageUrl('services', i18n.language)}>
-                    {t('home:sections.services.details')}
+                    {t('home.sections.services.learnMore')}
                   </Link>
                 </Button>
                 </CardContent>
@@ -441,15 +457,15 @@ const Home = () => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
                     <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-lg sm:text-xl">{t('home:sections.services.legalConsultation.title')}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">{t('home.sections.services.legalConsultation.title')}</CardTitle>
                   <CardDescription className="text-sm sm:text-base">
-                    {t('home:sections.services.legalConsultation.description')}
+                    {t('home.sections.services.legalConsultation.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                 <Button asChild className="text-sm sm:text-base w-full sm:w-auto">
                   <Link to={getLanguageUrl('services', i18n.language)}>
-                    {t('home:sections.services.details')}
+                    {t('home.sections.services.learnMore')}
                   </Link>
                 </Button>
                 </CardContent>
@@ -464,16 +480,16 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-                  {t('home:sections.priceStatistics.title')}
+                  {t('home.sections.priceStatistics.title')}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home:sections.priceStatistics.subtitle')}
+                  {t('home.sections.priceStatistics.subtitle')}
                 </p>
               </div>
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('price-statistics', i18n.language)}>
-                  <span className="hidden sm:inline">{t('home:sections.priceStatistics.viewAll')}</span>
-                  <span className="sm:hidden">{t('home:sections.priceStatistics.viewAllMobile')}</span>
+                  <span className="hidden sm:inline">{t('home.sections.priceStatistics.viewAll')}</span>
+                  <span className="sm:hidden">{t('common.common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>

@@ -47,7 +47,7 @@ interface Agency {
 
 
 const Agencies = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['agencies', 'common']);
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -115,10 +115,10 @@ const Agencies = () => {
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            სააგენტოები
+            {t('agencies.title')}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            იპოვნეთ საუკეთესო უძრავი ქონების სააგენტოები საქართველოში
+            {t('agencies.subtitle')}
           </p>
         </div>
 
@@ -129,7 +129,7 @@ const Agencies = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 type="text"
-                placeholder="ძიება სააგენტოს სახელით..."
+                placeholder={t('agencies.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -137,7 +137,7 @@ const Agencies = () => {
               />
             </div>
             <Button onClick={handleSearch} className="px-6">
-              ძიება
+              {t('agencies.searchButton')}
             </Button>
           </div>
         </div>
@@ -146,14 +146,14 @@ const Agencies = () => {
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-gray-600">იტვირთება...</p>
+            <p className="mt-4 text-gray-600">{t('agencies.loading')}</p>
           </div>
         ) : (
           <>
             {/* Stats */}
             <div className="mb-6 flex items-center justify-between">
               <p className="text-gray-600">
-                ნაჩვენებია {agencies.length} სააგენტოს {pagination.total}-დან
+                {t('agencies.showing', { count: agencies.length, total: pagination.total })}
               </p>
             </div>
 
@@ -184,7 +184,7 @@ const Agencies = () => {
                           )}
                         </div>
                         <p className="text-sm text-gray-600">
-                          მოღვაწე: {agency.owner.fullName}
+                          {t('agencies.owner', { name: agency.owner.fullName })}
                         </p>
                       </div>
                     </div>
@@ -218,7 +218,7 @@ const Agencies = () => {
                             rel="noopener noreferrer"
                             className="text-primary hover:underline truncate"
                           >
-                            ვებსაიტი
+                            {t('agencies.website')}
                           </a>
                         </div>
                       )}
@@ -231,7 +231,7 @@ const Agencies = () => {
                             rel="noopener noreferrer"
                             className="text-primary hover:underline truncate"
                           >
-                            სოციალური მედია
+                            {t('agencies.socialMedia')}
                           </a>
                         </div>
                       )}
@@ -243,34 +243,34 @@ const Agencies = () => {
                           <Users className="h-3 w-3" />
                           {agency.agentCount}
                         </div>
-                        <div className="text-xs text-gray-500">აგენტი</div>
+                        <div className="text-xs text-gray-500">{t('agencies.agents')}</div>
                       </div>
                       <div className="text-center">
                         <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
                           <Building2 className="h-3 w-3" />
                           {agency.propertyCount}
                         </div>
-                        <div className="text-xs text-gray-500">უძრავი ქონება</div>
+                        <div className="text-xs text-gray-500">{t('agencies.properties')}</div>
                       </div>
                       <div className="text-center">
                         <div className="flex items-center justify-center gap-1 text-sm font-medium text-gray-900">
                           <TrendingUp className="h-3 w-3" />
                           {agency.totalSales}
                         </div>
-                        <div className="text-xs text-gray-500">გაყიდვა</div>
+                        <div className="text-xs text-gray-500">{t('agencies.sales')}</div>
                       </div>
                     </div>
 
                     <div className="flex gap-2">
                       <Button asChild className="flex-1" size="sm">
                         <Link to={getLanguageUrl(`agencies/${agency.id}`, i18n.language)}>
-                          დეტალები
+                          {t('agencies.detailsButton')}
                         </Link>
                       </Button>
                     </div>
 
                     <div className="mt-3 pt-3 border-t text-xs text-gray-500">
-                      დაარსდა: {formatDate(agency.createdAt)}
+                      {t('agencies.founded', { date: formatDate(agency.createdAt) })}
                     </div>
                   </CardContent>
                 </Card>
@@ -286,7 +286,7 @@ const Agencies = () => {
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
-                    წინა
+                    {t('agencies.pagination.previous')}
                   </Button>
                   
                   {Array.from({ length: Math.min(5, pagination.pages) }, (_, i) => {
@@ -309,7 +309,7 @@ const Agencies = () => {
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === pagination.pages}
                   >
-                    შემდეგი
+                    {t('agencies.pagination.next')}
                   </Button>
                 </div>
               </div>
@@ -319,10 +319,10 @@ const Agencies = () => {
               <div className="text-center py-12">
                 <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  სააგენტო არ მოიძებნა
+                  {t('agencies.noAgenciesFound')}
                 </h3>
                 <p className="text-gray-600">
-                  სცადეთ სხვა საძიებო პარამეტრები
+                  {t('agencies.noAgenciesDescription')}
                 </p>
               </div>
             )}

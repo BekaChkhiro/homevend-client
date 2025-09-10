@@ -55,5 +55,390 @@
     "no": "არა",
     "ok": "კარგი",
     "tryAgain": "თავიდან ცდა"
+  },
+  "footer": {
+    "description": "საქართველოს წამყვანი უძრავი ქონების პლატფორმა. ჩვენ გაგეხმარებით იპოვოთ თქვენი სახლი.",
+    "quickLinks": "სწრაფი ლინკები",
+    "links": {
+      "home": "მთავარი",
+      "forSale": "ყიდვა",
+      "forRent": "ქირავდება",
+      "newProjects": "ახალი პროექტები",
+      "services": "სერვისები"
+    },
+    "contact": {
+      "title": "კონტაქტი",
+      "phoneNumber": "საკონტაქტო ნომერი",
+      "address": "თბილისი, ბერბუკის ქ. N7<br />მე-2 სადარბაზო, სართული 11, ბინა N54"
+    },
+    "rights": "ყველა უფლება დაცულია.",
+    "termsAndConditions": "წესები და პირობები"
+  },
+  "heroSection": {
+    "title": "იპოვე შენი",
+    "titleHighlight": "სახლი",
+    "subtitle": "საუკეთესო უძრავი ქონების შეთავაზებები თბილისში და მთელ საქართველოში",
+    "transactionType": "გარიგების ტიპი",
+    "propertyType": "ქონების ტიპი",
+    "address": "მისამართი",
+    "city": "ქალაქი",
+    "chooseType": "აირჩიეთ ტიპი",
+    "addressPlaceholder": "შეიყვანეთ მისამართი, რაიონი...",
+    "search": "ძიება",
+    "clear": "გასუფთავება",
+    "popularSearches": "პოპულარული ძებნები",
+    "districts": {
+      "vake": "ვაკე",
+      "saburtalo": "საბურთალო",
+      "isani": "ისანი",
+      "gldani": "გლდანი", 
+      "oldTbilisi": "ძველი თბილისი",
+      "mtasminda": "მთაწმინდა"
+    }
+  },
+  "propertySearchHero": {
+    "transactionType": "გარიგების ტიპი",
+    "propertyType": "ქონების ტიპი",
+    "location": "მდებარეობა",
+    "chooseType": "აირჩიეთ ტიპი",
+    "city": "ქალაქი",
+    "area": "უბანი",
+    "searchTransactionType": "მოძებნეთ გარიგების ტიპი...",
+    "searchPropertyType": "მოძებნეთ ქონების ტიპი...",
+    "searchCity": "მოძებნეთ ქალაქი...",
+    "searchArea": "მოძებნეთ უბანი...",
+    "noTransactionTypeFound": "გარიგების ტიპი ვერ მოიძებნა",
+    "noPropertyTypeFound": "ქონების ტიპი ვერ მოიძებნა",
+    "noCityFound": "ქალაქი ვერ მოიძებნა",
+    "noAreaFound": "უბანი ვერ მოიძებნა",
+    "searching": "ძიება...",
+    "selected": "არჩეული",
+    "allCities": "ყველა ქალაქი",
+    "allAreas": "ყველა უბანი"
+  },
+  "filters": {
+    "transactionTypes": {
+      "all": "ყველა",
+      "sale": "იყიდება",
+      "rent": "ქირავდება",
+      "mortgage": "გირავდება",
+      "lease": "გაიცემა იჯარით",
+      "daily": "ქირავდება დღიურად",
+      "rentToBuy": "ნასყიდობა გამოსყიდობის უფლებით"
+    },
+    "propertyTypes": {
+      "all": "ყველა",
+      "apartment": "ბინები",
+      "house": "სახლები",
+      "cottage": "აგარაკები",
+      "land": "მიწის ნაკვეთები",
+      "commercial": "კომერციული ფართები",
+      "office": "საოფისე ფართები",
+      "hotel": "სასტუმროები"
+    },
+    "condition": {
+      "newlyRenovated": "ახალი გარემონტებული",
+      "oldRenovated": "ძველი გარემონტებული",
+      "ongoingRenovation": "მიმდინარე რემონტი",
+      "needsRenovation": "სარემონტო",
+      "whiteFrame": "თეთრი კარკასი",
+      "blackFrame": "შავი კარკასი",
+      "greenFrame": "მწვანე კარკასი",
+      "whitePlus": "თეთრი პლიუსი"
+    },
+    "heating": {
+      "centralHeating": "ცენტრალური გათბობა",
+      "gasHeater": "გაზის გამათბობელი",
+      "electricHeater": "ელექტრო გამათბობელი",
+      "centralFloor": "ცენტრალური+იატაკის გათბობა",
+      "noHeating": "გათბობის გარეშე",
+      "individual": "ინდივიდუალური",
+      "floorHeating": "იატაკის გათბობა"
+    },
+    "buildingStatus": {
+      "oldBuilt": "ძველი აშენებული",
+      "newBuilt": "ახალი აშენებული",
+      "underConstruction": "მშენებარე"
+    },
+    "parking": {
+      "garage": "ავტოფარეხი",
+      "parkingSpace": "პარკინგის ადგილი",
+      "yardParking": "ეზოს პარკინგი",
+      "undergroundParking": "მიწისქვეშა პარკინგი",
+      "paidParking": "ფასიანი ავტოსადგომი",
+      "noParking": "პარკინგის გარეშე"
+    },
+    "hotWater": {
+      "gasWaterHeater": "გაზის გამაცხელებელი",
+      "boiler": "ავზი",
+      "electricWaterHeater": "ელექტრო გამაცხელებელი",
+      "solarHeater": "მზის გამაცხელებელი",
+      "noHotWater": "ცხელი წყლის გარეშე",
+      "centralHotWater": "ცენტრალური ცხელი წყალი",
+      "naturalHotWater": "ბუნებრივი ცხელი წყალი",
+      "individual": "ინდივიდუალური"
+    },
+    "buildingMaterial": {
+      "block": "ბლოკი",
+      "brick": "აგური",
+      "wood": "ხის მასალა",
+      "reinforcedConcrete": "რკინა-ბეტონი",
+      "combined": "კომბინირებული"
+    },
+    "projectType": {
+      "nonStandard": "არასტანდარტული",
+      "villa": "ვილა",
+      "townhouse": "თაუნჰაუსი"
+    },
+    "dailyRental": {
+      "sea": "ზღვასთან დღიური ქირაობა",
+      "mountains": "მთაში დღიური ქირაობა",
+      "villa": "დღიური ვილები"
+    }
+  },
+  "advancedFilters": {
+    "title": "გაფართოებული ფილტრები",
+    "subtitle": "მოძებნეთ თქვენი იდეალური უძრავი ქონება",
+    "properties": "უძრავი ქონება",
+    "tabs": {
+      "basic": "ძირითადი",
+      "basicShort": "ძირ",
+      "building": "შენობა",
+      "buildingShort": "შენ",
+      "amenities": "კომფორტი",
+      "amenitiesShort": "კომფ",
+      "features": "ხასიათები",
+      "featuresShort": "ხას",
+      "saved": "შენახული",
+      "savedShort": "შენ"
+    },
+    "price": {
+      "title": "ფასი (ლარი)",
+      "minPrice": "მინიმალური ფასი",
+      "maxPrice": "მაქსიმალური ფასი"
+    },
+    "area": {
+      "title": "ფართობი (მ²)",
+      "minArea": "მინიმალური ფართობი",
+      "maxArea": "მაქსიმალური ფართობი"
+    },
+    "rooms": {
+      "title": "ოთახების რაოდენობა",
+      "rooms": "ოთახები",
+      "bedrooms": "საძინებლები",
+      "bathrooms": "სააბაზანოები",
+      "selected": "არჩეული",
+      "chooseRooms": "აირჩიეთ ოთახები",
+      "searchRooms": "მოძებნეთ ოთახები...",
+      "noRoomsFound": "ოთახები ვერ მოიძებნა",
+      "chooseBedrooms": "აირჩიეთ საძინებლები",
+      "searchBedrooms": "მოძებნეთ საძინებლები...",
+      "noBedroomsFound": "საძინებლები ვერ მოიძებნა",
+      "chooseBathrooms": "აირჩიეთ სააბაზანოები",
+      "searchBathrooms": "მოძებნეთ სააბაზანოები...",
+      "noBathroomsFound": "სააბაზანოები ვერ მოიძებნა",
+      "shared": "საერთო"
+    },
+    "dailyRental": {
+      "title": "დღიური ქირაობის ტიპი",
+      "chooseType": "აირჩიეთ ტიპი",
+      "sea": "ზღვასთან დღიური ქირაობა",
+      "mountains": "მთაში დღიური ქირაობა",
+      "villa": "დღიური ვილები"
+    },
+    "building": {
+      "totalFloors": "სულ სართული",
+      "floors13": "1-3 სართული",
+      "floors49": "4-9 სართული",
+      "floors1016": "10-16 სართული",
+      "floors17plus": "17+ სართული",
+      "buildingStatus": "შენობის სტატუსი",
+      "constructionYear": "მშენებლობის წელი",
+      "from": "დან",
+      "to": "მდე",
+      "condition": "მდგომარეობა",
+      "projectType": "პროექტის ტიპი",
+      "ceilingHeight": "ჭერის სიმაღლე (მ)",
+      "minimum": "მინიმუმ",
+      "maximum": "მაქსიმუმ",
+      "buildingMaterial": "სამშენებლო მასალა"
+    },
+    "amenities": {
+      "systemsTitle": "სისტემები და საკომუნიკაციო",
+      "heating": "გათბობა",
+      "parking": "პარკინგი",
+      "hotWater": "ცხელი წყალი",
+      "additionalComfort": "დამატებითი კომფორტი",
+      "balcony": "აივანი",
+      "pool": "აუზი",
+      "livingRoom": "მისაღები",
+      "loggia": "ლოჯია",
+      "veranda": "ვერანდა",
+      "yard": "ეზო",
+      "storage": "საცავი"
+    },
+    "features": {
+      "title": "მახასიათებლები",
+      "elevator": "ლიფტი",
+      "airConditioning": "კონდიციონერი",
+      "internet": "ინტერნეტი",
+      "cableTv": "კაბელური ტელევიზია",
+      "securitySystem": "უსაფრთხოების სისტემა",
+      "videoSurveillance": "ვიდეო ზედამხედველობა",
+      "concierge": "კონსიერჟი",
+      "washingMachine": "სარეცხი მანქანა",
+      "dishwasher": "ჭურჭლის საბანელი მანქანა",
+      "naturalGas": "ბუნებრივი გაზი",
+      "gasStove": "გაზის ღუმელი",
+      "electricStove": "ელექტრო ღუმელი",
+      "microwave": "მიკროტალღური",
+      "separateEntrance": "ცალკე შესასვლელი"
+    },
+    "advantages": {
+      "title": "უპირატესობები",
+      "downtown": "ცენტრში",
+      "nearMetro": "მეტროსთან ახლოს",
+      "quietArea": "მშვიდი რაიონი",
+      "developedInfrastructure": "განვითარებული ინფრასტრუქტურა",
+      "nearPark": "პარკთან ახლოს",
+      "nearSchool": "სკოლასთან ახლოს",
+      "nearMall": "სავაჭრო ცენტრთან ახლოს",
+      "nearBusStop": "ავტობუსის გაჩერებასთან ახლოს",
+      "nearUniversity": "უნივერსიტეტთან ახლოს",
+      "nearHospital": "საავადმყოფოსთან ახლოს",
+      "nearSea": "ზღვასთან ახლოს",
+      "nearMountains": "მთებთან ახლოს"
+    },
+    "furniture": {
+      "title": "ავეჯი და ტექნიკა",
+      "wardrobe": "კარადა",
+      "bed": "საწოლი",
+      "refrigerator": "მაცივარი",
+      "stove": "ღუმელი",
+      "washingMachine": "სარეცხი მანქანა",
+      "tv": "ტელევიზორი",
+      "microwave": "მიკროტალღური",
+      "dishwasher": "ჭურჭლის საბანელი",
+      "sofa": "დივანი",
+      "table": "მაგიდა",
+      "chairs": "სკამები",
+      "balconyFurniture": "აივნის ავეჯი",
+      "airConditioner": "კონდიციონერი",
+      "heater": "გამაცხელებელი"
+    },
+    "saved": {
+      "saveCurrent": "მიმდინარე ფილტრის შენახვა",
+      "filters": "ფილტრი",
+      "filterNamePlaceholder": "ფილტრის სახელი",
+      "saveFilter": "ფილტრის შენახვა",
+      "savedFiltersTitle": "შენახული ფილტრები",
+      "noSavedFilters": "შენახული ფილტრები არ არის",
+      "load": "ჩატვირთვა"
+    },
+    "actions": {
+      "clearAll": "ყველას გასუფთავება",
+      "clear": "გასუფთავება",
+      "filtersApplied": "ფილტრი გამოყენებულია"
+    }
+  },
+  "activeFilters": {
+    "title": "აქტიური ფილტრები",
+    "clearAll": "ყველას გასუფთავება",
+    "labels": {
+      "search": "ძიება",
+      "location": "მდებარეობა", 
+      "city": "ქალაქი",
+      "transactionType": "გარიგების ტიპი",
+      "propertyType": "ქონების ტიპი",
+      "price": "ფასი",
+      "minPrice": "მინ. ფასი",
+      "maxPrice": "მაქს. ფასი",
+      "area": "ფართობი",
+      "minArea": "მინ. ფართობი",
+      "maxArea": "მაქს. ფართობი",
+      "bedrooms": "საძინებელი",
+      "bathrooms": "სააბაზანო",
+      "rooms": "ოთახები",
+      "condition": "მდგომარეობა",
+      "buildingStatus": "შენობის სტატუსი",
+      "heating": "გათბობა",
+      "parking": "პარკინგი",
+      "hotWater": "ცხელი წყალი",
+      "buildingMaterial": "მშენებლობის მასალა",
+      "projectType": "პროექტის ტიპი",
+      "dailyRentalCategory": "დღიური ქირის კატეგორია",
+      "floors": "სართულები",
+      "constructionYear": "მშენებლობის წელი",
+      "ceilingHeight": "ჭერის სიმაღლე",
+      "balcony": "აივანი",
+      "pool": "აუზი",
+      "livingRoom": "მისაღები",
+      "loggia": "ლოჯია",
+      "veranda": "ვერანდა",
+      "yard": "ეზო",
+      "storage": "საცავი",
+      "feature": "თვისება",
+      "advantage": "უპირატესობა",
+      "furniture": "ავეჯი/ტექნიკა"
+    },
+    "values": {
+      "yes": "კი",
+      "rooms": "ოთახი",
+      "gel": "ლარი",
+      "sqm": "მ²",
+      "meters": "მ",
+      "shared": "საერთო",
+      "floor": "სართული",
+      "floors": "სართული",
+      "from": "წლიდან",
+      "to": "წლამდე"
+    }
+  },
+  "projects": {
+    "title": "პროექტები",
+    "subtitle": "იპოვეთ საუკეთესო განვითარების პროექტები თბილისში",
+    "filters": {
+      "title": "ფილტრები",
+      "searchPlaceholder": "ძიება...",
+      "projectType": "პროექტის ტიპი",
+      "deliveryStatus": "ჩაბარების სტატუსი", 
+      "city": "ქალაქი",
+      "area": "რაიონი",
+      "clearFilters": "გასუფთავება",
+      "allTypes": "ყველა ტიპი",
+      "allStatuses": "ყველა სტატუსი"
+    },
+    "projectTypes": {
+      "private_house": "კერძო სახლი",
+      "apartment_building": "საცხოვრებელი კომპლექსი"
+    },
+    "deliveryStatuses": {
+      "completed_with_renovation": "ჩაბარება რემონტით",
+      "green_frame": "მწვანე კარკასი",
+      "black_frame": "შავი კარკასი",
+      "white_frame": "თეთრი კარკასი"
+    },
+    "loading": "პროექტების ჩატვირთვა...",
+    "noProjects": {
+      "title": "პროექტები ვერ მოიძებნა",
+      "description": "სცადეთ სხვა ფილტრების გამოყენება"
+    },
+    "card": {
+      "type": "ტიპი:",
+      "buildings": "კორპუსები:",
+      "apartments": "ბინები:",
+      "floors": "სართულები:",
+      "priceFrom": "ფასი დაწყებული:",
+      "developer": "დეველოპერი:",
+      "delivery": "ჩაბარება:",
+      "views": "ნახვები"
+    },
+    "pagination": {
+      "previous": "წინა",
+      "next": "შემდეგი"
+    },
+    "errors": {
+      "loadingError": "პროექტების ჩატვირთვისას მოხდა შეცდომა"
+    }
   }
 }

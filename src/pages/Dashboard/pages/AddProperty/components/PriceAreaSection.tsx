@@ -8,7 +8,7 @@ import type { PropertyFormData } from "../types/propertyForm";
 import { useTranslation } from "react-i18next";
 
 export const PriceAreaSection = () => {
-  const { t } = useTranslation('userDashboard');
+  const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext<PropertyFormData>();
   const area = form.watch("area");
   const totalPrice = form.watch("totalPrice");

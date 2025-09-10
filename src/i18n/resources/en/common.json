@@ -55,5 +55,487 @@
     "no": "No",
     "ok": "OK",
     "tryAgain": "Try Again"
+  },
+  "addProject": {
+    "title": "Add New Project",
+    "subtitle": "Create a new project with detailed information",
+    "backToDashboard": "Back to Dashboard",
+    "onlyDevelopers": "Only developers can create projects",
+    "accessDenied": "Access Denied",
+    "accessDeniedDesc": "Only developers can access this page"
+  },
+  "footer": {
+    "description": "Georgia's leading real estate platform. We help you find your home.",
+    "quickLinks": "Quick Links",
+    "links": {
+      "home": "Home",
+      "forSale": "For Sale",
+      "forRent": "For Rent",
+      "newProjects": "New Projects",
+      "services": "Services"
+    },
+    "contact": {
+      "title": "Contact",
+      "phoneNumber": "Phone Number",
+      "address": "Tbilisi, Berbuki St. N7<br />2nd Building, Floor 11, Apt. N54"
+    },
+    "rights": "All rights reserved.",
+    "termsAndConditions": "Terms and Conditions"
+  },
+  "heroSection": {
+    "title": "Find your",
+    "titleHighlight": "home",
+    "subtitle": "Best real estate offers in Tbilisi and throughout Georgia",
+    "transactionType": "Transaction Type",
+    "propertyType": "Property Type",
+    "address": "Address",
+    "city": "City",
+    "chooseType": "Choose type",
+    "addressPlaceholder": "Enter address, district...",
+    "search": "Search",
+    "clear": "Clear",
+    "popularSearches": "Popular searches",
+    "districts": {
+      "vake": "Vake",
+      "saburtalo": "Saburtalo", 
+      "isani": "Isani",
+      "gldani": "Gldani",
+      "oldTbilisi": "Old Tbilisi",
+      "mtasminda": "Mtasminda"
+    }
+  },
+  "propertySearchHero": {
+    "transactionType": "Transaction Type",
+    "propertyType": "Property Type",
+    "location": "Location",
+    "chooseType": "Choose type",
+    "city": "City",
+    "area": "Area",
+    "searchTransactionType": "Search transaction type...",
+    "searchPropertyType": "Search property type...",
+    "searchCity": "Search city...",
+    "searchArea": "Search area...",
+    "noTransactionTypeFound": "Transaction type not found",
+    "noPropertyTypeFound": "Property type not found",
+    "noCityFound": "City not found",
+    "noAreaFound": "Area not found",
+    "searching": "Searching...",
+    "selected": "selected",
+    "allCities": "All cities",
+    "allAreas": "All areas"
+  },
+  "filters": {
+    "transactionTypes": {
+      "all": "All",
+      "sale": "For Sale",
+      "rent": "For Rent",
+      "mortgage": "Mortgage",
+      "lease": "Lease",
+      "daily": "Daily Rental",
+      "rentToBuy": "Rent to Buy"
+    },
+    "propertyTypes": {
+      "all": "All",
+      "apartment": "Apartments",
+      "house": "Houses",
+      "cottage": "Cottages",
+      "land": "Land Plots",
+      "commercial": "Commercial Spaces",
+      "office": "Office Spaces",
+      "hotel": "Hotels"
+    },
+    "condition": {
+      "newlyRenovated": "Newly Renovated",
+      "oldRenovated": "Old Renovated",
+      "ongoingRenovation": "Ongoing Renovation",
+      "needsRenovation": "Needs Renovation",
+      "whiteFrame": "White Frame",
+      "blackFrame": "Black Frame",
+      "greenFrame": "Green Frame",
+      "whitePlus": "White Plus"
+    },
+    "heating": {
+      "centralHeating": "Central Heating",
+      "gasHeater": "Gas Heater",
+      "electricHeater": "Electric Heater",
+      "centralFloor": "Central+Floor Heating",
+      "noHeating": "No Heating",
+      "individual": "Individual",
+      "floorHeating": "Floor Heating"
+    },
+    "buildingStatus": {
+      "oldBuilt": "Old Built",
+      "newBuilt": "New Built",
+      "underConstruction": "Under Construction"
+    },
+    "parking": {
+      "garage": "Garage",
+      "parkingSpace": "Parking Space",
+      "yardParking": "Yard Parking",
+      "undergroundParking": "Underground Parking",
+      "paidParking": "Paid Parking",
+      "noParking": "No Parking"
+    },
+    "hotWater": {
+      "gasWaterHeater": "Gas Water Heater",
+      "boiler": "Boiler",
+      "electricWaterHeater": "Electric Water Heater",
+      "solarHeater": "Solar Heater",
+      "noHotWater": "No Hot Water",
+      "centralHotWater": "Central Hot Water",
+      "naturalHotWater": "Natural Hot Water",
+      "individual": "Individual"
+    },
+    "buildingMaterial": {
+      "block": "Block",
+      "brick": "Brick",
+      "wood": "Wood",
+      "reinforcedConcrete": "Reinforced Concrete",
+      "combined": "Combined"
+    },
+    "projectType": {
+      "nonStandard": "Non-standard",
+      "villa": "Villa",
+      "townhouse": "Townhouse"
+    },
+    "dailyRental": {
+      "sea": "Seaside Daily Rental",
+      "mountains": "Mountain Daily Rental",
+      "villa": "Daily Villas"
+    }
+  },
+  "advancedFilters": {
+    "title": "Advanced Filters",
+    "subtitle": "Find your ideal property",
+    "properties": "properties",
+    "tabs": {
+      "basic": "Basic",
+      "basicShort": "Basic",
+      "building": "Building",
+      "buildingShort": "Build",
+      "amenities": "Amenities",
+      "amenitiesShort": "Amen",
+      "features": "Features",
+      "featuresShort": "Feat",
+      "saved": "Saved",
+      "savedShort": "Save"
+    },
+    "price": {
+      "title": "Price (GEL)",
+      "minPrice": "Minimum Price",
+      "maxPrice": "Maximum Price"
+    },
+    "area": {
+      "title": "Area (m²)",
+      "minArea": "Minimum Area",
+      "maxArea": "Maximum Area"
+    },
+    "dailyRental": {
+      "sea": "Seaside Daily Rental",
+      "mountains": "Mountain Daily Rental",
+      "villa": "Daily Villas"
+    },
+    "buildingStatus": {
+      "oldBuilt": "Old Built",
+      "newBuilt": "New Built",
+      "underConstruction": "Under Construction"
+    },
+    "condition": {
+      "newlyRenovated": "Newly Renovated",
+      "oldRenovated": "Old Renovated",
+      "ongoingRenovation": "Ongoing Renovation",
+      "needsRenovation": "Needs Renovation",
+      "whiteFrame": "White Frame",
+      "blackFrame": "Black Frame",
+      "greenFrame": "Green Frame",
+      "whitePlus": "White Plus"
+    },
+    "heating": {
+      "centralHeating": "Central Heating",
+      "gasHeater": "Gas Heater",
+      "electricHeater": "Electric Heater",
+      "centralFloor": "Central+Floor Heating",
+      "noHeating": "No Heating",
+      "individual": "Individual",
+      "floorHeating": "Floor Heating"
+    },
+    "parking": {
+      "garage": "Garage",
+      "parkingSpace": "Parking Space",
+      "yardParking": "Yard Parking",
+      "undergroundParking": "Underground Parking",
+      "paidParking": "Paid Parking",
+      "noParking": "No Parking"
+    },
+    "hotWater": {
+      "gasWaterHeater": "Gas Water Heater",
+      "boiler": "Boiler",
+      "electricWaterHeater": "Electric Water Heater",
+      "solarHeater": "Solar Heater",
+      "noHotWater": "No Hot Water",
+      "centralHotWater": "Central Hot Water",
+      "naturalHotWater": "Natural Hot Water",
+      "individual": "Individual"
+    },
+    "buildingMaterial": {
+      "block": "Block",
+      "brick": "Brick",
+      "wood": "Wood",
+      "reinforcedConcrete": "Reinforced Concrete",
+      "combined": "Combined"
+    },
+    "projectType": {
+      "nonStandard": "Non-standard",
+      "villa": "Villa",
+      "townhouse": "Townhouse"
+    },
+    "features": {
+      "elevator": "Elevator",
+      "airConditioning": "Air Conditioning",
+      "internet": "Internet",
+      "cableTv": "Cable TV",
+      "securitySystem": "Security System",
+      "videoSurveillance": "Video Surveillance",
+      "concierge": "Concierge",
+      "washingMachine": "Washing Machine",
+      "dishwasher": "Dishwasher",
+      "naturalGas": "Natural Gas",
+      "gasStove": "Gas Stove",
+      "electricStove": "Electric Stove",
+      "microwave": "Microwave",
+      "separateEntrance": "Separate Entrance"
+    },
+    "advantages": {
+      "downtown": "Downtown",
+      "nearMetro": "Near Metro",
+      "quietArea": "Quiet Area",
+      "developedInfrastructure": "Developed Infrastructure",
+      "nearPark": "Near Park",
+      "nearSchool": "Near School",
+      "nearMall": "Near Shopping Center",
+      "nearBusStop": "Near Bus Stop",
+      "nearUniversity": "Near University",
+      "nearHospital": "Near Hospital",
+      "nearSea": "Near Sea",
+      "nearMountains": "Near Mountains"
+    },
+    "rooms": {
+      "title": "Number of Rooms",
+      "rooms": "Rooms",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "selected": "selected",
+      "chooseRooms": "Choose rooms",
+      "searchRooms": "Search rooms...",
+      "noRoomsFound": "No rooms found",
+      "chooseBedrooms": "Choose bedrooms",
+      "searchBedrooms": "Search bedrooms...",
+      "noBedroomsFound": "No bedrooms found",
+      "chooseBathrooms": "Choose bathrooms",
+      "searchBathrooms": "Search bathrooms...",
+      "noBathroomsFound": "No bathrooms found",
+      "shared": "Shared"
+    },
+    "dailyRental": {
+      "title": "Daily Rental Type",
+      "chooseType": "Choose type",
+      "sea": "Seaside Daily Rental",
+      "mountains": "Mountain Daily Rental",
+      "villa": "Daily Villas"
+    },
+    "building": {
+      "totalFloors": "Total Floors",
+      "floors13": "1-3 floors",
+      "floors49": "4-9 floors", 
+      "floors1016": "10-16 floors",
+      "floors17plus": "17+ floors",
+      "buildingStatus": "Building Status",
+      "constructionYear": "Construction Year",
+      "from": "From",
+      "to": "To",
+      "condition": "Condition",
+      "projectType": "Project Type",
+      "ceilingHeight": "Ceiling Height (m)",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "buildingMaterial": "Building Material"
+    },
+    "amenities": {
+      "systemsTitle": "Systems & Communications",
+      "heating": "Heating",
+      "parking": "Parking",
+      "hotWater": "Hot Water",
+      "additionalComfort": "Additional Comfort",
+      "balcony": "Balcony",
+      "pool": "Pool",
+      "livingRoom": "Living Room",
+      "loggia": "Loggia",
+      "veranda": "Veranda",
+      "yard": "Yard",
+      "storage": "Storage"
+    },
+    "features": {
+      "title": "Features",
+      "elevator": "Elevator",
+      "airConditioning": "Air Conditioning",
+      "internet": "Internet",
+      "cableTv": "Cable TV",
+      "securitySystem": "Security System",
+      "videoSurveillance": "Video Surveillance",
+      "concierge": "Concierge",
+      "washingMachine": "Washing Machine",
+      "dishwasher": "Dishwasher",
+      "naturalGas": "Natural Gas",
+      "gasStove": "Gas Stove",
+      "electricStove": "Electric Stove",
+      "microwave": "Microwave",
+      "separateEntrance": "Separate Entrance"
+    },
+    "advantages": {
+      "title": "Advantages",
+      "downtown": "Downtown",
+      "nearMetro": "Near Metro",
+      "quietArea": "Quiet Area",
+      "developedInfrastructure": "Developed Infrastructure",
+      "nearPark": "Near Park",
+      "nearSchool": "Near School",
+      "nearMall": "Near Shopping Center",
+      "nearBusStop": "Near Bus Stop",
+      "nearUniversity": "Near University",
+      "nearHospital": "Near Hospital",
+      "nearSea": "Near Sea",
+      "nearMountains": "Near Mountains"
+    },
+    "furniture": {
+      "title": "Furniture & Appliances",
+      "wardrobe": "Wardrobe",
+      "bed": "Bed",
+      "refrigerator": "Refrigerator",
+      "stove": "Stove",
+      "washingMachine": "Washing Machine",
+      "tv": "TV",
+      "microwave": "Microwave",
+      "dishwasher": "Dishwasher",
+      "sofa": "Sofa",
+      "table": "Table",
+      "chairs": "Chairs",
+      "balconyFurniture": "Balcony Furniture",
+      "airConditioner": "Air Conditioner",
+      "heater": "Heater"
+    },
+    "saved": {
+      "saveCurrent": "Save Current Filter",
+      "filters": "filters",
+      "filterNamePlaceholder": "Filter name",
+      "saveFilter": "Save Filter",
+      "savedFiltersTitle": "Saved Filters",
+      "noSavedFilters": "No saved filters",
+      "load": "Load"
+    },
+    "actions": {
+      "clearAll": "Clear All",
+      "clear": "Clear",
+      "filtersApplied": "filters applied"
+    }
+  },
+  "activeFilters": {
+    "title": "Active Filters",
+    "clearAll": "Clear All",
+    "labels": {
+      "search": "Search",
+      "location": "Location", 
+      "city": "City",
+      "transactionType": "Transaction Type",
+      "propertyType": "Property Type",
+      "price": "Price",
+      "minPrice": "Min. Price",
+      "maxPrice": "Max. Price",
+      "area": "Area",
+      "minArea": "Min. Area",
+      "maxArea": "Max. Area",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "rooms": "Rooms",
+      "condition": "Condition",
+      "buildingStatus": "Building Status",
+      "heating": "Heating",
+      "parking": "Parking",
+      "hotWater": "Hot Water",
+      "buildingMaterial": "Building Material",
+      "projectType": "Project Type",
+      "dailyRentalCategory": "Daily Rental Category",
+      "floors": "Floors",
+      "constructionYear": "Construction Year",
+      "ceilingHeight": "Ceiling Height",
+      "balcony": "Balcony",
+      "pool": "Pool",
+      "livingRoom": "Living Room",
+      "loggia": "Loggia",
+      "veranda": "Veranda",
+      "yard": "Yard",
+      "storage": "Storage",
+      "feature": "Feature",
+      "advantage": "Advantage",
+      "furniture": "Furniture/Appliances"
+    },
+    "values": {
+      "yes": "Yes",
+      "rooms": "rooms",
+      "gel": "GEL",
+      "sqm": "m²",
+      "meters": "m",
+      "shared": "Shared",
+      "floor": "floor",
+      "floors": "floors",
+      "from": "from",
+      "to": "to"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Find the best development projects in Tbilisi",
+    "filters": {
+      "title": "Filters",
+      "searchPlaceholder": "Search...",
+      "projectType": "Project Type",
+      "deliveryStatus": "Delivery Status", 
+      "city": "City",
+      "area": "Area",
+      "clearFilters": "Clear",
+      "allTypes": "All Types",
+      "allStatuses": "All Statuses"
+    },
+    "projectTypes": {
+      "private_house": "Private House",
+      "apartment_building": "Apartment Building"
+    },
+    "deliveryStatuses": {
+      "completed_with_renovation": "Completed with Renovation",
+      "green_frame": "Green Frame",
+      "black_frame": "Black Frame",
+      "white_frame": "White Frame"
+    },
+    "loading": "Loading projects...",
+    "noProjects": {
+      "title": "No projects found",
+      "description": "Try using different filters"
+    },
+    "card": {
+      "type": "Type:",
+      "buildings": "Buildings:",
+      "apartments": "Apartments:",
+      "floors": "Floors:",
+      "priceFrom": "Price from:",
+      "developer": "Developer:",
+      "delivery": "Delivery:",
+      "views": "Views"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "errors": {
+      "loadingError": "An error occurred while loading projects"
+    }
   }
 }

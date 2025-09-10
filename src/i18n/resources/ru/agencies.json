@@ -1,0 +1,24 @@
+{
+  "agencies": {
+    "title": "Агентства",
+    "subtitle": "Найдите лучшие агентства недвижимости в Грузии",
+    "searchPlaceholder": "Поиск по названию агентства...",
+    "searchButton": "Поиск",
+    "loading": "Загрузка...",
+    "showing": "Показано {{count}} агентств из {{total}}",
+    "noAgenciesFound": "Агентства не найдены",
+    "noAgenciesDescription": "Попробуйте другие параметры поиска",
+    "owner": "Владелец: {{name}}",
+    "agents": "агентов",
+    "properties": "объектов",
+    "sales": "продаж",
+    "detailsButton": "Подробности",
+    "founded": "Основано: {{date}}",
+    "website": "Веб-сайт",
+    "socialMedia": "Социальные сети",
+    "pagination": {
+      "previous": "Предыдущая",
+      "next": "Следующая"
+    }
+  }
+}

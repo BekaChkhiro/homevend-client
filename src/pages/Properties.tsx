@@ -11,9 +11,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, SlidersHorizontal, MapPin, Home, ChevronLeft, ChevronRight } from "lucide-react";
 import { MobilePagination } from "@/components/MobilePagination";
-import { propertyApi } from "@/lib/api";
+import { propertyApi, areasApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -33,31 +34,32 @@ import {
 
 
 const Properties = () => {
+  const { t } = useTranslation(['properties', 'common']);
   const searchHeroRef = useRef<PropertySearchHeroRef>(null);
   
-  // Mapping function to convert database enum values to Georgian display values
-  const mapDealTypeToGeorgian = (dealType: string): string => {
+  // Mapping function to convert database enum values to display values
+  const mapDealTypeToDisplay = (dealType: string): string => {
     const mapping: { [key: string]: string } = {
-      'sale': 'იყიდება',
-      'rent': 'ქირავდება',
-      'mortgage': 'გირავდება',
-      'lease': 'გაიცემა იჯარით',
-      'daily': 'ქირავდება დღიურად',
-      'rent-to-buy': 'ნასყიდობა გამოსყიდობის უფლებით'
+      'sale': t('properties.dealTypes.sale'),
+      'rent': t('properties.dealTypes.rent'),
+      'mortgage': t('properties.dealTypes.mortgage'),
+      'lease': t('properties.dealTypes.lease'),
+      'daily': t('properties.dealTypes.daily'),
+      'rent-to-buy': t('properties.dealTypes.rentToBuy')
     };
     return mapping[dealType] || dealType;
   };
 
-  // Mapping function to convert database property types to Georgian display values
-  const mapPropertyTypeToGeorgian = (propertyType: string): string => {
+  // Mapping function to convert database property types to display values
+  const mapPropertyTypeToDisplay = (propertyType: string): string => {
     const mapping: { [key: string]: string } = {
-      'apartment': 'ბინები',
-      'house': 'სახლები',
-      'cottage': 'აგარაკები',
-      'land': 'მიწის ნაკვეთები',
-      'commercial': 'კომერციული ფართები',
-      'office': 'საოფისე ფართები',
-      'hotel': 'სასტუმროები'
+      'apartment': t('properties.propertyTypes.apartment'),
+      'house': t('properties.propertyTypes.house'),
+      'cottage': t('properties.propertyTypes.cottage'),
+      'land': t('properties.propertyTypes.land'),
+      'commercial': t('properties.propertyTypes.commercial'),
+      'office': t('properties.propertyTypes.office'),
+      'hotel': t('properties.propertyTypes.hotel')
     };
     return mapping[propertyType] || propertyType;
   };
@@ -109,6 +111,7 @@ const Properties = () => {
   const [sortBy, setSortBy] = useState<string>("newest");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
+  const [areas, setAreas] = useState<Array<{id: number, nameKa: string, nameEn: string, cityId: number}>>([]);
   const PROPERTIES_PER_PAGE = 16;
 
   // Helper functions for URL params
@@ -121,6 +124,7 @@ const Properties = () => {
       priceMax: searchParams.get('priceMax') || '',
       location: searchParams.get('location') || '',
       city: searchParams.get('city') || 'all',
+      areaId: searchParams.get('areaId') ? parseInt(searchParams.get('areaId')!, 10) : undefined,
       propertyType: (() => {
         const propertyTypeParam = searchParams.get('propertyType');
         if (!propertyTypeParam || propertyTypeParam === 'all') return [];
@@ -186,6 +190,7 @@ const Properties = () => {
     if (newFilters.priceMax) searchParams.set('priceMax', newFilters.priceMax);
     if (newFilters.location) searchParams.set('location', newFilters.location);
     if (newFilters.city && newFilters.city !== 'all') searchParams.set('city', newFilters.city);
+    if (newFilters.areaId) searchParams.set('areaId', newFilters.areaId.toString());
     if (newFilters.propertyType) {
       if (Array.isArray(newFilters.propertyType) && newFilters.propertyType.length > 0) {
         searchParams.set('propertyType', newFilters.propertyType.join(','));
@@ -254,11 +259,51 @@ const Properties = () => {
     navigate(newURL, { replace: true });
   };
 
+  // Load areas for area name resolution
+  useEffect(() => {
+    const loadAreas = async () => {
+      try {
+        console.log('🗺️ Loading areas for area name resolution...');
+        // Load areas for Tbilisi (cityId: 1) - this should be dynamic based on city filter
+        const areasData = await areasApi.getAreasByCity(1);
+        console.log('🗺️ Loaded areas:', areasData?.length || 0);
+        setAreas(areasData || []);
+      } catch (error) {
+        console.error('❌ Failed to load areas:', error);
+        setAreas([]);
+      }
+    };
+    loadAreas();
+  }, []);
+
+  // Resolve area name to areaId when location contains area name
+  const resolveAreaIdFromLocation = (locationString: string): number | undefined => {
+    if (!locationString || !areas.length) return undefined;
+    
+    const locationParts = locationString.split(',').map(part => part.replace(/\+/g, ' ').trim());
+    if (locationParts.length <= 1) return undefined;
+    
+    const areaName = locationParts[1]; // Second part should be area name
+    console.log('🗺️ Resolving area name to ID:', areaName);
+    
+    const foundArea = areas.find(area => area.nameKa === areaName);
+    if (foundArea) {
+      console.log('✅ Found area ID:', foundArea.id, 'for area:', areaName);
+      return foundArea.id;
+    } else {
+      console.log('❌ Area not found:', areaName);
+      console.log('Available areas:', areas.map(a => a.nameKa));
+      return undefined;
+    }
+  };
+
   // Initialize filters from URL and navigation state on component mount
   useEffect(() => {
     const urlFilters = getFiltersFromURL();
     const urlSort = new URLSearchParams(location.search).get('sort') || 'newest';
     const urlPage = parseInt(new URLSearchParams(location.search).get('page') || '1');
+    
+    console.log('🔍 Properties: URL filters parsed:', urlFilters);
     
     // Check if we have filters from navigation state (from home page)
     const stateFilters = location.state?.filters;
@@ -275,11 +320,22 @@ const Properties = () => {
       window.history.replaceState({}, '', window.location.pathname + window.location.search);
     } else {
       // Use filters from URL
+      console.log('🔍 Properties: Setting filters from URL:', urlFilters);
+      
+      // Resolve area name to areaId if location contains area name but areaId is missing
+      if (urlFilters.location && !urlFilters.areaId && areas.length > 0) {
+        const resolvedAreaId = resolveAreaIdFromLocation(urlFilters.location);
+        if (resolvedAreaId) {
+          console.log('🗺️ Resolved area ID from location:', resolvedAreaId);
+          urlFilters.areaId = resolvedAreaId;
+        }
+      }
+      
       setFilters(urlFilters);
       setSortBy(urlSort);
       setCurrentPage(urlPage);
     }
-  }, [location.search, location.state]);
+  }, [location.search, location.state, areas]);
 
   // Fetch properties with filters from API - removed client-side filtering
   useEffect(() => {
@@ -290,6 +346,7 @@ const Properties = () => {
     try {
       setIsLoading(true);
       console.log('🔍 Fetching properties from API with filters:', filters, 'sort:', sortBy, 'page:', currentPage);
+      console.log('🔍 API_BASE_URL:', import.meta.env.VITE_API_URL || 'http://localhost:3000/api');
       
       // Convert frontend filters to API parameters
       const apiParams = {
@@ -298,11 +355,35 @@ const Properties = () => {
         search: filters.search || undefined,
         location: filters.location || undefined,
         city: filters.city !== 'all' ? filters.city : undefined,
+        areaId: filters.areaId || undefined,
         propertyType: Array.isArray(filters.propertyType) && filters.propertyType.length > 0 
-          ? filters.propertyType.map(type => type === 'ბინები' ? 'apartment' : type === 'სახლები' ? 'house' : type === 'აგარაკები' ? 'cottage' : type === 'მიწის ნაკვეთები' ? 'land' : type === 'კომერციული ფართები' ? 'commercial' : type === 'საოფისე ფართები' ? 'office' : type === 'სასტუმროები' ? 'hotel' : type)
+          ? filters.propertyType.map(type => {
+              // Map display values back to API values
+              const reverseMapping: { [key: string]: string } = {
+                [t('properties.propertyTypes.apartment')]: 'apartment',
+                [t('properties.propertyTypes.house')]: 'house', 
+                [t('properties.propertyTypes.cottage')]: 'cottage',
+                [t('properties.propertyTypes.land')]: 'land',
+                [t('properties.propertyTypes.commercial')]: 'commercial',
+                [t('properties.propertyTypes.office')]: 'office',
+                [t('properties.propertyTypes.hotel')]: 'hotel'
+              };
+              return reverseMapping[type] || type;
+            })
           : undefined,
         dealType: filters.transactionType !== 'all' 
-          ? (filters.transactionType === 'იყიდება' ? 'sale' : filters.transactionType === 'ქირავდება' ? 'rent' : filters.transactionType === 'გირავდება' ? 'mortgage' : filters.transactionType === 'გაიცემა იჯარით' ? 'lease' : filters.transactionType === 'ქირავდება დღიურად' ? 'daily' : filters.transactionType === 'ნასყიდობა გამოსყიდობის უფლებით' ? 'rent-to-buy' : filters.transactionType)
+          ? (() => {
+              // Map display values back to API values
+              const reverseMapping: { [key: string]: string } = {
+                [t('properties.dealTypes.sale')]: 'sale',
+                [t('properties.dealTypes.rent')]: 'rent',
+                [t('properties.dealTypes.mortgage')]: 'mortgage',
+                [t('properties.dealTypes.lease')]: 'lease',
+                [t('properties.dealTypes.daily')]: 'daily',
+                [t('properties.dealTypes.rentToBuy')]: 'rent-to-buy'
+              };
+              return reverseMapping[filters.transactionType] || filters.transactionType;
+            })()
           : undefined,
         dailyRentalSubcategory: filters.dailyRentalSubcategory !== 'all' ? filters.dailyRentalSubcategory : undefined,
         minPrice: filters.priceMin ? Number(filters.priceMin) : undefined,
@@ -344,6 +425,7 @@ const Properties = () => {
         }
       });
 
+      console.log('🔍 Final apiParams being sent to server:', JSON.stringify(apiParams, null, 2));
       const response = await propertyApi.getProperties(apiParams);
       console.log('🎯 API Response:', response);
       
@@ -377,7 +459,7 @@ const Properties = () => {
         } else if (prop.city && prop.city.trim()) {
           parts.push(prop.city);
         }
-        const address = parts.length > 0 ? parts.join(', ') : 'მდებარეობა არ არის მითითებული';
+        const address = parts.length > 0 ? parts.join(', ') : t('propertyCard.locationNotSpecified');
         
         return {
           id: parseInt(prop.id) || prop.id,
@@ -391,8 +473,8 @@ const Properties = () => {
           bedrooms: parseInt(prop.bedrooms) || 1,
           bathrooms: parseInt(prop.bathrooms) || 1,
           area: parseInt(prop.area) || 0,
-          type: mapPropertyTypeToGeorgian(prop.propertyType) || 'ბინები',
-          transactionType: mapDealTypeToGeorgian(prop.dealType) || 'იყიდება',
+          type: mapPropertyTypeToDisplay(prop.propertyType) || t('properties.propertyTypes.apartment'),
+          transactionType: mapDealTypeToDisplay(prop.dealType) || t('properties.dealTypes.sale'),
           dailyRentalSubcategory: prop.dailyRentalSubcategory,
           image: prop.photos?.[0] || "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop",
           featured: prop.isFeatured || prop.viewCount > 10,
@@ -481,14 +563,14 @@ const Properties = () => {
       if (error.response?.status === 429) {
         const retryAfter = error.response?.data?.retryAfter || 60;
         toast({
-          title: "მოთხოვნები ლიმიტი",
-          description: `ძალიან ბევრი მოთხოვნა. თუ შეძლება, გაიმეორეთ ${retryAfter} წამის შემდეგ.`,
+          title: t('properties.errors.rateLimitTitle'),
+          description: t('properties.errors.rateLimitDescription', { seconds: retryAfter }),
           variant: "destructive",
         });
       } else {
         toast({
-          title: "შეცდომა",
-          description: "განცხადებების ჩატვირთვისას მოხდა შეცდომა.",
+          title: t('properties.errors.generalErrorTitle'),
+          description: t('properties.errors.generalErrorDescription'),
           variant: "destructive",
         });
       }
@@ -738,10 +820,10 @@ const Properties = () => {
             /* Results Header with Sorting - only show when not loading */
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">განცხადებები</h2>
+                <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{t('properties.title')}</h2>
                 <p className="text-sm sm:text-base text-muted-foreground">
-                  <span className="hidden sm:inline">ნაჩვენებია {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} საერთოდან {totalProperties} განცხადებიდან)</span>
-                  <span className="sm:hidden">{filteredProperties.length} განცხადება</span>
+                  <span className="hidden sm:inline">{t('properties.showing')} {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} {t('properties.of')} {totalProperties} {t('properties.totalProperties')})</span>
+                  <span className="sm:hidden">{filteredProperties.length} {t('properties.propertiesFound')}</span>
                 </p>
               </div>
 
@@ -752,11 +834,11 @@ const Properties = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">ყველაზე ახალი</SelectItem>
-                    <SelectItem value="price-low">ფასი: ზრდადობით</SelectItem>
-                    <SelectItem value="price-high">ფასი: კლებადობით</SelectItem>
-                    <SelectItem value="area-large">ფართობი: დიდიდან პატარამდე</SelectItem>
-                    <SelectItem value="area-small">ფართობი: პატარიდან დიდამდე</SelectItem>
+                    <SelectItem value="newest">{t('properties.sortBy.newest')}</SelectItem>
+                    <SelectItem value="price-low">{t('properties.sortBy.priceAscending')}</SelectItem>
+                    <SelectItem value="price-high">{t('properties.sortBy.priceDescending')}</SelectItem>
+                    <SelectItem value="area-large">{t('properties.sortBy.areaLargest')}</SelectItem>
+                    <SelectItem value="area-small">{t('properties.sortBy.areaSmallest')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -806,9 +888,9 @@ const Properties = () => {
               ) : filteredProperties.length === 0 ? (
                 <div className="text-center py-8 sm:py-12">
                   <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">განცხადებები ვერ მოიძებნა</h3>
+                  <h3 className="text-lg font-semibold mb-2">{t('properties.noPropertiesFound')}</h3>
                   <p className="text-muted-foreground mb-4">
-                    სცადეთ ფილტრების შეცვლა ან ძიების პარამეტრების მოდიფიცირება
+                    {t('properties.noPropertiesDescription')}
                   </p>
                   <Button onClick={() => {
                     const clearedFilters = {
@@ -855,7 +937,7 @@ const Properties = () => {
                     // Clear URL as well
                     navigate(location.pathname, { replace: true });
                   }}>
-                    ფილტრების გასუფთავება
+                    {t('properties.clearFilters')}
                   </Button>
                 </div>
               ) : (
