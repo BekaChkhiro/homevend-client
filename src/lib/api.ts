@@ -760,7 +760,7 @@ export const projectApi = {
   
   getProjectById: async (id: string) => {
     const response = await publicApiClient.get(`/projects/${id}`);
-    return response.data.data;
+    return response.data;
   },
   
   createProject: async (projectData: any) => {
