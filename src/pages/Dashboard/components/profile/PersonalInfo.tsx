@@ -30,7 +30,7 @@ export const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
         
         <div>
           <Label htmlFor="email">{t('profile.email')}</Label>
-          <Input id="email" type="email" value={user.email} />
+          <Input id="email" type="email" value={user.email} readOnly />
         </div>
         
         <div>
