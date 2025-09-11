@@ -305,6 +305,70 @@
     },
     "messages": {
       "adAdded": "Advertisement successfully added!"
+    },
+    "placements": {
+      "homeTopBanner": {
+        "name": "Main Page Top Banner",
+        "location": "Main page - below hero section"
+      },
+      "homeSidebar": {
+        "name": "Main Page Sidebar",
+        "location": "Main page - below filter panel"
+      },
+      "homeBottomBanner": {
+        "name": "Main Page Bottom Banner",
+        "location": "Main page - below property grid"
+      },
+      "listingsTopBanner": {
+        "name": "Listings Page Top Banner",
+        "location": "Listings page - below search header"
+      },
+      "listingsSidebar": {
+        "name": "Listings Page Sidebar",
+        "location": "Listings page - below filter panel"
+      },
+      "listingsBottomBanner": {
+        "name": "Listings Page Bottom Banner",
+        "location": "Listings page - below property grid"
+      },
+      "detailTopBanner": {
+        "name": "Property Detail Top Banner",
+        "location": "PropertyDetail page - below header"
+      },
+      "detailMiddleBanner": {
+        "name": "Property Detail Middle Banner",
+        "location": "PropertyDetail page - below property info card"
+      },
+      "detailSidebar": {
+        "name": "Property Detail Sidebar",
+        "location": "PropertyDetail page - below agent info card"
+      }
+    },
+    "sampleAds": {
+      "vakeResidence": {
+        "title": "New Project - Vake Residence",
+        "advertiser": "Vake Development"
+      },
+      "familyLoan": {
+        "title": "Family Loan - 0% Commission",
+        "advertiser": "TBC Bank"
+      },
+      "propertyInsurance": {
+        "title": "Property Insurance",
+        "advertiser": "AIG Georgia"
+      },
+      "propertyValuation": {
+        "title": "Property Valuation Service",
+        "advertiser": "PropertyVal"
+      },
+      "mortgageLoan": {
+        "title": "Mortgage Loan - Quick Application",
+        "advertiser": "Bank of Georgia"
+      },
+      "renovationMaterials": {
+        "title": "Renovation Materials - 20% Discount",
+        "advertiser": "BuildMart"
+      }
     }
   },
   "projects": {

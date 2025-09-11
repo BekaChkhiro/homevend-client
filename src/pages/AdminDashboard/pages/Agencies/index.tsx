@@ -39,15 +39,98 @@ const AdminAgencies = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Translation dictionaries for common Georgian place names
+  const cityTranslations: Record<string, Record<string, string>> = {
+    'თბილისი': { en: 'Tbilisi', ru: 'Тбилиси', ka: 'თბილისი' },
+    'ბათუმი': { en: 'Batumi', ru: 'Батуми', ka: 'ბათუმი' },
+    'ქუთაისი': { en: 'Kutaisi', ru: 'Кутაიси', ka: 'ქუთაისი' }
+  };
+
+  const districtTranslations: Record<string, Record<string, string>> = {
+    'ვაკე-საბურთალო': { en: 'Vake-Saburtalo', ru: 'Ваке-Сабурталo', ka: 'ვაკე-საბურთალო' },
+    'ვაკე': { en: 'Vake', ru: 'Ваке', ka: 'ვაკე' },
+    'საბურთალო': { en: 'Saburtalo', ru: 'Сабурталo', ka: 'საბურთალო' },
+    'დიდუბე': { en: 'Didube', ru: 'Дидубе', ka: 'დიდუბე' },
+    'ისანი': { en: 'Isani', ru: 'Исани', ka: 'ისანი' },
+    'კრწანისი': { en: 'Krtsanisi', ru: 'Крцаниси', ka: 'კრწანისი' },
+    'მთაწმინდა': { en: 'Mtatsminda', ru: 'Мтацминда', ka: 'მთაწმინდა' },
+    'ნაძალადევი': { en: 'Nadzaladevi', ru: 'Надзაладеви', ka: 'ნაძალადევი' },
+    'სამგორი': { en: 'Samgori', ru: 'Самгори', ka: 'სამგორი' },
+    'ჩუღურეთი': { en: 'Chughureti', ru: 'Чугурети', ka: 'ჩუღურეთი' }
+  };
+
+  const streetTranslations: Record<string, Record<string, string>> = {
+    'ტაშკენტის ქუჩა': { en: 'Tashkenti Street', ru: 'улица Ташкенти', ka: 'ტაშკენტის ქუჩა' },
+    'რუსთაველის ქუჩა': { en: 'Rustaveli Street', ru: 'улица Руstaveli', ka: 'რუსთაველის ქუჩა' },
+    'აღმაშენებლის ქუჩა': { en: 'Agmashenebeli Street', ru: 'улица Агмашенებели', ka: 'აღმაშენებლის ქუჩა' },
+    'ვაჟა-ფშაველას ქუჩა': { en: 'Vazha-Pshavela Street', ru: 'улица Важа-Пшавела', ka: 'ვაჟა-ფშაველას ქუჩა' }
+  };
+
+  // Helper function to translate Georgian text to target language
+  const translateText = (text: string, targetLang: string): string => {
+    if (!text || targetLang === 'ka') return text;
+    
+    let translatedText = text;
+    
+    // Translate cities
+    Object.entries(cityTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    // Translate districts
+    Object.entries(districtTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    // Translate streets
+    Object.entries(streetTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    return translatedText;
+  };
+
   useEffect(() => {
     fetchAgencies();
-  }, []);
+  }, [i18n.language]);
 
   const fetchAgencies = async () => {
     try {
       setIsLoading(true);
-      const data = await agencyApi.getAgencies();
-      setAgencies(data.agencies || []);
+      const data = await agencyApi.getAgencies({ lang: i18n.language });
+      console.log('Agencies API response:', data);
+      
+      // Process agencies data to ensure all fields are properly displayed
+      const processedAgencies = (data.agencies || []).map((agency: any) => ({
+        id: agency.id || 0,
+        name: agency.name || agency.agencyName || 'Unknown Agency',
+        description: agency.description || '',
+        address: translateText(agency.address || agency.location || 'Address not provided', i18n.language),
+        phone: agency.phone || agency.phoneNumber || 'Not provided',
+        email: agency.email || 'Not provided',
+        website: agency.website || '',
+        status: agency.status || agency.isActive ? 'active' : 'inactive',
+        totalListings: agency.totalListings || agency.listingCount || 0,
+        activeListings: agency.activeListings || agency.activeListingCount || 0,
+        totalAgents: agency.totalAgents || agency.agentCount || 0,
+        owner: {
+          id: agency.owner?.id || agency.ownerId || 0,
+          name: agency.owner?.name || agency.owner?.fullName || agency.ownerName || 'Unknown Owner',
+          email: agency.owner?.email || agency.ownerEmail || 'Not provided',
+          phone: agency.owner?.phone || agency.ownerPhone || 'Not provided'
+        },
+        createdAt: agency.createdAt || new Date().toISOString(),
+        logo: agency.logo || ''
+      }));
+      
+      console.log('Processed agencies:', processedAgencies);
+      setAgencies(processedAgencies);
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.message || 
@@ -235,11 +318,21 @@ const AdminAgencies = () => {
 
                       <div className="flex items-center text-gray-600 mb-2">
                         <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-                        <span className="text-sm truncate mr-4">{agency.address}</span>
-                        <Phone className="h-4 w-4 mr-1 flex-shrink-0" />
-                        <span className="text-sm truncate mr-4">{agency.phone}</span>
-                        <Mail className="h-4 w-4 mr-1 flex-shrink-0" />
-                        <span className="text-sm truncate">{agency.email}</span>
+                        <span className="text-sm truncate mr-4" title={agency.address}>
+                          {agency.address}
+                        </span>
+                        {agency.phone !== 'Not provided' && (
+                          <>
+                            <Phone className="h-4 w-4 mr-1 flex-shrink-0" />
+                            <span className="text-sm truncate mr-4">{agency.phone}</span>
+                          </>
+                        )}
+                        {agency.email !== 'Not provided' && (
+                          <>
+                            <Mail className="h-4 w-4 mr-1 flex-shrink-0" />
+                            <span className="text-sm truncate">{agency.email}</span>
+                          </>
+                        )}
                       </div>
 
                       <div className="flex items-center text-gray-600 mb-2">
@@ -252,6 +345,12 @@ const AdminAgencies = () => {
                           {agency.totalAgents} {t('agencies.labels.agents')}, {agency.activeListings} {t('agencies.labels.activeListings')}
                         </span>
                       </div>
+                      
+                      {agency.description && (
+                        <div className="text-sm text-gray-600 mb-2 line-clamp-2" title={agency.description}>
+                          {agency.description}
+                        </div>
+                      )}
 
                       <div className="flex items-center gap-4 text-xs text-gray-500">
                         <div className="flex items-center">

@@ -54,6 +54,7 @@ interface RecentProject {
   name: string;
   description: string;
   city: string;
+  fullAddress: string;
   deliveryStatus: string;
   createdAt: string;
   developer: {
@@ -95,18 +96,296 @@ const Overview = () => {
   const { t, i18n } = useTranslation('admin');
   const navigate = useNavigate();
 
+  // Translation dictionaries for common Georgian place names
+  const cityTranslations: Record<string, Record<string, string>> = {
+    'თბილისი': {
+      en: 'Tbilisi',
+      ru: 'Тбилиси',
+      ka: 'თბილისი'
+    },
+    'ბათუმი': {
+      en: 'Batumi',
+      ru: 'Батуми', 
+      ka: 'ბათუმი'
+    },
+    'ქუთაისი': {
+      en: 'Kutaisi',
+      ru: 'Кутаиси',
+      ka: 'ქუთაისი'
+    }
+  };
+
+  const districtTranslations: Record<string, Record<string, string>> = {
+    'ვაკე-საბურთალო': {
+      en: 'Vake-Saburtalo',
+      ru: 'Ваке-Сабурталo',
+      ka: 'ვაკე-საბურთალო'
+    },
+    'ვაკე': {
+      en: 'Vake',
+      ru: 'Ваке',
+      ka: 'ვაკე'
+    },
+    'საბურთალო': {
+      en: 'Saburtalo',
+      ru: 'Сабурталo',
+      ka: 'საბურთალო'
+    },
+    'დიდუბე': {
+      en: 'Didube',
+      ru: 'Дидубе',
+      ka: 'დიდუბე'
+    },
+    'ისანი': {
+      en: 'Isani',
+      ru: 'Исани',
+      ka: 'ისანი'
+    },
+    'კრწანისი': {
+      en: 'Krtsanisi',
+      ru: 'Крцаниси',
+      ka: 'კრწანისი'
+    },
+    'მთაწმინდა': {
+      en: 'Mtatsminda',
+      ru: 'Мтацминда',
+      ka: 'მთაწმინდა'
+    },
+    'ნაძალადევი': {
+      en: 'Nadzaladevi',
+      ru: 'Надзаладеви',
+      ka: 'ნაძალადევი'
+    },
+    'სამგორი': {
+      en: 'Samgori',
+      ru: 'Самгори',
+      ka: 'სამგორი'
+    },
+    'ჩუღურეთი': {
+      en: 'Chughureti',
+      ru: 'Чугурети',
+      ka: 'ჩუღურეთი'
+    }
+  };
+
+  const streetTranslations: Record<string, Record<string, string>> = {
+    'ტაშკენტის ქუჩა': {
+      en: 'Tashkenti Street',
+      ru: 'улица Ташкенти',
+      ka: 'ტაშკენტის ქუჩა'
+    },
+    'რუსთაველის ქუჩა': {
+      en: 'Rustaveli Street',
+      ru: 'улица Руставели',
+      ka: 'რუსთაველის ქუჩა'
+    },
+    'აღმაშენებლის ქუჩა': {
+      en: 'Agmashenebeli Street',
+      ru: 'улица Агмашенебели',
+      ka: 'აღმაშენებლის ქუჩა'
+    },
+    'ვაჟა-ფშაველას ქუჩა': {
+      en: 'Vazha-Pshavela Street',
+      ru: 'улица Важа-Пшавела',
+      ka: 'ვაჟა-ფშაველას ქუჩა'
+    }
+  };
+
+  // Helper function to translate Georgian address to target language
+  const translateAddress = (address: string, targetLang: string): string => {
+    if (!address || targetLang === 'ka') return address;
+    
+    let translatedAddress = address;
+    
+    // Translate cities
+    Object.entries(cityTranslations).forEach(([georgian, translations]) => {
+      if (translatedAddress.includes(georgian)) {
+        translatedAddress = translatedAddress.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    // Translate districts
+    Object.entries(districtTranslations).forEach(([georgian, translations]) => {
+      if (translatedAddress.includes(georgian)) {
+        translatedAddress = translatedAddress.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    // Translate streets
+    Object.entries(streetTranslations).forEach(([georgian, translations]) => {
+      if (translatedAddress.includes(georgian)) {
+        translatedAddress = translatedAddress.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    return translatedAddress;
+  };
+
+  // Helper function to get full translated address from property/project data
+  const getLocationFromData = (data: any): string => {
+    const parts = [];
+    
+    // First try to get structured address data from database
+    // Check for translated city data
+    if (data.cityData || data.city) {
+      const city = data.cityData || data.city;
+      let cityName;
+      
+      if (typeof city === 'string') {
+        cityName = city;
+      } else if (city && typeof city === 'object') {
+        switch (i18n.language) {
+          case 'ka':
+            cityName = city.nameGeorgian || city.nameKa || city.nameEn || city.nameEnglish;
+            break;
+          case 'ru':
+            cityName = city.nameRu || city.nameEnglish || city.nameEn || city.nameGeorgian || city.nameKa;
+            break;
+          case 'en':
+          default:
+            cityName = city.nameEnglish || city.nameEn || city.nameGeorgian || city.nameKa;
+            break;
+        }
+      }
+      
+      if (cityName) parts.push(cityName);
+    }
+    
+    // Check for translated area/district data
+    if (data.areaData || data.districtData) {
+      const area = data.areaData || data.districtData;
+      let areaName;
+      
+      if (typeof area === 'string') {
+        areaName = area;
+      } else if (area && typeof area === 'object') {
+        switch (i18n.language) {
+          case 'ka':
+            areaName = area.nameKa || area.nameGeorgian || area.nameEn || area.nameEnglish;
+            break;
+          case 'ru':
+            areaName = area.nameRu || area.nameEnglish || area.nameEn || area.nameGeorgian || area.nameKa;
+            break;
+          case 'en':
+          default:
+            areaName = area.nameEn || area.nameEnglish || area.nameGeorgian || area.nameKa;
+            break;
+        }
+      }
+      
+      if (areaName) parts.push(areaName);
+    } else if (data.district) {
+      parts.push(data.district);
+    }
+    
+    // Add street if available
+    if (data.street) {
+      parts.push(data.street);
+    }
+    
+    // Add building number if available
+    if (data.buildingNumber || data.houseNumber) {
+      const buildingNum = data.buildingNumber || data.houseNumber;
+      if (parts.length > 0 && data.street) {
+        parts[parts.length - 1] = `${parts[parts.length - 1]} ${buildingNum}`;
+      } else {
+        parts.push(buildingNum);
+      }
+    }
+    
+    // If we got structured data, return it
+    if (parts.length > 0) {
+      return parts.join(', ');
+    }
+    
+    // Fallback to existing address fields with client-side translation
+    let address = '';
+    if (data.location) {
+      address = data.location;
+    } else if (data.fullAddress) {
+      address = data.fullAddress;
+    } else if (data.address) {
+      address = data.address;
+    } else {
+      return t('common.notSpecified');
+    }
+    
+    // Apply client-side translation as fallback
+    return translateAddress(address, i18n.language);
+  };
+
+  // Helper function to get translated city name from project data
+  const getCityNameFromProject = (project: any): string => {
+    let cityName = '';
+    
+    if (typeof project.city === 'string') {
+      cityName = project.city;
+    } else if (project.city && typeof project.city === 'object') {
+      // Try to get the city name from the object structure first
+      switch (i18n.language) {
+        case 'ka':
+          cityName = project.city.nameGeorgian || project.city.nameKa || project.city.nameEn || project.city.nameEnglish || '';
+          break;
+        case 'ru':
+          cityName = project.city.nameRu || project.city.nameEnglish || project.city.nameEn || project.city.nameGeorgian || project.city.nameKa || '';
+          break;
+        case 'en':
+        default:
+          cityName = project.city.nameEnglish || project.city.nameEn || project.city.nameGeorgian || project.city.nameKa || project.city.name || '';
+          break;
+      }
+    }
+    
+    if (!cityName) {
+      return 'Unknown';
+    }
+    
+    // Apply client-side translation if needed
+    return translateAddress(cityName, i18n.language);
+  };
+
+  // Helper function to get translated company name
+  const getCompanyName = (company: any): string => {
+    if (!company) return '';
+    
+    if (typeof company === 'string') {
+      return company;
+    }
+    
+    if (company && typeof company === 'object') {
+      switch (i18n.language) {
+        case 'ka':
+          return company.nameKa || company.nameGeorgian || company.nameEn || company.nameEnglish || company.name || '';
+        case 'ru':
+          return company.nameRu || company.nameEnglish || company.nameEn || company.nameGeorgian || company.nameKa || company.name || '';
+        case 'en':
+        default:
+          return company.nameEnglish || company.nameEn || company.name || company.nameGeorgian || company.nameKa || '';
+      }
+    }
+    
+    return '';
+  };
+
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [i18n.language]);
 
   const fetchDashboardData = async () => {
     try {
       setIsLoading(true);
       
-      // Fetch main dashboard stats
-      const result = await adminApi.getDashboardStats();
+      // Fetch main dashboard stats with language parameter
+      const result = await adminApi.getDashboardStats({ lang: i18n.language });
       setStats(result.stats);
-      setRecentListings(result.recentProperties || []);
+      
+      
+      // Process recent listings with proper location translation
+      const processedListings = (result.recentProperties || []).map((listing: any) => ({
+        ...listing,
+        location: getLocationFromData(listing)
+      }));
+      setRecentListings(processedListings);
       setRecentUsers(result.recentUsers || []);
       
       // Fetch additional data for new sections
@@ -133,15 +412,15 @@ const Overview = () => {
 
   const fetchRecentProjects = async () => {
     try {
-      const result = await adminApi.getProjects({ limit: 5 });
+      const result = await adminApi.getProjects({ limit: 5, lang: i18n.language });
+      
       
       const projects = result.projects?.slice(0, 5).map((project: any) => ({
         id: project.id,
         name: project.name || project.title || project.projectName || 'Unnamed Project',
         description: project.description || '',
-        city: typeof project.city === 'object' && project.city ? 
-          (project.city.nameEnglish || project.city.nameGeorgian || project.city.name || 'Unknown') : 
-          (project.city || 'Unknown'),
+        city: getCityNameFromProject(project),
+        fullAddress: getLocationFromData(project),
         deliveryStatus: project.deliveryStatus || project.status || 'active',
         createdAt: project.createdAt,
         developer: {
@@ -159,30 +438,16 @@ const Overview = () => {
 
   const fetchRecentDevelopers = async () => {
     try {
-      const result = await adminApi.getUsers({ role: 'developer', limit: 5 });
-      console.log('Developers API result:', result);
+      const result = await adminApi.getUsers({ role: 'developer', limit: 5, lang: i18n.language });
       
-      if (result.users && result.users.length > 0) {
-        console.log('First developer sample:', result.users[0]);
-      }
-      
-      const developers = result.users?.slice(0, 5).map((user: any) => {
-        console.log('Mapping developer user:', user);
-        
-        const mappedDeveloper = {
-          id: user.id,
-          fullName: user.fullName || 'Unknown Developer',
-          email: user.email || 'No email',
-          companyName: typeof user.companyName === 'object' && user.companyName ? 
-            (user.companyName.name || user.companyName.nameEnglish || 'Unknown Company') : 
-            (user.companyName || user.company || ''),
-          totalProjects: user.totalProjects || user.projectCount || user.projects?.length || 0,
-          createdAt: user.createdAt
-        };
-        
-        console.log('Mapped developer:', mappedDeveloper);
-        return mappedDeveloper;
-      }) || [];
+      const developers = result.users?.slice(0, 5).map((user: any) => ({
+        id: user.id,
+        fullName: user.fullName || 'Unknown Developer',
+        email: user.email || 'No email',
+        companyName: getCompanyName(user.companyName || user.company),
+        totalProjects: user.totalProjects || user.projectCount || user.projects?.length || 0,
+        createdAt: user.createdAt
+      })) || [];
       
       setRecentDevelopers(developers);
     } catch (error) {
@@ -193,7 +458,7 @@ const Overview = () => {
 
   const fetchRecentAgencies = async () => {
     try {
-      const result = await agencyApi.getAgencies({ limit: 5 });
+      const result = await agencyApi.getAgencies({ limit: 5, lang: i18n.language });
       const agencies = result.agencies?.slice(0, 5).map((agency: any) => ({
         id: agency.id,
         name: agency.name || 'Unknown Agency',
@@ -366,7 +631,7 @@ const Overview = () => {
                       <div className="flex-1">
                         <h4 className="font-semibold">{project.name}</h4>
                         <p className="text-sm text-gray-600">{t('overview.labels.developer')} {project.developer.fullName}</p>
-                        <p className="text-sm text-gray-600">{t('overview.labels.city')} {project.city}</p>
+                        <p className="text-sm text-gray-600">{t('overview.labels.location')} {project.fullAddress}</p>
                         <div className="flex items-center gap-4 mt-1">
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                             {t(`overview.deliveryStatus.${project.deliveryStatus}`, { defaultValue: project.deliveryStatus })}

@@ -39,14 +39,115 @@ const AdminProjects = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Translation dictionaries for common Georgian place names
+  const cityTranslations: Record<string, Record<string, string>> = {
+    'თბილისი': { en: 'Tbilisi', ru: 'Тбилиси', ka: 'თბილისი' },
+    'ბათუმი': { en: 'Batumi', ru: 'Батуми', ka: 'ბათუმი' },
+    'ქუთაისი': { en: 'Kutaisi', ru: 'Кутаიси', ka: 'ქუთაისი' }
+  };
+
+  const districtTranslations: Record<string, Record<string, string>> = {
+    'ვაკე-საბურთალო': { en: 'Vake-Saburtalo', ru: 'Ваке-Сабурталo', ka: 'ვაკე-საბურთალო' },
+    'ვაკე': { en: 'Vake', ru: 'Ваке', ka: 'ვაკე' },
+    'საბურთალო': { en: 'Saburtalo', ru: 'Сабурталo', ka: 'საბურთალო' },
+    'დიდუბე': { en: 'Didube', ru: 'Дидубე', ka: 'დიდუბე' },
+    'ისანი': { en: 'Isani', ru: 'Исани', ka: 'ისანი' },
+    'კრწანისი': { en: 'Krtsanisi', ru: 'Крцаниси', ka: 'კრწანისი' },
+    'მთაწმინდა': { en: 'Mtatsminda', ru: 'Мтацминда', ka: 'მთაწმინდა' },
+    'ნაძალადევი': { en: 'Nadzaladevi', ru: 'Надзаладеви', ka: 'ნაძალადევი' },
+    'სამგორი': { en: 'Samgori', ru: 'Самгори', ka: 'სამგორი' },
+    'ჩუღურეთი': { en: 'Chughureti', ru: 'Чугурети', ka: 'ჩუღურეთი' }
+  };
+
+  const streetTranslations: Record<string, Record<string, string>> = {
+    'ტაშკენტის ქუჩა': { en: 'Tashkenti Street', ru: 'улица Ташкенти', ka: 'ტაშკენტის ქუჩა' },
+    'რუსთაველის ქუჩა': { en: 'Rustaveli Street', ru: 'улица Руставeli', ka: 'რუსთაველის ქუჩა' },
+    'აღმაშენებლის ქუჩა': { en: 'Agmashenebeli Street', ru: 'улица Агмашენებели', ka: 'აღმაშენებლის ქუჩა' },
+    'ვაჟა-ფშაველას ქუჩა': { en: 'Vazha-Pshavela Street', ru: 'улица Важа-Пшавела', ka: 'ვაჟა-ფშაველას ქუჩა' }
+  };
+
+  // Helper function to translate Georgian text to target language
+  const translateText = (text: string, targetLang: string): string => {
+    if (!text || targetLang === 'ka') return text;
+    
+    let translatedText = text;
+    
+    // Translate cities
+    Object.entries(cityTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    // Translate districts
+    Object.entries(districtTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    // Translate streets
+    Object.entries(streetTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    return translatedText;
+  };
+
+  // Helper function to get localized city name
+  const getCityName = (city: any): string => {
+    if (typeof city === 'string') return city;
+    
+    if (city && typeof city === 'object') {
+      switch (i18n.language) {
+        case 'ka':
+          return city.nameGeorgian || city.nameKa || city.nameEn || city.nameEnglish || '';
+        case 'ru':
+          return city.nameRu || city.nameEnglish || city.nameEn || city.nameGeorgian || city.nameKa || '';
+        case 'en':
+        default:
+          return city.nameEnglish || city.nameEn || city.nameGeorgian || city.nameKa || '';
+      }
+    }
+    
+    return '';
+  };
+
+  // Helper function to get full translated address
+  const getFullTranslatedAddress = (proj: any, targetLang: string): string => {
+    // If we already have a full address, translate it
+    if (proj.fullAddress || proj.location || proj.address) {
+      const address = proj.fullAddress || proj.location || proj.address;
+      return translateText(address, targetLang);
+    }
+    
+    // Otherwise construct from parts
+    const parts = [];
+    
+    // Get city name
+    const cityName = getCityName(proj.city);
+    if (cityName) {
+      parts.push(translateText(cityName, targetLang));
+    }
+    
+    // Get street
+    if (proj.street) {
+      parts.push(translateText(proj.street, targetLang));
+    }
+    
+    return parts.join(', ') || 'Address not specified';
+  };
+
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [i18n.language]);
 
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      const result = await adminApi.getProjects();
+      const result = await adminApi.getProjects({ lang: i18n.language });
       
       // Handle different response formats
       let projectsData = [];
@@ -65,7 +166,7 @@ const AdminProjects = () => {
           id: proj.id,
           title: proj.projectName || proj.title || `${t('projects.title')} #${proj.id}`,
           description: proj.description || "",
-          location: proj.fullAddress || proj.location || proj.address || `${proj.street || ""} ${proj.city?.nameGeorgian || proj.city || ""}`.trim(),
+          location: getFullTranslatedAddress(proj, i18n.language),
           status: proj.deliveryStatus || proj.status || "active",
           totalUnits: proj.totalUnits || 0,
           soldUnits: proj.soldUnits || 0,

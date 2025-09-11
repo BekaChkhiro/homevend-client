@@ -364,7 +364,7 @@ const Projects = () => {
 
                       {/* Footer */}
                       <div className="flex items-center justify-between pt-2 border-t text-sm text-gray-500">
-                        <span>{project.developer?.fullName || `${t('projectInfo.developerId')} ${project.developerId}`}</span>
+                        <span>{project.developer?.fullName || `${t('projectInfo.developerId')} ${project.developer}`}</span>
                         <div className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />
                           <span>{project.viewCount}</span>

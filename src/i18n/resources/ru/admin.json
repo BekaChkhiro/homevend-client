@@ -305,6 +305,70 @@
     },
     "messages": {
       "adAdded": "Реклама успешно добавлена!"
+    },
+    "placements": {
+      "homeTopBanner": {
+        "name": "Верхний баннер главной страницы",
+        "location": "Главная страница - под hero секцией"
+      },
+      "homeSidebar": {
+        "name": "Боковой баннер главной страницы",
+        "location": "Главная страница - под панелью фильтров"
+      },
+      "homeBottomBanner": {
+        "name": "Нижний баннер главной страницы",
+        "location": "Главная страница - под сеткой недвижимости"
+      },
+      "listingsTopBanner": {
+        "name": "Верхний баннер страницы объявлений",
+        "location": "Страница объявлений - под заголовком поиска"
+      },
+      "listingsSidebar": {
+        "name": "Боковой баннер страницы объявлений",
+        "location": "Страница объявлений - под панелью фильтров"
+      },
+      "listingsBottomBanner": {
+        "name": "Нижний баннер страницы объявлений",
+        "location": "Страница объявлений - под сеткой недвижимости"
+      },
+      "detailTopBanner": {
+        "name": "Верхний баннер страницы деталей",
+        "location": "Страница PropertyDetail - под заголовком"
+      },
+      "detailMiddleBanner": {
+        "name": "Средний баннер страницы деталей",
+        "location": "Страница PropertyDetail - под карточкой информации"
+      },
+      "detailSidebar": {
+        "name": "Боковой баннер страницы деталей",
+        "location": "Страница PropertyDetail - под карточкой агента"
+      }
+    },
+    "sampleAds": {
+      "vakeResidence": {
+        "title": "Новый проект - Ваке Резиденция",
+        "advertiser": "Ваке Девелопмент"
+      },
+      "familyLoan": {
+        "title": "Семейный кредит - 0% комиссия",
+        "advertiser": "TBC Банк"
+      },
+      "propertyInsurance": {
+        "title": "Страхование недвижимости",
+        "advertiser": "AIG Грузия"
+      },
+      "propertyValuation": {
+        "title": "Услуги оценки недвижимости",
+        "advertiser": "PropertyVal"
+      },
+      "mortgageLoan": {
+        "title": "Ипотечный кредит - быстрая заявка",
+        "advertiser": "Банк Грузии"
+      },
+      "renovationMaterials": {
+        "title": "Материалы для ремонта - скидка 20%",
+        "advertiser": "BuildMart"
+      }
     }
   },
   "projects": {

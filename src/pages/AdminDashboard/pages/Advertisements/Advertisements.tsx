@@ -43,8 +43,8 @@ const Advertisements = () => {
   const adPlacements: AdPlacement[] = [
     {
       id: '1',
-      name: 'მთავარი გვერდის ზედა ბანერი',
-      location: 'მთავარი გვერდი - hero section-ის ქვეშ',
+      name: t('advertisements.placements.homeTopBanner.name'),
+      location: t('advertisements.placements.homeTopBanner.location'),
       type: 'banner',
       dimensions: '728x90px (horizontal)',
       status: 'active',
@@ -52,16 +52,16 @@ const Advertisements = () => {
       views: 18750,
       clicks: 312,
       currentAd: {
-        title: 'ახალი პროექტი - ვაკის რეზიდენცია',
-        advertiser: 'ვაკე დეველოპმენტი',
+        title: t('advertisements.sampleAds.vakeResidence.title'),
+        advertiser: t('advertisements.sampleAds.vakeResidence.advertiser'),
         startDate: '2024-01-15',
         endDate: '2024-02-15'
       }
     },
     {
       id: '2',
-      name: 'მთავარი გვერდის გვერდითი ბარი',
-      location: 'მთავარი გვერდი - ფილტრის პანელის ქვეშ',
+      name: t('advertisements.placements.homeSidebar.name'),
+      location: t('advertisements.placements.homeSidebar.location'),
       type: 'sidebar',
       dimensions: '300x250px (vertical)',
       status: 'active',
@@ -69,16 +69,16 @@ const Advertisements = () => {
       views: 14200,
       clicks: 189,
       currentAd: {
-        title: 'საოჯახო სესხი - 0% საკომისიო',
-        advertiser: 'TBC ბანკი',
+        title: t('advertisements.sampleAds.familyLoan.title'),
+        advertiser: t('advertisements.sampleAds.familyLoan.advertiser'),
         startDate: '2024-01-20',
         endDate: '2024-03-20'
       }
     },
     {
       id: '3',
-      name: 'მთავარი გვერდის ქვედა ბანერი',
-      location: 'მთავარი გვერდი - property grid-ის ქვეშ',
+      name: t('advertisements.placements.homeBottomBanner.name'),
+      location: t('advertisements.placements.homeBottomBanner.location'),
       type: 'banner',
       dimensions: '728x90px (horizontal)',
       status: 'active',
@@ -86,16 +86,16 @@ const Advertisements = () => {
       views: 12890,
       clicks: 156,
       currentAd: {
-        title: 'უძრავი ქონების დაზღვევა',
-        advertiser: 'AIG საქართველო',
+        title: t('advertisements.sampleAds.propertyInsurance.title'),
+        advertiser: t('advertisements.sampleAds.propertyInsurance.advertiser'),
         startDate: '2024-01-10',
         endDate: '2024-02-10'
       }
     },
     {
       id: '4',
-      name: 'განცხადებების გვერდის ზედა ბანერი',
-      location: 'განცხადებების გვერდი - search header-ის ქვეშ',
+      name: t('advertisements.placements.listingsTopBanner.name'),
+      location: t('advertisements.placements.listingsTopBanner.location'),
       type: 'banner',
       dimensions: '728x90px (horizontal)',
       status: 'active',
@@ -103,16 +103,16 @@ const Advertisements = () => {
       views: 16450,
       clicks: 234,
       currentAd: {
-        title: 'ქონების შეფასების სერვისი',
-        advertiser: 'PropertyVal',
+        title: t('advertisements.sampleAds.propertyValuation.title'),
+        advertiser: t('advertisements.sampleAds.propertyValuation.advertiser'),
         startDate: '2024-01-25',
         endDate: '2024-02-25'
       }
     },
     {
       id: '5',
-      name: 'განცხადებების გვერდის გვერდითი ბარი',
-      location: 'განცხადებების გვერდი - ფილტრის პანელის ქვეშ',
+      name: t('advertisements.placements.listingsSidebar.name'),
+      location: t('advertisements.placements.listingsSidebar.location'),
       type: 'sidebar',
       dimensions: '300x250px (vertical)',
       status: 'inactive',
@@ -122,8 +122,8 @@ const Advertisements = () => {
     },
     {
       id: '6',
-      name: 'განცხადებების გვერდის ქვედა ბანერი',
-      location: 'განცხადებების გვერდი - property grid-ის ქვეშ',
+      name: t('advertisements.placements.listingsBottomBanner.name'),
+      location: t('advertisements.placements.listingsBottomBanner.location'),
       type: 'banner',
       dimensions: '728x90px (horizontal)',
       status: 'inactive',
@@ -133,8 +133,8 @@ const Advertisements = () => {
     },
     {
       id: '7',
-      name: 'განცხადების დეტალების ზედა ბანერი',
-      location: 'PropertyDetail გვერდი - header-ის ქვეშ',
+      name: t('advertisements.placements.detailTopBanner.name'),
+      location: t('advertisements.placements.detailTopBanner.location'),
       type: 'banner',
       dimensions: '728x90px (horizontal)',
       status: 'active',
@@ -142,16 +142,16 @@ const Advertisements = () => {
       views: 8950,
       clicks: 95,
       currentAd: {
-        title: 'იპოთეკური სესხი - სწრაფი განცხადება',
-        advertiser: 'Bank of Georgia',
+        title: t('advertisements.sampleAds.mortgageLoan.title'),
+        advertiser: t('advertisements.sampleAds.mortgageLoan.advertiser'),
         startDate: '2024-01-18',
         endDate: '2024-03-18'
       }
     },
     {
       id: '8',
-      name: 'განცხადების დეტალების შუა ბანერი',
-      location: 'PropertyDetail გვერდი - property info card-ის ქვეშ',
+      name: t('advertisements.placements.detailMiddleBanner.name'),
+      location: t('advertisements.placements.detailMiddleBanner.location'),
       type: 'banner',
       dimensions: '728x90px (horizontal)',
       status: 'inactive',
@@ -161,8 +161,8 @@ const Advertisements = () => {
     },
     {
       id: '9',
-      name: 'განცხადების დეტალების გვერდითი ბარი',
-      location: 'PropertyDetail გვერდი - agent info card-ის ქვეშ',
+      name: t('advertisements.placements.detailSidebar.name'),
+      location: t('advertisements.placements.detailSidebar.location'),
       type: 'sidebar',
       dimensions: '300x250px (vertical)',
       status: 'active',
@@ -170,8 +170,8 @@ const Advertisements = () => {
       views: 7340,
       clicks: 78,
       currentAd: {
-        title: 'რემონტის მასალები - 20% ფასდაკლება',
-        advertiser: 'BuildMart',
+        title: t('advertisements.sampleAds.renovationMaterials.title'),
+        advertiser: t('advertisements.sampleAds.renovationMaterials.advertiser'),
         startDate: '2024-01-22',
         endDate: '2024-02-22'
       }
@@ -190,10 +190,10 @@ const Advertisements = () => {
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'banner': return t('admin:advertisements.types.banner');
-      case 'sidebar': return t('admin:advertisements.types.sidebar');
-      case 'popup': return t('admin:advertisements.types.popup');
-      case 'footer': return t('admin:advertisements.types.footer');
+      case 'banner': return t('advertisements.types.banner');
+      case 'sidebar': return t('advertisements.types.sidebar');
+      case 'popup': return t('advertisements.types.popup');
+      case 'footer': return t('advertisements.types.footer');
       default: return type;
     }
   };
@@ -207,46 +207,46 @@ const Advertisements = () => {
     console.log('New advertisement:', adData);
     // Here you would typically make an API call to save the advertisement
     // For now, we'll just log it and close the modal
-    alert(t('admin:advertisements.messages.adAdded'));
+    alert(t('advertisements.messages.adAdded'));
   };
 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{t('admin:advertisements.title')}</h1>
-        <p className="text-gray-600">{t('admin:advertisements.subtitle')}</p>
+        <h1 className="text-3xl font-bold mb-2">{t('advertisements.title')}</h1>
+        <p className="text-gray-600">{t('advertisements.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin:advertisements.stats.totalPlacements')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.totalPlacements')}</CardTitle>
             <MapPin className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{adPlacements.length}</div>
             <p className="text-xs text-muted-foreground">
-              {adPlacements.filter(p => p.status === 'active').length} {t('admin:advertisements.stats.activeCount')}
+              {adPlacements.filter(p => p.status === 'active').length} {t('advertisements.stats.activeCount')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin:advertisements.stats.totalViews')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.totalViews')}</CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {adPlacements.reduce((sum, p) => sum + p.views, 0).toLocaleString()}
             </div>
-            <p className="text-xs text-green-600">{t('admin:advertisements.stats.thisMonth')}</p>
+            <p className="text-xs text-green-600">{t('advertisements.stats.thisMonth')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin:advertisements.stats.totalClicks')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.totalClicks')}</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -262,7 +262,7 @@ const Advertisements = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin:advertisements.stats.ctrIndicator')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('advertisements.stats.ctrIndicator')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -270,7 +270,7 @@ const Advertisements = () => {
               {((adPlacements.reduce((sum, p) => sum + p.clicks, 0) / 
                 adPlacements.reduce((sum, p) => sum + p.views, 0)) * 100).toFixed(2)}%
             </div>
-            <p className="text-xs text-green-600">{t('admin:advertisements.stats.averageCtr')}</p>
+            <p className="text-xs text-green-600">{t('advertisements.stats.averageCtr')}</p>
           </CardContent>
         </Card>
       </div>
@@ -278,7 +278,7 @@ const Advertisements = () => {
       <div className="mb-6">
         <Button onClick={() => handleAddAdvertisement()} className="mb-4">
           <Plus className="h-4 w-4 mr-2" />
-          {t('admin:advertisements.buttons.addNew')}
+          {t('advertisements.buttons.addNew')}
         </Button>
       </div>
 
@@ -296,7 +296,7 @@ const Advertisements = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={placement.status === 'active' ? 'default' : 'secondary'}>
-                    {placement.status === 'active' ? t('admin:advertisements.status.active') : t('admin:advertisements.status.inactive')}
+                    {placement.status === 'active' ? t('advertisements.status.active') : t('advertisements.status.inactive')}
                   </Badge>
                   <Badge variant="outline">{getTypeLabel(placement.type)}</Badge>
                 </div>
@@ -305,12 +305,12 @@ const Advertisements = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">{t('admin:advertisements.labels.dimensions')}</p>
+                  <p className="text-sm text-muted-foreground">{t('advertisements.labels.dimensions')}</p>
                   <p className="font-medium">{placement.dimensions}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">{t('admin:advertisements.labels.performance')}</p>
-                  <p className="font-medium">{placement.views.toLocaleString()} {t('admin:advertisements.labels.views')} • {placement.clicks} {t('admin:advertisements.labels.clicks')}</p>
+                  <p className="text-sm text-muted-foreground">{t('advertisements.labels.performance')}</p>
+                  <p className="font-medium">{placement.views.toLocaleString()} {t('advertisements.labels.views')} • {placement.clicks} {t('advertisements.labels.clicks')}</p>
                 </div>
               </div>
 
@@ -322,7 +322,7 @@ const Advertisements = () => {
                       <p className="text-xs text-green-600">{placement.currentAd.advertiser}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-green-600">{t('admin:advertisements.labels.expires')} {placement.currentAd.endDate}{t('admin:advertisements.labels.until')}</p>
+                      <p className="text-xs text-green-600">{t('advertisements.labels.expires')} {placement.currentAd.endDate} {t('advertisements.labels.until')}</p>
                     </div>
                   </div>
                 </div>
@@ -331,16 +331,16 @@ const Advertisements = () => {
               <div className="flex gap-2">
                 {placement.status === 'active' ? (
                   <Button variant="outline" size="sm">
-                    {t('admin:advertisements.buttons.deactivate')}
+                    {t('advertisements.buttons.deactivate')}
                   </Button>
                 ) : (
                   <Button variant="outline" size="sm" onClick={() => handleAddAdvertisement(placement.id)}>
-                    {t('admin:advertisements.buttons.activate')}
+                    {t('advertisements.buttons.activate')}
                   </Button>
                 )}
                 <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
                   <Trash2 className="h-4 w-4 mr-1" />
-                  {t('admin:advertisements.buttons.delete')}
+                  {t('advertisements.buttons.delete')}
                 </Button>
               </div>
             </CardContent>
