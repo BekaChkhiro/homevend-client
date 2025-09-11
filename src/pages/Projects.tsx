@@ -66,7 +66,7 @@ interface ProjectFilters {
 const Projects = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useTranslation('projects');
+  const { t, i18n } = useTranslation('projects');
   const [searchParams] = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -289,7 +289,7 @@ const Projects = () => {
                   <Card 
                     key={project.id} 
                     className="group cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden"
-                    onClick={() => navigate(`/projects/${project.id}`)}
+                    onClick={() => navigate(`/${i18n.language}/projects/${project.id}`)}
                   >
                     {/* Project Photo */}
                     <div className="aspect-video w-full overflow-hidden bg-gray-100">
@@ -364,7 +364,7 @@ const Projects = () => {
 
                       {/* Footer */}
                       <div className="flex items-center justify-between pt-2 border-t text-sm text-gray-500">
-                        <span>{t('projectInfo.developerId')} {project.developer?.id || project.developerId}</span>
+                        <span>{project.developer?.fullName || `${t('projectInfo.developerId')} ${project.developerId}`}</span>
                         <div className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />
                           <span>{project.viewCount}</span>

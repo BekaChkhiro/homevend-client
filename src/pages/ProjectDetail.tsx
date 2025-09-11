@@ -46,10 +46,14 @@ interface ProjectDetail {
   city: {
     id: number;
     nameGeorgian: string;
+    nameEnglish?: string;
+    nameRussian?: string;
   };
   areaData?: {
     id: number;
     nameKa: string;
+    nameEn?: string;
+    nameRu?: string;
   };
   developer?: {
     id: number;
@@ -103,10 +107,14 @@ interface ProjectDetail {
     city?: {
       id: number;
       nameGeorgian: string;
+      nameEnglish?: string;
+      nameRussian?: string;
     };
     areaData?: {
       id: number;
       nameKa: string;
+      nameEn?: string;
+      nameRu?: string;
     };
     user?: {
       id: number;
@@ -119,7 +127,7 @@ const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useTranslation('projects');
+  const { t, i18n } = useTranslation('projects');
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -267,7 +275,7 @@ const ProjectDetail = () => {
               პროექტი ვერ მოიძებნა
             </h3>
             <Button onClick={() => navigate('/projects')}>
-              უკან დაბრუნება
+              {t('projectDetail.backToProjects')}
             </Button>
           </div>
         </div>
@@ -288,7 +296,7 @@ const ProjectDetail = () => {
             className="mb-6"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            უკან დაბრუნება
+            {t('projectDetail.backToProjects')}
           </Button>
 
           {/* Header */}
@@ -301,8 +309,8 @@ const ProjectDetail = () => {
                 <div className="flex items-center gap-2 text-gray-600 mb-2">
                   <MapPin className="h-5 w-5" />
                   <span>
-                    {project.city.nameGeorgian}
-                    {project.areaData && `, ${project.areaData.nameKa}`}
+                    {i18n.language === 'ka' ? project.city.nameGeorgian : i18n.language === 'ru' ? (project.city.nameRussian || project.city.nameGeorgian) : (project.city.nameEnglish || project.city.nameGeorgian)}
+                    {project.areaData && `, ${i18n.language === 'ka' ? project.areaData.nameKa : i18n.language === 'ru' ? (project.areaData.nameRu || project.areaData.nameKa) : (project.areaData.nameEn || project.areaData.nameKa)}`}
                     , {project.street}
                     {project.streetNumber && ` ${project.streetNumber}`}
                   </span>
@@ -395,36 +403,36 @@ const ProjectDetail = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Building2 className="h-5 w-5" />
-                    პროექტის დეტალები
+                    {t('projectDetail.details')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                     <div className="text-center">
-                      <div className="text-sm text-gray-500 mb-1">კორპუსი</div>
+                      <div className="text-sm text-gray-500 mb-1">{t('projectDetail.buildings')}</div>
                       <div className="text-2xl font-bold text-primary">{project.numberOfBuildings}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm text-gray-500 mb-1">ბინა</div>
+                      <div className="text-sm text-gray-500 mb-1">{t('projectDetail.apartments')}</div>
                       <div className="text-2xl font-bold text-primary">{project.totalApartments}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm text-gray-500 mb-1">სართული</div>
+                      <div className="text-sm text-gray-500 mb-1">{t('projectDetail.floors')}</div>
                       <div className="text-2xl font-bold text-primary">{project.numberOfFloors}</div>
                     </div>
                     {project.parkingSpaces && (
                       <div className="text-center">
-                        <div className="text-sm text-gray-500 mb-1">პარკინგი</div>
+                        <div className="text-sm text-gray-500 mb-1">{t('projectDetail.parking')}</div>
                         <div className="text-2xl font-bold text-primary">{project.parkingSpaces}</div>
                       </div>
                     )}
                     <div className="text-center">
-                      <div className="text-sm text-gray-500 mb-1">ტიპი</div>
+                      <div className="text-sm text-gray-500 mb-1">{t('projectDetail.type')}</div>
                       <div className="text-sm font-medium text-gray-700">{getProjectTypeLabel(project.projectType)}</div>
                     </div>
                     {project.deliveryDate && (
                       <div className="text-center">
-                        <div className="text-sm text-gray-500 mb-1">ჩაბარება</div>
+                        <div className="text-sm text-gray-500 mb-1">{t('projectDetail.delivery')}</div>
                         <div className="text-sm font-medium text-gray-700">{new Date(project.deliveryDate).toLocaleDateString('ka-GE')}</div>
                       </div>
                     )}
@@ -437,22 +445,22 @@ const ProjectDetail = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MapPin className="h-5 w-5" />
-                    ლოკაცია
+                    {t('projectDetail.location')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-[80px_1fr] gap-y-3 gap-x-4 items-center">
-                    <span className="text-sm text-gray-500">ქალაქი:</span>
-                    <span className="font-medium">{project.city.nameGeorgian}</span>
+                    <span className="text-sm text-gray-500">{t('projectDetail.city')}:</span>
+                    <span className="font-medium">{i18n.language === 'ka' ? project.city.nameGeorgian : i18n.language === 'ru' ? (project.city.nameRussian || project.city.nameGeorgian) : (project.city.nameEnglish || project.city.nameGeorgian)}</span>
                     
                     {project.areaData && (
                       <>
-                        <span className="text-sm text-gray-500">რაიონი:</span>
-                        <span className="font-medium">{project.areaData.nameKa}</span>
+                        <span className="text-sm text-gray-500">{t('projectDetail.area')}:</span>
+                        <span className="font-medium">{i18n.language === 'ka' ? project.areaData.nameKa : i18n.language === 'ru' ? (project.areaData.nameRu || project.areaData.nameKa) : (project.areaData.nameEn || project.areaData.nameKa)}</span>
                       </>
                     )}
                     
-                    <span className="text-sm text-gray-500">მისამართი:</span>
+                    <span className="text-sm text-gray-500">{t('projectDetail.address')}:</span>
                     <span className="font-medium">{project.street}{project.streetNumber && ` ${project.streetNumber}`}</span>
                   </div>
                 </CardContent>
@@ -462,61 +470,61 @@ const ProjectDetail = () => {
               {project.amenities && project.amenities.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>კომფორტი და მანძილები</CardTitle>
+                    <CardTitle>{t('projectDetail.amenities')}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {(() => {
-                      // Amenity labels in Georgian
+                      // Amenity labels with translations and emojis
                       const amenityLabels: {[key: string]: string} = {
-                        pharmacy: '💊 აფთიაქი',
-                        kindergarten: '👶 საბავშვო ბაღი',
-                        school: '🎒 სკოლა',
-                        university: '🎓 უნივერსიტეტი',
-                        hospital: '🏥 საავადმყოფო',
-                        clinic: '🩺 კლინიკა',
-                        busStop: '🚌 ავტობუსის გაჩერება',
-                        bus_stop: '🚌 ავტობუსის გაჩერება',
-                        metro: '🚇 მეტრო',
-                        groceryStore: '🛒 საყიდლების მაღაზია',
-                        grocery_store: '🛒 საყიდლების მაღაზია',
-                        supermarket: '🏬 სუპერმარკეტი',
-                        mall: '🏢 სავაჭრო ცენტრი',
-                        bank: '🏦 ბანკი',
-                        atm: '💳 ბანკომატი',
-                        restaurant: '🍽️ რესტორანი',
-                        cafe: '☕ კაფე',
-                        bakery: '🥖 საცხობი',
-                        sportsCenter: '🏋️ სპორტული ცენტრი',
-                        sports_center: '🏋️ სპორტული ცენტრი',
-                        stadium: '🏟️ სტადიონი',
-                        swimmingPool: '🏊 საცურაო აუზი',
-                        swimming_pool: '🏊 საცურაო აუზი',
-                        park: '🌳 პარკი',
-                        square: '🏛️ მოედანი',
-                        cinema: '🎬 კინო',
-                        theater: '🎭 თეატრი',
-                        library: '📚 ბიბლიოთეკა',
-                        postOffice: '📫 ფოსტის განყოფილება',
-                        post_office: '📫 ფოსტის განყოფილება',
-                        gasStation: '⛽ ბენზინგასამართი სადგური',
-                        gas_station: '⛽ ბენზინგასამართი სადგური',
-                        carWash: '🚗 ავტორეცხვა',
-                        car_wash: '🚗 ავტორეცხვა',
-                        veterinary: '🐕 ვეტერინარული კლინიკა',
-                        beautyCenter: '💄 სილამაზის სალონი',
-                        beauty_center: '💄 სილამაზის სალონი',
-                        dentist: '🦷 სტომატოლოგია',
-                        gym: '💪 სპორტული დარბაზი',
-                        garden: '🌳 ბაღი',
-                        parking: '🚗 პარკინგი',
-                        laundry: '🧺 სამრეცხაო',
-                        storage: '📦 საწყობი',
-                        childrenArea: '🎪 ბავშვთა მოედანი',
-                        children_area: '🎪 ბავშვთა მოედანი',
-                        bikePath: '🚴 ველოსიპედის ბილიკი',
-                        bike_path: '🚴 ველოსიპედის ბილიკი',
-                        sportsField: '⚽ სპორტული მოედანი',
-                        sports_field: '⚽ სპორტული მოედანი'
+                        pharmacy: '💊 ' + t('projectDetail.amenityTypes.pharmacy'),
+                        kindergarten: '👶 ' + t('projectDetail.amenityTypes.kindergarten'),
+                        school: '🎒 ' + t('projectDetail.amenityTypes.school'),
+                        university: '🎓 ' + t('projectDetail.amenityTypes.university'),
+                        hospital: '🏥 ' + t('projectDetail.amenityTypes.hospital'),
+                        clinic: '🩺 ' + t('projectDetail.amenityTypes.clinic'),
+                        busStop: '🚌 ' + t('projectDetail.amenityTypes.busStop'),
+                        bus_stop: '🚌 ' + t('projectDetail.amenityTypes.bus_stop'),
+                        metro: '🚇 ' + t('projectDetail.amenityTypes.metro'),
+                        groceryStore: '🛒 ' + t('projectDetail.amenityTypes.groceryStore'),
+                        grocery_store: '🛒 ' + t('projectDetail.amenityTypes.grocery_store'),
+                        supermarket: '🏬 ' + t('projectDetail.amenityTypes.supermarket'),
+                        mall: '🏢 ' + t('projectDetail.amenityTypes.mall'),
+                        bank: '🏦 ' + t('projectDetail.amenityTypes.bank'),
+                        atm: '💳 ' + t('projectDetail.amenityTypes.atm'),
+                        restaurant: '🍽️ ' + t('projectDetail.amenityTypes.restaurant'),
+                        cafe: '☕ ' + t('projectDetail.amenityTypes.cafe'),
+                        bakery: '🥖 ' + t('projectDetail.amenityTypes.bakery'),
+                        sportsCenter: '🏋️ ' + t('projectDetail.amenityTypes.sportsCenter'),
+                        sports_center: '🏋️ ' + t('projectDetail.amenityTypes.sports_center'),
+                        stadium: '🏟️ ' + t('projectDetail.amenityTypes.stadium'),
+                        swimmingPool: '🏊 ' + t('projectDetail.amenityTypes.swimmingPool'),
+                        swimming_pool: '🏊 ' + t('projectDetail.amenityTypes.swimming_pool'),
+                        park: '🌳 ' + t('projectDetail.amenityTypes.park'),
+                        square: '🏛️ ' + t('projectDetail.amenityTypes.square'),
+                        cinema: '🎬 ' + t('projectDetail.amenityTypes.cinema'),
+                        theater: '🎭 ' + t('projectDetail.amenityTypes.theater'),
+                        library: '📚 ' + t('projectDetail.amenityTypes.library'),
+                        postOffice: '📫 ' + t('projectDetail.amenityTypes.postOffice'),
+                        post_office: '📫 ' + t('projectDetail.amenityTypes.post_office'),
+                        gasStation: '⛽ ' + t('projectDetail.amenityTypes.gasStation'),
+                        gas_station: '⛽ ' + t('projectDetail.amenityTypes.gas_station'),
+                        carWash: '🚗 ' + t('projectDetail.amenityTypes.carWash'),
+                        car_wash: '🚗 ' + t('projectDetail.amenityTypes.car_wash'),
+                        veterinary: '🐕 ' + t('projectDetail.amenityTypes.veterinary'),
+                        beautyCenter: '💄 ' + t('projectDetail.amenityTypes.beautyCenter'),
+                        beauty_center: '💄 ' + t('projectDetail.amenityTypes.beauty_center'),
+                        dentist: '🦷 ' + t('projectDetail.amenityTypes.dentist'),
+                        gym: '💪 ' + t('projectDetail.amenityTypes.gym'),
+                        garden: '🌳 ' + t('projectDetail.amenityTypes.garden'),
+                        parking: '🚗 ' + t('projectDetail.amenityTypes.parking'),
+                        laundry: '🧺 ' + t('projectDetail.amenityTypes.laundry'),
+                        storage: '📦 ' + t('projectDetail.amenityTypes.storage'),
+                        childrenArea: '🎪 ' + t('projectDetail.amenityTypes.childrenArea'),
+                        children_area: '🎪 ' + t('projectDetail.amenityTypes.children_area'),
+                        bikePath: '🚴 ' + t('projectDetail.amenityTypes.bikePath'),
+                        bike_path: '🚴 ' + t('projectDetail.amenityTypes.bike_path'),
+                        sportsField: '⚽ ' + t('projectDetail.amenityTypes.sportsField'),
+                        sports_field: '⚽ ' + t('projectDetail.amenityTypes.sports_field')
                       };
 
                       // Group amenities by distance
@@ -530,10 +538,10 @@ const ProjectDetail = () => {
                       }, {});
 
                       const distanceSections = [
-                        { key: 'on_site', title: '🏢 პროექტის ტერიტორიაზე', color: 'bg-gray-50' },
-                        { key: 'within_300m', title: '📍 300 მეტრის რადიუსში', color: '' },
-                        { key: 'within_500m', title: '📍 500 მეტრის რადიუსში', color: '' },
-                        { key: 'within_1km', title: '📍 1 კილომეტრის რადიუსში', color: '' }
+                        { key: 'on_site', title: '🏢 ' + t('projectDetail.distances.onSite'), color: 'bg-gray-50' },
+                        { key: 'within_300m', title: '📍 ' + t('projectDetail.distances.within300m'), color: '' },
+                        { key: 'within_500m', title: '📍 ' + t('projectDetail.distances.within500m'), color: '' },
+                        { key: 'within_1km', title: '📍 ' + t('projectDetail.distances.within1km'), color: '' }
                       ];
 
                       return (
@@ -571,18 +579,18 @@ const ProjectDetail = () => {
               {/* Services - Only show services that are true */}
               {(() => {
                 const availableServices = [
-                  { key: 'securityService', label: 'უსაფრთხოების სერვისი', value: project.securityService },
-                  { key: 'hasLobby', label: 'ლობი', value: project.hasLobby },
-                  { key: 'hasConcierge', label: 'კონსიერჟი', value: project.hasConcierge },
-                  { key: 'videoSurveillance', label: 'ვიდეო ზედამხედველობა', value: project.videoSurveillance },
-                  { key: 'hasLighting', label: 'განათება', value: project.hasLighting },
-                  { key: 'landscaping', label: 'ლანდშაფტის დიზაინი', value: project.landscaping },
-                  { key: 'yardCleaning', label: 'ეზოს დალაგება', value: project.yardCleaning },
-                  { key: 'entranceCleaning', label: 'შესასვლელის დალაგება', value: project.entranceCleaning },
-                  { key: 'hasDoorman', label: 'კარისკაცი', value: project.hasDoorman },
-                  { key: 'fireSystem', label: 'ხანძრის ჩაქრობის სისტემა', value: project.fireSystem },
-                  { key: 'mainDoorLock', label: 'მთავარი კარის საკეტი', value: project.mainDoorLock },
-                  { key: 'maintenance', label: 'ტექნიკური მომსახურება', value: project.maintenance }
+                  { key: 'securityService', label: t('projectDetail.serviceTypes.securityService'), value: project.securityService },
+                  { key: 'hasLobby', label: t('projectDetail.serviceTypes.hasLobby'), value: project.hasLobby },
+                  { key: 'hasConcierge', label: t('projectDetail.serviceTypes.hasConcierge'), value: project.hasConcierge },
+                  { key: 'videoSurveillance', label: t('projectDetail.serviceTypes.videoSurveillance'), value: project.videoSurveillance },
+                  { key: 'hasLighting', label: t('projectDetail.serviceTypes.hasLighting'), value: project.hasLighting },
+                  { key: 'landscaping', label: t('projectDetail.serviceTypes.landscaping'), value: project.landscaping },
+                  { key: 'yardCleaning', label: t('projectDetail.serviceTypes.yardCleaning'), value: project.yardCleaning },
+                  { key: 'entranceCleaning', label: t('projectDetail.serviceTypes.entranceCleaning'), value: project.entranceCleaning },
+                  { key: 'hasDoorman', label: t('projectDetail.serviceTypes.hasDoorman'), value: project.hasDoorman },
+                  { key: 'fireSystem', label: t('projectDetail.serviceTypes.fireSystem'), value: project.fireSystem },
+                  { key: 'mainDoorLock', label: t('projectDetail.serviceTypes.mainDoorLock'), value: project.mainDoorLock },
+                  { key: 'maintenance', label: t('projectDetail.serviceTypes.maintenance'), value: project.maintenance }
                 ].filter(service => service.value === true);
 
                 return availableServices.length > 0 ? (
@@ -590,7 +598,7 @@ const ProjectDetail = () => {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Shield className="h-5 w-5" />
-                        ჩაბარების შემდგომ სერვისები
+                        {t('projectDetail.services')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -614,7 +622,7 @@ const ProjectDetail = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="h-5 w-5" />
-                    დეველოპერი
+                    {t('projectDetail.developer')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -623,17 +631,21 @@ const ProjectDetail = () => {
                       <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
                         <Users className="h-8 w-8 text-primary" />
                       </div>
-                      <h3 className="font-semibold text-lg">{project.developer?.fullName || 'Unknown Developer'}</h3>
+                      <h3 className="font-semibold text-lg">
+                        {project.developer?.fullName || `${t('projectDetail.developer')} ID: ${project.developerId}`}
+                      </h3>
                     </div>
                     
                     <Separator />
                     
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-                        <Mail className="h-4 w-4 text-gray-600 flex-shrink-0" />
-                        <span className="text-sm break-all">{project.developer?.email || 'No email available'}</span>
+                    {project.developer?.email && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
+                          <Mail className="h-4 w-4 text-gray-600 flex-shrink-0" />
+                          <span className="text-sm break-all">{project.developer.email}</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     <div className="space-y-2">
                       {project.developer?.phone ? (
@@ -645,7 +657,7 @@ const ProjectDetail = () => {
                               onClick={() => setShowPhone(true)}
                             >
                               <Phone className="h-4 w-4 mr-2" />
-                              ნომრის ნახვა
+                              {t('projectDetail.showPhone')}
                             </Button>
                           ) : (
                             <div className="space-y-2">
@@ -664,7 +676,7 @@ const ProjectDetail = () => {
                                   });
                                 }}
                               >
-                                ნომრის კოპირება
+                                {t('projectDetail.copyPhone')}
                               </Button>
                             </div>
                           )}
@@ -676,7 +688,7 @@ const ProjectDetail = () => {
                           disabled
                         >
                           <Phone className="h-4 w-4 mr-2" />
-                          ნომერი მიუწვდომელია
+                          {t('projectDetail.phoneUnavailable')}
                         </Button>
                       )}
                     </div>
@@ -693,13 +705,13 @@ const ProjectDetail = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Building2 className="h-5 w-5" />
-                    ყველა {project.linkedProperties.length} ბინა პროექტში
+                    {t('projectDetail.allApartmentsInProject', { count: project.linkedProperties.length })}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {project.linkedProperties.map((property) => (
-                      <Card key={property.id} className="hover:shadow-md transition-all duration-300 cursor-pointer border-l-4 border-l-primary/30 hover:border-l-primary" onClick={() => navigate(`/property/${property.id}`)}>
+                      <Card key={property.id} className="hover:shadow-md transition-all duration-300 cursor-pointer border-l-4 border-l-primary/30 hover:border-l-primary" onClick={() => navigate(`/${i18n.language}/property/${property.id}`)}>
                         <CardContent className="p-0">
                           <div className="flex min-h-[140px]">
                             {/* Property Photo */}
@@ -730,33 +742,33 @@ const ProjectDetail = () => {
                                       ₾{Math.round(property.totalPrice / property.area).toLocaleString()}
                                     </div>
                                   )}
-                                  <div className="text-xs text-gray-500">მ²-ზე</div>
+                                  <div className="text-xs text-gray-500">{t('projectDetail.perSqm')}</div>
                                 </div>
                                 
                                 {/* Key Info with Badges */}
                                 <div className="flex gap-1.5 flex-wrap">
                                   {/* Area Badge */}
                                   <Badge variant="secondary" className="text-xs px-2 py-1">
-                                    {property.area} მ²
+                                    {property.area} {t('projectDetail.sqm')}
                                   </Badge>
                                   
                                   {/* Rooms Badge */}
                                   {property.rooms && (
                                     <Badge variant="outline" className="text-xs px-2 py-1">
-                                      {property.rooms} ოთახი
+                                      {property.rooms} {t('projectDetail.rooms')}
                                     </Badge>
                                   )}
                                   
                                   {/* Bedrooms Badge */}
                                   {property.bedrooms && (
                                     <Badge variant="outline" className="text-xs px-2 py-1">
-                                      {property.bedrooms} საძინებელი
+                                      {property.bedrooms} {t('projectDetail.bedrooms')}
                                     </Badge>
                                   )}
                                   
                                   {/* Floor Badge */}
                                   <Badge variant="outline" className="text-xs px-2 py-1">
-                                    {property.floor || 1} სართული
+                                    {t('projectDetail.floor', { floor: property.floor || 1 })}
                                   </Badge>
                                 </div>
                               </div>
