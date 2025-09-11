@@ -596,7 +596,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                           }
                         </div>
                       ) : (
-                        "აირჩიეთ ტიპი"
+t('propertySearchHero.chooseType')
                       )}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -749,8 +749,8 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                       <div className="flex items-center gap-2">
                         <Home className="h-4 w-4 text-primary" />
                         {filters.propertyType.length === 1 
-                          ? propertyTypes.find((type) => type.value === filters.propertyType[0])?.label 
-                          : `${filters.propertyType.length} არჩეული`
+                          ? translatedPropertyTypes.find((type) => type.value === filters.propertyType[0])?.label 
+                          : `${filters.propertyType.length} ${t('propertySearchHero.selected')}`
                         }
                       </div>
                     ) : (
@@ -763,7 +763,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                   <Command>
                     <CommandInput placeholder={t('propertySearchHero.searchPropertyType')} />
                     <CommandList>
-                      <CommandEmpty>ქონების ტიპი ვერ მოიძებნა</CommandEmpty>
+                      <CommandEmpty>{t('propertySearchHero.noPropertyTypeFound')}</CommandEmpty>
                       <CommandGroup>
                         {translatedPropertyTypes.map((type) => {
                           const getIcon = (value: string) => {
