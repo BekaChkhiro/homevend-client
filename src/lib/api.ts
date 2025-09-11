@@ -372,12 +372,12 @@ export const favoritesApi = {
 
 // Admin API
 export const adminApi = {
-  getDashboardStats: async () => {
-    const response = await apiClient.get('/admin/dashboard');
+  getDashboardStats: async (params?: { lang?: string }) => {
+    const response = await apiClient.get('/admin/dashboard', { params });
     return response.data.data;
   },
   
-  getUsers: async (params?: { page?: number; limit?: number; role?: string }) => {
+  getUsers: async (params?: { page?: number; limit?: number; role?: string; lang?: string }) => {
     const response = await apiClient.get('/admin/users', { params });
     return response.data.data;
   },
@@ -397,14 +397,14 @@ export const adminApi = {
     return response.data;
   },
   
-  getAllProperties: async (params?: { page?: number; limit?: number; developerId?: number }) => {
+  getAllProperties: async (params?: { page?: number; limit?: number; developerId?: number; lang?: string }) => {
     const response = await apiClient.get('/admin/properties', { params });
     return response.data.data;
   },
 
   // Districts management
-  getDistricts: async () => {
-    const response = await apiClient.get('/districts');
+  getDistricts: async (params?: { lang?: string }) => {
+    const response = await apiClient.get('/districts', { params });
     return response.data.data;
   },
 
@@ -589,7 +589,7 @@ export const areasApi = {
 
 // Agency API
 export const agencyApi = {
-  getAgencies: async (params?: { page?: number; limit?: number; search?: string; city?: string; isVerified?: boolean; role?: string }) => {
+  getAgencies: async (params?: { page?: number; limit?: number; search?: string; city?: string; isVerified?: boolean; role?: string; lang?: string }) => {
     const response = await publicApiClient.get('/agencies', { params });
     return response.data.data;
   },

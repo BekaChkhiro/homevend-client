@@ -305,6 +305,70 @@
     },
     "messages": {
       "adAdded": "რეკლამა წარმატებით დაემატა!"
+    },
+    "placements": {
+      "homeTopBanner": {
+        "name": "მთავარი გვერდის ზედა ბანერი",
+        "location": "მთავარი გვერდი - hero section-ის ქვეშ"
+      },
+      "homeSidebar": {
+        "name": "მთავარი გვერდის გვერდითი ბარი",
+        "location": "მთავარი გვერდი - ფილტრის პანელის ქვეშ"
+      },
+      "homeBottomBanner": {
+        "name": "მთავარი გვერდის ქვედა ბანერი",
+        "location": "მთავარი გვერდი - property grid-ის ქვეშ"
+      },
+      "listingsTopBanner": {
+        "name": "განცხადებების გვერდის ზედა ბანერი",
+        "location": "განცხადებების გვერდი - search header-ის ქვეშ"
+      },
+      "listingsSidebar": {
+        "name": "განცხადებების გვერდის გვერდითი ბარი",
+        "location": "განცხადებების გვერდი - ფილტრის პანელის ქვეშ"
+      },
+      "listingsBottomBanner": {
+        "name": "განცხადებების გვერდის ქვედა ბანერი",
+        "location": "განცხადებების გვერდი - property grid-ის ქვეშ"
+      },
+      "detailTopBanner": {
+        "name": "განცხადების დეტალების ზედა ბანერი",
+        "location": "PropertyDetail გვერდი - header-ის ქვეშ"
+      },
+      "detailMiddleBanner": {
+        "name": "განცხადების დეტალების შუა ბანერი",
+        "location": "PropertyDetail გვერდი - property info card-ის ქვეშ"
+      },
+      "detailSidebar": {
+        "name": "განცხადების დეტალების გვერდითი ბარი",
+        "location": "PropertyDetail გვერდი - agent info card-ის ქვეშ"
+      }
+    },
+    "sampleAds": {
+      "vakeResidence": {
+        "title": "ახალი პროექტი - ვაკის რეზიდენცია",
+        "advertiser": "ვაკე დეველოპმენტი"
+      },
+      "familyLoan": {
+        "title": "საოჯახო სესხი - 0% საკომისიო",
+        "advertiser": "TBC ბანკი"
+      },
+      "propertyInsurance": {
+        "title": "უძრავი ქონების დაზღვევა",
+        "advertiser": "AIG საქართველო"
+      },
+      "propertyValuation": {
+        "title": "ქონების შეფასების სერვისი",
+        "advertiser": "PropertyVal"
+      },
+      "mortgageLoan": {
+        "title": "იპოთეკური სესხი - სწრაფი განცხადება",
+        "advertiser": "Bank of Georgia"
+      },
+      "renovationMaterials": {
+        "title": "რემონტის მასალები - 20% ფასდაკლება",
+        "advertiser": "BuildMart"
+      }
     }
   },
   "projects": {

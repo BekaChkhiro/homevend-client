@@ -27,6 +27,7 @@ interface Property {
     nameRu: string;
   };
   street: string;
+  fullAddress?: string;
   area: string;
   totalPrice: string;
   bedrooms?: string;
@@ -73,16 +74,51 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   const getLocationString = () => {
     if (!property) return t('apartmentCard.labels.locationNotSpecified');
     
-    const parts = [];
+    // Use fullAddress if available (already translated)
+    if (property.fullAddress) {
+      return property.fullAddress;
+    }
     
-    if (property.areaData?.nameKa) {
-      parts.push(property.areaData.nameKa);
+    // Fallback to constructing address from parts
+    const parts = [];
+    const lang = i18n.language;
+    
+    // Get area/district name based on current language
+    if (property.areaData) {
+      let areaName;
+      switch (lang) {
+        case 'ka':
+          areaName = property.areaData.nameKa || property.areaData.nameEn || property.areaData.nameRu;
+          break;
+        case 'ru':
+          areaName = property.areaData.nameRu || property.areaData.nameEn || property.areaData.nameKa;
+          break;
+        case 'en':
+        default:
+          areaName = property.areaData.nameEn || property.areaData.nameKa || property.areaData.nameRu;
+          break;
+      }
+      if (areaName) parts.push(areaName);
     } else if (property.district) {
       parts.push(property.district);
     }
     
-    if (property.cityData?.nameGeorgian) {
-      parts.push(property.cityData.nameGeorgian);
+    // Get city name based on current language
+    if (property.cityData) {
+      let cityName;
+      switch (lang) {
+        case 'ka':
+          cityName = property.cityData.nameGeorgian || property.cityData.nameEnglish;
+          break;
+        case 'ru':
+          cityName = property.cityData.nameRu || property.cityData.nameEnglish || property.cityData.nameGeorgian;
+          break;
+        case 'en':
+        default:
+          cityName = property.cityData.nameEnglish || property.cityData.nameGeorgian;
+          break;
+      }
+      if (cityName) parts.push(cityName);
     } else if (property.city) {
       parts.push(property.city);
     }

@@ -81,11 +81,11 @@ const Districts = () => {
 
   useEffect(() => {
     fetchDistricts();
-  }, []);
+  }, [i18n.language]);
 
   const fetchDistricts = async () => {
     try {
-      const data = await adminApi.getDistricts();
+      const data = await adminApi.getDistricts({ lang: i18n.language });
       setDistricts(data || []);
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
