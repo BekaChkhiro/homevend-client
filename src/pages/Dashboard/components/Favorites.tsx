@@ -26,6 +26,19 @@ interface FavoriteProperty {
   status: string;
   createdAt: string;
   favoriteAddedAt: string;
+  cityData?: {
+    id: number;
+    code: string;
+    nameGeorgian: string;
+    nameEnglish: string;
+    nameRussian?: string;
+  };
+  areaData?: {
+    id: number;
+    nameKa: string;
+    nameEn: string;
+    nameRu: string;
+  };
   user: {
     id: number;
     fullName: string;
@@ -45,13 +58,13 @@ export const Favorites: React.FC = () => {
 
   useEffect(() => {
     fetchFavorites();
-  }, []);
+  }, [i18n.language]);
 
   const fetchFavorites = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await favoritesApi.getFavorites();
+      const response = await favoritesApi.getFavorites({ lang: i18n.language });
       setFavorites(response.favorites);
     } catch (error: any) {
       console.error('Error fetching favorites:', error);
@@ -143,6 +156,10 @@ export const Favorites: React.FC = () => {
               title: property.title,
               price: parseInt(property.totalPrice) || 0,
               address: formatAddress(property),
+              city: property.city,
+              district: property.district,
+              cityData: property.cityData,
+              areaData: property.areaData,
               bedrooms: parseInt(property.bedrooms) || 0,
               bathrooms: parseInt(property.bathrooms) || 0,
               area: parseInt(property.area) || 0,

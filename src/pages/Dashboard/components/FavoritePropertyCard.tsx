@@ -11,6 +11,21 @@ interface FavoritePropertyCardProps {
   title: string;
   price: number;
   address: string;
+  city?: string;
+  district?: string;
+  cityData?: {
+    id: number;
+    code: string;
+    nameGeorgian: string;
+    nameEnglish: string;
+    nameRussian?: string;
+  };
+  areaData?: {
+    id: number;
+    nameKa: string;
+    nameEn: string;
+    nameRu: string;
+  };
   bedrooms: number;
   bathrooms: number;
   area: number;
@@ -28,7 +43,11 @@ export const FavoritePropertyCard = ({
   id, 
   title, 
   price, 
-  address, 
+  address,
+  city,
+  district,
+  cityData,
+  areaData,
   bedrooms, 
   bathrooms, 
   area, 
@@ -44,6 +63,52 @@ export const FavoritePropertyCard = ({
 
   const navigate = useNavigate();
   const { t, i18n } = useTranslation(['userDashboard', 'propertyCard']);
+
+  const getLocationString = () => {
+    const parts = [];
+    
+    // Add district/area if available - use language-specific name
+    if (areaData) {
+      let areaName;
+      switch (i18n.language) {
+        case 'ka':
+          areaName = areaData.nameKa || areaData.nameEn || areaData.nameRu;
+          break;
+        case 'ru':
+          areaName = areaData.nameRu || areaData.nameEn || areaData.nameKa;
+          break;
+        case 'en':
+        default:
+          areaName = areaData.nameEn || areaData.nameKa || areaData.nameRu;
+          break;
+      }
+      if (areaName) parts.push(areaName);
+    } else if (district) {
+      parts.push(district);
+    }
+    
+    // Add city - use language-specific name with proper fallback
+    if (cityData) {
+      let cityName;
+      switch (i18n.language) {
+        case 'ka':
+          cityName = cityData.nameGeorgian || cityData.nameEnglish;
+          break;
+        case 'ru':
+          cityName = cityData.nameRussian || cityData.nameEnglish || cityData.nameGeorgian;
+          break;
+        case 'en':
+        default:
+          cityName = cityData.nameEnglish || cityData.nameGeorgian;
+          break;
+      }
+      if (cityName) parts.push(cityName);
+    } else if (city) {
+      parts.push(city);
+    }
+    
+    return parts.length > 0 ? parts.join(', ') : address || t('propertyCard:locationNotSpecified');
+  };
 
   const handleRemoveFromFavorites = () => {
     if (onRemoveFromFavorites) {
@@ -91,7 +156,7 @@ export const FavoritePropertyCard = ({
             </div>
             <div className="flex items-center text-gray-600 mt-1">
               <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
-              <span className="text-xs truncate">{address}</span>
+              <span className="text-xs truncate">{getLocationString()}</span>
             </div>
           </div>
         </div>
