@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Settings } from "lucide-react";
 import { PersonalInfo } from "./profile/PersonalInfo";
+import { AgencyPersonalInfo } from "./profile/AgencyPersonalInfo";
 import { PasswordChange } from "./profile/PasswordChange";
 import { User as UserType } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -32,7 +33,11 @@ export const ProfileContent: React.FC<ProfileContentProps> = ({ user }) => {
           
           <div className="mt-6">
             <TabsContent value="personal">
-              <PersonalInfo user={user} />
+              {user.role === 'agency' ? (
+                <AgencyPersonalInfo user={user} />
+              ) : (
+                <PersonalInfo user={user} />
+              )}
             </TabsContent>
             
             <TabsContent value="password">

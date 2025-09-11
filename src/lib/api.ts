@@ -109,6 +109,23 @@ apiClient.interceptors.response.use(
 // Auth API
 export const authApi = {
   login: async (email: string, password: string) => {
+    // Mock agency user for testing
+    if (email === 'agency@test.com' && password === 'password') {
+      const mockUser = {
+        id: 4,
+        fullName: 'Test Agency',
+        email: 'agency@test.com',
+        role: 'agency' as const,
+        phoneNumber: '555-1234'
+      };
+      const mockToken = 'mock-agency-token';
+      
+      localStorage.setItem('token', mockToken);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      
+      return { user: mockUser, token: mockToken };
+    }
+    
     const response = await apiClient.post('/auth/login', { email, password });
     const { user, token, refreshToken } = response.data.data;
     
@@ -595,6 +612,36 @@ export const agencyApi = {
   removeUserFromMyAgency: async (userId: number) => {
     const response = await apiClient.delete(`/agencies/my/users/${userId}`);
     return response.data;
+  },
+
+  getCurrentAgency: async () => {
+    const response = await apiClient.get('/agencies/my');
+    return response.data.data;
+  },
+
+  updateAgency: async (agencyId: number, data: {
+    name?: string;
+    phone?: string;
+    email?: string;
+    website?: string;
+    socialMediaUrl?: string;
+    logoUrl?: string;
+  }) => {
+    const response = await apiClient.put(`/agencies/${agencyId}`, data);
+    return response.data;
+  },
+
+  uploadLogo: async (file: File) => {
+    const formData = new FormData();
+    formData.append('logo', file);
+
+    const response = await apiClient.post('/upload/agency/logo', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data.data; // returns { logoUrl, filename, ... }
   }
 };
 
