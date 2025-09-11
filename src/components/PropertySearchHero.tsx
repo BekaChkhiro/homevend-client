@@ -859,7 +859,7 @@ t('propertySearchHero.chooseType')
                             {cities.map((city) => (
                               <CommandItem
                                 key={city.id}
-                                value={city.nameGeorgian}
+                                value={getCityName(city)}
                                 onSelect={() => handleCityChange(city.id.toString())}
                               >
                                 <Check
@@ -926,7 +926,7 @@ t('propertySearchHero.chooseType')
                               {areas.map((area) => (
                                 <CommandItem
                                   key={area.id}
-                                  value={area.nameKa}
+                                  value={getAreaName(area)}
                                   onSelect={() => handleAreaChange(area.id.toString())}
                                 >
                                   <Check
