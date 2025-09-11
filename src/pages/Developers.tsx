@@ -247,7 +247,7 @@ const Developers = () => {
           ) : developers.length > 0 ? (
             <>
               <div className="text-center text-sm text-muted-foreground">
-                {t('foundDevelopers', { count: pagination.total })}
+                {t('foundDevelopers').replace('{count}', String(pagination.total || 0))}
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

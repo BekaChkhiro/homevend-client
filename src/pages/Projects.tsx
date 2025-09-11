@@ -30,10 +30,14 @@ interface Project {
   city: {
     id: number;
     nameGeorgian: string;
+    nameEnglish?: string;
+    nameRussian?: string;
   };
   areaData?: {
     id: number;
     nameKa: string;
+    nameEn?: string;
+    nameRu?: string;
   };
   developer: {
     id: number;
@@ -62,6 +66,31 @@ interface ProjectFilters {
   projectType: string;
   deliveryStatus: string;
 }
+
+// Helper functions to get translated city and area names
+const getCityName = (city: Project['city'], i18nLanguage: string) => {
+  if (city) {
+    if (i18nLanguage === 'en' && city.nameEnglish) {
+      return city.nameEnglish;
+    } else if (i18nLanguage === 'ru' && city.nameRussian) {
+      return city.nameRussian;
+    }
+    return city.nameGeorgian;
+  }
+  return '';
+};
+
+const getAreaName = (areaData: Project['areaData'], i18nLanguage: string) => {
+  if (areaData) {
+    if (i18nLanguage === 'en' && areaData.nameEn) {
+      return areaData.nameEn;
+    } else if (i18nLanguage === 'ru' && areaData.nameRu) {
+      return areaData.nameRu;
+    }
+    return areaData.nameKa;
+  }
+  return '';
+};
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -325,8 +354,8 @@ const Projects = () => {
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="h-4 w-4" />
                         <span className="text-sm">
-                          {project.city.nameGeorgian}
-                          {project.areaData && `, ${project.areaData.nameKa}`}
+                          {getCityName(project.city, i18n.language)}
+                          {project.areaData && `, ${getAreaName(project.areaData, i18n.language)}`}
                           , {project.street}
                           {project.streetNumber && ` ${project.streetNumber}`}
                         </span>
