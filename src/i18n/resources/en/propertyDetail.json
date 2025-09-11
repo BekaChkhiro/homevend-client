@@ -106,7 +106,10 @@
     "apartment": "Apartment",
     "house": "House",
     "cottage": "Cottage",
-    "land": "Land"
+    "land": "Land",
+    "commercial": "Commercial",
+    "office": "Office",
+    "hotel": "Hotel"
   },
   "dealType": {
     "sale": "For Sale",
@@ -116,15 +119,31 @@
   "parking": {
     "garage": "Garage",
     "parking_space": "Parking Space",
-    "no_parking": "No Parking"
+    "no_parking": "No Parking",
+    "underground_parking": "Underground Parking",
+    "yard_parking": "Yard Parking",
+    "paid_parking": "Paid Parking"
   },
   "heating": {
     "central_heating": "Central Heating",
-    "gas_heating": "Gas Heating"
+    "gas_heating": "Gas Heating",
+    "no_heating": "No Heating",
+    "gas_heater": "Gas Heater",
+    "electric_heater": "Electric Heater",
+    "central_floor": "Central Floor Heating",
+    "individual": "Individual Heating",
+    "floor_heating": "Floor Heating"
   },
   "hotWater": {
     "central_hot_water": "Central Hot Water",
-    "solar_heater": "Solar Heater"
+    "solar_heater": "Solar Heater",
+    "gas_water_heater": "Gas Water Heater",
+    "electric_heater": "Electric Heater",
+    "electric_water_heater": "Electric Water Heater",
+    "boiler": "Boiler",
+    "no_hot_water": "No Hot Water",
+    "natural_hot_water": "Natural Hot Water",
+    "individual": "Individual Hot Water"
   },
   "poolType": {
     "indoor": "Indoor Pool",
@@ -132,8 +151,16 @@
     "jacuzzi": "Jacuzzi"
   },
   "features": {
+    "air_conditioning": "Air Conditioning",
+    "heating_system": "Heating System",
     "internet": "Internet",
+    "cable_tv": "Cable TV",
+    "security_system": "Security System",
     "elevator": "Elevator",
+    "parking_space": "Parking Space",
+    "garage": "Garage",
+    "garden": "Garden",
+    "terrace": "Terrace",
     "tv": "Television",
     "cargo_elevator": "Cargo Elevator",
     "water": "Water",
