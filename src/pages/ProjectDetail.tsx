@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
+import { projectApi } from "@/lib/api";
 import {
   MapPin,
   Calendar,
@@ -158,21 +159,17 @@ const ProjectDetail = () => {
   const fetchProject = async (projectId: string) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/projects/${projectId}`);
-      if (!response.ok) {
-        if (response.status === 404) {
-          toast({
-            title: t('error.title'),
-            description: t('projectDetail.notFound'),
-            variant: "destructive",
-          });
-          navigate('/projects');
-          return;
-        }
-        throw new Error('Failed to fetch project');
+      const data = await projectApi.getProjectById(projectId);
+      
+      if (!data) {
+        toast({
+          title: t('error.title'),
+          description: t('projectDetail.notFound'),
+          variant: "destructive",
+        });
+        navigate(`/${i18n.language}/projects`);
+        return;
       }
-
-      const data = await response.json();
       
       // Add mock photos for testing
       data.photos = [
@@ -191,11 +188,20 @@ const ProjectDetail = () => {
       setProject(data);
     } catch (error) {
       console.error('Error fetching project:', error);
-      toast({
-        title: t('error.title'),
-        description: t('projectDetail.loadingError'),
-        variant: "destructive",
-      });
+      if (error?.response?.status === 404) {
+        toast({
+          title: t('error.title'),
+          description: t('projectDetail.notFound'),
+          variant: "destructive",
+        });
+        navigate(`/${i18n.language}/projects`);
+      } else {
+        toast({
+          title: t('error.title'),
+          description: t('projectDetail.loadingError'),
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -318,9 +324,9 @@ const ProjectDetail = () => {
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <div className="flex items-center gap-1">
                     <Eye className="h-4 w-4" />
-                    <span>{project.viewCount} ნახვა</span>
+                    <span>{project.viewCount} {t('projectDetail.views')}</span>
                   </div>
-                  <span>დაემატა: {new Date(project.createdAt).toLocaleDateString('ka-GE')}</span>
+                  <span>{t('projectDetail.addedOn')}: {new Date(project.createdAt).toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' : i18n.language === 'ru' ? 'ru-RU' : 'en-US')}</span>
                 </div>
               </div>
               <Badge className={getDeliveryStatusColor(project.deliveryStatus)}>
