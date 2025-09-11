@@ -22,6 +22,7 @@ interface Property {
     code: string;
     nameGeorgian: string;
     nameEnglish: string;
+    nameRussian?: string;
   };
   areaData?: {
     id: number;
@@ -113,29 +114,88 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
     return "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop";
   };
 
+  // Translation dictionaries for common Georgian place names
+  const cityTranslations: Record<string, Record<string, string>> = {
+    'თბილისი': { en: 'Tbilisi', ru: 'Тбилиси', ka: 'თბილისი' },
+    'ბათუმი': { en: 'Batumi', ru: 'Батуми', ka: 'ბათუმი' },
+    'ქუთაისი': { en: 'Kutaisi', ru: 'Кутаиси', ka: 'ქუთაისი' }
+  };
+
+  const districtTranslations: Record<string, Record<string, string>> = {
+    'ვაკე-საბურთალო': { en: 'Vake-Saburtalo', ru: 'Ваке-Сабурталo', ka: 'ვაკე-საბურთალო' },
+    'ვაკე': { en: 'Vake', ru: 'Ваке', ka: 'ვაკე' },
+    'საბურთალო': { en: 'Saburtalo', ru: 'Сабурталo', ka: 'საბურთალო' },
+    'დიდუბე': { en: 'Didube', ru: 'Дидубе', ka: 'დიდუბე' },
+    'ისანი': { en: 'Isani', ru: 'Исани', ka: 'ისანი' },
+    'კრწანისი': { en: 'Krtsanisi', ru: 'Крцаниси', ka: 'კრწანისი' },
+    'მთაწმინდა': { en: 'Mtatsminda', ru: 'Мтацминда', ka: 'მთაწმინდა' },
+    'ნაძალადევი': { en: 'Nadzaladevi', ru: 'Надзаладеви', ka: 'ნაძალადევი' },
+    'სამგორი': { en: 'Samgori', ru: 'Самгори', ka: 'სამგორი' },
+    'ჩუღურეთი': { en: 'Chughureti', ru: 'Чугурети', ka: 'ჩუღურეთი' }
+  };
+
+  // Helper function to translate Georgian text to target language
+  const translateText = (text: string, targetLang: string): string => {
+    if (!text || targetLang === 'ka') return text;
+    
+    let translatedText = text;
+    
+    // Translate cities
+    Object.entries(cityTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    // Translate districts
+    Object.entries(districtTranslations).forEach(([georgian, translations]) => {
+      if (translatedText.includes(georgian)) {
+        translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
+      }
+    });
+    
+    return translatedText;
+  };
+
   const getLocationString = () => {
     const parts = [];
     
     // Add district/area if available - use language-specific name
     if (property.areaData) {
-      if (i18n.language === 'en' && property.areaData.nameEn) {
-        parts.push(property.areaData.nameEn);
-      } else if (i18n.language === 'ru' && property.areaData.nameRu) {
-        parts.push(property.areaData.nameRu);
-      } else if (property.areaData.nameKa) {
-        parts.push(property.areaData.nameKa);
+      let areaName;
+      switch (i18n.language) {
+        case 'ka':
+          areaName = property.areaData.nameKa || property.areaData.nameEn || property.areaData.nameRu;
+          break;
+        case 'ru':
+          areaName = property.areaData.nameRu || property.areaData.nameEn || property.areaData.nameKa;
+          break;
+        case 'en':
+        default:
+          areaName = property.areaData.nameEn || property.areaData.nameKa || property.areaData.nameRu;
+          break;
       }
+      if (areaName) parts.push(areaName);
     } else if (property.district) {
       parts.push(property.district);
     }
     
-    // Add city - use language-specific name
+    // Add city - use language-specific name with proper fallback
     if (property.cityData) {
-      if (i18n.language === 'en' && property.cityData.nameEnglish) {
-        parts.push(property.cityData.nameEnglish);
-      } else if (property.cityData.nameGeorgian) {
-        parts.push(property.cityData.nameGeorgian);
+      let cityName;
+      switch (i18n.language) {
+        case 'ka':
+          cityName = property.cityData.nameGeorgian || property.cityData.nameEnglish;
+          break;
+        case 'ru':
+          cityName = property.cityData.nameRussian || property.cityData.nameEnglish || property.cityData.nameGeorgian;
+          break;
+        case 'en':
+        default:
+          cityName = property.cityData.nameEnglish || property.cityData.nameGeorgian;
+          break;
       }
+      if (cityName) parts.push(cityName);
     } else if (property.city) {
       parts.push(property.city);
     }

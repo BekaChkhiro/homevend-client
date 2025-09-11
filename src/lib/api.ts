@@ -326,8 +326,9 @@ export const propertyApi = {
     return response.data.data;
   },
   
-  getUserProperties: async () => {
-    const response = await apiClient.get('/properties/my-properties');
+  getUserProperties: async (params?: { lang?: string }) => {
+    const queryParams = params?.lang ? `?lang=${params.lang}` : '';
+    const response = await apiClient.get(`/properties/my-properties${queryParams}`);
     return response.data.data;
   },
   
@@ -349,8 +350,9 @@ export const propertyApi = {
 
 // Favorites API
 export const favoritesApi = {
-  getFavorites: async () => {
-    const response = await apiClient.get('/favorites');
+  getFavorites: async (params?: { lang?: string }) => {
+    const queryParams = params?.lang ? `?lang=${params.lang}` : '';
+    const response = await apiClient.get(`/favorites${queryParams}`);
     return response.data.data;
   },
   

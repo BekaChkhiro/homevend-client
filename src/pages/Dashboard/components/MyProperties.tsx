@@ -31,6 +31,7 @@ interface Property {
     code: string;
     nameGeorgian: string;
     nameEnglish: string;
+    nameRussian?: string;
   };
   areaData?: {
     id: number;
@@ -78,12 +79,12 @@ export const MyProperties: React.FC = () => {
 
   useEffect(() => {
     fetchUserProperties();
-  }, []);
+  }, [i18n.language]);
 
   const fetchUserProperties = async () => {
     try {
       setIsLoading(true);
-      const data = await propertyApi.getUserProperties();
+      const data = await propertyApi.getUserProperties({ lang: i18n.language });
       setProperties(data || []);
     } catch (error: any) {
       console.error('Error fetching properties:', error);
