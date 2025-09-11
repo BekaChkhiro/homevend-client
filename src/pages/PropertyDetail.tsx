@@ -34,7 +34,8 @@ interface Property {
     id: number;
     code: string;
     nameGeorgian: string;
-    nameEnglish: string;
+    nameEnglish?: string;
+    nameRussian?: string;
   };
   areaData?: {
     id: number;
@@ -113,6 +114,8 @@ interface Property {
     street: string;
     city: {
       nameGeorgian: string;
+      nameEnglish?: string;
+      nameRussian?: string;
     };
   };
   user: {
@@ -164,17 +167,17 @@ const translateDealType = (type: string, t: any) => {
 };
 
 const translateParking = (parking: string, t: any) => {
-  const translationKey = `parking.${parking.replace('-', '_')}`;
+  const translationKey = `parking.${parking.replace(/-/g, '_')}`;
   return t(translationKey, { defaultValue: parking });
 };
 
 const translateHeating = (heating: string, t: any) => {
-  const translationKey = `heating.${heating.replace('-', '_')}`;
+  const translationKey = `heating.${heating.replace(/-/g, '_')}`;
   return t(translationKey, { defaultValue: heating });
 };
 
 const translateHotWater = (hotWater: string, t: any) => {
-  const translationKey = `hotWater.${hotWater.replace('-', '_')}`;
+  const translationKey = `hotWater.${hotWater.replace(/-/g, '_')}`;
   return t(translationKey, { defaultValue: hotWater });
 };
 
@@ -406,22 +409,51 @@ const PropertyDetail = () => {
 
   // Transform property data for display
   
+  // Helper function to get city name based on language
+  const getCityName = (cityData?: Property['cityData'], cityFallback?: string) => {
+    if (cityData) {
+      if (i18n.language === 'en' && cityData.nameEnglish) {
+        return cityData.nameEnglish;
+      } else if (i18n.language === 'ru' && cityData.nameRussian) {
+        return cityData.nameRussian;
+      }
+      return cityData.nameGeorgian;
+    }
+    return cityFallback || '';
+  };
+
+  // Helper function to get area name based on language
+  const getAreaName = (areaData?: Property['areaData'], districtFallback?: string) => {
+    if (areaData) {
+      if (i18n.language === 'en' && areaData.nameEn) {
+        return areaData.nameEn;
+      } else if (i18n.language === 'ru' && areaData.nameRu) {
+        return areaData.nameRu;
+      }
+      return areaData.nameKa;
+    }
+    return districtFallback || '';
+  };
+
   // Build location string with district if available
   const getLocationString = (property: Property) => {
     let location = property.street;
     
-    // Add district if available
-    if (property.areaData?.nameKa) {
-      location += `, ${property.areaData.nameKa}`;
-    } else if (property.district) {
-      location += `, ${property.district}`;
+    // Add street number if available
+    if (property.streetNumber) {
+      location += ` ${property.streetNumber}`;
+    }
+    
+    // Add district/area if available
+    const areaName = getAreaName(property.areaData, property.district);
+    if (areaName) {
+      location += `, ${areaName}`;
     }
     
     // Add city
-    if (property.cityData?.nameGeorgian) {
-      location += `, ${property.cityData.nameGeorgian}`;
-    } else if (property.city) {
-      location += `, ${property.city}`;
+    const cityName = getCityName(property.cityData, property.city);
+    if (cityName) {
+      location += `, ${cityName}`;
     }
     
     return location;
@@ -1173,7 +1205,7 @@ const PropertyDetail = () => {
                             {property.project.projectName}
                           </Link>
                           <p className="text-xs text-blue-700 mt-1">
-                            {property.project.city.nameGeorgian}, {property.project.street}
+                            {getCityName(property.project.city as any, property.project.city.nameGeorgian)}, {getAreaName(property.areaData, property.district)}
                           </p>
                         </div>
                       </div>
@@ -1218,7 +1250,7 @@ const PropertyDetail = () => {
                   {similarProperties.map((prop) => {
                     const similarProperty = {
                       id: prop.id,
-                      title: `${prop.propertyType} ${prop.dealType} ${prop.city}`,
+                      title: prop.title || `${translatePropertyType(prop.propertyType, t)} ${translateDealType(prop.dealType, t)} ${getCityName(prop.cityData, prop.city)}`,
                       price: parseInt(prop.totalPrice) || 0,
                       address: getLocationString(prop),
                       bedrooms: parseInt(prop.bedrooms || '1'),

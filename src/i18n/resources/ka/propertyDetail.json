@@ -106,7 +106,10 @@
     "apartment": "ბინა",
     "house": "სახლი",
     "cottage": "კოტეჯი",
-    "land": "მიწა"
+    "land": "მიწა",
+    "commercial": "კომერციული",
+    "office": "ოფისი",
+    "hotel": "სასტუმრო"
   },
   "dealType": {
     "sale": "იყიდება",
@@ -116,15 +119,31 @@
   "parking": {
     "garage": "გარაჟი",
     "parking_space": "პარკინგი",
-    "no_parking": "პარკინგი არ არის"
+    "no_parking": "პარკინგი არ არის",
+    "underground_parking": "მიწისქვეშა პარკინგი",
+    "yard_parking": "ეზოს პარკინგი",
+    "paid_parking": "ფასიანი პარკინგი"
   },
   "heating": {
     "central_heating": "ცენტრალური გათბობა",
-    "gas_heating": "გაზით გათბობა"
+    "gas_heating": "გაზით გათბობა",
+    "no_heating": "გათბობა არ არის",
+    "gas_heater": "გაზის გამათბობელი",
+    "electric_heater": "ელექტრო გამათბობელი",
+    "central_floor": "ცენტრალური იატაკის გათბობა",
+    "individual": "ინდივიდუალური გათბობა",
+    "floor_heating": "იატაკის გათბობა"
   },
   "hotWater": {
     "central_hot_water": "ცენტრალური ცხელი წყალი",
-    "solar_heater": "მზის კოლექტორი"
+    "solar_heater": "მზის კოლექტორი",
+    "gas_water_heater": "გაზით ცხელი წყლის გამაცხელებელი",
+    "electric_heater": "ელექტრო წყლის გამაცხელებელი",
+    "electric_water_heater": "ელექტრო წყლის გამაცხელებელი",
+    "boiler": "ბოილერი",
+    "no_hot_water": "ცხელი წყალი არ არის",
+    "natural_hot_water": "ბუნებრივი ცხელი წყალი",
+    "individual": "ინდივიდუალური ცხელი წყალი"
   },
   "poolType": {
     "indoor": "შიდა აუზი",
@@ -132,8 +151,16 @@
     "jacuzzi": "ჯაკუზი"
   },
   "features": {
+    "air_conditioning": "კონდიციონერი",
+    "heating_system": "გათბობის სისტემა",
     "internet": "ინტერნეტი",
+    "cable_tv": "კაბელური ტელევიზია",
+    "security_system": "უსაფრთხოების სისტემა",
     "elevator": "ლიფტი",
+    "parking_space": "პარკინგის ადგილი",
+    "garage": "გარაჟი",
+    "garden": "ბაღი",
+    "terrace": "ტერასა",
     "tv": "ტელევიზორი",
     "cargo_elevator": "სამუშაო ლიფტი",
     "water": "წყალი",

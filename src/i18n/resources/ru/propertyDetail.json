@@ -106,7 +106,10 @@
     "apartment": "Квартира",
     "house": "Дом",
     "cottage": "Коттедж",
-    "land": "Земля"
+    "land": "Земля",
+    "commercial": "Коммерческая",
+    "office": "Офис",
+    "hotel": "Отель"
   },
   "dealType": {
     "sale": "Продается",
@@ -116,15 +119,31 @@
   "parking": {
     "garage": "Гараж",
     "parking_space": "Парковочное место",
-    "no_parking": "Парковки нет"
+    "no_parking": "Парковки нет",
+    "underground_parking": "Подземная парковка",
+    "yard_parking": "Парковка во дворе",
+    "paid_parking": "Платная парковка"
   },
   "heating": {
     "central_heating": "Центральное отопление",
-    "gas_heating": "Газовое отопление"
+    "gas_heating": "Газовое отопление",
+    "no_heating": "Отопления нет",
+    "gas_heater": "Газовый обогреватель",
+    "electric_heater": "Электрический обогреватель",
+    "central_floor": "Центральный теплый пол",
+    "individual": "Индивидуальное отопление",
+    "floor_heating": "Теплый пол"
   },
   "hotWater": {
     "central_hot_water": "Центральная горячая вода",
-    "solar_heater": "Солнечный коллектор"
+    "solar_heater": "Солнечный коллектор",
+    "gas_water_heater": "Газовый водонагреватель",
+    "electric_heater": "Электрический водонагреватель",
+    "electric_water_heater": "Электрический водонагреватель",
+    "boiler": "Бойлер",
+    "no_hot_water": "Без горячей воды",
+    "natural_hot_water": "Природная горячая вода",
+    "individual": "Индивидуальная горячая вода"
   },
   "poolType": {
     "indoor": "Крытый бассейн",
@@ -132,8 +151,16 @@
     "jacuzzi": "Джакузи"
   },
   "features": {
+    "air_conditioning": "Кондиционер",
+    "heating_system": "Система отопления",
     "internet": "Интернет",
+    "cable_tv": "Кабельное ТВ",
+    "security_system": "Система безопасности",
     "elevator": "Лифт",
+    "parking_space": "Парковочное место",
+    "garage": "Гараж",
+    "garden": "Сад",
+    "terrace": "Терраса",
     "tv": "Телевизор",
     "cargo_elevator": "Грузовой лифт",
     "water": "Вода",

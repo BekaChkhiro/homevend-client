@@ -35,7 +35,6 @@ const AdminEditProject: React.FC = () => {
   const { toast } = useToast();
   const { t, i18n } = useTranslation('admin');
   
-  console.log('AdminEditProject - URL param id:', id);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
@@ -145,14 +144,9 @@ const AdminEditProject: React.FC = () => {
       }
 
       const result = await response.json();
-      console.log('Fetched project response:', result);
       
       // Extract the actual project data from the response
       const project = result.data || result;
-      console.log('Extracted project data:', project);
-      console.log('Project developer/owner:', project.developer || project.user);
-      console.log('Project cityId:', project.cityId);
-      console.log('Project areaId:', project.areaId);
       
       // Store project owner info
       setProjectOwner(project.developer || project.user || null);
@@ -206,7 +200,6 @@ const AdminEditProject: React.FC = () => {
         hasSwimmingPool: project.hasSwimmingPool || false,
       };
       
-      console.log('Setting form data:', newFormData);
       setFormData(newFormData);
 
       // Convert amenities from project data to customAmenities format
@@ -265,7 +258,6 @@ const AdminEditProject: React.FC = () => {
         Object.assign(amenitiesMap, project.customAmenities);
       }
       
-      console.log('Setting custom amenities:', amenitiesMap);
       setCustomAmenities(amenitiesMap);
     } catch (error) {
       console.error('Error fetching project:', error);
@@ -282,14 +274,11 @@ const AdminEditProject: React.FC = () => {
 
   const fetchCities = async () => {
     try {
-      console.log('Fetching cities...');
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       const response = await fetch(`${apiUrl}/cities`);
-      console.log('Cities response status:', response.status);
       
       if (response.ok) {
         const result = await response.json();
-        console.log('Cities response:', result);
         // Handle the API response format { success: true, data: cities }
         const cities = result.success && result.data ? result.data : [];
         setCities(Array.isArray(cities) ? cities : []);
@@ -309,7 +298,6 @@ const AdminEditProject: React.FC = () => {
       const response = await fetch(`${apiUrl}/areas?cityId=${cityId}`);
       if (response.ok) {
         const result = await response.json();
-        console.log('Areas response:', result);
         // Handle the API response format
         const areas = result.success && result.data ? result.data : result;
         setAreas(Array.isArray(areas) ? areas : []);
@@ -408,15 +396,6 @@ const AdminEditProject: React.FC = () => {
         customAmenities: customAmenities,
       };
 
-      console.log('Updating project with data:', projectData);
-      console.log('Project ID:', id);
-      console.log('Data types:', {
-        cityId: typeof projectData.cityId,
-        areaId: typeof projectData.areaId,
-        numberOfBuildings: typeof projectData.numberOfBuildings,
-        totalApartments: typeof projectData.totalApartments,
-        numberOfFloors: typeof projectData.numberOfFloors
-      });
 
       // Try admin-specific endpoint first for updates
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -429,11 +408,8 @@ const AdminEditProject: React.FC = () => {
         body: JSON.stringify(projectData),
       });
 
-      console.log('Admin update response status:', response.status);
-      
       // If admin endpoint doesn't work, try regular endpoint
       if (response.status === 404 || response.status === 403) {
-        console.log('Admin update endpoint failed, trying regular project endpoint...');
         response = await fetch(`${apiUrl}/projects/${id}`, {
           method: 'PUT',
           headers: {
@@ -442,11 +418,7 @@ const AdminEditProject: React.FC = () => {
           },
           body: JSON.stringify(projectData),
         });
-        console.log('Regular update response status:', response.status);
       }
-
-      console.log('Update response status:', response.status);
-      console.log('Update response headers:', Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -475,7 +447,6 @@ const AdminEditProject: React.FC = () => {
       }
 
       const result = await response.json();
-      console.log('Update success response:', result);
 
       toast({
         title: t('common.success'),
