@@ -47,10 +47,14 @@ interface Project {
   city: {
     id: number;
     nameGeorgian: string;
+    nameEnglish?: string;
+    nameRussian?: string;
   };
   areaData?: {
     id: number;
     nameKa: string;
+    nameEn?: string;
+    nameRu?: string;
   };
   pricing: Array<{
     id: number;
@@ -82,7 +86,8 @@ export const MyProjects: React.FC = () => {
   const fetchUserProjects = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/projects/my-projects', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/projects/my-projects`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -108,7 +113,8 @@ export const MyProjects: React.FC = () => {
 
   const handleDeleteProject = async (projectId: number) => {
     try {
-      const response = await fetch(`/api/projects/${projectId}`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/projects/${projectId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -196,6 +202,27 @@ export const MyProjects: React.FC = () => {
     return Math.min(...pricing.map(p => p.totalPriceFrom));
   };
 
+  // Helper function to get city name based on language
+  const getCityName = (city: Project['city']) => {
+    if (i18n.language === 'en' && city.nameEnglish) {
+      return city.nameEnglish;
+    } else if (i18n.language === 'ru' && city.nameRussian) {
+      return city.nameRussian;
+    }
+    return city.nameGeorgian;
+  };
+
+  // Helper function to get area name based on language
+  const getAreaName = (area: Project['areaData']) => {
+    if (!area) return '';
+    if (i18n.language === 'en' && area.nameEn) {
+      return area.nameEn;
+    } else if (i18n.language === 'ru' && area.nameRu) {
+      return area.nameRu;
+    }
+    return area.nameKa;
+  };
+
   // Show different content for non-developers
   if (user?.role !== 'developer') {
     return (
@@ -258,8 +285,8 @@ export const MyProjects: React.FC = () => {
                       <div className="flex items-center gap-2 text-gray-600 mb-2">
                         <MapPin className="h-4 w-4" />
                         <span className="text-sm">
-                          {project.city.nameGeorgian}
-                          {project.areaData && `, ${project.areaData.nameKa}`}
+                          {getCityName(project.city)}
+                          {project.areaData && `, ${getAreaName(project.areaData)}`}
                           , {project.street}
                           {project.streetNumber && ` ${project.streetNumber}`}
                         </span>

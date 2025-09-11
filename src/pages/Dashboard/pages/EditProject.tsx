@@ -19,11 +19,15 @@ import { useTranslation } from "react-i18next";
 interface City {
   id: number;
   nameGeorgian: string;
+  nameEnglish?: string;
+  nameRussian?: string;
 }
 
 interface Area {
   id: number;
   nameKa: string;
+  nameEn?: string;
+  nameRu?: string;
 }
 
 export const EditProject: React.FC = () => {
@@ -31,7 +35,7 @@ export const EditProject: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t } = useTranslation(['projectForm', 'common']);
+  const { t, i18n } = useTranslation(['projectForm', 'common']);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
@@ -88,7 +92,8 @@ export const EditProject: React.FC = () => {
   const fetchProject = async () => {
     try {
       setIsFetching(true);
-      const response = await fetch(`/api/projects/${id}`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/projects/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -184,7 +189,8 @@ export const EditProject: React.FC = () => {
   const fetchCities = async () => {
     try {
       console.log('Fetching cities...');
-      const response = await fetch('/api/cities');
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/cities`);
       console.log('Cities response status:', response.status);
       
       if (response.ok) {
@@ -205,7 +211,8 @@ export const EditProject: React.FC = () => {
 
   const fetchAreas = async (cityId: number) => {
     try {
-      const response = await fetch(`/api/areas?cityId=${cityId}`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/areas?cityId=${cityId}`);
       if (response.ok) {
         const result = await response.json();
         console.log('Areas response:', result);
@@ -241,6 +248,26 @@ export const EditProject: React.FC = () => {
     });
   };
 
+  // Helper function to get city name based on language
+  const getCityName = (city: City) => {
+    if (i18n.language === 'en' && city.nameEnglish) {
+      return city.nameEnglish;
+    } else if (i18n.language === 'ru' && city.nameRussian) {
+      return city.nameRussian;
+    }
+    return city.nameGeorgian;
+  };
+
+  // Helper function to get area name based on language
+  const getAreaName = (area: Area) => {
+    if (i18n.language === 'en' && area.nameEn) {
+      return area.nameEn;
+    } else if (i18n.language === 'ru' && area.nameRu) {
+      return area.nameRu;
+    }
+    return area.nameKa;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -268,7 +295,8 @@ export const EditProject: React.FC = () => {
         customAmenities: customAmenities,
       };
 
-      const response = await fetch(`/api/projects/${id}`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/projects/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -430,7 +458,7 @@ export const EditProject: React.FC = () => {
                       <SelectContent>
                         {(cities || []).map((city) => (
                           <SelectItem key={city.id} value={city.id.toString()}>
-                            {city.nameGeorgian}
+                            {getCityName(city)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -450,7 +478,7 @@ export const EditProject: React.FC = () => {
                       <SelectContent>
                         {(areas || []).map((area) => (
                           <SelectItem key={area.id} value={area.id.toString()}>
-                            {area.nameKa}
+                            {getAreaName(area)}
                           </SelectItem>
                         ))}
                       </SelectContent>

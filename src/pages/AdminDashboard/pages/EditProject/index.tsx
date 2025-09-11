@@ -18,11 +18,15 @@ import { getLanguageUrl } from "@/components/LanguageRoute";
 interface City {
   id: number;
   nameGeorgian: string;
+  nameEnglish?: string;
+  nameRussian?: string;
 }
 
 interface Area {
   id: number;
   nameKa: string;
+  nameEn?: string;
+  nameRu?: string;
 }
 
 const AdminEditProject: React.FC = () => {
@@ -30,6 +34,8 @@ const AdminEditProject: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const { t, i18n } = useTranslation('admin');
+  
+  console.log('AdminEditProject - URL param id:', id);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
@@ -63,15 +69,31 @@ const AdminEditProject: React.FC = () => {
     fireSystem: false,
     mainDoorLock: false,
     maintenance: false,
+    // Additional amenities
+    hasBikePath: false,
+    hasChildrenArea: false,
+    hasGarden: false,
+    hasGroceryStore: false,
+    hasGym: false,
+    hasLaundry: false,
+    hasParking: false,
+    hasRestaurant: false,
+    hasSportsField: false,
+    hasSquare: false,
+    hasStorage: false,
+    hasSwimmingPool: false,
   });
 
   const [customAmenities, setCustomAmenities] = useState<{[key: string]: string}>({});
 
   useEffect(() => {
-    fetchCities();
-    if (id) {
-      fetchProject();
-    }
+    const loadData = async () => {
+      await fetchCities();
+      if (id) {
+        await fetchProject();
+      }
+    };
+    loadData();
   }, [id]);
 
   useEffect(() => {
@@ -87,9 +109,10 @@ const AdminEditProject: React.FC = () => {
     try {
       setIsFetching(true);
       console.log('Admin fetching project with ID:', id);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       
       // Try admin-specific endpoint first
-      let response = await fetch(`/api/admin/projects/${id}`, {
+      let response = await fetch(`${apiUrl}/admin/projects/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -100,7 +123,7 @@ const AdminEditProject: React.FC = () => {
       // If admin endpoint doesn't work, try regular endpoint
       if (response.status === 404 || !response.ok) {
         console.log('Admin endpoint failed, trying regular project endpoint...');
-        response = await fetch(`/api/projects/${id}`, {
+        response = await fetch(`${apiUrl}/projects/${id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -121,15 +144,26 @@ const AdminEditProject: React.FC = () => {
         throw new Error('Failed to fetch project');
       }
 
-      const project = await response.json();
-      console.log('Fetched project data:', project);
+      const result = await response.json();
+      console.log('Fetched project response:', result);
+      
+      // Extract the actual project data from the response
+      const project = result.data || result;
+      console.log('Extracted project data:', project);
       console.log('Project developer/owner:', project.developer || project.user);
+      console.log('Project cityId:', project.cityId);
+      console.log('Project areaId:', project.areaId);
       
       // Store project owner info
       setProjectOwner(project.developer || project.user || null);
       
+      // If project has a cityId, fetch areas for that city first
+      if (project.cityId) {
+        await fetchAreas(project.cityId);
+      }
+      
       // Convert project data to form format
-      setFormData({
+      const newFormData = {
         projectName: project.projectName || "",
         description: project.description || "",
         cityId: project.cityId?.toString() || "",
@@ -156,11 +190,53 @@ const AdminEditProject: React.FC = () => {
         fireSystem: project.fireSystem || false,
         mainDoorLock: project.mainDoorLock || false,
         maintenance: project.maintenance || false,
-      });
+        
+        // Additional amenities from the project data
+        hasBikePath: project.hasBikePath || false,
+        hasChildrenArea: project.hasChildrenArea || false,
+        hasGarden: project.hasGarden || false,
+        hasGroceryStore: project.hasGroceryStore || false,
+        hasGym: project.hasGym || false,
+        hasLaundry: project.hasLaundry || false,
+        hasParking: project.hasParking || false,
+        hasRestaurant: project.hasRestaurant || false,
+        hasSportsField: project.hasSportsField || false,
+        hasSquare: project.hasSquare || false,
+        hasStorage: project.hasStorage || false,
+        hasSwimmingPool: project.hasSwimmingPool || false,
+      };
+      
+      console.log('Setting form data:', newFormData);
+      setFormData(newFormData);
 
-      // Convert amenities array to customAmenities format
+      // Convert amenities from project data to customAmenities format
+      const amenitiesMap: {[key: string]: string} = {};
+      
+      // Map distance-based amenities from project data
+      const distanceBasedAmenities = [
+        'pharmacy', 'kindergarten', 'school', 'university', 'hospital', 'clinic',
+        'busStop', 'metro', 'groceryStore', 'supermarket', 'mall', 'bank', 'atm',
+        'restaurant', 'cafe', 'bakery', 'sportsCenter', 'gym', 'stadium', 'swimmingPool',
+        'park', 'garden', 'square', 'parking', 'bikePath', 'sportsField', 'childrenArea',
+        'laundry', 'storage', 'cinema', 'theater', 'library', 'postOffice', 'gasStation',
+        'carWash', 'veterinary', 'beautyCenter', 'dentist'
+      ];
+      
+      // Check for each amenity type at different distances
+      distanceBasedAmenities.forEach(amenityType => {
+        if (project[`${amenityType}300m`]) {
+          amenitiesMap[amenityType] = '300m';
+        } else if (project[`${amenityType}500m`]) {
+          amenitiesMap[amenityType] = '500m';
+        } else if (project[`${amenityType}1km`]) {
+          amenitiesMap[amenityType] = '1km';
+        } else if (project[`${amenityType}OnSite`] || project[`has${amenityType.charAt(0).toUpperCase() + amenityType.slice(1)}`]) {
+          amenitiesMap[amenityType] = 'onSite';
+        }
+      });
+      
+      // Convert amenities array format (if exists)
       if (project.amenities && Array.isArray(project.amenities)) {
-        const amenitiesMap: {[key: string]: string} = {};
         project.amenities.forEach((amenity: any) => {
           // Convert database distance format to form format
           let distanceKey: string;
@@ -182,11 +258,15 @@ const AdminEditProject: React.FC = () => {
           }
           amenitiesMap[amenity.amenityType] = distanceKey;
         });
-        setCustomAmenities(amenitiesMap);
-      } else if (project.customAmenities) {
-        // Fallback for old format
-        setCustomAmenities(project.customAmenities);
       }
+      
+      // Fallback for customAmenities format
+      if (project.customAmenities && typeof project.customAmenities === 'object') {
+        Object.assign(amenitiesMap, project.customAmenities);
+      }
+      
+      console.log('Setting custom amenities:', amenitiesMap);
+      setCustomAmenities(amenitiesMap);
     } catch (error) {
       console.error('Error fetching project:', error);
       toast({
@@ -203,7 +283,8 @@ const AdminEditProject: React.FC = () => {
   const fetchCities = async () => {
     try {
       console.log('Fetching cities...');
-      const response = await fetch('/api/cities');
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/cities`);
       console.log('Cities response status:', response.status);
       
       if (response.ok) {
@@ -224,7 +305,8 @@ const AdminEditProject: React.FC = () => {
 
   const fetchAreas = async (cityId: number) => {
     try {
-      const response = await fetch(`/api/areas?cityId=${cityId}`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/areas?cityId=${cityId}`);
       if (response.ok) {
         const result = await response.json();
         console.log('Areas response:', result);
@@ -258,6 +340,26 @@ const AdminEditProject: React.FC = () => {
       delete newState[amenityType];
       return newState;
     });
+  };
+
+  // Helper function to get city name based on language
+  const getCityName = (city: City) => {
+    if (i18n.language === 'en' && city.nameEnglish) {
+      return city.nameEnglish;
+    } else if (i18n.language === 'ru' && city.nameRussian) {
+      return city.nameRussian;
+    }
+    return city.nameGeorgian;
+  };
+
+  // Helper function to get area name based on language
+  const getAreaName = (area: Area) => {
+    if (i18n.language === 'en' && area.nameEn) {
+      return area.nameEn;
+    } else if (i18n.language === 'ru' && area.nameRu) {
+      return area.nameRu;
+    }
+    return area.nameKa;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -317,7 +419,8 @@ const AdminEditProject: React.FC = () => {
       });
 
       // Try admin-specific endpoint first for updates
-      let response = await fetch(`/api/admin/projects/${id}`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      let response = await fetch(`${apiUrl}/admin/projects/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -331,7 +434,7 @@ const AdminEditProject: React.FC = () => {
       // If admin endpoint doesn't work, try regular endpoint
       if (response.status === 404 || response.status === 403) {
         console.log('Admin update endpoint failed, trying regular project endpoint...');
-        response = await fetch(`/api/projects/${id}`, {
+        response = await fetch(`${apiUrl}/projects/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -435,7 +538,7 @@ const AdminEditProject: React.FC = () => {
         
         <h1 className="text-2xl font-bold mb-2">{t('editProject.title')}</h1>
         <div className="space-y-1">
-          <p className="text-gray-600">{t('editProject.projectNumber', { id })}</p>
+          <p className="text-gray-600">Project #{id}</p>
           {projectOwner && (
             <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
               <p className="text-sm text-blue-800">
@@ -481,9 +584,8 @@ const AdminEditProject: React.FC = () => {
                   <div>
                     <Label htmlFor="projectType">{t('editProject.fields.projectType')} *</Label>
                     <Select
-                      value={formData.projectType}
+                      value={formData.projectType || ""}
                       onValueChange={(value) => handleInputChange('projectType', value)}
-                      required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder={t('editProject.placeholders.selectType')} />
@@ -520,9 +622,8 @@ const AdminEditProject: React.FC = () => {
                   <div>
                     <Label htmlFor="cityId">{t('editProject.fields.city')} *</Label>
                     <Select
-                      value={formData.cityId}
+                      value={formData.cityId || ""}
                       onValueChange={(value) => handleInputChange('cityId', value)}
-                      required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder={t('editProject.placeholders.selectCity')} />
@@ -530,7 +631,7 @@ const AdminEditProject: React.FC = () => {
                       <SelectContent>
                         {(cities || []).map((city) => (
                           <SelectItem key={city.id} value={city.id.toString()}>
-                            {city.nameGeorgian}
+                            {getCityName(city)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -540,7 +641,7 @@ const AdminEditProject: React.FC = () => {
                   <div>
                     <Label htmlFor="areaId">{t('editProject.fields.area')}</Label>
                     <Select
-                      value={formData.areaId}
+                      value={formData.areaId || ""}
                       onValueChange={(value) => handleInputChange('areaId', value)}
                       disabled={!formData.cityId}
                     >
@@ -550,7 +651,7 @@ const AdminEditProject: React.FC = () => {
                       <SelectContent>
                         {(areas || []).map((area) => (
                           <SelectItem key={area.id} value={area.id.toString()}>
-                            {area.nameKa}
+                            {getAreaName(area)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -592,9 +693,8 @@ const AdminEditProject: React.FC = () => {
                   <div>
                     <Label htmlFor="deliveryStatus">{t('editProject.fields.deliveryStatus')} *</Label>
                     <Select
-                      value={formData.deliveryStatus}
+                      value={formData.deliveryStatus || ""}
                       onValueChange={(value) => handleInputChange('deliveryStatus', value)}
-                      required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder={t('editProject.placeholders.selectStatus')} />
