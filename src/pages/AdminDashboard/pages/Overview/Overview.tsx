@@ -292,213 +292,267 @@ const Overview = () => {
         ))}
       </div>
 
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('overview.recent.listings')}</CardTitle>
-            <CardDescription>{t('overview.recent.listingsSubtitle', { count: recentListings.length })}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentListings.length > 0 ? (
-                recentListings.map((listing) => (
-                  <div key={listing.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-1">
-                      <h4 className="font-semibold">{listing.title}</h4>
-                      <p className="text-sm text-gray-600">{t('overview.labels.user')} {listing.user.fullName}</p>
-                      <p className="text-sm text-gray-600">{t('overview.labels.location')} {listing.location || t('common.notSpecified')}</p>
-                      <div className="flex items-center gap-4 mt-1">
-                        <p className="text-sm font-medium text-primary">{formatPrice(listing.price)}</p>
-                        <p className="text-xs text-gray-500">{formatDate(listing.createdAt)}</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(getLanguageUrl(`property/${listing.id}`, i18n.language))}
-                      className="ml-4"
-                    >
-                      {t('overview.buttons.view')}
-                      <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  {t('overview.messages.noListings')}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('overview.recent.users')}</CardTitle>
-            <CardDescription>{t('overview.recent.usersSubtitle', { count: recentUsers.length })}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentUsers.length > 0 ? (
-                recentUsers.map((user) => (
-                  <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-1">
-                      <p className="font-semibold">{user.fullName}</p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1">
-                        {getRoleText(user.role)}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="text-right">
-                        <p className="text-sm text-gray-600">{formatDate(user.createdAt)}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div>
+                <CardTitle>{t('overview.recent.listings')}</CardTitle>
+                <CardDescription>{t('overview.recent.listingsSubtitle', { count: recentListings.length })}</CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(getLanguageUrl('admin/listings', i18n.language))}
+              >
+                {t('overview.buttons.viewAll', { defaultValue: 'View All' })}
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentListings.length > 0 ? (
+                  recentListings.map((listing) => (
+                    <div key={listing.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                      <div className="flex-1">
+                        <h4 className="font-semibold">{listing.title}</h4>
+                        <p className="text-sm text-gray-600">{t('overview.labels.user')} {listing.user.fullName}</p>
+                        <p className="text-sm text-gray-600">{t('overview.labels.location')} {listing.location || t('common.notSpecified')}</p>
+                        <div className="flex items-center gap-4 mt-1">
+                          <p className="text-sm font-medium text-primary">{formatPrice(listing.price)}</p>
+                          <p className="text-xs text-gray-500">{formatDate(listing.createdAt)}</p>
+                        </div>
                       </div>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(getLanguageUrl(`user/${user.id}`, i18n.language))}
+                        onClick={() => navigate(getLanguageUrl(`property/${listing.id}`, i18n.language))}
+                        className="ml-4"
                       >
                         {t('overview.buttons.view')}
                         <ArrowRight className="h-3 w-3 ml-1" />
                       </Button>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    {t('overview.messages.noListings')}
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  {t('overview.messages.noUsers')}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('overview.recent.projects')}</CardTitle>
-            <CardDescription>{t('overview.recent.projectsSubtitle', { count: recentProjects.length })}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentProjects.length > 0 ? (
-                recentProjects.map((project) => (
-                  <div key={project.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-1">
-                      <h4 className="font-semibold">{project.name}</h4>
-                      <p className="text-sm text-gray-600">{t('overview.labels.developer')} {project.developer.fullName}</p>
-                      <p className="text-sm text-gray-600">{t('overview.labels.city')} {project.city}</p>
-                      <div className="flex items-center gap-4 mt-1">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          {t(`overview.deliveryStatus.${project.deliveryStatus}`, { defaultValue: project.deliveryStatus })}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div>
+                <CardTitle>{t('overview.recent.projects')}</CardTitle>
+                <CardDescription>{t('overview.recent.projectsSubtitle', { count: recentProjects.length })}</CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(getLanguageUrl('admin/projects', i18n.language))}
+              >
+                {t('overview.buttons.viewAll', { defaultValue: 'View All' })}
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentProjects.length > 0 ? (
+                  recentProjects.map((project) => (
+                    <div key={project.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                      <div className="flex-1">
+                        <h4 className="font-semibold">{project.name}</h4>
+                        <p className="text-sm text-gray-600">{t('overview.labels.developer')} {project.developer.fullName}</p>
+                        <p className="text-sm text-gray-600">{t('overview.labels.city')} {project.city}</p>
+                        <div className="flex items-center gap-4 mt-1">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            {t(`overview.deliveryStatus.${project.deliveryStatus}`, { defaultValue: project.deliveryStatus })}
+                          </span>
+                          <p className="text-xs text-gray-500">{formatDate(project.createdAt)}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(getLanguageUrl(`projects/${project.id}`, i18n.language))}
+                        className="ml-4"
+                      >
+                        {t('overview.buttons.view')}
+                        <ArrowRight className="h-3 w-3 ml-1" />
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    {t('overview.messages.noProjects')}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div>
+                <CardTitle>{t('overview.recent.agencies')}</CardTitle>
+                <CardDescription>{t('overview.recent.agenciesSubtitle', { count: recentAgencies.length })}</CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(getLanguageUrl('admin/agencies', i18n.language))}
+              >
+                {t('overview.buttons.viewAll', { defaultValue: 'View All' })}
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentAgencies.length > 0 ? (
+                  recentAgencies.map((agency) => (
+                    <div key={agency.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                      <div className="flex-1">
+                        <h4 className="font-semibold">{agency.name}</h4>
+                        <p className="text-sm text-gray-600">{t('overview.labels.owner')} {agency.owner.fullName}</p>
+                        <div className="flex items-center gap-4 mt-1">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {t('overview.labels.agents', { count: agency.totalAgents })}
+                          </span>
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                            {t('overview.labels.listings', { count: agency.totalListings })}
+                          </span>
+                          <p className="text-xs text-gray-500">{formatDate(agency.createdAt)}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(getLanguageUrl(`agencies/${agency.id}`, i18n.language))}
+                        className="ml-4"
+                      >
+                        {t('overview.buttons.view')}
+                        <ArrowRight className="h-3 w-3 ml-1" />
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    {t('overview.messages.noAgencies')}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div>
+                <CardTitle>{t('overview.recent.users')}</CardTitle>
+                <CardDescription>{t('overview.recent.usersSubtitle', { count: recentUsers.length })}</CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(getLanguageUrl('admin/users', i18n.language))}
+              >
+                {t('overview.buttons.viewAll', { defaultValue: 'View All' })}
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentUsers.length > 0 ? (
+                  recentUsers.map((user) => (
+                    <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                      <div className="flex-1">
+                        <p className="font-semibold">{user.fullName}</p>
+                        <p className="text-sm text-gray-600">{user.email}</p>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1">
+                          {getRoleText(user.role)}
                         </span>
-                        <p className="text-xs text-gray-500">{formatDate(project.createdAt)}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-right">
+                          <p className="text-sm text-gray-600">{formatDate(user.createdAt)}</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(getLanguageUrl(`user/${user.id}`, i18n.language))}
+                        >
+                          {t('overview.buttons.view')}
+                          <ArrowRight className="h-3 w-3 ml-1" />
+                        </Button>
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(getLanguageUrl(`projects/${project.id}`, i18n.language))}
-                      className="ml-4"
-                    >
-                      {t('overview.buttons.view')}
-                      <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    {t('overview.messages.noUsers')}
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  {t('overview.messages.noProjects')}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('overview.recent.developers')}</CardTitle>
-            <CardDescription>{t('overview.recent.developersSubtitle', { count: recentDevelopers.length })}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentDevelopers.length > 0 ? (
-                recentDevelopers.map((developer) => (
-                  <div key={developer.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-1">
-                      <p className="font-semibold">{developer.fullName}</p>
-                      <p className="text-sm text-gray-600">{developer.email}</p>
-                      {developer.companyName && (
-                        <p className="text-sm text-gray-600">{t('overview.labels.company')} {developer.companyName}</p>
-                      )}
-                      <div className="flex items-center gap-4 mt-1">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                          {t('overview.labels.projects', { count: developer.totalProjects })}
-                        </span>
-                        <p className="text-xs text-gray-500">{formatDate(developer.createdAt)}</p>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div>
+                <CardTitle>{t('overview.recent.developers')}</CardTitle>
+                <CardDescription>{t('overview.recent.developersSubtitle', { count: recentDevelopers.length })}</CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(getLanguageUrl('admin/users?role=developer', i18n.language))}
+              >
+                {t('overview.buttons.viewAll', { defaultValue: 'View All' })}
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentDevelopers.length > 0 ? (
+                  recentDevelopers.map((developer) => (
+                    <div key={developer.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                      <div className="flex-1">
+                        <p className="font-semibold">{developer.fullName}</p>
+                        <p className="text-sm text-gray-600">{developer.email}</p>
+                        {developer.companyName && (
+                          <p className="text-sm text-gray-600">{t('overview.labels.company')} {developer.companyName}</p>
+                        )}
+                        <div className="flex items-center gap-4 mt-1">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                            {t('overview.labels.projects', { count: developer.totalProjects })}
+                          </span>
+                          <p className="text-xs text-gray-500">{formatDate(developer.createdAt)}</p>
+                        </div>
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(getLanguageUrl(`developers/${developer.id}`, i18n.language))}
+                        className="ml-4"
+                      >
+                        {t('overview.buttons.view')}
+                        <ArrowRight className="h-3 w-3 ml-1" />
+                      </Button>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(getLanguageUrl(`developers/${developer.id}`, i18n.language))}
-                      className="ml-4"
-                    >
-                      {t('overview.buttons.view')}
-                      <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    {t('overview.messages.noDevelopers')}
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  {t('overview.messages.noDevelopers')}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('overview.recent.agencies')}</CardTitle>
-            <CardDescription>{t('overview.recent.agenciesSubtitle', { count: recentAgencies.length })}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentAgencies.length > 0 ? (
-                recentAgencies.map((agency) => (
-                  <div key={agency.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-1">
-                      <h4 className="font-semibold">{agency.name}</h4>
-                      <p className="text-sm text-gray-600">{t('overview.labels.owner')} {agency.owner.fullName}</p>
-                      <div className="flex items-center gap-4 mt-1">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {t('overview.labels.agents', { count: agency.totalAgents })}
-                        </span>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                          {t('overview.labels.listings', { count: agency.totalListings })}
-                        </span>
-                        <p className="text-xs text-gray-500">{formatDate(agency.createdAt)}</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(getLanguageUrl(`agencies/${agency.id}`, i18n.language))}
-                      className="ml-4"
-                    >
-                      {t('overview.buttons.view')}
-                      <ArrowRight className="h-3 w-3 ml-1" />
-                    </Button>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  {t('overview.messages.noAgencies')}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
