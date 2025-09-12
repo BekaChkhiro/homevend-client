@@ -73,8 +73,8 @@ export const FeaturedPropertiesCarousel = ({ properties, isLoading = false }: Fe
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="flex -left-2 md:-left-4" />
-        <CarouselNext className="flex -right-2 md:-right-4" />
+        <CarouselPrevious className="flex -left-2 md:left-3 " />
+        <CarouselNext className="flex -right-2 md:right-3" />
       </Carousel>
       
       {/* Dots Indicator */}
