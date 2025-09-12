@@ -66,7 +66,10 @@
       "house": "Дом",
       "cottage": "Коттедж",
       "land": "Земля",
-      "commercial": "Коммерческая"
+      "commercial": "Коммерческая",
+      "hotel": "Отель",
+      "office": "Офис",
+      "featured": "Избранное"
     },
     "dealTypes": {
       "sale": "Продается",
@@ -211,6 +214,13 @@
     "maxLength": "Максимум {{max}} символов",
     "numeric": "Должно быть числом",
     "positive": "Должно быть положительным числом"
+  },
+  "passwordValidation": {
+    "requirements": "Мин. 8 символов, одна заглавная и строчная буква"
+  },
+  "passwordChange": {
+    "changePassword": "Изменить пароль",
+    "logoutWarning": "После изменения пароля вы автоматически выйдете из системы"
   },
   "propertyCard": {
     "views": "просмотров",
