@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User, Crown, Clock } from "lucide-react";
-import { useState } from "react";
+import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User, Crown, Clock, ChevronLeft, ChevronRight, Home } from "lucide-react";
+import { useState, useEffect } from "react";
 import { VipPurchaseModal } from "@/components/VipPurchaseModal";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
@@ -81,7 +81,6 @@ const VIP_LABELS = {
   super_vip: 'SUPER VIP'
 };
 
-
 const DEFAULT_SERVICE_COLORS = {
   vip: '#3b82f6', // Blue
   vip_plus: '#8b5cf6', // Purple
@@ -91,11 +90,75 @@ const DEFAULT_SERVICE_COLORS = {
 };
 
 export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services }: UserPropertyCardProps) => {
-  const navigate = useNavigate();
   const [isVipModalOpen, setIsVipModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [propertyImages, setPropertyImages] = useState<string[]>([]);
+  const navigate = useNavigate();
   const refreshBalance = useBalanceRefresh();
   const { t, i18n } = useTranslation('userDashboard');
 
+  useEffect(() => {
+    const fetchPropertyImages = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/property/${property.id}/images`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && data.images.length > 0) {
+            const imageUrls = data.images.map((img: any) => 
+              img.urls?.large || img.urls?.medium || img.urls?.original
+            ).filter(Boolean);
+            setPropertyImages(imageUrls);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load property images:', error);
+        if (property.photos && property.photos.length > 0) {
+          setPropertyImages(property.photos);
+        }
+      }
+    };
+
+    fetchPropertyImages();
+  }, [property.id, property.photos]);
+
+  const getImageUrls = () => {
+    if (propertyImages.length > 0) {
+      return propertyImages;
+    }
+    if (property.photos && property.photos.length > 0) {
+      return property.photos;
+    }
+    return ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop'];
+  };
+
+  const images = getImageUrls();
+  const hasMultipleImages = images.length > 1;
+
+  const goToPrevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+    return false;
+  };
+
+  const goToNextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+    return false;
+  };
+
+  const handleDotClick = (e: React.MouseEvent, index: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex(index);
+    return false;
+  };
 
   const formatPrice = (price: string) => {
     return parseInt(price).toLocaleString();
@@ -108,13 +171,15 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
   };
 
   const getMainImage = () => {
+    if (images.length > 0) {
+      return images[currentImageIndex];
+    }
     if (property.photos && property.photos.length > 0) {
       return property.photos[0];
     }
-    return "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=300&fit=crop";
+    return 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop';
   };
 
-  // Translation dictionaries for common Georgian place names
   const cityTranslations: Record<string, Record<string, string>> = {
     'თბილისი': { en: 'Tbilisi', ru: 'Тбилиси', ka: 'თბილისი' },
     'ბათუმი': { en: 'Batumi', ru: 'Батуми', ka: 'ბათუმი' },
@@ -134,20 +199,17 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
     'ჩუღურეთი': { en: 'Chughureti', ru: 'Чугурети', ka: 'ჩუღურეთი' }
   };
 
-  // Helper function to translate Georgian text to target language
   const translateText = (text: string, targetLang: string): string => {
     if (!text || targetLang === 'ka') return text;
     
     let translatedText = text;
     
-    // Translate cities
     Object.entries(cityTranslations).forEach(([georgian, translations]) => {
       if (translatedText.includes(georgian)) {
         translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
       }
     });
     
-    // Translate districts
     Object.entries(districtTranslations).forEach(([georgian, translations]) => {
       if (translatedText.includes(georgian)) {
         translatedText = translatedText.replace(georgian, translations[targetLang] || georgian);
@@ -160,7 +222,6 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
   const getLocationString = () => {
     const parts = [];
     
-    // Add district/area if available - use language-specific name
     if (property.areaData) {
       let areaName;
       switch (i18n.language) {
@@ -180,7 +241,6 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
       parts.push(property.district);
     }
     
-    // Add city - use language-specific name with proper fallback
     if (property.cityData) {
       let cityName;
       switch (i18n.language) {
@@ -307,13 +367,40 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
         <div className="sm:hidden p-4">
           {/* First Row - Main Info */}
           <div className="flex items-center gap-3 mb-3">
-            {/* Image */}
-            <div className="relative flex-shrink-0">
+            {/* Image Carousel */}
+            <div className="relative flex-shrink-0 w-16 h-16 overflow-hidden rounded-lg">
               <img 
                 src={getMainImage()} 
                 alt={property.title || `${property.propertyType} ${property.city}`}
-                className="w-16 h-16 object-cover rounded-lg"
+                className="w-full h-full object-cover"
               />
+              
+              {/* Navigation Arrows (only show on hover and if multiple images) */}
+              {hasMultipleImages && (
+                <div className="absolute inset-0 group">
+                  <button 
+                    onClick={goToPrevImage}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/30 text-white p-0.5 rounded-r-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="h-3 w-3" />
+                  </button>
+                  <button 
+                    onClick={goToNextImage}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/30 text-white p-0.5 rounded-l-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="h-3 w-3" />
+                  </button>
+                  
+                  {/* Image Counter */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1 text-center">
+                    <span className="text-white text-[10px] font-medium">
+                      {currentImageIndex + 1}/{images.length}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Title and Price */}
