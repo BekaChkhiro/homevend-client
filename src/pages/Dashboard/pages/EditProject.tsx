@@ -598,8 +598,10 @@ export const EditProject: React.FC = () => {
 
             {/* Photo Gallery Section */}
             <PhotoGallerySection
-              images={projectImages}
-              onImagesChange={setProjectImages}
+              projectId={id ? parseInt(id) : undefined}
+              onImagesChange={(images) => {
+                console.log('Project images updated in AWS:', images);
+              }}
             />
           </TabsContent>
 

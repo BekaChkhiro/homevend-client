@@ -45,8 +45,16 @@ interface Project {
   };
   photos?: Array<{
     id: number;
-    url: string;
+    url?: string;
+    urls?: {
+      original: string;
+      thumbnail?: string;
+      small?: string;
+      medium?: string;
+      large?: string;
+    };
     fileName: string;
+    originalName?: string;
   }>;
   pricing: Array<{
     id: number;
@@ -136,15 +144,27 @@ const Projects = () => {
       const data = await projectApi.getProjects(params);
       console.log('Projects API response:', data); // Debug log
       
-      // Add mock photos to each project
-      const projectsWithPhotos = Array.isArray(data.projects) ? data.projects.map((project: Project) => ({
-        ...project,
-        photos: [
-          { id: 1, url: '/placeholder.svg', fileName: `${project.projectName}-1.jpg` },
-          { id: 2, url: '/placeholder.svg', fileName: `${project.projectName}-2.jpg` },
-          { id: 3, url: '/placeholder.svg', fileName: `${project.projectName}-3.jpg` }
-        ]
-      })) : [];
+      // Fetch images for each project
+      const projectsWithPhotos = Array.isArray(data.projects) ? await Promise.all(
+        data.projects.map(async (project: Project) => {
+          try {
+            const imageResponse = await fetch(`/api/upload/project/${project.id}/images`);
+            if (imageResponse.ok) {
+              const imageData = await imageResponse.json();
+              return {
+                ...project,
+                photos: imageData.images || []
+              };
+            }
+          } catch (error) {
+            console.error(`Error fetching images for project ${project.id}:`, error);
+          }
+          return {
+            ...project,
+            photos: []
+          };
+        })
+      ) : [];
       
       setProjects(projectsWithPhotos);
       setTotalPages(data.pagination?.totalPages || 1);
@@ -324,13 +344,32 @@ const Projects = () => {
                     <div className="aspect-video w-full overflow-hidden bg-gray-100">
                       {project.photos && project.photos.length > 0 ? (
                         <img
-                          src={project.photos[0].url}
+                          src={project.photos[0].urls?.medium || project.photos[0].urls?.original || project.photos[0].url}
                           alt={project.projectName}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          onError={(e) => {
+                            // Fallback to placeholder if image fails to load
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = `
+                              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                                <div class="text-center">
+                                  <div class="h-12 w-12 mx-auto mb-2 text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15l-3 18h-9l-3-18Z" />
+                                    </svg>
+                                  </div>
+                                  <p class="text-xs text-gray-500">No Image</p>
+                                </div>
+                              </div>
+                            `;
+                          }}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                          <Building2 className="h-12 w-12 text-gray-400" />
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                          <div className="text-center">
+                            <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                            <p className="text-xs text-gray-500">No Images</p>
+                          </div>
                         </div>
                       )}
                     </div>

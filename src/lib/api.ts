@@ -828,5 +828,65 @@ export const projectApi = {
   }
 };
 
+// Universal Upload API
+export const uploadApi = {
+  uploadImages: async (entityType: string, entityId: number, files: File[], purpose?: string) => {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('images', file);
+    });
+    if (purpose) {
+      formData.append('purpose', purpose);
+    }
+    
+    const response = await apiClient.post(
+      `/upload/${entityType}/${entityId}`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
+    return response.data;
+  },
+  
+  getEntityImages: async (entityType: string, entityId: number, purpose?: string) => {
+    const params = purpose ? { purpose } : {};
+    const response = await apiClient.get(
+      `/upload/${entityType}/${entityId}/images`,
+      { params }
+    );
+    return response.data;
+  },
+  
+  deleteImage: async (imageId: number) => {
+    const response = await apiClient.delete(`/upload/image/${imageId}`);
+    return response.data;
+  },
+  
+  reorderImages: async (entityType: string, entityId: number, purpose: string, imageOrders: Array<{imageId: number, sortOrder: number}>) => {
+    const response = await apiClient.put(
+      `/upload/${entityType}/${entityId}/reorder`,
+      { purpose, imageOrders }
+    );
+    return response.data;
+  },
+  
+  setPrimaryImage: async (imageId: number) => {
+    const response = await apiClient.put(`/upload/image/${imageId}/set-primary`);
+    return response.data;
+  },
+  
+  getPresignedUrl: async (params: {
+    entityType: string;
+    entityId: number;
+    purpose: string;
+    fileName: string;
+    contentType: string;
+  }) => {
+    const response = await apiClient.post('/upload/presigned-url', params);
+    return response.data;
+  }
+};
+
 export default apiClient;
 export { publicApiClient };

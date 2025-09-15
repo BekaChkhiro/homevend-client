@@ -41,6 +41,8 @@ export const EditProperty = () => {
   const [vipPricing, setVipPricing] = useState<any[]>([]);
   const [additionalServices, setAdditionalServices] = useState<any[]>([]);
   const [freeServicePrice, setFreeServicePrice] = useState<number>(0);
+  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
+  const [pendingImages, setPendingImages] = useState<File[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id } = useParams<{ id: string }>();
@@ -412,6 +414,40 @@ export const EditProperty = () => {
       // Update property first
       await propertyApi.updateProperty(id, propertyData);
       
+      // Upload pending images if any
+      if (pendingImages.length > 0) {
+        try {
+          const formData = new FormData();
+          pendingImages.forEach(file => {
+            formData.append('images', file);
+          });
+          formData.append('purpose', 'property_gallery');
+          
+          const token = localStorage.getItem('token');
+          const uploadResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/property/${id}`, {
+            method: 'POST',
+            headers: {
+              'Authorization': token ? `Bearer ${token}` : '',
+            },
+            body: formData,
+          });
+          
+          if (uploadResponse.ok) {
+            const uploadResult = await uploadResponse.json();
+            setUploadedImages([...uploadedImages, ...(uploadResult.images || [])]);
+            setPendingImages([]); // Clear pending images
+            console.log(`Successfully uploaded ${uploadResult.images?.length || 0} images`);
+          } else {
+            const errorResult = await uploadResponse.json().catch(() => ({ error: 'Upload failed' }));
+            console.warn('Image upload failed:', errorResult.error);
+            // Don't throw error - property update succeeded, just image upload failed
+          }
+        } catch (uploadError) {
+          console.warn('Image upload error:', uploadError);
+          // Don't throw error - property update succeeded, just image upload failed
+        }
+      }
+      
       // Handle services purchase (VIP + additional services)
       const servicesToPurchase = [];
       
@@ -444,14 +480,16 @@ export const EditProperty = () => {
           servicesText.push(`${label} (${service.days} დღე)`);
         });
         
+        const imageUploadText = pendingImages.length > 0 ? ` Images uploaded: ${pendingImages.length}` : '';
         toast({
           title: t('common.success'),
-          description: t('editProperty.successWithServices', { services: servicesText.join(', ') }),
+          description: t('editProperty.successWithServices', { services: servicesText.join(', ') }) + imageUploadText,
         });
       } else {
+        const imageUploadText = pendingImages.length > 0 ? ` ${pendingImages.length} images uploaded successfully.` : '';
         toast({
           title: t('common.success'),
-          description: t('editProperty.successWithoutServices'),
+          description: t('editProperty.successWithoutServices') + imageUploadText,
         });
       }
       
@@ -525,7 +563,15 @@ export const EditProperty = () => {
           <DescriptionSection />
           
           {/* Photo Gallery Section */}
-          <PhotoGallerySection />
+          <PhotoGallerySection 
+            propertyId={id ? parseInt(id) : undefined}
+            onImagesChange={(images) => {
+              setUploadedImages(images);
+            }}
+            onPendingImagesChange={(files) => {
+              setPendingImages(files);
+            }}
+          />
           
           </form>
         </Form>
@@ -564,7 +610,10 @@ export const EditProperty = () => {
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                {t('editProperty.updating')}
+                {pendingImages.length > 0 ? 
+                  `Updating property and uploading ${pendingImages.length} images...` : 
+                  t('editProperty.updating')
+                }
               </>
             ) : (
               t('editProperty.updateProperty')

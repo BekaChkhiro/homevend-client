@@ -30,6 +30,7 @@ interface Project {
   developerId: number;
   createdAt: string;
   images: string[];
+  projectImages?: string[]; // For AWS images
 }
 
 const AdminProjects = () => {
@@ -162,27 +163,49 @@ const AdminProjects = () => {
       
       if (Array.isArray(projectsData) && projectsData.length > 0) {
         // Transform API data to match our interface
-        const transformedProjects = projectsData.map((proj: any) => ({
-          id: proj.id,
-          title: proj.projectName || proj.title || `${t('projects.title')} #${proj.id}`,
-          description: proj.description || "",
-          location: getFullTranslatedAddress(proj, i18n.language),
-          status: proj.deliveryStatus || proj.status || "active",
-          totalUnits: proj.totalUnits || 0,
-          soldUnits: proj.soldUnits || 0,
-          startDate: proj.createdAt || new Date().toISOString(),
-          completionDate: proj.deliveryDate,
-          minPrice: proj.minPrice || 0,
-          maxPrice: proj.maxPrice || 0,
-          developer: {
-            id: proj.developer?.id || proj.developerId || 0,
-            name: proj.developer?.fullName || t('projects.labels.unknownDeveloper'),
-            email: proj.developer?.email || ""
-          },
-          developerId: proj.developerId || proj.developer?.id || 0,
-          createdAt: proj.createdAt || new Date().toISOString(),
-          images: proj.images || []
-        }));
+        // Fetch images for each project
+        const transformedProjects = await Promise.all(
+          projectsData.map(async (proj: any) => {
+            let projectImages: string[] = [];
+            
+            try {
+              const imageResponse = await fetch(`/api/upload/project/${proj.id}/images`);
+              if (imageResponse.ok) {
+                const imageData = await imageResponse.json();
+                if (imageData.images && imageData.images.length > 0) {
+                  projectImages = imageData.images.map((img: any) => 
+                    img.urls?.medium || img.urls?.original || img.url
+                  ).filter(Boolean);
+                }
+              }
+            } catch (error) {
+              console.warn(`Failed to load images for project ${proj.id}:`, error);
+            }
+            
+            return {
+              id: proj.id,
+              title: proj.projectName || proj.title || `${t('projects.title')} #${proj.id}`,
+              description: proj.description || "",
+              location: getFullTranslatedAddress(proj, i18n.language),
+              status: proj.deliveryStatus || proj.status || "active",
+              totalUnits: proj.totalUnits || 0,
+              soldUnits: proj.soldUnits || 0,
+              startDate: proj.createdAt || new Date().toISOString(),
+              completionDate: proj.deliveryDate,
+              minPrice: proj.minPrice || 0,
+              maxPrice: proj.maxPrice || 0,
+              developer: {
+                id: proj.developer?.id || proj.developerId || 0,
+                name: proj.developer?.fullName || t('projects.labels.unknownDeveloper'),
+                email: proj.developer?.email || ""
+              },
+              developerId: proj.developerId || proj.developer?.id || 0,
+              createdAt: proj.createdAt || new Date().toISOString(),
+              images: proj.images || [],
+              projectImages: projectImages
+            };
+          })
+        );
         
         setProjects(transformedProjects);
       } else {
@@ -264,6 +287,13 @@ const AdminProjects = () => {
     return price.toLocaleString();
   };
 
+  const getProjectImage = (project: Project) => {
+    if (project.projectImages && project.projectImages.length > 0) {
+      return project.projectImages[0];
+    }
+    return null;
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -315,13 +345,32 @@ const AdminProjects = () => {
               <Card key={project.id} className="border hover:shadow-sm transition-shadow">
                 <CardContent className="p-0">
                   <div className="flex items-center gap-4 p-4">
-                    {/* Image placeholder */}
+                    {/* Project Image */}
                     <div className="relative flex-shrink-0">
-                      <img 
-                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=300&fit=crop"
-                        alt={project.title}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
+                      {getProjectImage(project) ? (
+                        <img 
+                          src={getProjectImage(project)!}
+                          alt={project.title}
+                          className="w-20 h-20 object-cover rounded-lg"
+                          onError={(e) => {
+                            // Fallback to placeholder if image fails to load
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = `
+                              <div class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                                <div class="text-gray-400">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15l-3 18h-9l-3-18Z" />
+                                  </svg>
+                                </div>
+                              </div>
+                            `;
+                          }}
+                        />
+                      ) : (
+                        <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                          <Building className="w-10 h-10 text-gray-400" />
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}

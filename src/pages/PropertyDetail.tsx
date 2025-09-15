@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag, Crown } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag, Crown, ChevronLeft, ChevronRight } from "lucide-react";
 import { AdBanner } from "@/components/AdBanner";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
@@ -211,6 +211,8 @@ const PropertyDetail = () => {
   const { toast } = useToast();
   const [property, setProperty] = useState<Property | null>(null);
   const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
+  const [propertyImages, setPropertyImages] = useState<any[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -220,6 +222,36 @@ const PropertyDetail = () => {
     window.scrollTo(0, 0);
     fetchProperty();
   }, [id]);
+
+  // Get total image count for keyboard navigation
+  const getTotalImages = () => {
+    if (propertyImages.length > 0) return propertyImages.length;
+    if (property?.photos.length > 0) return property.photos.length;
+    return 1; // Default placeholder image
+  };
+
+  // Keyboard navigation for image slider
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!property) return;
+      
+      const totalImages = getTotalImages();
+      if (totalImages <= 1) return;
+      
+      if (event.key === 'ArrowLeft') {
+        setCurrentImageIndex(prev => 
+          prev === 0 ? totalImages - 1 : prev - 1
+        );
+      } else if (event.key === 'ArrowRight') {
+        setCurrentImageIndex(prev => 
+          prev === totalImages - 1 ? 0 : prev + 1
+        );
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [property, propertyImages]);
 
   const fetchProperty = async () => {
     if (!id) {
@@ -235,6 +267,18 @@ const PropertyDetail = () => {
       // Fetch the specific property
       const propertyData = await propertyApi.getPropertyById(id);
       setProperty(propertyData);
+
+      // Fetch property images from Universal Image system
+      try {
+        const imagesResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/property/${id}/images`);
+        if (imagesResponse.ok) {
+          const imagesData = await imagesResponse.json();
+          setPropertyImages(imagesData.images || []);
+        }
+      } catch (imageError) {
+        console.warn('Failed to load property images:', imageError);
+        setPropertyImages([]);
+      }
 
       // Fetch similar properties with rate limiting handling - delay this call
       setTimeout(async () => {
@@ -459,6 +503,30 @@ const PropertyDetail = () => {
     return location;
   };
   
+  // Create image URLs from Universal Image system
+  const getImageUrls = () => {
+    if (propertyImages.length > 0) {
+      // Sort by isPrimary first, then by sortOrder
+      const sortedImages = [...propertyImages].sort((a, b) => {
+        if (a.isPrimary && !b.isPrimary) return -1;
+        if (!a.isPrimary && b.isPrimary) return 1;
+        return a.sortOrder - b.sortOrder;
+      });
+      
+      // Use large size for display, fallback to medium, then original
+      return sortedImages.map(img => 
+        img.urls?.large || img.urls?.medium || img.urls?.original
+      ).filter(Boolean);
+    }
+    
+    // Fallback to property.photos if no Universal Images, then placeholder
+    if (property.photos.length > 0) {
+      return property.photos;
+    }
+    
+    return ["https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop"];
+  };
+
   const displayProperty = {
     id: property.id,
     title: property.title || `${property.propertyType} ${property.dealType} ${property.city}`,
@@ -468,9 +536,7 @@ const PropertyDetail = () => {
     bathrooms: parseInt(property.bathrooms || '1'),
     area: parseInt(property.area) || 0,
     type: property.propertyType,
-    images: property.photos.length > 0 ? property.photos : [
-      "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop"
-    ],
+    images: getImageUrls(),
     description: property.descriptionGeorgian || property.descriptionEnglish || t('noDescription'),
     features: property.features,
     advantages: property.advantages,
@@ -500,25 +566,86 @@ const PropertyDetail = () => {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
             {/* Main Content */}
             <div className="xl:col-span-2">
-              {/* Property Images */}
+              {/* Property Images Slider */}
               <div className="mb-4 md:mb-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4">
-                  <div className="sm:col-span-2">
-                    <img
-                      src={displayProperty.images[0]}
-                      alt={displayProperty.title}
-                      className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-lg"
-                    />
+                {/* Main Image Display */}
+                <div className="relative mb-4">
+                  <img
+                    src={displayProperty.images[currentImageIndex]}
+                    alt={`${displayProperty.title} ${currentImageIndex + 1}`}
+                    className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover rounded-lg"
+                  />
+                  
+                  {/* Image counter */}
+                  <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {currentImageIndex + 1} / {displayProperty.images.length}
                   </div>
-                  {displayProperty.images.slice(1).map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`${displayProperty.title} ${index + 2}`}
-                      className="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg"
-                    />
-                  ))}
+                  
+                  {/* Navigation Arrows */}
+                  {displayProperty.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setCurrentImageIndex(
+                          currentImageIndex === 0 
+                            ? displayProperty.images.length - 1 
+                            : currentImageIndex - 1
+                        )}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-colors"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => setCurrentImageIndex(
+                          currentImageIndex === displayProperty.images.length - 1 
+                            ? 0 
+                            : currentImageIndex + 1
+                        )}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-colors"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </>
+                  )}
                 </div>
+
+                {/* Thumbnail Navigation */}
+                {displayProperty.images.length > 1 && (
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    {displayProperty.images.map((image, index) => (
+                      <img
+                        key={index}
+                        src={image}
+                        alt={`Thumbnail ${index + 1}`}
+                        className={`w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg cursor-pointer transition-all flex-shrink-0 border-2 ${
+                          index === currentImageIndex 
+                            ? 'border-primary opacity-100 ring-2 ring-primary/30' 
+                            : 'border-transparent hover:border-primary/50 opacity-70 hover:opacity-100'
+                        }`}
+                        onClick={() => setCurrentImageIndex(index)}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Dots Indicator for Mobile */}
+                {displayProperty.images.length > 1 && (
+                  <div className="flex justify-center gap-2 mt-4 md:hidden">
+                    {displayProperty.images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          index === currentImageIndex 
+                            ? 'bg-primary w-4' 
+                            : 'bg-gray-300 hover:bg-gray-400'
+                        }`}
+                        aria-label={`Go to image ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Property Info */}

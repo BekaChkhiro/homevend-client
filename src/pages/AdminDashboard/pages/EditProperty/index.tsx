@@ -301,9 +301,8 @@ const AdminEditProperty = () => {
         contactPhone: data.contactPhone,
         descriptionGeorgian: cleanData(data.descriptionGeorgian),
         descriptionEnglish: cleanData(data.descriptionEnglish),
-        descriptionRussian: cleanData(data.descriptionRussian),
-        // TODO: Handle photo uploads
-        photos: []
+        descriptionRussian: cleanData(data.descriptionRussian)
+        // Photos are now handled directly through AWS upload in PhotoGallerySection
       };
 
       await propertyApi.updateProperty(id, propertyData);
@@ -426,7 +425,12 @@ const AdminEditProperty = () => {
           <DescriptionSection />
           
           {/* Photo Gallery Section */}
-          <PhotoGallerySection />
+          <PhotoGallerySection 
+            propertyId={id ? parseInt(id) : undefined}
+            onImagesChange={(images) => {
+              console.log('Property images updated in AWS:', images);
+            }}
+          />
           
           
           </form>

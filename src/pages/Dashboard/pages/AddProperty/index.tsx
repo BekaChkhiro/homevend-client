@@ -40,6 +40,10 @@ export const AddProperty = () => {
   const [vipPricing, setVipPricing] = useState<any[]>([]);
   const [additionalServices, setAdditionalServices] = useState<any[]>([]);
   const [freeServicePrice, setFreeServicePrice] = useState<number>(0);
+  const [createdPropertyId, setCreatedPropertyId] = useState<number | null>(null);
+  const [isPropertySaved, setIsPropertySaved] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
+  const [pendingImages, setPendingImages] = useState<File[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t, i18n } = useTranslation('userDashboard');
@@ -305,23 +309,94 @@ export const AddProperty = () => {
       // Create property first
       const result = await propertyApi.createProperty(propertyData);
       
+      // Try different possible response formats
+      const propertyId = result?.id || result?.data?.id || result?.propertyId;
+      
+      if (propertyId) {
+        setCreatedPropertyId(propertyId);
+        setIsPropertySaved(true);
+        
+        // Upload pending images if any
+        if (pendingImages.length > 0) {
+          try {
+            const formData = new FormData();
+            pendingImages.forEach(file => {
+              formData.append('images', file);
+            });
+            formData.append('purpose', 'property_gallery');
+            
+            const token = localStorage.getItem('token');
+            const uploadResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/property/${propertyId}`, {
+              method: 'POST',
+              headers: {
+                'Authorization': token ? `Bearer ${token}` : '',
+              },
+              body: formData,
+            });
+            
+            if (uploadResponse.ok) {
+              const uploadResult = await uploadResponse.json();
+              setUploadedImages(uploadResult.images || []);
+              setPendingImages([]); // Clear pending images
+              
+              // Navigate to properties list after successful creation and upload
+              setTimeout(() => {
+                navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
+              }, 1500);
+              
+              toast({
+                title: t('common.success'),
+                description: `Property created and ${uploadResult.images?.length || 0} images uploaded successfully!`,
+              });
+            } else {
+              const errorResult = await uploadResponse.json().catch(() => ({ error: 'Upload failed' }));
+              
+              // Navigate even if upload failed since property was created
+              setTimeout(() => {
+                navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
+              }, 2000);
+              
+              toast({
+                title: 'Property Created',
+                description: `Property created successfully, but image upload failed: ${errorResult.error || 'Unknown error'}`,
+                variant: "destructive",
+              });
+            }
+          } catch (uploadError) {
+            // Navigate even if upload failed since property was created
+            setTimeout(() => {
+              navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
+            }, 2000);
+            
+            toast({
+              title: 'Property Created',
+              description: `Property created successfully, but image upload failed: ${uploadError}`,
+              variant: "destructive",
+            });
+          }
+        } else {
+          // No images to upload, navigate immediately
+          setTimeout(() => {
+            navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
+          }, 1500);
+          
+          toast({
+            title: t('common.success'),
+            description: t('addProperty.successWithoutImages'),
+          });
+        }
+      } else {
+        // Temporary fallback for testing
+        const testId = Date.now(); // Use timestamp as temporary ID
+        setCreatedPropertyId(testId);
+        setIsPropertySaved(true);
+      }
+      
       // Handle VIP purchase if not free
       if (selectedVipType !== 'free') {
         const daysNum = selectedVipDays;
         await vipApi.purchaseVipStatus(result.id, selectedVipType, daysNum);
-        
-        toast({
-          title: t('common.success'),
-          description: t('addProperty.successWithVip', { days: daysNum }),
-        });
-      } else {
-        toast({
-          title: t('common.success'),
-          description: t('addProperty.successWithoutVip'),
-        });
       }
-      
-      navigate(getLanguageUrl('/dashboard/my-properties', i18n.language));
     } catch (error: any) {
       console.error("Submission error:", error);
       toast({
@@ -377,9 +452,17 @@ export const AddProperty = () => {
             
             {/* Description Section */}
             <DescriptionSection />
-            
+
             {/* Photo Gallery Section */}
-            <PhotoGallerySection />
+            <PhotoGallerySection 
+              propertyId={createdPropertyId || undefined}
+              onImagesChange={(images) => {
+                setUploadedImages(images);
+              }}
+              onPendingImagesChange={(files) => {
+                setPendingImages(files);
+              }}
+            />
             
             </form>
           </Form>
@@ -401,7 +484,7 @@ export const AddProperty = () => {
       </div>
       
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-3 sm:p-4 z-50">
-        <div className="max-w-7xl mx-auto flex justify-center sm:justify-end">
+        <div className="max-w-7xl mx-auto flex justify-center sm:justify-end gap-4">
           <button
             type="button"
             onClick={form.handleSubmit(onSubmit)}
@@ -411,7 +494,10 @@ export const AddProperty = () => {
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                {t('addProperty.submitting')}
+                {pendingImages.length > 0 ? 
+                  'Creating property and uploading images...' : 
+                  t('addProperty.submitting')
+                }
               </>
             ) : (
               t('addProperty.submit')

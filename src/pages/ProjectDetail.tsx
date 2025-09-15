@@ -133,17 +133,24 @@ const ProjectDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showPhone, setShowPhone] = useState(false);
+  const [projectImages, setProjectImages] = useState<any[]>([]);
+
+  // Reset photo index when images change
+  useEffect(() => {
+    setCurrentPhotoIndex(0);
+  }, [projectImages]);
 
   useEffect(() => {
     if (id) {
       fetchProject(id);
+      fetchProjectImages(id);
     }
   }, [id]);
 
   // Keyboard navigation for photo slideshow
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (project?.photos && project.photos.length > 1) {
+      if (projectImages && projectImages.length > 1) {
         if (e.key === 'ArrowLeft') {
           prevPhoto();
         } else if (e.key === 'ArrowRight') {
@@ -154,7 +161,7 @@ const ProjectDetail = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [project?.photos]);
+  }, [projectImages]);
 
   const fetchProject = async (projectId: string) => {
     try {
@@ -170,20 +177,6 @@ const ProjectDetail = () => {
         navigate(`/${i18n.language}/projects`);
         return;
       }
-      
-      // Add mock photos for testing
-      data.photos = [
-        { id: 1, url: '/placeholder.svg', fileName: 'project-exterior-1.jpg' },
-        { id: 2, url: '/placeholder.svg', fileName: 'project-exterior-2.jpg' },
-        { id: 3, url: '/placeholder.svg', fileName: 'project-interior-1.jpg' },
-        { id: 4, url: '/placeholder.svg', fileName: 'project-lobby.jpg' },
-        { id: 5, url: '/placeholder.svg', fileName: 'project-courtyard.jpg' },
-        { id: 6, url: '/placeholder.svg', fileName: 'project-building.jpg' }
-      ];
-      
-      // Developer phone will come from real API data
-      
-      // linkedProperties will come from API only - no mock data
       
       setProject(data);
     } catch (error) {
@@ -204,6 +197,22 @@ const ProjectDetail = () => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchProjectImages = async (projectId: string) => {
+    try {
+      const response = await fetch(`/api/upload/project/${projectId}/images`);
+      if (response.ok) {
+        const data = await response.json();
+        setProjectImages(data.images || []);
+      } else {
+        console.error('Failed to fetch project images');
+        setProjectImages([]);
+      }
+    } catch (error) {
+      console.error('Error fetching project images:', error);
+      setProjectImages([]);
     }
   };
 
@@ -231,17 +240,17 @@ const ProjectDetail = () => {
   };
 
   const nextPhoto = () => {
-    if (project?.photos && project.photos.length > 0) {
+    if (projectImages && projectImages.length > 0) {
       setCurrentPhotoIndex((prev) => 
-        prev === project.photos!.length - 1 ? 0 : prev + 1
+        prev === projectImages.length - 1 ? 0 : prev + 1
       );
     }
   };
 
   const prevPhoto = () => {
-    if (project?.photos && project.photos.length > 0) {
+    if (projectImages && projectImages.length > 0) {
       setCurrentPhotoIndex((prev) => 
-        prev === 0 ? project.photos!.length - 1 : prev - 1
+        prev === 0 ? projectImages.length - 1 : prev - 1
       );
     }
   };
@@ -346,17 +355,17 @@ const ProjectDetail = () => {
             {/* Left Content - Photos and Main Info */}
             <div className="xl:col-span-2 space-y-8">
               {/* Photo Slideshow */}
-              {project.photos && project.photos.length > 0 && (
+              {projectImages && projectImages.length > 0 ? (
                 <div className="relative">
                   <div className="aspect-video rounded-xl overflow-hidden bg-gray-100 shadow-lg">
                     <img
-                      src={project.photos[currentPhotoIndex].url}
-                      alt={project.photos[currentPhotoIndex].fileName}
+                      src={projectImages[currentPhotoIndex].urls?.medium || projectImages[currentPhotoIndex].urls?.original}
+                      alt={projectImages[currentPhotoIndex].originalName || projectImages[currentPhotoIndex].fileName}
                       className="w-full h-full object-cover"
                     />
                     
                     {/* Navigation Arrows */}
-                    {project.photos.length > 1 && (
+                    {projectImages.length > 1 && (
                       <>
                         <button
                           onClick={prevPhoto}
@@ -375,16 +384,16 @@ const ProjectDetail = () => {
                     
                     {/* Photo Counter */}
                     <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
-                      {currentPhotoIndex + 1} / {project.photos.length}
+                      {currentPhotoIndex + 1} / {projectImages.length}
                     </div>
                   </div>
                   
                   {/* Photo Thumbnails */}
-                  {project.photos.length > 1 && (
+                  {projectImages.length > 1 && (
                     <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-                      {project.photos.map((photo, index) => (
+                      {projectImages.map((image, index) => (
                         <button
-                          key={photo.id}
+                          key={image.id}
                           onClick={() => setCurrentPhotoIndex(index)}
                           className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
                             index === currentPhotoIndex 
@@ -393,14 +402,22 @@ const ProjectDetail = () => {
                           }`}
                         >
                           <img
-                            src={photo.url}
-                            alt={photo.fileName}
+                            src={image.urls?.thumbnail || image.urls?.small || image.urls?.original}
+                            alt={image.originalName || image.fileName}
                             className="w-full h-full object-cover"
                           />
                         </button>
                       ))}
                     </div>
                   )}
+                </div>
+              ) : (
+                <div className="aspect-video rounded-xl overflow-hidden bg-gray-100 shadow-lg flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <Camera className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium">{t('projectDetail.noImages')}</p>
+                    <p className="text-sm">{t('projectDetail.noImagesDescription')}</p>
+                  </div>
                 </div>
               )}
               
