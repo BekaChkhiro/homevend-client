@@ -1,36 +1,126 @@
 import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Camera, Upload, X, Image } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { UniversalImageUpload } from "@/components/UniversalImageUpload";
+import { Camera, Info, Upload, X } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface PhotoGallerySectionProps {
-  images: File[];
-  onImagesChange: (images: File[]) => void;
+  projectId?: number;
+  images?: File[]; // For local state before project is created  
+  onImagesChange?: (images: any[]) => void;
+  onPendingImagesChange?: (files: File[]) => void;
 }
 
-export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
-  images,
+export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({ 
+  projectId,
+  images: localImages,
   onImagesChange,
+  onPendingImagesChange
 }) => {
   const { t } = useTranslation(['projectForm', 'common']);
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const newImages = Array.from(files);
-      onImagesChange([...images, ...newImages]);
-    }
+  const [pendingImages, setPendingImages] = useState<File[]>(localImages || []);
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    const validFiles = files.filter(file => 
+      ['image/jpeg', 'image/png', 'image/webp'].includes(file.type) &&
+      file.size <= 15 * 1024 * 1024 // 15MB
+    );
+    
+    const newPendingImages = [...(localImages || pendingImages), ...validFiles].slice(0, 30);
+    setPendingImages(newPendingImages);
+    onPendingImagesChange?.(newPendingImages);
   };
 
-  const removeImage = (index: number) => {
-    const updatedImages = images.filter((_, i) => i !== index);
-    onImagesChange(updatedImages);
+  const removePendingImage = (index: number) => {
+    const newPendingImages = (localImages || pendingImages).filter((_, i) => i !== index);
+    setPendingImages(newPendingImages);
+    onPendingImagesChange?.(newPendingImages);
   };
 
-  const getImagePreview = (file: File) => {
-    return URL.createObjectURL(file);
-  };
+  // If no projectId, show temporary image selection
+  if (!projectId) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center space-x-2 border-b pb-3 mb-2">
+          <Camera className="h-5 w-5 text-primary" />
+          <h3 className="text-xl font-semibold">{t('projectForm.photoGallery.title')}</h3>
+        </div>
+
+        <div className="rounded-md border border-border p-5 space-y-6">
+          {/* Temporary Image Upload */}
+          <div className="space-y-4">
+            <label className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50">
+              <div className="flex flex-col items-center justify-center">
+                <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                <p className="text-sm text-muted-foreground">
+                  Click to select images or drag and drop
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  JPEG, PNG, WebP up to 15MB each (max 30 files)
+                </p>
+              </div>
+              <input
+                type="file"
+                multiple
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+            </label>
+
+            {/* Preview Selected Images */}
+            {(localImages || pendingImages).length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {(localImages || pendingImages).map((file, index) => (
+                  <div key={index} className="relative group">
+                    <div className="aspect-square bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      onClick={() => removePendingImage(index)}
+                      className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                    <div className="absolute bottom-1 left-1 right-1 bg-black/50 text-white text-xs p-1 rounded truncate">
+                      {file.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {(localImages || pendingImages).length > 0 && (
+              <Alert>
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  {(localImages || pendingImages).length} image{(localImages || pendingImages).length !== 1 ? 's' : ''} selected. 
+                  They will be uploaded when you save the project.
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+
+          {/* Instructions */}
+          <div className="bg-muted/50 rounded-lg p-4">
+            <h5 className="font-medium mb-2">{t('projectForm.photoGallery.recommendations.title')}</h5>
+            <ul className="text-sm text-muted-foreground space-y-1">
+              <li>• {t('projectForm.photoGallery.recommendations.highQuality')}</li>
+              <li>• {t('projectForm.photoGallery.recommendations.differentAngles')}</li>
+              <li>• {t('projectForm.photoGallery.recommendations.allBuildings')}</li>
+              <li>• {t('projectForm.photoGallery.recommendations.maxFileSize')}</li>
+              <li>• {t('projectForm.photoGallery.recommendations.supportedFormats')}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -40,69 +130,20 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
       </div>
 
       <div className="rounded-md border border-border p-5 space-y-6">
-        {/* Upload Area */}
-        <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-              <Upload className="h-8 w-8 text-muted-foreground" />
-            </div>
-            <div>
-              <h4 className="text-lg font-medium mb-2">{t('projectForm.photoGallery.uploadTitle')}</h4>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t('projectForm.photoGallery.uploadDescription')}
-              </p>
-              <Input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="hidden"
-                id="project-photo-upload"
-              />
-              <Label htmlFor="project-photo-upload" asChild>
-                <Button variant="outline" className="cursor-pointer">
-                  <Upload className="h-4 w-4 mr-2" />
-                  {t('projectForm.photoGallery.selectPhotos')}
-                </Button>
-              </Label>
-            </div>
-          </div>
-        </div>
-
-        {/* Uploaded Images Preview */}
-        {images.length > 0 && (
-          <div className="space-y-4">
-            <Label className="font-medium flex items-center gap-2">
-              <Image className="h-4 w-4 text-muted-foreground" />
-              <span>{t('projectForm.photoGallery.uploadedPhotos')} ({images.length})</span>
-            </Label>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {images.map((file, index) => (
-                <div key={index} className="relative group">
-                  <div className="aspect-square rounded-lg overflow-hidden border border-border">
-                    <img
-                      src={getImagePreview(file)}
-                      alt={`Upload ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => removeImage(index)}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                  <div className="mt-2 text-xs text-muted-foreground truncate">
-                    {file.name}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* AWS S3 Universal Image Upload Component */}
+        <UniversalImageUpload
+          entityType="project"
+          entityId={projectId}
+          purpose="project_gallery"
+          maxFiles={15}
+          maxSize={15}
+          acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+          showPrimary={true}
+          onImagesChange={(images) => {
+            console.log('Project images uploaded:', images);
+            onImagesChange?.(images);
+          }}
+        />
 
         {/* Instructions */}
         <div className="bg-muted/50 rounded-lg p-4">

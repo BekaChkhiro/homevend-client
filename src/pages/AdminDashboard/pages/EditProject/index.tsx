@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Trash2, Building2, MapPin, Calendar } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { getLanguageUrl } from "@/components/LanguageRoute";
+import { PhotoGallerySection } from "../../../Dashboard/pages/AddProperty/components/PhotoGallerySection";
 
 interface City {
   id: number;
@@ -739,18 +740,14 @@ const AdminEditProject: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Photo Gallery Placeholder */}
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('editProject.sections.gallery.title')}</CardTitle>
-                <CardDescription>{t('editProject.sections.gallery.description')}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  <p className="text-gray-500">{t('editProject.sections.gallery.placeholder')}</p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Photo Gallery Section */}
+            <PhotoGallerySection 
+              projectId={id ? parseInt(id) : undefined}
+              entityType="project"
+              onImagesChange={(images) => {
+                console.log('Project images updated in AWS:', images);
+              }}
+            />
           </TabsContent>
 
           {/* Amenities Tab */}

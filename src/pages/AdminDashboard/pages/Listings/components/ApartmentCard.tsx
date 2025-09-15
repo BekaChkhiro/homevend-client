@@ -1,11 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User } from "lucide-react";
+import { Edit, Trash2, Eye, MapPin, Bed, Bath, Square, Calendar, User, Home } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useState, useEffect } from "react";
 
 interface Property {
   id: string;
@@ -53,10 +54,32 @@ interface ApartmentCardProps {
 export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation('admin');
+  const [propertyImages, setPropertyImages] = useState<string[]>([]);
   
   if (!property) {
     return null;
   }
+
+  useEffect(() => {
+    const fetchPropertyImages = async () => {
+      try {
+        const response = await fetch(`/api/upload/property/${property.id}/images`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && data.images.length > 0) {
+            const imageUrls = data.images.map((img: any) => 
+              img.urls?.medium || img.urls?.original || img.url
+            ).filter(Boolean);
+            setPropertyImages(imageUrls);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load property images:', error);
+      }
+    };
+
+    fetchPropertyImages();
+  }, [property.id]);
 
   const formatPrice = (price: string) => {
     return parseInt(price).toLocaleString();
@@ -67,8 +90,10 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   };
 
   const getMainImage = () => {
-    // Using test photo since no uploading functionality exists yet
-    return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&h=300&fit=crop";
+    if (propertyImages.length > 0) {
+      return propertyImages[0];
+    }
+    return null;
   };
 
   const getLocationString = () => {
@@ -144,11 +169,30 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
         <div className="flex items-center gap-4 p-4">
           {/* Image */}
           <div className="relative flex-shrink-0">
-            <img 
-              src={getMainImage()} 
-              alt={property.title || `${property.propertyType} ${property.city}-ში`}
-              className="w-20 h-20 object-cover rounded-lg"
-            />
+            {getMainImage() ? (
+              <img 
+                src={getMainImage()!} 
+                alt={property.title || `${property.propertyType} ${property.city}-ში`}
+                className="w-20 h-20 object-cover rounded-lg"
+                onError={(e) => {
+                  // Fallback to placeholder if image fails to load
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.parentElement!.innerHTML = `
+                    <div class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                      <div class="text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                        </svg>
+                      </div>
+                    </div>
+                  `;
+                }}
+              />
+            ) : (
+              <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                <Home className="w-10 h-10 text-gray-400" />
+              </div>
+            )}
           </div>
 
           {/* Content */}

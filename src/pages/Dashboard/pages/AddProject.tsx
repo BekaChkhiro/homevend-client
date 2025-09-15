@@ -303,6 +303,36 @@ export const AddProject: React.FC = () => {
       }
 
       const newProject = await response.json();
+      const projectId = newProject.project?.id || newProject.id;
+
+      // Upload images to AWS if any were selected
+      if (projectImages.length > 0 && projectId) {
+        try {
+          const formData = new FormData();
+          projectImages.forEach(file => {
+            formData.append('images', file);
+          });
+          formData.append('purpose', 'project_gallery');
+
+          const uploadResponse = await fetch(`/api/upload/project/${projectId}`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData,
+          });
+
+          if (!uploadResponse.ok) {
+            console.error('Failed to upload project images');
+            // Don't fail the whole operation if image upload fails
+          } else {
+            console.log('Project images uploaded successfully');
+          }
+        } catch (uploadError) {
+          console.error('Error uploading project images:', uploadError);
+          // Don't fail the whole operation if image upload fails
+        }
+      }
 
       // Link selected properties to the project
       if (selectedProperties.length > 0) {
@@ -609,7 +639,7 @@ export const AddProject: React.FC = () => {
           <TabsContent value="photos" className="space-y-6">
             <PhotoGallerySection
               images={projectImages}
-              onImagesChange={setProjectImages}
+              onPendingImagesChange={setProjectImages}
             />
           </TabsContent>
 

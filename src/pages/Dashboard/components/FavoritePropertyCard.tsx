@@ -1,10 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, Eye, Phone, MapPin, Bed, Bath, Square, Calendar } from "lucide-react";
+import { Heart, Eye, Phone, MapPin, Bed, Bath, Square, Calendar, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useState, useEffect } from "react";
 
 interface FavoritePropertyCardProps {
   id: number;
@@ -63,6 +64,38 @@ export const FavoritePropertyCard = ({
 
   const navigate = useNavigate();
   const { t, i18n } = useTranslation(['userDashboard', 'propertyCard']);
+  const [propertyImages, setPropertyImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchPropertyImages = async () => {
+      try {
+        const response = await fetch(`/api/upload/property/${id}/images`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && data.images.length > 0) {
+            const imageUrls = data.images.map((img: any) => 
+              img.urls?.medium || img.urls?.original || img.url
+            ).filter(Boolean);
+            setPropertyImages(imageUrls);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load property images:', error);
+      }
+    };
+
+    fetchPropertyImages();
+  }, [id]);
+
+  const getDisplayImage = () => {
+    if (propertyImages.length > 0) {
+      return propertyImages[0];
+    }
+    if (image) {
+      return image;
+    }
+    return null;
+  };
 
   const getLocationString = () => {
     const parts = [];
@@ -132,11 +165,31 @@ export const FavoritePropertyCard = ({
         <div className="flex items-center gap-3 mb-2">
           {/* Image */}
           <div className="relative flex-shrink-0">
-            <img 
-              src={image} 
-              alt={title}
-              className="w-16 h-16 object-cover rounded-lg"
-            />
+            {getDisplayImage() ? (
+              <img 
+                src={getDisplayImage()!} 
+                alt={title}
+                className="w-16 h-16 object-cover rounded-lg"
+                onError={(e) => {
+                  // Fallback to placeholder if image fails to load
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.parentElement!.innerHTML = `
+                    <div class="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                      <div class="text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                        </svg>
+                      </div>
+                    </div>
+                    ${featured ? '<div class="absolute -top-1 -right-1"><span class="bg-orange-100 text-orange-800 text-xs px-1 py-0.5 rounded">რჩეული</span></div>' : ''}
+                  `;
+                }}
+              />
+            ) : (
+              <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                <Home className="w-8 h-8 text-gray-400" />
+              </div>
+            )}
             {featured && (
               <div className="absolute -top-1 -right-1">
                 <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs px-1 py-0.5">

@@ -6,12 +6,16 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface PhotoGallerySectionProps {
   propertyId?: number;
+  projectId?: number;
+  entityType?: "property" | "project";
   onImagesChange?: (images: any[]) => void;
   onPendingImagesChange?: (files: File[]) => void;
 }
 
 export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({ 
   propertyId,
+  projectId,
+  entityType = "property",
   onImagesChange,
   onPendingImagesChange
 }) => {
@@ -37,8 +41,11 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
     onPendingImagesChange?.(newPendingImages);
   };
 
-  // If no propertyId, show temporary image selection
-  if (!propertyId) {
+  // Get the actual entity ID and type
+  const entityId = entityType === "project" ? projectId : propertyId;
+  
+  // If no entity ID, show temporary image selection
+  if (!entityId) {
     return (
       <div className="space-y-8">
         <div className="flex items-center space-x-2 border-b pb-3 mb-2">
@@ -131,15 +138,15 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
       <div className="rounded-md border border-border p-5 space-y-6">
         {/* AWS S3 Universal Image Upload Component */}
         <UniversalImageUpload
-          entityType="property"
-          entityId={propertyId}
-          purpose="property_gallery"
+          entityType={entityType}
+          entityId={entityId}
+          purpose={`${entityType}_gallery`}
           maxFiles={15}
           maxSize={15}
           acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
           showPrimary={true}
           onImagesChange={(images) => {
-            console.log('Property images uploaded:', images);
+            console.log(`${entityType} images uploaded:`, images);
             onImagesChange?.(images);
           }}
         />

@@ -184,13 +184,18 @@ export const useUniversalImageUpload = (config: UploadConfig) => {
   const deleteImage = useCallback(
     async (imageId: number) => {
       try {
+        console.log('Deleting image with ID:', imageId);
         const api = createAxiosInstance();
-        await api.delete(`/upload/image/${imageId}`);
+        const response = await api.delete(`/upload/image/${imageId}`);
+        console.log('Delete response:', response.status, response.data);
         setImages((prev) => prev.filter((img) => img.id !== imageId));
         return true;
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to delete image:', error);
-        setErrors(['Failed to delete image']);
+        console.error('Error response:', error.response?.data);
+        console.error('Error status:', error.response?.status);
+        const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Failed to delete image';
+        setErrors([errorMessage]);
         return false;
       }
     },

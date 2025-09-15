@@ -190,7 +190,18 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
 
   const handleDelete = async (imageId: number) => {
     if (confirm('Are you sure you want to delete this image?')) {
-      await deleteImage(imageId);
+      console.log('Attempting to delete image with ID:', imageId);
+      console.log('Entity type:', entityType, 'Entity ID:', entityId);
+      const success = await deleteImage(imageId);
+      if (success) {
+        console.log('Image deleted successfully');
+        // Trigger callback to parent component
+        const remainingImages = images.filter(img => img.id !== imageId);
+        onImagesChange?.(remainingImages);
+      } else {
+        console.error('Failed to delete image');
+        alert('Failed to delete image. Please try again.');
+      }
     }
   };
 
