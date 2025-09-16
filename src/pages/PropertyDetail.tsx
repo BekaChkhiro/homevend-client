@@ -1,6 +1,6 @@
 
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -204,6 +204,149 @@ const translateFurnitureAppliance = (item: string, t: any) => {
 const translateTag = (tag: string, t: any) => {
   const translationKey = `tags.${tag.replace('-', '_')}`;
   return t(translationKey, { defaultValue: tag });
+};
+
+// Component for Similar Property Card to handle image fetching
+const SimilarPropertyCard = ({ prop, t, i18n, formatPrice }: {
+  prop: Property;
+  t: any;
+  i18n: any;
+  formatPrice: (price: string | number) => string;
+}) => {
+  const [propertyImage, setPropertyImage] = useState<string>("https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop");
+
+  useEffect(() => {
+    const fetchSimilarPropertyImage = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/property/${prop.id}/images`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && data.images.length > 0) {
+            const firstImage = data.images[0];
+            setPropertyImage(firstImage.urls?.medium || firstImage.urls?.small || firstImage.urls?.original);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load similar property image:', error);
+        if (prop.photos && prop.photos.length > 0) {
+          setPropertyImage(prop.photos[0]);
+        }
+      }
+    };
+
+    fetchSimilarPropertyImage();
+  }, [prop.id, prop.photos]);
+
+  // Helper function to get city name based on language
+  const getCityName = (cityData?: Property['cityData'], cityFallback?: string) => {
+    if (cityData) {
+      if (i18n.language === 'en' && cityData.nameEnglish) {
+        return cityData.nameEnglish;
+      } else if (i18n.language === 'ru' && cityData.nameRussian) {
+        return cityData.nameRussian;
+      }
+      return cityData.nameGeorgian;
+    }
+    return cityFallback || '';
+  };
+
+  // Helper function to get area name based on language
+  const getAreaName = (areaData?: Property['areaData'], districtFallback?: string) => {
+    if (areaData) {
+      if (i18n.language === 'en' && areaData.nameEn) {
+        return areaData.nameEn;
+      } else if (i18n.language === 'ru' && areaData.nameRu) {
+        return areaData.nameRu;
+      }
+      return areaData.nameKa;
+    }
+    return districtFallback || '';
+  };
+
+  // Build location string with district if available
+  const getLocationString = (property: Property) => {
+    let location = property.street;
+
+    // Add street number if available
+    if (property.streetNumber) {
+      location += ` ${property.streetNumber}`;
+    }
+
+    // Add district/area if available
+    const areaName = getAreaName(property.areaData, property.district);
+    if (areaName) {
+      location += `, ${areaName}`;
+    }
+
+    // Add city
+    const cityName = getCityName(property.cityData, property.city);
+    if (cityName) {
+      location += `, ${cityName}`;
+    }
+
+    return location;
+  };
+
+  const similarProperty = {
+    id: prop.id,
+    title: prop.title || `${translatePropertyType(prop.propertyType, t)} ${translateDealType(prop.dealType, t)} ${getCityName(prop.cityData, prop.city)}`,
+    price: parseInt(prop.totalPrice) || 0,
+    address: getLocationString(prop),
+    bedrooms: parseInt(prop.bedrooms || '1'),
+    bathrooms: parseInt(prop.bathrooms || '1'),
+    area: parseInt(prop.area) || 0,
+    image: propertyImage,
+    type: prop.propertyType
+  };
+
+  return (
+    <CarouselItem key={similarProperty.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+      <Link to={getLanguageUrl(`property/${similarProperty.id}`, i18n.language)}>
+        <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-300 h-full">
+          <div className="relative h-48">
+            <img
+              src={similarProperty.image}
+              alt={similarProperty.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-2 right-2">
+              <FavoriteButton
+                propertyId={similarProperty.id}
+                className="bg-white/80 rounded-full"
+              />
+            </div>
+          </div>
+          <CardContent className="p-3 md:p-4">
+            <h3 className="font-bold text-sm md:text-base truncate mb-1">{similarProperty.title}</h3>
+            <div className="flex items-center text-muted-foreground text-xs md:text-sm mb-2">
+              <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
+              <span className="truncate">{similarProperty.address}</span>
+            </div>
+            <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm text-muted-foreground mb-2 md:mb-3">
+              <div className="flex items-center">
+                <Bed className="h-3 w-3 mr-1" />
+                {similarProperty.bedrooms}
+              </div>
+              <div className="flex items-center">
+                <Bath className="h-3 w-3 mr-1" />
+                {similarProperty.bathrooms}
+              </div>
+              <div className="flex items-center">
+                <Square className="h-3 w-3 mr-1" />
+                {similarProperty.area} {t('squareMeters')}
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="font-bold text-primary text-sm md:text-base">
+                {formatPrice(similarProperty.price)}
+              </div>
+              <Badge variant="secondary" className="text-xs">{translatePropertyType(similarProperty.type, t)}</Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
+    </CarouselItem>
+  );
 };
 
 const PropertyDetail = () => {
@@ -1374,68 +1517,15 @@ const PropertyDetail = () => {
                 className="w-full"
               >
                 <CarouselContent className="-ml-2 md:-ml-4">
-                  {similarProperties.map((prop) => {
-                    const similarProperty = {
-                      id: prop.id,
-                      title: prop.title || `${translatePropertyType(prop.propertyType, t)} ${translateDealType(prop.dealType, t)} ${getCityName(prop.cityData, prop.city)}`,
-                      price: parseInt(prop.totalPrice) || 0,
-                      address: getLocationString(prop),
-                      bedrooms: parseInt(prop.bedrooms || '1'),
-                      bathrooms: parseInt(prop.bathrooms || '1'),
-                      area: parseInt(prop.area) || 0,
-                      image: prop.photos?.[0] || "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
-                      type: prop.propertyType
-                    };
-
-                    return (
-                      <CarouselItem key={similarProperty.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                        <Link to={getLanguageUrl(`property/${similarProperty.id}`, i18n.language)}>
-                          <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-300 h-full">
-                            <div className="relative h-48">
-                              <img
-                                src={similarProperty.image}
-                                alt={similarProperty.title}
-                                className="w-full h-full object-cover"
-                              />
-                              <div className="absolute top-2 right-2">
-                                <FavoriteButton 
-                                  propertyId={similarProperty.id}
-                                  className="bg-white/80 rounded-full"
-                                />
-                              </div>
-                            </div>
-                            <CardContent className="p-3 md:p-4">
-                              <h3 className="font-bold text-sm md:text-base truncate mb-1">{similarProperty.title}</h3>
-                              <div className="flex items-center text-muted-foreground text-xs md:text-sm mb-2">
-                                <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
-                                <span className="truncate">{similarProperty.address}</span>
-                              </div>
-                              <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm text-muted-foreground mb-2 md:mb-3">
-                                <div className="flex items-center">
-                                  <Bed className="h-3 w-3 mr-1" />
-                                  {similarProperty.bedrooms}
-                                </div>
-                                <div className="flex items-center">
-                                  <Bath className="h-3 w-3 mr-1" />
-                                  {similarProperty.bathrooms}
-                                </div>
-                                <div className="flex items-center">
-                                  <Square className="h-3 w-3 mr-1" />
-                                  {similarProperty.area} {t('squareMeters')}
-                                </div>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <div className="font-bold text-primary text-sm md:text-base">
-                                  {formatPrice(similarProperty.price)}
-                                </div>
-                                <Badge variant="secondary" className="text-xs">{translatePropertyType(similarProperty.type, t)}</Badge>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </Link>
-                      </CarouselItem>
-                    );
-                  })}
+                  {similarProperties.map((prop) => (
+                    <SimilarPropertyCard
+                      key={prop.id}
+                      prop={prop}
+                      t={t}
+                      i18n={i18n}
+                      formatPrice={formatPrice}
+                    />
+                  ))}
                 </CarouselContent>
                 <CarouselPrevious className="hidden sm:flex -left-4 lg:-left-6" />
                 <CarouselNext className="hidden sm:flex -right-4 lg:-right-6" />

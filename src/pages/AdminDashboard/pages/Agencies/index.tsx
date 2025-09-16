@@ -32,6 +32,76 @@ interface Agency {
   logo?: string;
 }
 
+// Component to display agency logo from AWS
+const AgencyLogo = ({ agencyId, agencyName }: {
+  agencyId: number;
+  agencyName: string;
+}) => {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadAgencyLogo = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/agency/${agencyId}/images?purpose=agency_logo`);
+
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.images && data.images.length > 0) {
+            const firstLogo = data.images[0];
+            const logoUrl = firstLogo.urls?.small || firstLogo.urls?.medium || firstLogo.urls?.original;
+
+            if (logoUrl) {
+              const img = new Image();
+              img.onload = () => {
+                setLogoUrl(logoUrl);
+                setLoading(false);
+              };
+              img.onerror = () => {
+                setLoading(false);
+              };
+              img.src = logoUrl;
+              return;
+            }
+          }
+        }
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
+    loadAgencyLogo();
+  }, [agencyId]);
+
+  if (loading) {
+    return (
+      <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center animate-pulse">
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (logoUrl) {
+    return (
+      <img
+        src={logoUrl}
+        alt={agencyName}
+        className="w-20 h-20 rounded-lg object-cover"
+        onError={() => setLogoUrl(null)}
+      />
+    );
+  }
+
+  return (
+    <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
+      <Building className="h-8 w-8 text-blue-600" />
+    </div>
+  );
+};
+
 const AdminAgencies = () => {
   const { t, i18n } = useTranslation('admin');
   const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -298,11 +368,12 @@ const AdminAgencies = () => {
               <Card key={agency.id} className="border hover:shadow-sm transition-shadow">
                 <CardContent className="p-0">
                   <div className="flex items-center gap-4 p-4">
-                    {/* Logo placeholder */}
+                    {/* Agency Logo */}
                     <div className="relative flex-shrink-0">
-                      <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
-                        <Building className="h-8 w-8 text-blue-600" />
-                      </div>
+                      <AgencyLogo
+                        agencyId={agency.owner.id}
+                        agencyName={agency.name}
+                      />
                     </div>
 
                     {/* Content */}

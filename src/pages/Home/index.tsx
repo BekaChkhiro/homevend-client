@@ -27,6 +27,7 @@ interface Agency {
   totalSales?: number;
   isVerified?: boolean;
   owner?: {
+    id: number;
     fullName: string;
   };
   address?: string;
@@ -35,6 +36,53 @@ interface Agency {
   socialMediaUrl?: string;
   createdAt?: string;
 }
+
+// AgencyLogo component for displaying logos from S3
+const AgencyLogo = ({ userId, name }: { userId: number; name: string }) => {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const response = await fetch(`/api/upload/agency/${userId}/images?purpose=agency_logo`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && data.images.length > 0) {
+            const logo = data.images[0];
+            setLogoUrl(logo.urls?.small || logo.urls?.medium || logo.urls?.original);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching agency logo:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLogo();
+  }, [userId]);
+
+  if (loading) {
+    return (
+      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-lg animate-pulse flex-shrink-0" />
+    );
+  }
+
+  return (
+    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+      {logoUrl ? (
+        <img
+          src={logoUrl}
+          alt={name}
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
+        />
+      ) : (
+        <Building2 className="h-6 w-6 text-primary" />
+      )}
+    </div>
+  );
+};
 
 
 const Home = () => {
@@ -291,17 +339,7 @@ const Home = () => {
                   <Card key={agency.id} className="hover:shadow-lg transition-shadow duration-200">
                     <CardHeader className="p-4 sm:p-6 pb-3">
                       <div className="flex items-start gap-2 sm:gap-3">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                          {agency.logoUrl ? (
-                            <img
-                              src={agency.logoUrl}
-                              alt={agency.name}
-                              className="w-10 h-10 rounded-lg object-cover"
-                            />
-                          ) : (
-                            <Building2 className="h-6 w-6 text-primary" />
-                          )}
-                        </div>
+                        <AgencyLogo userId={agency.owner?.id || agency.id} name={agency.name} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <CardTitle className="text-base sm:text-lg truncate">
@@ -391,7 +429,7 @@ const Home = () => {
 
                       <div className="flex gap-2">
                         <Button asChild className="flex-1 text-xs sm:text-sm" size="sm">
-                          <Link to={`/agencies/${agency.id}`}>
+                          <Link to={getLanguageUrl(`/agencies/${agency.id}`)}>
                             {t('home.sections.agencies.details')}
                           </Link>
                         </Button>

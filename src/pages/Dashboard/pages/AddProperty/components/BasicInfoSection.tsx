@@ -345,9 +345,9 @@ export const BasicInfoSection = () => {
               <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
                 <CreditCard className="h-4 w-4 text-primary" />
               </div>
-              <span>დღიურის კატეგორია</span>
+              <span>{t('addProperty.dailyRentalCategory')}</span>
             </Label>
-            <p className="text-sm text-muted-foreground mt-1 ml-11">აირჩიეთ დღიური ქირაობის ტიპი</p>
+            <p className="text-sm text-muted-foreground mt-1 ml-11">{t('addProperty.selectDailyRentalType')}</p>
           </div>
           <FormField
             control={form.control}
@@ -360,9 +360,9 @@ export const BasicInfoSection = () => {
                       <SelectValue placeholder={t('addPropertyForm.basicInfo.selectCategoryOptional')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="sea">ზღვასთან დღიური ქირაობა</SelectItem>
-                      <SelectItem value="mountains">მთაში დღიური ქირაობა</SelectItem>
-                      <SelectItem value="villa">დღიური ვილები</SelectItem>
+                      <SelectItem value="sea">{t('addProperty.dailyRentalCategories.sea')}</SelectItem>
+                      <SelectItem value="mountains">{t('addProperty.dailyRentalCategories.mountains')}</SelectItem>
+                      <SelectItem value="villa">{t('addProperty.dailyRentalCategories.villa')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -386,10 +386,10 @@ export const BasicInfoSection = () => {
               <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg">
                 <Building2 className="h-4 w-4 text-primary" />
               </div>
-              <span>პროექტთან დაკავშირება</span>
-              <span className="text-sm font-normal text-muted-foreground">(არასავალდებულო)</span>
+              <span>{t('addProperty.projectAssociation')}</span>
+              <span className="text-sm font-normal text-muted-foreground">({t('addPropertyForm.basicInfo.optional')})</span>
             </Label>
-            <p className="text-sm text-muted-foreground mt-1 ml-11">აირჩიეთ პროექტი რომელთანაც უნდა დაკავშირდეს ეს განცხადება</p>
+            <p className="text-sm text-muted-foreground mt-1 ml-11">{t('addProperty.selectProjectDesc')}</p>
           </div>
           <FormField
             control={form.control}
@@ -403,7 +403,7 @@ export const BasicInfoSection = () => {
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
                       {projectsLoading ? (
-                        <SelectItem value="loading" disabled>იტვირთება...</SelectItem>
+                        <SelectItem value="loading" disabled>{t('common.loading')}</SelectItem>
                       ) : (
                         projects.map((project) => (
                           <SelectItem key={project.id} value={project.id.toString()}>
@@ -420,7 +420,7 @@ export const BasicInfoSection = () => {
           />
           <div className="mt-3 p-3 bg-muted/50 rounded-lg">
             <p className="text-xs text-muted-foreground">
-              💡 თუ აირჩევთ პროექტს, ეს განცხადება ასევე გამოჩნდება პროექტის გვერდზე როგორც დაკავშირებული ქონება
+              {t('addProperty.projectAssociationTip')}
             </p>
           </div>
         </div>

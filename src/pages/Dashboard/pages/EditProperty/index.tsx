@@ -611,7 +611,7 @@ export const EditProperty = () => {
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                 {pendingImages.length > 0 ? 
-                  `Updating property and uploading ${pendingImages.length} images...` : 
+                  t('editProperty.updatingWithImages', { count: pendingImages.length }) : 
                   t('editProperty.updating')
                 }
               </>

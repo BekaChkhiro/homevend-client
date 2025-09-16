@@ -141,15 +141,18 @@ export const authApi = {
   
   register: async (userData: any) => {
     const response = await apiClient.post('/auth/register', userData);
+    console.log('🔄 Full registration response:', response.data);
     const { user, token, refreshToken } = response.data.data;
-    
+
+    console.log('👤 User data from backend:', user);
+
     // Store auth data
     localStorage.setItem('token', token);
     if (refreshToken) {
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('userId', user.id);
     }
-    
+
     return { user, token };
   },
   

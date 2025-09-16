@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Camera, X } from 'lucide-react';
 import { useUniversalImageUpload } from '@/hooks/useUniversalImageUpload';
+import { useTranslation } from 'react-i18next';
 
 interface AvatarUploadProps {
   userId: number;
@@ -25,6 +26,7 @@ export const AvatarUpload: React.FC<AvatarUploadProps> = ({
   onAvatarChange,
   size = 'lg',
 }) => {
+  const { t } = useTranslation('imageUpload');
   const { images, uploadImages, deleteImage, fetchImages } = useUniversalImageUpload({
     entityType: 'user',
     entityId: userId,
@@ -51,7 +53,7 @@ export const AvatarUpload: React.FC<AvatarUploadProps> = ({
   };
 
   const handleDelete = async () => {
-    if (images[0] && confirm('Remove profile picture?')) {
+    if (images[0] && confirm(t('avatar.upload.removeAvatar'))) {
       await deleteImage(images[0].id);
       onAvatarChange?.('');
     }

@@ -46,57 +46,88 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
   const loadDeveloperData = async () => {
     try {
       setIsLoading(true);
-      console.log('=== LOADING DEVELOPER DATA ===');
-      console.log('Current user from AuthContext:', user);
-      console.log('User role:', user.role);
-      console.log('User fullName from AuthContext:', user.fullName);
-      console.log('Token exists:', !!localStorage.getItem('token'));
-      
+
+      // Check if user has developer role
+      if (!user || user.role !== 'developer') {
+        throw new Error('User is not a developer');
+      }
+
       const developer = await developerApi.getMyDeveloper();
-      console.log('=== DEVELOPER API RESPONSE ===');
-      console.log('Full developer response:', developer);
-      console.log('Developer name:', developer.name);
-      console.log('Developer phone:', developer.phone);
-      console.log('Developer email:', developer.email);
-      
-      setDeveloperData({
-        id: developer.id,
-        name: developer.name || '',
-        phone: developer.phone || '',
-        email: developer.email || user.email,
-        website: developer.website || '',
-        socialMediaUrl: developer.socialMediaUrl || '',
-        logoUrl: developer.logoUrl || ''
-      });
-      if (developer.logoUrl) {
-        // Set logo preview with full URL for server-uploaded images
-        const logoUrl = developer.logoUrl.startsWith('/') 
-          ? `http://localhost:5000${developer.logoUrl}` 
-          : developer.logoUrl;
-        setLogoPreview(logoUrl);
+
+      if (developer && typeof developer === 'object') {
+        setDeveloperData({
+          id: developer.id || 0,
+          name: developer.name || '',
+          phone: developer.phone || '',
+          email: developer.email || user.email,
+          website: developer.website || '',
+          socialMediaUrl: developer.socialMediaUrl || '',
+          logoUrl: developer.logoUrl || ''
+        });
+
+        // Try to load logo from developer record or from image system
+        let logoUrl = developer.logoUrl;
+
+        // If no logo in developer record, try to fetch from image system
+        if (!logoUrl) {
+          try {
+            const imageResponse = await fetch(`/api/upload/developer/${user.id}/images?purpose=developer_logo`, {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              },
+            });
+
+            if (imageResponse.ok) {
+              const imageData = await imageResponse.json();
+              if (imageData.images && imageData.images.length > 0) {
+                const logo = imageData.images[0];
+                logoUrl = logo.urls?.small || logo.urls?.medium || logo.urls?.original;
+
+                // Update developer data with found logo
+                setDeveloperData(prev => ({
+                  ...prev,
+                  logoUrl: logoUrl || ''
+                }));
+              }
+            }
+          } catch (imageError) {
+            console.log('No existing logo images found:', imageError);
+          }
+        }
+
+        if (logoUrl) {
+          setLogoPreview(logoUrl);
+        } else {
+          setLogoPreview(null);
+        }
+      } else {
+        throw new Error('Invalid developer data received');
       }
     } catch (error) {
       console.error('Failed to load developer data:', error);
-      console.error('Error details:', error.response?.data);
-      console.error('Error status:', error.response?.status);
-      console.error('Full error object:', error);
-      
-      // Fall back to mock data
+
+      // Fall back to basic user data
       setDeveloperData({
-        id: 2,
-        name: 'Test Developer Company',
-        phone: '555-1234',
-        email: 'testdeveloper@example.com',
+        id: user.developerId || 0,
+        name: user.fullName || 'Developer Company',
+        phone: user.phone || '',
+        email: user.email,
         website: '',
         socialMediaUrl: '',
         logoUrl: ''
       });
-      
-      toast({
-        title: "შეცდომა",
-        description: "დეველოპერის მონაცემების ჩატვირთვა ვერ მოხერხდა - იყენებს mock მონაცემებს",
-        variant: "destructive",
-      });
+
+      // Clear logo preview for fallback data
+      setLogoPreview(null);
+
+      // Only show toast if it's a real API error, not just missing endpoint
+      if (error?.response?.status !== 404) {
+        toast({
+          title: t('developerProfile.errors.title'),
+          description: t('developerProfile.errors.loadFailed'),
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -115,40 +146,82 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
       // Validate file type
       if (!file.type.startsWith('image/')) {
         toast({
-          title: "შეცდომა",
-          description: "გთხოვთ აირჩიოთ სურათის ფაილი",
+          title: t('developerProfile.errors.title'),
+          description: t('developerProfile.errors.selectImageFile'),
           variant: "destructive",
         });
         return;
       }
-      
+
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast({
-          title: "შეცდომა", 
-          description: "ლოგოს ზომა არ უნდა აღემატებოდეს 5MB-ს",
+          title: t('developerProfile.errors.title'),
+          description: t('developerProfile.errors.logoSizeExceeded'),
           variant: "destructive",
         });
         return;
       }
 
       try {
-        // For now, just set preview since upload might not be implemented
+        setIsSaving(true);
+
+        // Set preview first for immediate feedback
         const reader = new FileReader();
         reader.onload = (e) => setLogoPreview(e.target?.result as string);
         reader.readAsDataURL(file);
 
-        toast({
-          title: "წარმატება",
-          description: "ლოგო ატვირთულია",
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('images', file);
+        formData.append('purpose', 'developer_logo');
+
+        // Upload to universal image upload endpoint
+        const response = await fetch(`/api/upload/developer/${user.id}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: formData,
         });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.images && result.images.length > 0) {
+          const uploadedImage = result.images[0];
+          const logoUrl = uploadedImage.urls?.small || uploadedImage.urls?.medium || uploadedImage.urls?.original;
+
+          // Update the logo preview with the uploaded image URL
+          setLogoPreview(logoUrl);
+
+          // Update developer data with the new logo URL
+          setDeveloperData(prev => ({
+            ...prev,
+            logoUrl: logoUrl
+          }));
+
+          toast({
+            title: t('developerProfile.success.title'),
+            description: t('developerProfile.success.logoUploaded'),
+          });
+        } else {
+          throw new Error('No image data received from server');
+        }
       } catch (error) {
         console.error('Logo upload failed:', error);
         toast({
-          title: "შეცდომა",
-          description: "ლოგოს ატვირთვა ვერ მოხერხდა",
+          title: t('developerProfile.errors.title'),
+          description: t('developerProfile.errors.logoUploadFailed'),
           variant: "destructive",
         });
+        // Reset preview on error
+        setLogoPreview(null);
+      } finally {
+        setIsSaving(false);
       }
     }
   };
@@ -156,32 +229,73 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      
+
+      // Basic validation
+      if (!developerData.name.trim()) {
+        toast({
+          title: t('developerProfile.errors.title'),
+          description: t('validation.required'),
+          variant: "destructive",
+        });
+        return;
+      }
+
       const updateData = {
-        name: developerData.name,
-        phone: developerData.phone,
-        email: developerData.email,
-        website: developerData.website || undefined,
-        socialMediaUrl: developerData.socialMediaUrl || undefined,
-        logoUrl: logoPreview || undefined
+        name: developerData.name.trim(),
+        phone: developerData.phone.trim(),
+        email: developerData.email.trim(),
+        website: developerData.website?.trim() || undefined,
+        socialMediaUrl: developerData.socialMediaUrl?.trim() || undefined,
+        logoUrl: developerData.logoUrl || undefined
       };
 
-      await developerApi.updateDeveloper(developerData.id.toString(), updateData);
-      
+      // Make the API call - the backend will handle creating the record if it doesn't exist
+      let developerId = developerData.id;
+
+      // If no ID, use a placeholder (backend will create the record)
+      if (!developerId || developerId === 0) {
+        developerId = 1; // Placeholder ID - backend will create the record
+      }
+
+      const result = await developerApi.updateDeveloper(developerId.toString(), updateData);
+
+      // Update the local state with the returned data
+      if (result && result.id) {
+        setDeveloperData(prevData => ({
+          ...prevData,
+          id: result.id
+        }));
+      }
+
+      // Reload the data to ensure we have the latest information
+      await loadDeveloperData();
+
       toast({
-        title: "წარმატება",
-        description: "დეველოპერის მონაცემები შენახულია",
+        title: t('developerProfile.success.title'),
+        description: t('developerProfile.success.dataSaved'),
       });
     } catch (error) {
       console.error('Failed to save developer data:', error);
+
+      // Show specific error messages when available
+      const errorMessage = error?.response?.data?.message || t('developerProfile.errors.saveFailed');
+
       toast({
-        title: "შეცდომა",
-        description: "მონაცემების შენახვა ვერ მოხერხდა",
+        title: t('developerProfile.errors.title'),
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleLogoRemove = () => {
+    setLogoPreview(null);
+    setDeveloperData(prev => ({
+      ...prev,
+      logoUrl: ''
+    }));
   };
 
   const handleCancel = () => {
@@ -194,7 +308,7 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
         <div className="flex items-center justify-center">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-            <p className="mt-2">მონაცემები იტვირთება...</p>
+            <p className="mt-2">{t('developerProfile.loading')}</p>
           </div>
         </div>
       </Card>
@@ -203,18 +317,18 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
 
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-medium mb-4">დეველოპერული კომპანიის ინფორმაცია</h3>
+      <h3 className="text-lg font-medium mb-4">{t('developerProfile.title')}</h3>
       <div className="space-y-4">
         {/* Company Name */}
         <div>
           <Label htmlFor="developerName" className="text-sm font-medium">
-            დეველოპერული კომპანიის დასახელება
+            {t('developerProfile.companyName')}
           </Label>
-          <Input 
-            id="developerName" 
+          <Input
+            id="developerName"
             value={developerData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
-            placeholder="შეიყვანეთ კომპანიის დასახელება"
+            placeholder={t('developerProfile.companyNamePlaceholder')}
             className="mt-1"
             disabled={isSaving}
           />
@@ -222,7 +336,7 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
 
         {/* Logo Upload */}
         <div>
-          <Label className="text-sm font-medium">ლოგო (არასავალდებულო)</Label>
+          <Label className="text-sm font-medium">{t('developerProfile.logo')}</Label>
           <div className="flex items-center gap-4 mt-2">
             <div className="flex-1">
               <div className="relative">
@@ -237,7 +351,7 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
                 <div className="flex items-center gap-2 px-3 py-2 border border-input rounded-md bg-background hover:bg-gray-50 transition-colors cursor-pointer">
                   <Upload className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-600">
-                    აირჩიეთ ლოგოს ფაილი
+                    {isSaving ? t('developerProfile.loading') : t('developerProfile.selectLogoFile')}
                   </span>
                 </div>
               </div>
@@ -246,12 +360,12 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
               <div className="relative">
                 <img
                   src={logoPreview}
-                  alt="ლოგოს წინასწარი ნახვა"
+                  alt={t('developerProfile.logoPreview')}
                   className="w-16 h-16 object-cover rounded-md border"
                 />
                 <button
                   type="button"
-                  onClick={() => setLogoPreview(null)}
+                  onClick={handleLogoRemove}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
                   disabled={isSaving}
                 >
@@ -261,21 +375,21 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
             )}
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            მხარდაჭერილი ფორმატები: JPG, PNG, GIF. მაქსიმალური ზომა: 5MB
+            {t('developerProfile.logoFormats')}
           </p>
         </div>
         
         {/* Email */}
         <div>
           <Label htmlFor="email" className="text-sm font-medium">
-            ელ-ფოსტა
+            {t('developerProfile.email')}
           </Label>
-          <Input 
-            id="email" 
-            type="email" 
+          <Input
+            id="email"
+            type="email"
             value={developerData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
-            placeholder="კომპანიის ელ-ფოსტის მისამართი"
+            placeholder={t('developerProfile.emailPlaceholder')}
             className="mt-1"
             disabled={isSaving}
           />
@@ -284,13 +398,13 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
         {/* Phone */}
         <div>
           <Label htmlFor="developerPhone" className="text-sm font-medium">
-            ტელეფონის ნომერი
+            {t('developerProfile.phone')}
           </Label>
-          <Input 
-            id="developerPhone" 
+          <Input
+            id="developerPhone"
             value={developerData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
-            placeholder="ტელეფონის ნომერი"
+            placeholder={t('developerProfile.phonePlaceholder')}
             className="mt-1"
             disabled={isSaving}
           />
@@ -299,13 +413,13 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
         {/* Social Media */}
         <div>
           <Label htmlFor="developerSocialMedia" className="text-sm font-medium">
-            სოციალური მედია URL (არასავალდებულო)
+            {t('developerProfile.socialMedia')}
           </Label>
-          <Input 
-            id="developerSocialMedia" 
+          <Input
+            id="developerSocialMedia"
             value={developerData.socialMediaUrl}
             onChange={(e) => handleInputChange('socialMediaUrl', e.target.value)}
-            placeholder="https://facebook.com/yourpage"
+            placeholder={t('developerProfile.socialMediaPlaceholder')}
             className="mt-1"
             disabled={isSaving}
           />
@@ -314,13 +428,13 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
         {/* Website */}
         <div>
           <Label htmlFor="developerWebsite" className="text-sm font-medium">
-            ვებსაიტი (არასავალდებულო)
+            {t('developerProfile.website')}
           </Label>
-          <Input 
-            id="developerWebsite" 
+          <Input
+            id="developerWebsite"
             value={developerData.website}
             onChange={(e) => handleInputChange('website', e.target.value)}
-            placeholder="https://yourwebsite.com"
+            placeholder={t('developerProfile.websitePlaceholder')}
             className="mt-1"
             disabled={isSaving}
           />
@@ -332,14 +446,14 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
             onClick={handleSave}
             disabled={isSaving}
           >
-            {isSaving ? "შენახვა..." : "შენახვა"}
+            {isSaving ? t('developerProfile.saving') : t('developerProfile.save')}
           </Button>
           <Button 
             variant="outline" 
             onClick={handleCancel}
             disabled={isSaving}
           >
-            გაუქმება
+            {t('developerProfile.cancel')}
           </Button>
         </div>
       </div>

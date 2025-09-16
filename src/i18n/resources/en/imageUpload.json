@@ -1,0 +1,89 @@
+{
+  "demo": {
+    "title": "Universal Image Upload Demo",
+    "subtitle": "Test the universal image upload system with different entity types and purposes.",
+    "tabs": {
+      "propertyGallery": "Property Gallery",
+      "userAvatar": "User Avatar",
+      "agencyLogo": "Agency Logo",
+      "projectGallery": "Project Gallery"
+    },
+    "property": {
+      "title": "Property Gallery Upload",
+      "description": "Upload multiple images for a property. Supports up to 30 images with drag & drop reordering.",
+      "propertyId": "Property ID:"
+    },
+    "user": {
+      "title": "User Avatar Upload",
+      "description": "Upload a single avatar image for a user. Automatically resized to multiple sizes.",
+      "userId": "User ID:",
+      "avatarComponent": "Avatar Upload Component",
+      "universalUpload": "Universal Upload (User Avatar)"
+    },
+    "agency": {
+      "title": "Agency Logo Upload",
+      "description": "Upload a single logo image for an agency. Supports PNG with transparency.",
+      "agencyId": "Agency ID:"
+    },
+    "project": {
+      "title": "Project Gallery Upload",
+      "description": "Upload multiple images for a project or development.",
+      "projectId": "Project ID:"
+    },
+    "apiTest": {
+      "title": "API Test",
+      "description": "Test the API endpoints directly",
+      "testPropertyImages": "Test GET Property Images",
+      "testUserImages": "Test GET User Images",
+      "testAgencyImages": "Test GET Agency Images"
+    }
+  },
+  "universal": {
+    "upload": {
+      "dragDrop": "Drag & drop files here, or click to select",
+      "dropFiles": "Drop the files here...",
+      "slotsAvailable": "of {{maxFiles}} slots available",
+      "maxFileSize": "Max {{maxSize}}MB per file",
+      "uploading": "Uploading...",
+      "uploadErrors": "Upload Errors",
+      "clearErrors": "Clear errors",
+      "uploadedFiles": "Uploaded Files ({{count}}/{{maxFiles}})",
+      "noFilesUploaded": "No files uploaded yet",
+      "confirmDelete": "Are you sure you want to delete this image?",
+      "primary": "Primary"
+    },
+    "errors": {
+      "exceededSize": "{{fileName}} exceeds {{maxSize}}MB limit",
+      "invalidType": "{{fileName}} has invalid type",
+      "maxFilesExceeded": "Maximum {{maxFiles}} files allowed",
+      "uploadFailed": "Upload failed",
+      "deleteFailed": "Failed to delete image. Please try again.",
+      "fetchFailed": "Failed to load images",
+      "reorderFailed": "Failed to reorder images",
+      "setPrimaryFailed": "Failed to set primary image"
+    }
+  },
+  "avatar": {
+    "upload": {
+      "changeAvatar": "Change Avatar",
+      "uploadAvatar": "Upload Avatar",
+      "removeAvatar": "Remove Avatar",
+      "selectImage": "Select Image",
+      "dragDropImage": "Drag & drop an image here, or click to select",
+      "supportedFormats": "Supported formats: JPEG, PNG, WebP",
+      "maxSize": "Maximum size: {size}MB"
+    }
+  },
+  "photoGallery": {
+    "title": "Photos",
+    "selectImages": "Click to select images or drag and drop",
+    "supportedFormats": "JPEG, PNG, WebP up to 15MB each (max 15 files)",
+    "imagesSelected": "{count} image{plural} selected. They will be uploaded when you save the property.",
+    "recommendations": "Photo Recommendations:",
+    "rec1": "Upload high-quality images with good lighting",
+    "rec2": "Include photos of all rooms and important features",
+    "rec3": "Show the property from different angles",
+    "rec4": "Include exterior shots and surroundings",
+    "rec5": "Avoid blurry or dark images"
+  }
+}

@@ -73,6 +73,125 @@ interface Property {
   createdAt: string;
 }
 
+// Component to display developer logo from AWS
+const DeveloperLogo = ({ developerId, developerName }: { developerId: number; developerName: string }) => {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDeveloperLogo = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/developer/${developerId}/images?purpose=developer_logo`);
+
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.images && data.images.length > 0) {
+            const firstLogo = data.images[0];
+            const logoUrl = firstLogo.urls?.medium || firstLogo.urls?.small || firstLogo.urls?.original;
+
+            if (logoUrl) {
+              const img = new Image();
+              img.onload = () => {
+                setLogoUrl(logoUrl);
+                setLoading(false);
+              };
+              img.onerror = () => {
+                setLoading(false);
+              };
+              img.src = logoUrl;
+              return;
+            }
+          }
+        }
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
+    loadDeveloperLogo();
+  }, [developerId]);
+
+  if (loading) {
+    return (
+      <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center animate-pulse">
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (logoUrl) {
+    return (
+      <img
+        src={logoUrl}
+        alt={developerName}
+        className="w-24 h-24 rounded-lg object-cover"
+        onError={() => setLogoUrl(null)}
+      />
+    );
+  }
+
+  return (
+    <div className="w-24 h-24 bg-primary/10 rounded-lg flex items-center justify-center">
+      <Construction className="h-12 w-12 text-primary" />
+    </div>
+  );
+};
+
+// Component to fetch and display project image
+const ProjectImage = ({ projectId, projectName }: { projectId: number; projectName: string }) => {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjectImage = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/project/${projectId}/images`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && data.images.length > 0) {
+            // Get the first image's medium or small version
+            const firstImage = data.images[0];
+            setImageUrl(firstImage.urls?.medium || firstImage.urls?.small || firstImage.urls?.original);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load project image:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjectImage();
+  }, [projectId]);
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (imageUrl) {
+    return (
+      <img
+        src={imageUrl}
+        alt={projectName}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+    );
+  }
+
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-gray-100">
+      <Building2 className="h-12 w-12 text-gray-400" />
+    </div>
+  );
+};
+
 const DeveloperDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { i18n } = useTranslation();
@@ -174,17 +293,7 @@ const DeveloperDetail = () => {
             <CardHeader>
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="flex-shrink-0">
-                  {developer.logoUrl ? (
-                    <img 
-                      src={developer.logoUrl} 
-                      alt={developer.name}
-                      className="w-24 h-24 rounded-lg object-cover"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <Construction className="h-12 w-12 text-primary" />
-                    </div>
-                  )}
+                  <DeveloperLogo developerId={developer.id} developerName={developer.name}/>
                 </div>
                 
                 <div className="flex-grow space-y-4">
@@ -338,15 +447,13 @@ const DeveloperDetail = () => {
                   };
 
                   return (
-                    <Card 
-                      key={project.id} 
+                    <Card
+                      key={project.id}
                       className="group cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden"
                     >
                       {/* Project Photo */}
                       <div className="aspect-video w-full overflow-hidden bg-gray-100">
-                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                          <Building2 className="h-12 w-12 text-gray-400" />
-                        </div>
+                        <ProjectImage projectId={project.id} projectName={project.projectName} />
                       </div>
                       
                       <CardHeader className="pb-3">

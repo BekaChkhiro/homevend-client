@@ -7,8 +7,10 @@ import { Label } from '@/components/ui/label';
 import { UniversalImageUpload } from '@/components/UniversalImageUpload';
 import { AvatarUpload } from '@/components/AvatarUpload';
 import { EntityType } from '@/hooks/useUniversalImageUpload';
+import { useTranslation } from 'react-i18next';
 
 export const ImageUploadDemo: React.FC = () => {
+  const { t } = useTranslation(['imageUpload', 'common']);
   const [propertyId, setPropertyId] = useState(1);
   const [userId, setUserId] = useState(1);
   const [agencyId, setAgencyId] = useState(1);
@@ -16,32 +18,32 @@ export const ImageUploadDemo: React.FC = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Universal Image Upload Demo</h1>
+        <h1 className="text-3xl font-bold">{t('demo.title')}</h1>
         <p className="text-muted-foreground mt-2">
-          Test the universal image upload system with different entity types and purposes.
+          {t('demo.subtitle')}
         </p>
       </div>
 
       <Tabs defaultValue="property" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="property">Property Gallery</TabsTrigger>
-          <TabsTrigger value="user">User Avatar</TabsTrigger>
-          <TabsTrigger value="agency">Agency Logo</TabsTrigger>
-          <TabsTrigger value="project">Project Gallery</TabsTrigger>
+          <TabsTrigger value="property">{t('demo.tabs.propertyGallery')}</TabsTrigger>
+          <TabsTrigger value="user">{t('demo.tabs.userAvatar')}</TabsTrigger>
+          <TabsTrigger value="agency">{t('demo.tabs.agencyLogo')}</TabsTrigger>
+          <TabsTrigger value="project">{t('demo.tabs.projectGallery')}</TabsTrigger>
         </TabsList>
 
         {/* Property Gallery Upload */}
         <TabsContent value="property" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Property Gallery Upload</CardTitle>
+              <CardTitle>{t('demo.property.title')}</CardTitle>
               <CardDescription>
-                Upload multiple images for a property. Supports up to 30 images with drag & drop reordering.
+                {t('demo.property.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
-                <Label htmlFor="propertyId">Property ID:</Label>
+                <Label htmlFor="propertyId">{t('demo.property.propertyId')}</Label>
                 <Input
                   id="propertyId"
                   type="number"
@@ -70,14 +72,14 @@ export const ImageUploadDemo: React.FC = () => {
         <TabsContent value="user" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>User Avatar Upload</CardTitle>
+              <CardTitle>{t('demo.user.title')}</CardTitle>
               <CardDescription>
-                Upload a single avatar image for a user. Automatically resized to multiple sizes.
+                {t('demo.user.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
-                <Label htmlFor="userId">User ID:</Label>
+                <Label htmlFor="userId">{t('demo.user.userId')}</Label>
                 <Input
                   id="userId"
                   type="number"
@@ -90,7 +92,7 @@ export const ImageUploadDemo: React.FC = () => {
               <div className="flex items-center space-x-8">
                 {/* Avatar Upload Component */}
                 <div className="space-y-2">
-                  <Label>Avatar Upload Component</Label>
+                  <Label>{t('demo.user.avatarComponent')}</Label>
                   <AvatarUpload
                     userId={userId}
                     size="xl"
@@ -102,7 +104,7 @@ export const ImageUploadDemo: React.FC = () => {
 
                 {/* Or Universal Upload for User Avatar */}
                 <div className="flex-1">
-                  <Label>Universal Upload (User Avatar)</Label>
+                  <Label>{t('demo.user.universalUpload')}</Label>
                   <UniversalImageUpload
                     entityType="user"
                     entityId={userId}
@@ -125,14 +127,14 @@ export const ImageUploadDemo: React.FC = () => {
         <TabsContent value="agency" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Agency Logo Upload</CardTitle>
+              <CardTitle>{t('demo.agency.title')}</CardTitle>
               <CardDescription>
-                Upload a single logo image for an agency. Supports PNG with transparency.
+                {t('demo.agency.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
-                <Label htmlFor="agencyId">Agency ID:</Label>
+                <Label htmlFor="agencyId">{t('demo.agency.agencyId')}</Label>
                 <Input
                   id="agencyId"
                   type="number"
@@ -161,14 +163,14 @@ export const ImageUploadDemo: React.FC = () => {
         <TabsContent value="project" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Project Gallery Upload</CardTitle>
+              <CardTitle>{t('demo.project.title')}</CardTitle>
               <CardDescription>
-                Upload multiple images for a project or development.
+                {t('demo.project.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
-                <Label htmlFor="projectId">Project ID:</Label>
+                <Label htmlFor="projectId">{t('demo.project.projectId')}</Label>
                 <Input
                   id="projectId"
                   type="number"
@@ -196,9 +198,9 @@ export const ImageUploadDemo: React.FC = () => {
       {/* API Test Section */}
       <Card>
         <CardHeader>
-          <CardTitle>API Test</CardTitle>
+          <CardTitle>{t('demo.apiTest.title')}</CardTitle>
           <CardDescription>
-            Test the API endpoints directly
+            {t('demo.apiTest.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -214,7 +216,7 @@ export const ImageUploadDemo: React.FC = () => {
                 }
               }}
             >
-              Test GET Property Images
+              {t('demo.apiTest.testPropertyImages')}
             </Button>
             
             <Button
@@ -228,7 +230,7 @@ export const ImageUploadDemo: React.FC = () => {
                 }
               }}
             >
-              Test GET User Images
+              {t('demo.apiTest.testUserImages')}
             </Button>
             
             <Button
@@ -242,7 +244,7 @@ export const ImageUploadDemo: React.FC = () => {
                 }
               }}
             >
-              Test GET Agency Images
+              {t('demo.apiTest.testAgencyImages')}
             </Button>
           </div>
         </CardContent>

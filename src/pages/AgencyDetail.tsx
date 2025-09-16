@@ -133,6 +133,77 @@ interface AgencyProperty {
   };
 }
 
+// Component to display agency logo from AWS
+const AgencyLogo = ({ agencyId, agencyName, size = "w-32 h-32" }: {
+  agencyId: number;
+  agencyName: string;
+  size?: string;
+}) => {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadAgencyLogo = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/agency/${agencyId}/images?purpose=agency_logo`);
+
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.images && data.images.length > 0) {
+            const firstLogo = data.images[0];
+            const logoUrl = firstLogo.urls?.small || firstLogo.urls?.medium || firstLogo.urls?.original;
+
+            if (logoUrl) {
+              const img = new Image();
+              img.onload = () => {
+                setLogoUrl(logoUrl);
+                setLoading(false);
+              };
+              img.onerror = () => {
+                setLoading(false);
+              };
+              img.src = logoUrl;
+              return;
+            }
+          }
+        }
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
+    loadAgencyLogo();
+  }, [agencyId]);
+
+  if (loading) {
+    return (
+      <div className={`${size} bg-gray-100 rounded-lg flex items-center justify-center animate-pulse`}>
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (logoUrl) {
+    return (
+      <img
+        src={logoUrl}
+        alt={agencyName}
+        className={`${size} rounded-lg object-cover`}
+        onError={() => setLogoUrl(null)}
+      />
+    );
+  }
+
+  return (
+    <div className={`${size} bg-primary/10 rounded-lg flex items-center justify-center`}>
+      <Building2 className="h-16 w-16 text-primary" />
+    </div>
+  );
+};
+
 const AgencyDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { t, i18n } = useTranslation('agencies');
@@ -342,17 +413,11 @@ const AgencyDetail = () => {
       <div className="container mx-auto py-10 px-4 pt-32">
         {/* Agency Header */}
         <div className="flex flex-col md:flex-row items-start gap-8 mb-12">
-          <div className="w-32 h-32 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-            {agency.logoUrl ? (
-              <img
-                src={agency.logoUrl}
-                alt={agency.name}
-                className="w-28 h-28 rounded-lg object-cover"
-              />
-            ) : (
-              <Building2 className="h-16 w-16 text-primary" />
-            )}
-          </div>
+          <AgencyLogo
+            agencyId={agency.owner.id}
+            agencyName={agency.name}
+            size="w-32 h-32"
+          />
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-4xl font-bold text-gray-900">{agency.name}</h1>

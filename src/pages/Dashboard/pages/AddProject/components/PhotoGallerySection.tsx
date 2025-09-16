@@ -57,7 +57,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
                   Click to select images or drag and drop
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  JPEG, PNG, WebP up to 15MB each (max 30 files)
+                  JPEG, PNG, WebP up to 15MB each (max 15 files)
                 </p>
               </div>
               <input
