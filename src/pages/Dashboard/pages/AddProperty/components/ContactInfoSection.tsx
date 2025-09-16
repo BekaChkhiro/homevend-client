@@ -14,7 +14,7 @@ export const ContactInfoSection = () => {
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <User className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">{t('addPropertyForm.pricing.title')}</h3>
+        <h3 className="text-xl font-semibold">{t('addPropertyForm.contact.title')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5 space-y-6">
@@ -22,7 +22,7 @@ export const ContactInfoSection = () => {
         <div>
           <Label htmlFor="contact-name" className="block mb-3 font-medium flex items-center gap-2">
             <User className="h-4 w-4 text-muted-foreground" />
-            <span>{t('addPropertyForm.pricing.contactPerson')}</span>
+            <span>{t('addPropertyForm.contact.name')}</span>
           </Label>
           <FormField
             control={form.control}
@@ -33,7 +33,7 @@ export const ContactInfoSection = () => {
                   <Input 
                     id="contact-name" 
                     type="text" 
-                    placeholder={t('addPropertyForm.pricing.contactPersonPlaceholder')} 
+                    placeholder={t('addPropertyForm.contact.namePlaceholder')} 
                     className="border-input focus:ring-ring focus:ring-1"
                     {...field}
                   />
@@ -48,7 +48,7 @@ export const ContactInfoSection = () => {
         <div>
           <Label htmlFor="contact-phone" className="block mb-3 font-medium flex items-center gap-2">
             <Phone className="h-4 w-4 text-muted-foreground" />
-            <span>{t('addPropertyForm.pricing.contactPhone')}</span>
+            <span>{t('addPropertyForm.contact.phone')}</span>
           </Label>
           <FormField
             control={form.control}
@@ -69,7 +69,7 @@ export const ContactInfoSection = () => {
             )}
           />
           <div className="mt-2 text-xs text-muted-foreground">
-            {t('addPropertyForm.pricing.phoneExample')}
+            {t('addPropertyForm.contact.phoneExample')}
           </div>
         </div>
       </div>

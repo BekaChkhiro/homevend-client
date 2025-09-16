@@ -107,7 +107,21 @@
     "successWithVip": "Property successfully added and VIP status purchased for {{days}} days",
     "successWithoutVip": "Property successfully added",
     "submissionError": "Error occurred while adding property",
-    "cityNotFound": "City \"{{city}}\" not found. Please select a valid city."
+    "cityNotFound": "City \"{{city}}\" not found. Please select a valid city.",
+    "creatingPropertyUploading": "Creating property and uploading images...",
+    "propertyCreated": "Property Created",
+    "propertyCreatedWithImages": "Property created and {{count}} images uploaded successfully!",
+    "propertyCreatedUploadFailed": "Property created successfully, but image upload failed: {{error}}",
+    "dailyRentalCategory": "Daily Rental Category",
+    "selectDailyRentalType": "Select daily rental type",
+    "projectAssociation": "Project Association",
+    "selectProjectDesc": "Select project to associate with this property",
+    "dailyRentalCategories": {
+      "sea": "Seaside Daily Rental",
+      "mountains": "Mountain Daily Rental",
+      "villa": "Daily Villas"
+    },
+    "projectAssociationTip": "💡 If you select a project, this property will also appear on the project page as associated property"
   },
   "profileSections": {
     "personalInfo": {
@@ -427,6 +441,40 @@
       "password": "Password",
       "notifications": "Notifications",
       "privacy": "Privacy"
+    }
+  },
+  "developerProfile": {
+    "title": "Developer Company Information",
+    "companyName": "Developer Company Name",
+    "companyNamePlaceholder": "Enter company name",
+    "logo": "Logo (optional)",
+    "selectLogoFile": "Select logo file",
+    "logoFormats": "Supported formats: JPG, PNG, GIF. Maximum size: 5MB",
+    "email": "Email",
+    "emailPlaceholder": "Company email address",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Phone number",
+    "socialMedia": "Social Media URL (optional)",
+    "socialMediaPlaceholder": "https://facebook.com/yourpage",
+    "website": "Website (optional)",
+    "websitePlaceholder": "https://yourwebsite.com",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "loading": "Loading data...",
+    "logoPreview": "Logo preview",
+    "errors": {
+      "title": "Error",
+      "loadFailed": "Failed to load developer data - using mock data",
+      "selectImageFile": "Please select an image file",
+      "logoSizeExceeded": "Logo size should not exceed 5MB",
+      "logoUploadFailed": "Logo upload failed",
+      "saveFailed": "Failed to save data"
+    },
+    "success": {
+      "title": "Success",
+      "logoUploaded": "Logo uploaded",
+      "dataSaved": "Developer data saved"
     }
   },
   "addPropertyForm": {
@@ -1042,6 +1090,40 @@
       "successDescription": "{{linked}} properties linked{{unlinked, plural, =0 {} other { and {{unlinked}} unlinked}}",
       "error": "Error",
       "errorDescription": "An error occurred while saving changes"
+    }
+  },
+  "agencyProfile": {
+    "title": "Agency Information",
+    "agencyName": "Agency Name",
+    "agencyNamePlaceholder": "Enter agency name",
+    "logo": "Logo (Optional)",
+    "logoPreview": "Logo preview",
+    "selectLogoFile": "Select logo file",
+    "logoFormats": "Supported formats: JPG, PNG, GIF. Max size: 5MB",
+    "email": "Email",
+    "emailPlaceholder": "Agency email address",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Phone number",
+    "socialMedia": "Social Media URL (Optional)",
+    "socialMediaPlaceholder": "https://facebook.com/yourpage",
+    "website": "Website (Optional)",
+    "websitePlaceholder": "https://yourwebsite.com",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "loading": "Loading data...",
+    "success": {
+      "title": "Success",
+      "dataSaved": "Agency data saved",
+      "logoUploaded": "Logo uploaded"
+    },
+    "errors": {
+      "title": "Error",
+      "loadFailed": "Failed to load agency data - using mock data",
+      "saveFailed": "Failed to save data",
+      "selectImageFile": "Please select an image file",
+      "logoSizeExceeded": "Logo size must not exceed 5MB",
+      "logoUploadFailed": "Logo upload failed"
     }
   }
 }

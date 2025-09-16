@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
 import { projectApi } from "@/lib/api";
+import { getLanguageUrl } from "@/components/LanguageRoute";
 import {
   MapPin,
   Calendar,
@@ -123,6 +124,54 @@ interface ProjectDetail {
     };
   }>;
 }
+
+// Component to fetch and display property image
+const PropertyImage = ({ propertyId, title }: { propertyId: number; title: string }) => {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPropertyImage = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/property/${propertyId}/images`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.images && data.images.length > 0) {
+            // Get the first image's thumbnail or small version
+            const firstImage = data.images[0];
+            setImageUrl(firstImage.urls?.small || firstImage.urls?.thumbnail || firstImage.urls?.original);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load property image:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPropertyImage();
+  }, [propertyId]);
+
+  return (
+    <div className="w-36 flex-shrink-0 bg-gray-100 rounded-l-lg overflow-hidden">
+      {loading ? (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-gray-200">
+          <Camera className="h-8 w-8 text-gray-400" />
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -734,18 +783,12 @@ const ProjectDetail = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {project.linkedProperties.map((property) => (
-                      <Card key={property.id} className="hover:shadow-md transition-all duration-300 cursor-pointer border-l-4 border-l-primary/30 hover:border-l-primary" onClick={() => navigate(`/${i18n.language}/property/${property.id}`)}>
+                      <Card key={property.id} className="hover:shadow-md transition-all duration-300 cursor-pointer border-l-4 border-l-primary/30 hover:border-l-primary" onClick={() => navigate(getLanguageUrl(`/property/${property.id}`))}>
                         <CardContent className="p-0">
                           <div className="flex min-h-[140px]">
                             {/* Property Photo */}
-                            <div className="w-36 flex-shrink-0 bg-gray-100 rounded-l-lg overflow-hidden">
-                              <img
-                                src="/placeholder.svg"
-                                alt={property.title}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            
+                            <PropertyImage propertyId={property.id} title={property.title} />
+
                             {/* Property Info */}
                             <div className="flex-1 p-4">
                               <div className="h-full flex flex-col justify-between space-y-2">
@@ -753,7 +796,7 @@ const ProjectDetail = () => {
                                 <h3 className="font-semibold text-base line-clamp-2 text-gray-900 leading-tight">
                                   {property.title}
                                 </h3>
-                                
+
                                 {/* Price per sqm (most prominent) */}
                                 <div className="flex items-baseline gap-2">
                                   {property.pricePerSqm ? (
@@ -767,28 +810,28 @@ const ProjectDetail = () => {
                                   )}
                                   <div className="text-xs text-gray-500">{t('projectDetail.perSqm')}</div>
                                 </div>
-                                
+
                                 {/* Key Info with Badges */}
                                 <div className="flex gap-1.5 flex-wrap">
                                   {/* Area Badge */}
                                   <Badge variant="secondary" className="text-xs px-2 py-1">
                                     {property.area} {t('projectDetail.sqm')}
                                   </Badge>
-                                  
+
                                   {/* Rooms Badge */}
                                   {property.rooms && (
                                     <Badge variant="outline" className="text-xs px-2 py-1">
                                       {property.rooms} {t('projectDetail.rooms')}
                                     </Badge>
                                   )}
-                                  
+
                                   {/* Bedrooms Badge */}
                                   {property.bedrooms && (
                                     <Badge variant="outline" className="text-xs px-2 py-1">
                                       {property.bedrooms} {t('projectDetail.bedrooms')}
                                     </Badge>
                                   )}
-                                  
+
                                   {/* Floor Badge */}
                                   <Badge variant="outline" className="text-xs px-2 py-1">
                                     {t('projectDetail.floor', { floor: property.floor || 1 })}

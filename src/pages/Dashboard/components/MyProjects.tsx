@@ -87,7 +87,7 @@ export const MyProjects: React.FC = () => {
     try {
       setIsLoading(true);
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const response = await fetch(`${apiUrl}/projects/my-projects`, {
+      const response = await fetch(`${apiUrl}/projects/my-projects?t=${Date.now()}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

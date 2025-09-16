@@ -62,21 +62,22 @@ const Register = () => {
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
+      // Validate file type (match backend config)
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
+      if (!allowedTypes.includes(file.type)) {
         toast({
           title: "შეცდომა",
-          description: "გთხოვთ აირჩიოთ სურათის ფაილი",
+          description: "მხარდაჭერილი ფორმატები: JPG, PNG, SVG",
           variant: "destructive",
         });
         return;
       }
       
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
+      // Validate file size (max 2MB to match backend config)
+      if (file.size > 2 * 1024 * 1024) {
         toast({
-          title: "შეცდომა", 
-          description: "ლოგოს ზომა არ უნდა აღემატებოდეს 5MB-ს",
+          title: "შეცდომა",
+          description: "ლოგოს ზომა არ უნდა აღემატებოდეს 2MB-ს",
           variant: "destructive",
         });
         return;
@@ -150,13 +151,117 @@ const Register = () => {
         registrationData.fullName = formData.fullName;
       }
 
-      const success = await register(registrationData);
+      // We need to call the register API directly to get the full response with entity IDs
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const registerResponse = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registrationData),
+      });
+
+      if (!registerResponse.ok) {
+        const errorData = await registerResponse.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const registerResult = await registerResponse.json();
+      console.log('🎉 Full registration result:', registerResult);
+
+      // Store auth data
+      const { user, token } = registerResult.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      const success = true;
 
       if (success) {
+        // If registration was successful and there's a logo file, upload it
+        if (logoFile && (formData.role === "agency" || formData.role === "developer")) {
+          toast({
+            title: "ლოგოს ატვირთვა...",
+            description: "რეგისტრაცია წარმატებით დასრულდა, ლოგო იტვირთება...",
+          });
+
+          try {
+            // Use the user data directly from the registration response
+            console.log('📊 User data from registration:', user);
+
+            // IMPORTANT: Use the user ID for S3 folder structure, not the entity ID
+            // This ensures consistent folder naming with user IDs (e.g., /developer/50/ not /developer/7/)
+            let entityId = user.id; // Use user ID instead of developer/agency ID
+
+            console.log('🔑 Using user ID for upload:', entityId, 'for role:', formData.role);
+
+            if (entityId) {
+                const uploadFormData = new FormData();
+                uploadFormData.append('images', logoFile);
+                uploadFormData.append('purpose', `${formData.role}_logo`);
+
+                // Wait a brief moment to ensure token is properly stored
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                console.log('🚀 Uploading logo:', {
+                  entityType: formData.role,
+                  entityId: entityId,
+                  purpose: `${formData.role}_logo`,
+                  fileName: logoFile.name,
+                  fileSize: logoFile.size,
+                  fileType: logoFile.type
+                });
+
+                const uploadUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/${formData.role}/${entityId}`;
+                console.log('📤 Upload URL:', uploadUrl);
+
+                const uploadResponse = await fetch(uploadUrl, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                  },
+                  body: uploadFormData,
+                });
+
+                console.log('📥 Upload response status:', uploadResponse.status);
+
+                if (uploadResponse.ok) {
+                  const responseData = await uploadResponse.json();
+                  console.log('✅ Upload success:', responseData);
+                  toast({
+                    title: "რეგისტრაცია და ლოგო წარმატებით ატვირთდა!",
+                    description: "შეამოწმეთ თქვენი ელ.ფოსტა ანგარიშის გასააქტიურებლად",
+                  });
+                } else {
+                  const errorData = await uploadResponse.json().catch(() => ({}));
+                  console.error('❌ Upload failed:', uploadResponse.status, errorData);
+                  toast({
+                    title: "რეგისტრაცია წარმატებით დასრულდა!",
+                    description: `ლოგოს ატვირთვა ვერ მოხერხდა (${uploadResponse.status}), შეგიძლიათ მოგვიანებით ატვირთოთ პროფილიდან. შეამოწმეთ ელ.ფოსტა ანგარიშის გასააქტიურებლად.`,
+                  });
+                }
+              } else {
+                console.warn('⚠️ No entity ID found for logo upload');
+              }
+          } catch (logoError) {
+            console.error('💥 Logo upload error:', logoError);
+            toast({
+              title: "რეგისტრაცია წარმატებით დასრულდა!",
+              description: "ლოგოს ატვირთვა ვერ მოხერხდა (შიდა შეცდომა), შეგიძლიათ მოგვიანებით ატვირთოთ პროფილიდან. შეამოწმეთ ელ.ფოსტა ანგარიშის გასააქტიურებლად.",
+            });
+          }
+        } else {
+          toast({
+            title: "რეგისტრაცია წარმატებით დასრულდა!",
+            description: "შეამოწმეთ თქვენი ელ.ფოსტა ანგარიშის გასააქტიურებლად",
+          });
+        }
+
+        // Add success toast if not already shown
         toast({
           title: "რეგისტრაცია წარმატებით დასრულდა!",
-          description: "შეამოწმეთ თქვენი ელ.ფოსტა ანგარიშის გასააქტიურებლად",
+          description: `მოგესალმებით, ${user.fullName || formData.agencyName || formData.developerName}! შეამოწმეთ ელ.ფოსტა ანგარიშის გასააქტიურებლად.`,
         });
+
         navigate(getLanguageUrl('login?message=check-email', i18n.language));
       }
     } catch (error) {
@@ -297,7 +402,7 @@ const Register = () => {
                               <input
                                 id="agencyLogo"
                                 type="file"
-                                accept="image/*"
+                                accept="image/jpeg,image/png,image/svg+xml"
                                 onChange={handleLogoChange}
                                 disabled={isLoading}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -332,7 +437,7 @@ const Register = () => {
                           )}
                         </div>
                         <p className="text-xs text-gray-500">
-                          მხარდაჭერილი ფორმატები: JPG, PNG, GIF. მაქსიმალური ზომა: 5MB
+                          მხარდაჭერილი ფორმატები: JPG, PNG, SVG. მაქსიმალური ზომა: 2MB
                         </p>
                       </div>
                       
@@ -457,7 +562,7 @@ const Register = () => {
                               <input
                                 id="developerLogo"
                                 type="file"
-                                accept="image/*"
+                                accept="image/jpeg,image/png,image/svg+xml"
                                 onChange={handleLogoChange}
                                 disabled={isLoading}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -492,7 +597,7 @@ const Register = () => {
                           )}
                         </div>
                         <p className="text-xs text-gray-500">
-                          მხარდაჭერილი ფორმატები: JPG, PNG, GIF. მაქსიმალური ზომა: 5MB
+                          მხარდაჭერილი ფორმატები: JPG, PNG, SVG. მაქსიმალური ზომა: 2MB
                         </p>
                       </div>
                       

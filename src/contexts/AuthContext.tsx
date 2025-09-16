@@ -103,13 +103,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       const { user, token } = await authApi.register(userData);
+      console.log('📝 Register response user:', user); // Debug log
       setAuthData(user, token);
-      
+
       toast({
         title: "რეგისტრაცია წარმატებით დასრულდა",
         description: `მოგესალმებით, ${user.fullName}!`,
       });
-      
+
       return true;
     } catch (error: any) {
       console.error('Registration failed:', error);

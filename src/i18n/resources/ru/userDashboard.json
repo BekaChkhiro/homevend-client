@@ -429,6 +429,40 @@
       "privacy": "Конфиденциальность"
     }
   },
+  "developerProfile": {
+    "title": "Информация о компании-застройщике",
+    "companyName": "Название компании-застройщика",
+    "companyNamePlaceholder": "Введите название компании",
+    "logo": "Логотип (необязательно)",
+    "selectLogoFile": "Выберите файл логотипа",
+    "logoFormats": "Поддерживаемые форматы: JPG, PNG, GIF. Максимальный размер: 5MB",
+    "email": "Электронная почта",
+    "emailPlaceholder": "Email адрес компании",
+    "phone": "Номер телефона",
+    "phonePlaceholder": "Номер телефона",
+    "socialMedia": "URL социальных сетей (необязательно)",
+    "socialMediaPlaceholder": "https://facebook.com/yourpage",
+    "website": "Веб-сайт (необязательно)",
+    "websitePlaceholder": "https://yourwebsite.com",
+    "save": "Сохранить",
+    "saving": "Сохранение...",
+    "cancel": "Отмена",
+    "loading": "Загрузка данных...",
+    "logoPreview": "Предпросмотр логотипа",
+    "errors": {
+      "title": "Ошибка",
+      "loadFailed": "Не удалось загрузить данные застройщика - используются тестовые данные",
+      "selectImageFile": "Пожалуйста, выберите файл изображения",
+      "logoSizeExceeded": "Размер логотипа не должен превышать 5MB",
+      "logoUploadFailed": "Не удалось загрузить логотип",
+      "saveFailed": "Не удалось сохранить данные"
+    },
+    "success": {
+      "title": "Успешно",
+      "logoUploaded": "Логотип загружен",
+      "dataSaved": "Данные застройщика сохранены"
+    }
+  },
   "addPropertyForm": {
     "basicInfo": {
       "title": "Основная информация",
@@ -704,6 +738,9 @@
       "automaticallyCalculated": "Рассчитывается автоматически",
       "priceCalculation": "Расчет цены",
       "priceCalculationDesc": "Цена за квадратный метр рассчитывается автоматически на основе общей цены и площади.",
+      "totalAreaPlaceholder": "Площадь в кв.м.",
+      "pricePlaceholder": "Стоимость в долларах",
+      "pricePerSqmPlaceholder": "Рассчитывается автоматически",
       "descriptionInLanguages": "Описание на разных языках",
       "georgian": "Грузинский",
       "english": "Английский",
@@ -711,6 +748,24 @@
       "descriptionInGeorgian": "Описание на грузинском",
       "descriptionHelp": "Подробное описание поможет привлечь больше внимания потенциальных покупателей",
       "phoneExample": "Пример: +995 555 123 456"
+    },
+    "contact": {
+      "title": "Контактная информация",
+      "name": "Имя",
+      "namePlaceholder": "Ваше имя",
+      "phone": "Номер телефона",
+      "phoneExample": "Пример: +995 555 123 456"
+    },
+    "description": {
+      "title": "Описание",
+      "subtitle": "Описание на разных языках",
+      "georgian": "Грузинский",
+      "english": "Английский",
+      "russian": "Русский",
+      "georgianPlaceholder": "Описание на грузинском языке",
+      "englishPlaceholder": "Description in English",
+      "russianPlaceholder": "Описание на русском языке",
+      "tip": "Подробное описание поможет покупателям лучше понять преимущества вашей недвижимости"
     },
     "vipServices": {
       "title": "VIP услуги и пакеты",
@@ -823,6 +878,7 @@
     "successWithoutServices": "Объявление успешно обновлено",
     "updateError": "Ошибка при обновлении объявления",
     "updating": "Обновление...",
+    "updatingWithImages": "Обновление и загрузка {{count}} изображений...",
     "updateProperty": "Обновить объявление"
   },
   "addProject": {
@@ -993,6 +1049,40 @@
       "successDescription": "{{linked}} объявлений привязано{{unlinked, plural, =0 {} other { и {{unlinked}} отвязано}}",
       "error": "Ошибка",
       "errorDescription": "Произошла ошибка при сохранении изменений"
+    }
+  },
+  "agencyProfile": {
+    "title": "Информация об агентстве",
+    "agencyName": "Название агентства",
+    "agencyNamePlaceholder": "Введите название агентства",
+    "logo": "Логотип (необязательно)",
+    "logoPreview": "Предварительный просмотр логотипа",
+    "selectLogoFile": "Выберите файл логотипа",
+    "logoFormats": "Поддерживаемые форматы: JPG, PNG, GIF. Макс. размер: 5MB",
+    "email": "Электронная почта",
+    "emailPlaceholder": "Электронная почта агентства",
+    "phone": "Номер телефона",
+    "phonePlaceholder": "Номер телефона",
+    "socialMedia": "URL социальных сетей (необязательно)",
+    "socialMediaPlaceholder": "https://facebook.com/yourpage",
+    "website": "Веб-сайт (необязательно)",
+    "websitePlaceholder": "https://yourwebsite.com",
+    "save": "Сохранить",
+    "cancel": "Отменить",
+    "saving": "Сохранение...",
+    "loading": "Загрузка данных...",
+    "success": {
+      "title": "Успех",
+      "dataSaved": "Данные агентства сохранены",
+      "logoUploaded": "Логотип загружен"
+    },
+    "errors": {
+      "title": "Ошибка",
+      "loadFailed": "Не удалось загрузить данные агентства - используются тестовые данные",
+      "saveFailed": "Не удалось сохранить данные",
+      "selectImageFile": "Пожалуйста, выберите файл изображения",
+      "logoSizeExceeded": "Размер логотипа не должен превышать 5MB",
+      "logoUploadFailed": "Не удалось загрузить логотип"
     }
   }
 }

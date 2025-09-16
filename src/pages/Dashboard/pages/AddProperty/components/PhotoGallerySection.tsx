@@ -19,7 +19,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
   onImagesChange,
   onPendingImagesChange
 }) => {
-  const { t } = useTranslation(['userDashboard', 'admin']);
+  const { t } = useTranslation(['userDashboard', 'admin', 'imageUpload']);
   const [pendingImages, setPendingImages] = useState<File[]>([]);
 
 
@@ -50,7 +50,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
       <div className="space-y-8">
         <div className="flex items-center space-x-2 border-b pb-3 mb-2">
           <Camera className="h-5 w-5 text-primary" />
-          <h3 className="text-xl font-semibold">{t('addPropertyForm.photos.title')}</h3>
+          <h3 className="text-xl font-semibold">{t('imageUpload:photoGallery.title')}</h3>
         </div>
 
         <div className="rounded-md border border-border p-5 space-y-6">
@@ -60,10 +60,10 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
               <div className="flex flex-col items-center justify-center">
                 <Upload className="h-8 w-8 text-muted-foreground mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  Click to select images or drag and drop
+                  {t('imageUpload:photoGallery.selectImages')}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  JPEG, PNG, WebP up to 15MB each (max 15 files)
+                  {t('imageUpload:photoGallery.supportedFormats')}
                 </p>
               </div>
               <input
@@ -105,8 +105,10 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertDescription>
-                  {pendingImages.length} image{pendingImages.length !== 1 ? 's' : ''} selected. 
-                  They will be uploaded when you save the property.
+                  {t('imageUpload:photoGallery.imagesSelected', { 
+                    count: pendingImages.length, 
+                    plural: pendingImages.length !== 1 ? 's' : '' 
+                  })}
                 </AlertDescription>
               </Alert>
             )}
@@ -115,13 +117,13 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
 
         {/* Instructions */}
         <div className="bg-muted/50 rounded-lg p-4">
-          <h5 className="font-medium mb-2">{t('addPropertyForm.photos.recommendations')}:</h5>
+          <h5 className="font-medium mb-2">{t('imageUpload:photoGallery.recommendations')}:</h5>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• {t('addPropertyForm.photos.rec1')}</li>
-            <li>• {t('addPropertyForm.photos.rec2')}</li>
-            <li>• {t('addPropertyForm.photos.rec3')}</li>
-            <li>• {t('addPropertyForm.photos.rec4')}</li>
-            <li>• {t('addPropertyForm.photos.rec5')}</li>
+            <li>• {t('imageUpload:photoGallery.rec1')}</li>
+            <li>• {t('imageUpload:photoGallery.rec2')}</li>
+            <li>• {t('imageUpload:photoGallery.rec3')}</li>
+            <li>• {t('imageUpload:photoGallery.rec4')}</li>
+            <li>• {t('imageUpload:photoGallery.rec5')}</li>
           </ul>
         </div>
       </div>
@@ -132,7 +134,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <Camera className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">{t('addPropertyForm.photos.title')}</h3>
+        <h3 className="text-xl font-semibold">{t('imageUpload:photoGallery.title')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5 space-y-6">
@@ -153,13 +155,13 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
 
         {/* Instructions */}
         <div className="bg-muted/50 rounded-lg p-4">
-          <h5 className="font-medium mb-2">{t('addPropertyForm.photos.recommendations')}:</h5>
+          <h5 className="font-medium mb-2">{t('imageUpload:photoGallery.recommendations')}:</h5>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• {t('addPropertyForm.photos.rec1')}</li>
-            <li>• {t('addPropertyForm.photos.rec2')}</li>
-            <li>• {t('addPropertyForm.photos.rec3')}</li>
-            <li>• {t('addPropertyForm.photos.rec4')}</li>
-            <li>• {t('addPropertyForm.photos.rec5')}</li>
+            <li>• {t('imageUpload:photoGallery.rec1')}</li>
+            <li>• {t('imageUpload:photoGallery.rec2')}</li>
+            <li>• {t('imageUpload:photoGallery.rec3')}</li>
+            <li>• {t('imageUpload:photoGallery.rec4')}</li>
+            <li>• {t('imageUpload:photoGallery.rec5')}</li>
           </ul>
         </div>
       </div>

@@ -13,29 +13,29 @@ export const DescriptionSection = () => {
     <div className="space-y-8">
       <div className="flex items-center space-x-2 border-b pb-3 mb-2">
         <FileText className="h-5 w-5 text-primary" />
-        <h3 className="text-xl font-semibold">{t('addPropertyForm.pricing.description')}</h3>
+        <h3 className="text-xl font-semibold">{t('addPropertyForm.description.title')}</h3>
       </div>
 
       <div className="rounded-md border border-border p-5">
         <Label className="block mb-4 font-medium flex items-center gap-2">
           <Languages className="h-4 w-4 text-muted-foreground" />
-          <span>{t('addPropertyForm.pricing.descriptionInLanguages')}</span>
+          <span>{t('addPropertyForm.description.subtitle')}</span>
         </Label>
 
         <Tabs defaultValue="georgian" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="georgian">{t('addPropertyForm.pricing.georgian')}</TabsTrigger>
-            <TabsTrigger value="english">{t('addPropertyForm.pricing.english')}</TabsTrigger>
-            <TabsTrigger value="russian">{t('addPropertyForm.pricing.russian')}</TabsTrigger>
+            <TabsTrigger value="georgian">{t('addPropertyForm.description.georgian')}</TabsTrigger>
+            <TabsTrigger value="english">{t('addPropertyForm.description.english')}</TabsTrigger>
+            <TabsTrigger value="russian">{t('addPropertyForm.description.russian')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="georgian" className="space-y-4">
             <div>
-              <Label htmlFor="descriptionGeorgian" className="text-sm mb-2 block">{t('addPropertyForm.pricing.descriptionInGeorgian')}</Label>
+              <Label htmlFor="descriptionGeorgian" className="text-sm mb-2 block">{t('addPropertyForm.description.georgianPlaceholder')}</Label>
               <Textarea 
                 {...register("descriptionGeorgian")}
                 id="descriptionGeorgian"
-                placeholder={t('addPropertyForm.pricing.descriptionPlaceholder')}
+                placeholder={t('addPropertyForm.description.georgianPlaceholder')}
                 className="min-h-[120px] border-input focus:ring-ring focus:ring-1"
                 rows={6}
               />
@@ -47,11 +47,11 @@ export const DescriptionSection = () => {
           
           <TabsContent value="english" className="space-y-4">
             <div>
-              <Label htmlFor="descriptionEnglish" className="text-sm mb-2 block">Description in English</Label>
+              <Label htmlFor="descriptionEnglish" className="text-sm mb-2 block">{t('addPropertyForm.description.english')}</Label>
               <Textarea 
                 {...register("descriptionEnglish")}
                 id="descriptionEnglish"
-                placeholder="Write a detailed description of the property in English..."
+                placeholder={t('addPropertyForm.description.englishPlaceholder')}
                 className="min-h-[120px] border-input focus:ring-ring focus:ring-1"
                 rows={6}
               />
@@ -63,11 +63,11 @@ export const DescriptionSection = () => {
           
           <TabsContent value="russian" className="space-y-4">
             <div>
-              <Label htmlFor="descriptionRussian" className="text-sm mb-2 block">Описание на русском</Label>
+              <Label htmlFor="descriptionRussian" className="text-sm mb-2 block">{t('addPropertyForm.description.russian')}</Label>
               <Textarea 
                 {...register("descriptionRussian")}
                 id="descriptionRussian"
-                placeholder="Напишите подробное описание недвижимости на русском языке..."
+                placeholder={t('addPropertyForm.description.russianPlaceholder')}
                 className="min-h-[120px] border-input focus:ring-ring focus:ring-1"
                 rows={6}
               />
@@ -79,7 +79,7 @@ export const DescriptionSection = () => {
         </Tabs>
 
         <div className="mt-4 text-xs text-muted-foreground">
-          {t('addPropertyForm.pricing.descriptionHelp')}
+          💡 {t('addPropertyForm.description.tip')}
         </div>
       </div>
     </div>

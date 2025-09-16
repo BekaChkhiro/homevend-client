@@ -44,6 +44,77 @@ interface Developer {
   };
 }
 
+// Component to display developer logo from AWS
+const DeveloperLogo = ({ developerId, developerName, size = "w-12 h-12" }: {
+  developerId: number;
+  developerName: string;
+  size?: string;
+}) => {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDeveloperLogo = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/developer/${developerId}/images?purpose=developer_logo`);
+
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.images && data.images.length > 0) {
+            const firstLogo = data.images[0];
+            const logoUrl = firstLogo.urls?.small || firstLogo.urls?.medium || firstLogo.urls?.original;
+
+            if (logoUrl) {
+              const img = new Image();
+              img.onload = () => {
+                setLogoUrl(logoUrl);
+                setLoading(false);
+              };
+              img.onerror = () => {
+                setLoading(false);
+              };
+              img.src = logoUrl;
+              return;
+            }
+          }
+        }
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
+    loadDeveloperLogo();
+  }, [developerId]);
+
+  if (loading) {
+    return (
+      <div className={`${size} bg-gray-100 rounded-lg flex items-center justify-center animate-pulse`}>
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (logoUrl) {
+    return (
+      <img
+        src={logoUrl}
+        alt={developerName}
+        className={`${size} rounded-lg object-cover`}
+        onError={() => setLogoUrl(null)}
+      />
+    );
+  }
+
+  return (
+    <div className={`${size} bg-primary/10 rounded-lg flex items-center justify-center`}>
+      <Construction className="h-6 w-6 text-primary" />
+    </div>
+  );
+};
+
 const Developers = () => {
   const { i18n, t } = useTranslation('developers');
   const [developers, setDevelopers] = useState<Developer[]>([]);
@@ -105,17 +176,11 @@ const Developers = () => {
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            {developer.logoUrl ? (
-              <img 
-                src={developer.logoUrl} 
-                alt={developer.name}
-                className="w-12 h-12 rounded-lg object-cover"
-              />
-            ) : (
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Construction className="h-6 w-6 text-primary" />
-              </div>
-            )}
+            <DeveloperLogo
+              developerId={developer.id}
+              developerName={developer.name}
+              size="w-12 h-12"
+            />
             <div>
               <CardTitle className="text-lg font-semibold">{developer.name}</CardTitle>
               <div className="flex items-center space-x-2 mt-1">

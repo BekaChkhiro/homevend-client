@@ -145,6 +145,8 @@
       "fireSystem": "Fire Safety System",
       "mainDoorLock": "Main Door Lock",
       "maintenance": "Technical Maintenance"
-    }
+    },
+    "noImages": "No Images Available",
+    "noImagesDescription": "Images for this project have not been uploaded yet"
   }
 }

@@ -34,6 +34,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface UniversalImageUploadProps {
   entityType: EntityType;
@@ -56,6 +57,7 @@ const SortableImageItem: React.FC<{
   onSetPrimary: () => void;
   showPrimary: boolean;
 }> = ({ image, onDelete, onSetPrimary, showPrimary }) => {
+  const { t } = useTranslation('imageUpload');
   const {
     attributes,
     listeners,
@@ -92,7 +94,7 @@ const SortableImageItem: React.FC<{
       {showPrimary && image.isPrimary && (
         <div className="absolute top-2 right-2 z-10">
           <div className="bg-yellow-500 text-white text-xs px-2 py-1 rounded">
-            Primary
+            {t('universal.upload.primary')}
           </div>
         </div>
       )}
@@ -139,6 +141,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
   showCaptions = false,
   onImagesChange,
 }) => {
+  const { t } = useTranslation('imageUpload');
   const {
     images,
     uploading,
@@ -189,7 +192,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
   });
 
   const handleDelete = async (imageId: number) => {
-    if (confirm('Are you sure you want to delete this image?')) {
+    if (confirm(t('universal.upload.confirmDelete'))) {
       console.log('Attempting to delete image with ID:', imageId);
       console.log('Entity type:', entityType, 'Entity ID:', entityId);
       const success = await deleteImage(imageId);
@@ -200,7 +203,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
         onImagesChange?.(remainingImages);
       } else {
         console.error('Failed to delete image');
-        alert('Failed to delete image. Please try again.');
+        alert(t('universal.errors.deleteFailed'));
       }
     }
   };
@@ -239,17 +242,17 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
           )}
           
           {isDragActive ? (
-            <p className="text-lg">Drop the files here...</p>
+            <p className="text-lg">{t('universal.upload.dropFiles')}</p>
           ) : (
             <>
               <p className="text-lg mb-2">
-                Drag & drop files here, or click to select
+                {t('universal.upload.dragDrop')}
               </p>
               <p className="text-sm text-gray-500">
-                {maxFiles - images.length} of {maxFiles} slots available
+                {t('universal.upload.slotsAvailable', { available: maxFiles - images.length, maxFiles })}
               </p>
               <p className="text-xs text-gray-400 mt-2">
-                Max {maxSize}MB per file
+                {t('universal.upload.maxFileSize', { maxSize })}
               </p>
             </>
           )}
@@ -259,7 +262,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
       {/* Upload Progress */}
       {Object.keys(uploadProgress).length > 0 && (
         <Card className="p-4">
-          <h4 className="font-medium mb-3">Uploading...</h4>
+          <h4 className="font-medium mb-3">{t('universal.upload.uploading')}</h4>
           {Object.entries(uploadProgress).map(([fileName, progress]) => (
             <div key={fileName} className="mb-2">
               <div className="flex justify-between text-sm mb-1">
@@ -278,7 +281,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
           <div className="flex items-start space-x-2">
             <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
             <div className="flex-1">
-              <h4 className="font-medium text-red-900 mb-1">Upload Errors</h4>
+              <h4 className="font-medium text-red-900 mb-1">{t('universal.upload.uploadErrors')}</h4>
               <ul className="text-sm text-red-700 space-y-1">
                 {errors.map((error, index) => (
                   <li key={index}>{error}</li>
@@ -290,7 +293,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
                 onClick={clearErrors}
                 className="mt-2"
               >
-                Clear errors
+                {t('universal.upload.clearErrors')}
               </Button>
             </div>
           </div>
@@ -301,7 +304,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
       {images.length > 0 && (
         <Card className="p-4">
           <h4 className="font-medium mb-3">
-            Uploaded Files ({images.length}/{maxFiles})
+            {t('universal.upload.uploadedFiles', { count: images.length, maxFiles })}
           </h4>
           <DndContext
             sensors={sensors}
@@ -332,7 +335,7 @@ export const UniversalImageUpload: React.FC<UniversalImageUploadProps> = ({
       {images.length === 0 && !uploading && (
         <Card className="p-8 text-center text-gray-500">
           <ImageIcon className="mx-auto h-12 w-12 mb-4 text-gray-300" />
-          <p>No files uploaded yet</p>
+          <p>{t('universal.upload.noFilesUploaded')}</p>
         </Card>
       )}
     </div>

@@ -359,8 +359,7 @@ export const AddProject: React.FC = () => {
 
 
       toast({
-        title: t('projectForm.success'),
-        description: t('projectForm.success.created'),
+        title: t('projectForm.success.created'),
       });
 
       navigate(getLanguageUrl('/dashboard', i18n.language));

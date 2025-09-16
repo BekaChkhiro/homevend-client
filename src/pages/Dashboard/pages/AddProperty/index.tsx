@@ -346,7 +346,7 @@ export const AddProperty = () => {
               
               toast({
                 title: t('common.success'),
-                description: `Property created and ${uploadResult.images?.length || 0} images uploaded successfully!`,
+                description: t('addProperty.propertyCreatedWithImages', { count: uploadResult.images?.length || 0 }),
               });
             } else {
               const errorResult = await uploadResponse.json().catch(() => ({ error: 'Upload failed' }));
@@ -357,8 +357,8 @@ export const AddProperty = () => {
               }, 2000);
               
               toast({
-                title: 'Property Created',
-                description: `Property created successfully, but image upload failed: ${errorResult.error || 'Unknown error'}`,
+                title: t('addProperty.propertyCreated'),
+                description: t('addProperty.propertyCreatedUploadFailed', { error: errorResult.error || 'Unknown error' }),
                 variant: "destructive",
               });
             }
@@ -369,8 +369,8 @@ export const AddProperty = () => {
             }, 2000);
             
             toast({
-              title: 'Property Created',
-              description: `Property created successfully, but image upload failed: ${uploadError}`,
+              title: t('addProperty.propertyCreated'),
+              description: t('addProperty.propertyCreatedUploadFailed', { error: uploadError }),
               variant: "destructive",
             });
           }
@@ -495,7 +495,7 @@ export const AddProperty = () => {
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                 {pendingImages.length > 0 ? 
-                  'Creating property and uploading images...' : 
+                  t('addProperty.creatingPropertyUploading') :
                   t('addProperty.submitting')
                 }
               </>
