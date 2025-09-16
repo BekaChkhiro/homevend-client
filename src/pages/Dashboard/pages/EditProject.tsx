@@ -310,7 +310,7 @@ export const EditProject: React.FC = () => {
       }
 
       toast({
-        title: t('projectForm.success.updated'),
+        title: t('projectForm.succesfully.updated'),
       });
 
       navigate('/dashboard');
