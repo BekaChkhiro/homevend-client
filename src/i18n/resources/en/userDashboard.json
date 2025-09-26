@@ -478,6 +478,24 @@
     }
   },
   "addPropertyForm": {
+    "contact": {
+      "title": "Contact Information",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "phone": "Phone Number",
+      "phoneExample": "Example: +995 555 123 456"
+    },
+    "description": {
+      "title": "Property Description",
+      "subtitle": "Provide detailed property description",
+      "georgian": "Georgian",
+      "english": "English",
+      "russian": "Russian",
+      "georgianPlaceholder": "Write description in Georgian...",
+      "englishPlaceholder": "Write description in English...",
+      "russianPlaceholder": "Write description in Russian...",
+      "tip": "A detailed description will help attract more interest from potential buyers"
+    },
     "basicInfo": {
       "title": "Basic Information",
       "subtitle": "Property Information",
