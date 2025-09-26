@@ -42,6 +42,7 @@ import { AdminManageProjectProperties } from "./pages/AdminDashboard/components/
 import AdminDistricts from "./pages/AdminDashboard/pages/Districts";
 import AdminSettings from "./pages/AdminDashboard/pages/Settings";
 import AdminServicePricing from "./pages/AdminDashboard/pages/ServicePricing";
+import AdminTermsConditions from "./pages/AdminDashboard/pages/TermsConditions";
 import { AddProperty } from "./pages/Dashboard/pages/AddProperty";
 import { EditProperty } from "./pages/Dashboard/pages/EditProperty";
 import { AddProject } from "./pages/Dashboard/pages/AddProject";
@@ -135,6 +136,7 @@ const App = () => (
                 <Route path="districts" element={<AdminDistricts />} />
                 <Route path="service-pricing" element={<AdminServicePricing />} />
                 <Route path="settings" element={<AdminSettings />} />
+                <Route path="terms-conditions" element={<AdminTermsConditions />} />
               </Route>
             </Route>
             

@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart3, Users, Home, Monitor, MapPin, DollarSign, Building, FolderOpen } from "lucide-react";
+import { BarChart3, Users, Home, Monitor, MapPin, DollarSign, Building, FolderOpen, FileText } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -69,12 +69,19 @@ export const AdminSidebarMenu: React.FC = () => {
       icon: <MapPin className="h-5 w-5" />,
       category: "data"
     },
-    { 
-      id: "service-pricing", 
-      path: "admin/service-pricing", 
-      labelKey: "navigation.menu.servicePricing", 
+    {
+      id: "service-pricing",
+      path: "admin/service-pricing",
+      labelKey: "navigation.menu.servicePricing",
       icon: <DollarSign className="h-5 w-5" />,
       category: "data"
+    },
+    {
+      id: "terms-conditions",
+      path: "admin/terms-conditions",
+      labelKey: "navigation.menu.termsConditions",
+      icon: <FileText className="h-5 w-5" />,
+      category: "system"
     },
   ];
 
@@ -82,6 +89,7 @@ export const AdminSidebarMenu: React.FC = () => {
   const analyticsItems = menuItems.filter(item => item.category === "analytics");
   const contentItems = menuItems.filter(item => item.category === "content");
   const dataItems = menuItems.filter(item => item.category === "data");
+  const systemItems = menuItems.filter(item => item.category === "system");
   const uncategorizedItems = menuItems.filter(item => !item.category);
 
   // Check if path is active or is a sub-path (considering language prefix)
@@ -147,6 +155,7 @@ export const AdminSidebarMenu: React.FC = () => {
       {analyticsItems.length > 0 && renderCategory("navigation.categories.analytics", analyticsItems)}
       {contentItems.length > 0 && renderCategory("navigation.categories.content", contentItems)}
       {dataItems.length > 0 && renderCategory("navigation.categories.data", dataItems)}
+      {systemItems.length > 0 && renderCategory("navigation.categories.system", systemItems)}
       {uncategorizedItems.length > 0 && uncategorizedItems.map(renderMenuItem)}
     </div>
   );

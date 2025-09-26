@@ -1,9 +1,188 @@
+import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { termsApi } from "@/lib/api";
+
+interface TermsSection {
+  id: string;
+  order: number;
+  headerKa: string;
+  headerEn: string;
+  headerRu: string;
+  contentKa: string;
+  contentEn: string;
+  contentRu: string;
+}
 
 const TermsAndConditions = () => {
+  const { i18n } = useTranslation();
+  const [sections, setSections] = useState<TermsSection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  useEffect(() => {
+    fetchTermsContent();
+  }, [i18n.language]);
+
+  const fetchTermsContent = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await termsApi.getActiveTerms(i18n.language);
+
+      if (data && data.sections) {
+        // Sort sections by order
+        const sortedSections = [...data.sections].sort((a, b) =>
+          (a.order || 0) - (b.order || 0)
+        );
+        setSections(sortedSections);
+
+        if (data.updatedAt) {
+          setLastUpdated(new Date(data.updatedAt));
+        }
+      } else {
+        // If no content from API, use default sections
+        setSections(getDefaultSections());
+      }
+    } catch (err) {
+      console.error('Error fetching terms and conditions:', err);
+      setError('Failed to load terms and conditions');
+      // Fall back to default content on error
+      setSections(getDefaultSections());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getDefaultSections = (): TermsSection[] => {
+    return [
+      {
+        id: '1',
+        order: 0,
+        headerKa: 'ჩვენს შესახებ',
+        headerEn: 'About Us',
+        headerRu: 'О нас',
+        contentKa: `შპს „ლარჯ ჰოუმ 2025" ს/ნ 405780757
+მისამართი: ქ. თბილისი, ბერბუკის ქ. N7, მე-2 სადარბაზო; სართული 11, ბინა N54
+ელ. ფოსტა: info@homevend.ge
+ვებ-გვერდი: www.homevend.ge
+
+www.homevend.ge არის განცხადებების განსათავსებელი პლატფორმა, სადაც მომხმარებლები, სააგონტოები და დეველოპერები სრულიად უფასოდ შეძლებთ უძრავი ქონების სწრაფად და მარტივად გაყიდვის მიზნით განცხადებების განთავსებას.`,
+        contentEn: `LLC "Large Home 2025" ID: 405780757
+Address: Tbilisi, Berbuki St. N7, 2nd Building; Floor 11, Apt. N54
+Email: info@homevend.ge
+Website: www.homevend.ge
+
+www.homevend.ge is an advertising platform where users, agencies and developers can post real estate sale advertisements completely free of charge.`,
+        contentRu: `ООО "Лардж Хоум 2025" ИД: 405780757
+Адрес: г. Тбилиси, ул. Бербуки N7, 2-й подъезд; 11 этаж, кв. N54
+Эл. почта: info@homevend.ge
+Веб-сайт: www.homevend.ge
+
+www.homevend.ge - это платформа для размещения объявлений, где пользователи, агентства и застройщики могут совершенно бесплатно размещать объявления о продаже недвижимости.`
+      },
+      {
+        id: '2',
+        order: 1,
+        headerKa: 'განცხადებების განთავსება',
+        headerEn: 'Posting Advertisements',
+        headerRu: 'Размещение объявлений',
+        contentKa: 'განცხადების განსათავსებლად უნდა გაიაროთ მარტივი რეგისტრაცია ელ.ფოსტის, Google-ის ან Facebook-ის მეშვეობით. რეგისტრირებულ მომხმარებელს, სააგენტოს და დეველოპერს შესაძლებლობა აქვთ განათავსონ შეუზღუდავი რაოდენობის განცხადება.',
+        contentEn: 'To post an advertisement, you need to complete a simple registration via email, Google or Facebook. Registered users, agencies and developers can post unlimited number of advertisements.',
+        contentRu: 'Для размещения объявления необходимо пройти простую регистрацию через электронную почту, Google или Facebook. Зарегистрированные пользователи, агентства и застройщики могут размещать неограниченное количество объявлений.'
+      },
+      {
+        id: '3',
+        order: 2,
+        headerKa: 'საფასურები',
+        headerEn: 'Fees',
+        headerRu: 'Тарифы',
+        contentKa: 'პლატფორმაზე მომხმარებლის მიერ უძრავი ქონების გაყიდვის, გაქირავების, იჯარით გაცემის, გამოსყიდვის უფლებით ნასყიდობის, დაგირავებისა და დღიურად გაქირავების შესახებ ჩვეულებრივი განცხადების განთავსება უფასოა.',
+        contentEn: 'Posting regular advertisements for sale, rental, lease, mortgage, and daily rental of real estate on the platform is free.',
+        contentRu: 'Размещение обычных объявлений о продаже, аренде, лизинге, ипотеке и посуточной аренде недвижимости на платформе бесплатно.'
+      }
+    ];
+  };
+
+  const renderSectionContent = (section: TermsSection) => {
+    const header = i18n.language === 'ka' ? section.headerKa :
+                   i18n.language === 'ru' ? section.headerRu :
+                   section.headerEn;
+    const content = i18n.language === 'ka' ? section.contentKa :
+                    i18n.language === 'ru' ? section.contentRu :
+                    section.contentEn;
+
+    if (!header && !content) return null;
+
+    return (
+      <section key={section.id} className="mb-8">
+        {header && (
+          <h2 className="text-xl font-semibold mb-4 text-foreground">
+            {header}
+          </h2>
+        )}
+        {content && (
+          <div className="space-y-3">
+            {content.split('\n').map((paragraph, index) => {
+              if (paragraph.trim() === '') return null;
+
+              // Check if it's a list item
+              if (paragraph.startsWith('- ') || paragraph.startsWith('• ')) {
+                return (
+                  <li key={index} className="ml-6 text-muted-foreground">
+                    {paragraph.substring(2)}
+                  </li>
+                );
+              }
+
+              return (
+                <p key={index} className="text-muted-foreground leading-relaxed">
+                  {paragraph}
+                </p>
+              );
+            })}
+          </div>
+        )}
+        {section.order < sections.length - 1 && (
+          <Separator className="my-8" />
+        )}
+      </section>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 pt-32 pb-8 max-w-5xl">
+          <Card className="border-0 shadow-lg">
+            <CardHeader className="pb-4">
+              <Skeleton className="h-8 w-64" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="h-6 w-48" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -11,148 +190,44 @@ const TermsAndConditions = () => {
         <Card className="border-0 shadow-lg">
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl lg:text-3xl font-bold text-primary">
-              წესები და პირობები
+              {i18n.language === 'ka' ? 'წესები და პირობები' :
+               i18n.language === 'ru' ? 'Правила и условия' :
+               'Terms and Conditions'}
             </CardTitle>
+            {lastUpdated && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {i18n.language === 'ka' ? 'ბოლო განახლება: ' :
+                 i18n.language === 'ru' ? 'Последнее обновление: ' :
+                 'Last updated: '}
+                {lastUpdated.toLocaleDateString(i18n.language === 'ka' ? 'ka-GE' :
+                                                i18n.language === 'ru' ? 'ru-RU' :
+                                                'en-US')}
+              </p>
+            )}
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none dark:prose-invert">
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">ჩვენს შესახებ</h2>
-              <div className="space-y-2 text-muted-foreground">
-                <p>შპს „ლარჯ ჰოუმ 2025" ს/ნ 405780757</p>
-                <p>მისამართი: ქ. თბილისი, ბერბუკის ქ. N7, მე-2 სადარბაზო; სართული 11, ბინა N54</p>
-                <p>ელ. ფოსტა: info@homevend.ge</p>
-                <p>ვებ-გვერდი: www.homevend.ge</p>
-              </div>
-              <p className="mt-4 text-muted-foreground leading-relaxed">
-                www.homevend.ge არის განცხადებების განსათავსებელი პლატფორმა, სადაც მომხმარებლები, სააგონტოები და დეველოპერები სრულიად უფასოდ შეძლებთ უძრავი ქონების სწრაფად და მარტივად გაყიდვის მიზნით განცხადებების განთავსებას. ასევე, სურვილის შემთხვევაში შესაძლებლობა გექნებათ ისარგებლოთ ფასიანი VIP განცხადებების განთავსების სერვისით. პლატფორმაზე თქვენი ბიზნესისა თუ საქმიანობის პოპულარიზაციის მიზნით შეგიძლიათ განათავსოთ რეკლამა.
-              </p>
-            </section>
+            {error && (
+              <Alert className="mb-6">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  {error}
+                </AlertDescription>
+              </Alert>
+            )}
 
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">განცხადებების განთავსება</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                განცხადების განსათავსებლად უნდა გაიაროთ მარტივი რეგისტრაცია ელ.ფოსტის, Google-ის ან Facebook-ის მეშვეობით. რეგისტრირებულ მომხმარებელს, სააგენტოს და დეველოპერს შესაძლებლობა აქვთ განათავსონ შეუზღუდავი რაოდენობის განცხადება. განცხადების შევსება ხდება პლატფორმაზე არსებული ფორმის დახმარებით.
-              </p>
-              <p className="mt-3 text-muted-foreground leading-relaxed">
-                საიტზე განთავსებული არათემატური ან/და პლატფორმის სპეციფიკიდან გამომდინარე შეუსაბამო განცხადება წაიშლება საიტის ადმინისტრაციის მიერ.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">საფასურები</h2>
-              <p className="text-muted-foreground mb-4">
-                პლატფორმაზე მომხმარებლის მიერ უძრავი ქონების გაყიდვის, გაქირავების, იჯარით გაცემის, გამოსყიდვის უფლებით ნასყიდობის, დაგირავებისა და დღიურად გაქირავების შესახებ ჩვეულებრივი განცხადების განთავსება უფასოა.
-              </p>
-              
-              <h3 className="text-lg font-semibold mb-3 text-foreground">სააგენტოები</h3>
-              <p className="text-muted-foreground mb-4">
-                რეგისტრაციისას უძრავი ქონების სააგენტო ვალდებულია მონიშნოს ღილაკი „სააგენტო" და შეავსოს დამატებითი ინფორმაცია, რომელიც სავალდებულოა უძრავი ქონების სააგენტოდ რეგისტრაციისათვის. სააგენტოდ რეგისტრირებული პირების შესახებ ინფორმაცია აისახება სააგენტოების განყოფილებაში. სააგენტოების მიერ განცხადებების განთავსება უფასოა.
-              </p>
-
-              <h3 className="text-lg font-semibold mb-3 text-foreground">დეველოპერები</h3>
-              <p className="text-muted-foreground mb-4">
-                რეგისტრაციისას დეველოპერი ვალდებულია მონიშნოს ღილაკი „დეველოპერი" და შეავსოს დამატებითი ინფორმაცია, რომელიც სავალდებულოა დეველოპერად რეგისტრაციისათვის. დეველოპერად რეგისტრირებული პირების შესახებ ინფორმაცია აისახება დეველოპერების განყოფილებაში. დეველოპერების მიერ განცხადებების განთავსება უფასოა.
-              </p>
-
-              <h3 className="text-lg font-semibold mb-3 text-foreground">VIP განცხადებები</h3>
-              <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-muted-foreground mb-3">
-                  რეგისტრირებულ მომხმარებელს, სააგენტოსა და დეველოპერს შესაძლებლობა აქვს პლატფორმაზე ჩვეულებრივი განცხადების გარდა განათავსოს შემდეგი ტიპის განცხადება:
+            {sections.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
+                  {i18n.language === 'ka' ? 'წესები და პირობები მალე დაემატება' :
+                   i18n.language === 'ru' ? 'Правила и условия скоро будут добавлены' :
+                   'Terms and conditions will be added soon'}
                 </p>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex justify-between">
-                    <span>• Super VIP</span>
-                    <span className="font-semibold">1 დღე - 8 ლარი</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>• VIP +</span>
-                    <span className="font-semibold">1 დღე - 6 ლარი</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>• VIP</span>
-                    <span className="font-semibold">1 დღე - 2 ლარი</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>• ფერის დამატება</span>
-                    <span className="font-semibold">1 დღე - 0.5 ლარი</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>• ავტომატური განახლება</span>
-                    <span className="font-semibold">1 დღე - 0.5 ლარი</span>
-                  </li>
-                </ul>
               </div>
-              <p className="mt-4 text-muted-foreground text-sm">
-                მომხმარებლის, სააგენტოსა და დეველოპერის მიერ VIP განცხადების განთავსების საფასურის გადახდისა და განცხადების განთავსების შემდეგ განცხადება აქტიური იქნება VIP სტატუსით გადახდილი თანხის შესაბამისად. შემდგომი გადახდის განუხორციელებლობის შემთხვევაში განცხადება ავტომატურად გადავა ჩვეულებრივ (უფასო) განცხადებებში. პლატფორმის მიერ ჩვეულებრივი განცხადება ავტომატურად წაიშლება მისი განთავსებიდან 90 დღეში, იმ შემთხვევაში თუ მომხმარებლის მიერ არ მოხდება მის მიერვე განთავსებული განცხადების წაშლა.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">თანხის დაბრუნება</h2>
-              <p className="text-muted-foreground">
-                მომხმარებელს, სააგენტოსა და დეველოპერს შესაძლებლობა აქვს გადახდილი თანხის (მხედველობაშია გაუხარჯავი თანხა) უკან დაბრუნება მოითხოვოს გადახდიდან 12 საათის განმავლობაში. მოთხოვნილ თანხას დააკლდება საბანკო მომსახურების 2%.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">საიტის ადმინისტრაციის პასუხისმგებლობა</h2>
-              <p className="text-muted-foreground">
-                საიტის ადმინისტრაცია არ არის პასუხისმგებელი პლატფორმაზე განთავსებულ განცხადებებში მოცემული ინფორმაციის ნამდვილობაზე. საიტის ადმინისტრაცია არ ახორციელების უძრავი ქონების რეალიზაციას, გაქირავებას, იჯარით გაცემას, დაგირავებას, გამოსყიდვის უფლებით გასხვისებასა და დღიურად გაქირავებას. შესაბამისად, იგი პასუხს არ აგებს მათ მდგომარეობაზე. კომუნიკაცია ხორციელდება განცხადების განმთავსებელ პირსა და პოტენციურ მყიდველს შორის განცხადებაში მითითებულ საკონტაქტო მონაცემებზე და გარიგებაც ამ პირებს შორის დგება.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">მომხმარებლის ანგარიშის გაუქმება</h2>
-              <p className="text-muted-foreground">
-                რეგისტრირებულ მომხმარებელს, სააგენტოსა და დეველოპერს სურვილის შემთხვევაში შესაძლებლობა აქვს გააუქმოს საკუთარი ანგარიში. ამისათვის მომხმარებელი, სააგენტო, დეველოპერი საიტზე მითითებულ ელ. ფოსტის მეშვეობით აფიქსირებს საკუთარ სურვილს. საიტის ადმინისტრაცია შესაბამისი ელექტრონული წერილის მიღების შემთხვევაში გააუქმებს მომხმარებლის ანგარიშს.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">რეკლამის განთავსება</h2>
-              <p className="text-muted-foreground">
-                პლატფორმაზე ნებისმიერ ფიზიკურ თუ იურიდიულ პირს შესაძლებლობა აქვს განათავსოს რეკლამა საკუთარი ბიზნესისა თუ საქმიანობის პოპულარიზაციის მიზნით. რეკლამის განთავსების მსურველმა საიტის ადმინისტრაციას უნდა წარმოუდგინოს სარეკლამო ბანერი, რომელიც შესაბამისობაში უნდა იყოს „რეკლამის შესახებ" საქართველოს კანონის მოთხოვნებთან. ადმინისტრაცია იტოვებს უფლებას უარი განაცხადოს კანონთან შეუსაბამო რეკლამის განთავსებაზე. დეტალებისთვის იხილეთ რეკლამის შესახებ ინფორმაცია.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">კონფიდენციალობა</h2>
-              <p className="text-muted-foreground">
-                პლატფორმა კანონის შესაბამისად იცავს თქვენს პერსონალურ მონაცემებს, რათა ისინი არ გახდეს მესამე პირთათვის ხელმისაწვდომი. პლატფორმაზე განთავსებულ განცხადებაში მითითებული თქვენი სახელისა და საკონტაქტო ტელეფონის ნომრის დაცვაზე პლატფორმა პასუხს არ აგებს.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">ცვლილებების შეტანა</h2>
-              <p className="text-muted-foreground">
-                პლატფორმა უფლებამოსილია ნებისმიერ დროს ცალმხრივად, პლატფორმაზე გამოქვეყნების გზით, შეიტანოს ცვლილებები წესებსა და პირობებში მომხმარებლის, სააგენტოსა და დეველოპერის მხრიდან დამატებითი თანხმობის გარეშე. ცვლილებების განხორციელების შემდგომ პლატფორმის გამოყენება მიიჩნევა თქვენი მხრიდან ცვლილებებზე გაცხადებულ თანხმობად.
-              </p>
-            </section>
-
-            <Separator className="my-8" />
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">დასკვნითი დებულებები</h2>
-              <p className="text-muted-foreground">
-                წესებსა და პირობებზე თანხმობით თქვენ ადასტურებთ, რომ ხართ ქმედუნარიანი, 18 წელს მიღწეული ფიზიკური პირი ან საქართველოს კანონმდებლობის შესაბამისად შექმნილი იურიდიული პირი და ეთანხმებით წინამდებარე წესებს და პირობებს.
-              </p>
-            </section>
+            ) : (
+              <div>
+                {sections.map((section) => renderSectionContent(section))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </main>

@@ -458,6 +458,36 @@ export const adminApi = {
   deleteProject: async (id: string) => {
     const response = await apiClient.delete(`/admin/projects/${id}`);
     return response.data;
+  },
+
+  // Terms and Conditions management
+  getTermsConditions: async () => {
+    const response = await apiClient.get('/admin/terms-conditions');
+    return response.data.data;
+  },
+
+  createTermsConditions: async (termsData: any) => {
+    const response = await apiClient.post('/admin/terms-conditions', termsData);
+    return response.data.data;
+  },
+
+  updateTermsConditions: async (id: string, termsData: any) => {
+    const response = await apiClient.put(`/admin/terms-conditions/${id}`, termsData);
+    return response.data.data;
+  },
+
+  deleteTermsConditions: async (id: string) => {
+    const response = await apiClient.delete(`/admin/terms-conditions/${id}`);
+    return response.data;
+  }
+};
+
+// Public Terms and Conditions API
+export const termsApi = {
+  getActiveTerms: async (lang?: string) => {
+    const params = lang ? { lang } : {};
+    const response = await publicApiClient.get('/terms-conditions', { params });
+    return response.data.data;
   }
 };
 

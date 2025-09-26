@@ -877,5 +877,47 @@
       "targetUrlRequired": "Target URL is required",
       "endDateAfterStart": "End date must be after start date"
     }
+  },
+  "termsConditions": {
+    "title": "Terms & Conditions Management",
+    "subtitle": "Manage terms and conditions sections in multiple languages",
+    "version": "Version",
+    "lastUpdated": "Last updated",
+    "section": "Section",
+    "sectionHeader": "Section Header",
+    "sectionContent": "Section Content",
+    "buttons": {
+      "preview": "Preview",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "addSection": "Add Section"
+    },
+    "preview": {
+      "title": "Preview Terms & Conditions",
+      "description": "This is how the terms will appear to users"
+    },
+    "form": {
+      "title": "Terms & Conditions Sections",
+      "description": "Add and manage sections for your terms and conditions in each language",
+      "georgianContent": "Georgian Content",
+      "englishContent": "English Content",
+      "russianContent": "Russian Content",
+      "help": "Use # for headers, ## for subheaders, and blank lines for paragraphs",
+      "placeholders": {
+        "georgian": "Enter terms and conditions in Georgian...",
+        "english": "Enter terms and conditions in English...",
+        "russian": "Enter terms and conditions in Russian..."
+      }
+    },
+    "empty": {
+      "title": "No sections yet",
+      "description": "Start by adding your first section"
+    },
+    "messages": {
+      "errorLoading": "Failed to load terms and conditions",
+      "errorSaving": "Failed to save terms and conditions",
+      "saved": "Terms and conditions saved successfully",
+      "unsavedChanges": "You have unsaved changes"
+    }
   }
 }
