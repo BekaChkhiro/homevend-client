@@ -541,12 +541,77 @@ export const BalancePage = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const paymentStatus = urlParams.get('payment');
 
-  if (paymentStatus === 'success' && !balanceData) {
+  if (paymentStatus === 'success') {
+    // Auto-redirect timer
+    const [countdown, setCountdown] = useState(5);
+
+    React.useEffect(() => {
+      const timer = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            window.location.href = '/dashboard';
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }, []);
+
     return (
-      <div className="w-full flex justify-center items-center min-h-[400px]">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Processing payment verification...</p>
+      <div className="w-full flex flex-col items-center justify-center min-h-[500px] p-6">
+        <div className="max-w-md w-full text-center bg-white rounded-lg shadow-lg p-8 border">
+          {/* Success Icon */}
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="w-10 h-10 text-green-600" />
+          </div>
+
+          {/* Title */}
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            🎉 Payment Successful!
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-gray-600 mb-4">
+            Your balance has been updated. Thank you for your payment!
+          </p>
+
+          {/* Countdown */}
+          <div className="bg-blue-50 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-center mb-2">
+              <Loader2 className="h-5 w-5 animate-spin mr-2 text-blue-500" />
+              <span className="text-sm text-gray-600">Verifying payment...</span>
+            </div>
+            <p className="text-sm font-medium text-blue-700">
+              Redirecting to dashboard in {countdown} seconds
+            </p>
+          </div>
+
+          {/* Manual buttons */}
+          <div className="space-y-3">
+            <Button
+              onClick={() => window.location.href = '/dashboard'}
+              className="w-full"
+              size="lg"
+            >
+              ✅ Go to Dashboard Now
+            </Button>
+
+            <Button
+              onClick={() => window.location.href = '/dashboard/balance'}
+              variant="outline"
+              className="w-full"
+              size="lg"
+            >
+              💰 View Balance Page
+            </Button>
+          </div>
+
+          {/* Help text */}
+          <p className="text-xs text-gray-500 mt-4">
+            Click any button above to navigate manually
+          </p>
         </div>
       </div>
     );
@@ -758,23 +823,37 @@ export const BalancePage = () => {
           <DialogDescription className="text-base leading-relaxed">
             {paymentStatusDialog.message}
           </DialogDescription>
-          {paymentStatusDialog.type !== 'processing' && (
-            <div className="flex justify-end gap-2 mt-4">
-              {paymentStatusDialog.type === 'success' && paymentStatusDialog.newBalance && (
-                <Button
-                  variant="outline"
-                  onClick={() => fetchBalance(true)}
-                  disabled={balanceRefreshing}
-                >
-                  {balanceRefreshing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-                  {t('payment.refreshBalance')}
-                </Button>
-              )}
-              <Button onClick={() => setPaymentStatusDialog({ ...paymentStatusDialog, show: false })}>
-                {paymentStatusDialog.type === 'failed' ? t('payment.tryAgain') : t('payment.ok')}
+          <div className="flex justify-end gap-2 mt-4">
+            {paymentStatusDialog.type === 'success' && paymentStatusDialog.newBalance && (
+              <Button
+                variant="outline"
+                onClick={() => fetchBalance(true)}
+                disabled={balanceRefreshing}
+              >
+                {balanceRefreshing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+                {t('payment.refreshBalance')}
               </Button>
-            </div>
-          )}
+            )}
+
+            {/* Always show a "Go to Dashboard" button */}
+            <Button
+              onClick={() => window.location.href = '/dashboard'}
+              variant={paymentStatusDialog.type === 'success' ? 'default' : 'outline'}
+            >
+              {paymentStatusDialog.type === 'success' ? '✅ Go to Dashboard' :
+               paymentStatusDialog.type === 'failed' ? '❌ Back to Dashboard' :
+               '🏠 Go to Dashboard'}
+            </Button>
+
+            {paymentStatusDialog.type !== 'processing' && (
+              <Button
+                variant="ghost"
+                onClick={() => setPaymentStatusDialog({ ...paymentStatusDialog, show: false })}
+              >
+                Close
+              </Button>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>
