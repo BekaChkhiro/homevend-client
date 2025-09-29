@@ -241,7 +241,9 @@ export const BalancePage = () => {
     console.log('🔍 Current URL:', window.location.href);
 
     if (paymentStatus === 'success') {
-      // Show success dialog and refresh balance
+      console.log('🚀 Payment success detected! Starting immediate verification...');
+
+      // Immediately show processing dialog to prevent white screen
       setPaymentStatusDialog({
         show: true,
         type: 'processing',
@@ -249,14 +251,31 @@ export const BalancePage = () => {
         message: t('payment.paymentVerifying')
       });
 
+      // Ensure balanceData is set so component renders properly
+      if (!balanceData) {
+        setBalanceData({
+          balance: 0,
+          recentTransactions: [],
+          lastTopUp: null
+        });
+      }
+
       // Trigger immediate verification for recent payments (especially for Flitt)
       const triggerVerification = async () => {
         try {
           console.log('🔄 Triggering immediate Flitt payment verification...');
 
           // First get current user to get their ID for Flitt immediate verification
-          const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-          const userId = currentUser.id;
+          let userId = null;
+          try {
+            const storedUser = localStorage.getItem('user') || localStorage.getItem('currentUser');
+            if (storedUser) {
+              const currentUser = JSON.parse(storedUser);
+              userId = currentUser.id;
+            }
+          } catch (err) {
+            console.error('Error parsing user from localStorage:', err);
+          }
 
           if (userId) {
             // Call immediate Flitt verification endpoint
@@ -324,11 +343,32 @@ export const BalancePage = () => {
           }
         } catch (error) {
           console.error('Error triggering verification:', error);
+          // Even if verification fails, show a processing dialog to prevent white screen
+          setPaymentStatusDialog({
+            show: true,
+            type: 'processing',
+            title: t('payment.paymentStarted'),
+            message: t('payment.paymentVerifying')
+          });
+
+          // Fallback: redirect to dashboard after 6 seconds if verification fails
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 6000);
+
+          // Clear URL params
+          window.history.replaceState({}, '', window.location.pathname);
         }
       };
 
       // Trigger verification immediately
       triggerVerification();
+
+      // Safety fallback: If nothing happens after 15 seconds, redirect anyway
+      setTimeout(() => {
+        console.log('⏰ Safety timeout reached - redirecting to dashboard');
+        window.location.href = '/dashboard';
+      }, 15000);
 
       // Start polling for balance updates
       let pollCount = 0;
@@ -423,6 +463,21 @@ export const BalancePage = () => {
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading balance information...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Special handling for payment success page - ensure we always show content
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentStatus = urlParams.get('payment');
+
+  if (paymentStatus === 'success' && !balanceData) {
+    return (
+      <div className="w-full flex justify-center items-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Processing payment verification...</p>
         </div>
       </div>
     );
