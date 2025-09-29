@@ -232,20 +232,44 @@ export const BalancePage = () => {
         title: t('payment.paymentStarted'),
         message: t('payment.paymentVerifying')
       });
-      
+
+      // Trigger immediate verification for recent payments (especially for Flitt)
+      const triggerVerification = async () => {
+        try {
+          console.log('🔄 Triggering payment verification for user...');
+          // Use checkRecentPayments which is designed for when user returns from payment
+          const result = await balanceApi.checkRecentPayments();
+          console.log('✅ Payment verification result:', result);
+
+          // If any payments were completed, refresh balance immediately
+          if (result.balanceUpdated) {
+            console.log('🎉 Balance was updated! Refreshing...');
+            await fetchBalance();
+          }
+        } catch (error) {
+          console.error('Error triggering verification:', error);
+        }
+      };
+
+      // Trigger verification immediately
+      triggerVerification();
+
       // Start polling for balance updates
       let pollCount = 0;
-      const maxPolls = 12; // Poll for 1 minute (5 seconds * 12)
+      const maxPolls = 15; // Poll for longer - 75 seconds (5 seconds * 15)
       const originalBalance = balanceData?.balance || 0;
       
       const pollBalance = async () => {
         pollCount++;
+        console.log(`🔄 Poll attempt ${pollCount}/${maxPolls} - checking balance...`);
         try {
           const data = await balanceApi.getBalance();
-          
+          console.log(`💰 Current balance: ${data.balance}, Original: ${originalBalance}`);
+
           // Check if balance has been updated
           if (data.balance > originalBalance) {
             const increase = data.balance - originalBalance;
+            console.log(`🎉 Balance increased by ${increase}! Payment successful!`);
             setBalanceData(data);
             setPaymentStatusDialog({
               show: true,
