@@ -539,12 +539,17 @@ export const BalancePage = () => {
   }
 
 
-  // Check for payment status
+  // Check for payment status first (before checking balanceData)
   const urlParams = new URLSearchParams(window.location.search);
   const paymentStatus = urlParams.get('payment');
   const isPaymentSuccess = paymentStatus === 'success';
 
-  // Error fallback if balanceData failed to load
+  // Render payment success page immediately if payment=success
+  if (isPaymentSuccess) {
+    return <PaymentSuccessPage />;
+  }
+
+  // Error fallback if balanceData failed to load (only for normal pages)
   if (!balanceData) {
     return (
       <div className="w-full p-6">
@@ -563,11 +568,6 @@ export const BalancePage = () => {
         </div>
       </div>
     );
-  }
-
-  // Render payment success page or normal balance page
-  if (isPaymentSuccess) {
-    return <PaymentSuccessPage />;
   }
 
   return (
