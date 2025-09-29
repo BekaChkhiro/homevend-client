@@ -19,7 +19,76 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Loading indicator until React loads -->
+      <div id="initial-loader" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 9999;
+      ">
+        <div style="
+          width: 40px;
+          height: 40px;
+          border: 4px solid #f3f3f3;
+          border-top: 4px solid #3498db;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin-bottom: 20px;
+        "></div>
+        <p style="color: #666; font-family: Arial, sans-serif;">Loading...</p>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    </div>
+
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Force script loading and execution -->
+    <script>
+      // Force page to wait for React to mount
+      document.addEventListener('DOMContentLoaded', function() {
+        // Hide loader once React mounts
+        const checkReactMount = setInterval(() => {
+          const loader = document.getElementById('initial-loader');
+          if (loader && document.querySelector('[data-reactroot], .react-app')) {
+            loader.style.display = 'none';
+            clearInterval(checkReactMount);
+          }
+        }, 100);
+
+        // Fallback: hide loader after 5 seconds regardless
+        setTimeout(() => {
+          const loader = document.getElementById('initial-loader');
+          if (loader) {
+            loader.style.display = 'none';
+          }
+        }, 5000);
+      });
+
+      // Force refresh if page seems stuck (payment success detection)
+      if (window.location.search.includes('payment=success')) {
+        console.log('🚨 Payment success detected - ensuring page loads properly');
+        // Give React 2 seconds to load, then force refresh if still white screen
+        setTimeout(() => {
+          const loader = document.getElementById('initial-loader');
+          if (loader && loader.style.display !== 'none') {
+            console.log('🚨 Forcing page refresh due to loading timeout');
+            window.location.reload();
+          }
+        }, 2000);
+      }
+    </script>
   </body>
 </html>
