@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle } from "lucide-react";
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 interface PaymentSuccessPageProps {
   onComplete?: () => void;
@@ -11,10 +11,24 @@ interface PaymentSuccessPageProps {
 export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComplete }) => {
   const { t } = useTranslation('userDashboard');
   const { lang } = useParams<{ lang: string }>();
+  const location = useLocation();
   const [countdown, setCountdown] = useState(5);
 
-  // Get current language from URL or default to 'en'
-  const currentLang = lang || 'en';
+  // Extract language from URL path if not available in params
+  const getCurrentLanguage = () => {
+    if (lang) return lang;
+
+    // Extract from current URL path
+    const pathParts = location.pathname.split('/');
+    const possibleLang = pathParts[1];
+    if (['en', 'ge', 'ru'].includes(possibleLang)) {
+      return possibleLang;
+    }
+
+    return 'en'; // default fallback
+  };
+
+  const currentLang = getCurrentLanguage();
   const dashboardUrl = `/${currentLang}/dashboard`;
   const balanceUrl = `/${currentLang}/dashboard/balance`;
 
@@ -24,13 +38,22 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
     currentLang,
     dashboardUrl,
     balanceUrl,
-    countdown
+    countdown,
+    pathname: location.pathname,
+    search: location.search
   });
 
   useEffect(() => {
+    // Clear URL parameters immediately to clean up the URL
+    if (window.location.search.includes('payment=')) {
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, '', cleanUrl);
+    }
+
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
+          // Use window.location.href for reliable navigation
           window.location.href = dashboardUrl;
           return 0;
         }
@@ -42,7 +65,7 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
   }, [dashboardUrl]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center min-h-[500px] p-6">
+    <div className="w-full flex flex-col items-center justify-center min-h-[500px] p-6 bg-gray-50">
       <div className="max-w-md w-full text-center bg-white rounded-lg shadow-lg p-8 border">
         {/* Success Icon */}
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
