@@ -530,7 +530,18 @@ export const BalancePage = () => {
   // Check for payment status FIRST (before any loading checks)
   const urlParams = new URLSearchParams(window.location.search);
   const paymentStatus = urlParams.get('payment');
-  const isPaymentSuccess = paymentStatus === 'success';
+
+  // Also check for other possible Flitt parameters
+  const statusParam = urlParams.get('status');
+  const resultParam = urlParams.get('result');
+  const orderStatusParam = urlParams.get('order_status');
+
+  // Check multiple possible success indicators
+  const isPaymentSuccess = paymentStatus === 'success' ||
+                          statusParam === 'success' ||
+                          statusParam === 'approved' ||
+                          resultParam === 'success' ||
+                          orderStatusParam === 'approved';
 
   // Debug logging to see exactly what's happening
   console.log('🔍 BalancePage Debug Info:', {
@@ -538,15 +549,18 @@ export const BalancePage = () => {
     pathname: window.location.pathname,
     search: window.location.search,
     paymentStatus,
+    statusParam,
+    resultParam,
+    orderStatusParam,
     isPaymentSuccess,
     allParams: Object.fromEntries(urlParams.entries()),
     loading,
     providersLoading
   });
 
-  // Render payment success page immediately if payment=success (bypass all loading checks)
+  // Render payment success page immediately if any success indicator found
   if (isPaymentSuccess) {
-    console.log('🎉 Rendering PaymentSuccessPage because payment=success');
+    console.log('🎉 Rendering PaymentSuccessPage because payment success detected');
     return <PaymentSuccessPage />;
   }
 
