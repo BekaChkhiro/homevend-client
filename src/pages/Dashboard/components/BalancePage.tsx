@@ -264,12 +264,51 @@ export const BalancePage = () => {
             const immediateResult = await balanceApi.verifyFlittImmediate(userId);
             console.log('✅ Immediate Flitt verification result:', immediateResult);
 
-            // Check if any transactions were completed
+            // Check verification results
             const completedCount = immediateResult.results?.filter(r => r.status === 'completed').length || 0;
+            const failedCount = immediateResult.results?.filter(r => r.status === 'failed').length || 0;
+
             if (completedCount > 0) {
               console.log(`🎉 ${completedCount} Flitt payments completed! Refreshing balance...`);
               await fetchBalance();
+
+              // Show success message and redirect to dashboard
+              setPaymentStatusDialog({
+                show: true,
+                type: 'success',
+                title: t('payment.balanceSuccessfullyToppedUp'),
+                message: t('payment.paymentCompletedMessage') + ' ' + t('common.redirectingToDashboard', 'Redirecting to dashboard...')
+              });
+
+              // Redirect to dashboard after 4 seconds
+              setTimeout(() => {
+                window.location.href = '/dashboard';
+              }, 4000);
+
+              // Clear URL params
+              window.history.replaceState({}, '', window.location.pathname);
               return; // Skip general check if Flitt verification succeeded
+            }
+
+            if (failedCount > 0) {
+              console.log(`❌ ${failedCount} Flitt payments failed!`);
+
+              // Show failure message and redirect to dashboard
+              setPaymentStatusDialog({
+                show: true,
+                type: 'failed',
+                title: t('payment.paymentFailed'),
+                message: t('payment.paymentFailedMessage') + ' ' + t('common.redirectingToDashboard', 'Redirecting to dashboard...')
+              });
+
+              // Redirect to dashboard after 4 seconds
+              setTimeout(() => {
+                window.location.href = '/dashboard';
+              }, 4000);
+
+              // Clear URL params
+              window.history.replaceState({}, '', window.location.pathname);
+              return; // Skip general check since we handled the failure
             }
           }
 
@@ -319,10 +358,16 @@ export const BalancePage = () => {
               show: true,
               type: 'success',
               title: t('payment.balanceSuccessfullyToppedUp'),
-              message: t('payment.balanceUpdated', { amount: increase.toFixed(2), balance: data.balance.toFixed(2) }),
+              message: t('payment.paymentCompletedMessage') + ' ' + t('common.redirectingToDashboard', 'Redirecting to dashboard...'),
               amount: increase,
               newBalance: data.balance
             });
+
+            // Redirect to dashboard after 4 seconds
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 4000);
+
             window.history.replaceState({}, '', window.location.pathname);
             return;
           }
