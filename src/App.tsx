@@ -70,6 +70,16 @@ const DashboardRedirect = () => {
   const location = useLocation();
   const dashboardPath = location.pathname.replace('/dashboard', '');
   const fullPath = `/en/dashboard${dashboardPath}${location.search}`;
+
+  // Debug logging to see if Flitt redirects reach here
+  console.log('🚨 DashboardRedirect triggered:', {
+    originalPath: location.pathname,
+    originalSearch: location.search,
+    dashboardPath,
+    fullPath,
+    timestamp: new Date().toISOString()
+  });
+
   return <Navigate to={fullPath} replace />;
 };
 
