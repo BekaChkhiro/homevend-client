@@ -223,13 +223,38 @@ export const BalancePage = () => {
   useEffect(() => {
     fetchBalance();
     fetchPaymentProviders();
-    
+
     // Set up periodic balance refresh to catch webhook-updated payments
     const balanceRefreshInterval = setInterval(() => {
       fetchBalance();
     }, 30000); // Check every 30 seconds
-    
-    return () => clearInterval(balanceRefreshInterval);
+
+    // Add window event listener to detect when user returns from payment
+    const handlePopState = () => {
+      console.log('🔄 Navigation detected - checking for payment status');
+      const urlParams = new URLSearchParams(window.location.search);
+      const paymentStatus = urlParams.get('payment');
+      if (paymentStatus) {
+        console.log('🚀 Payment status detected after navigation:', paymentStatus);
+        // Force re-check by updating a state that triggers useEffect
+        window.dispatchEvent(new Event('payment-return'));
+      }
+    };
+
+    const handlePaymentReturn = () => {
+      console.log('🎯 Payment return event triggered');
+      // This will force the payment useEffect to run again
+      setBalanceRefreshing(prev => !prev);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('payment-return', handlePaymentReturn);
+
+    return () => {
+      clearInterval(balanceRefreshInterval);
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('payment-return', handlePaymentReturn);
+    };
   }, []);
 
   // Check URL for payment success/failure and refresh balance
@@ -239,6 +264,7 @@ export const BalancePage = () => {
 
     console.log('🔍 Payment status from URL:', paymentStatus);
     console.log('🔍 Current URL:', window.location.href);
+    console.log('🔍 useEffect triggered due to URL change');
 
     if (paymentStatus === 'success') {
       console.log('🚀 Payment success detected! Starting immediate verification...');
@@ -265,20 +291,51 @@ export const BalancePage = () => {
         try {
           console.log('🔄 Triggering immediate Flitt payment verification...');
 
-          // First get current user to get their ID for Flitt immediate verification
+          // First get current user to get their ID for Flitt immediate verification with retry
           let userId = null;
-          try {
-            const storedUser = localStorage.getItem('user') || localStorage.getItem('currentUser');
-            if (storedUser) {
-              const currentUser = JSON.parse(storedUser);
-              userId = currentUser.id;
+          let retryCount = 0;
+          const maxRetries = 3;
+
+          const getUserId = () => {
+            try {
+              // Try multiple localStorage keys
+              const storedUser = localStorage.getItem('user') ||
+                               localStorage.getItem('currentUser') ||
+                               localStorage.getItem('authUser');
+
+              if (storedUser) {
+                const currentUser = JSON.parse(storedUser);
+                return currentUser.id || currentUser.userId;
+              }
+
+              // Also try token-based lookup if available
+              const token = localStorage.getItem('token');
+              if (token) {
+                console.log('🔍 User data not found, but token exists - will proceed with general verification');
+                return 'token-based'; // Special marker to indicate we should try general verification
+              }
+
+              return null;
+            } catch (err) {
+              console.error('Error parsing user from localStorage:', err);
+              return null;
             }
-          } catch (err) {
-            console.error('Error parsing user from localStorage:', err);
+          };
+
+          // Retry logic for user ID detection
+          while (!userId && retryCount < maxRetries) {
+            userId = getUserId();
+            if (!userId) {
+              retryCount++;
+              console.log(`🔄 User ID not found, retry ${retryCount}/${maxRetries}`);
+              await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms before retry
+            }
           }
 
-          if (userId) {
-            // Call immediate Flitt verification endpoint
+          console.log(`🎯 User ID detection result: ${userId} (after ${retryCount} retries)`);
+
+          if (userId && userId !== 'token-based') {
+            // Call immediate Flitt verification endpoint with actual user ID
             console.log(`🎯 Calling immediate Flitt verification for user ${userId}...`);
             const immediateResult = await balanceApi.verifyFlittImmediate(userId);
             console.log('✅ Immediate Flitt verification result:', immediateResult);
@@ -299,13 +356,14 @@ export const BalancePage = () => {
                 message: t('payment.paymentCompletedMessage') + ' ' + t('common.redirectingToDashboard', 'Redirecting to dashboard...')
               });
 
+              // Clear URL params BEFORE redirect to clean up URL
+              window.history.replaceState({}, '', window.location.pathname);
+
               // Redirect to dashboard after 4 seconds
               setTimeout(() => {
                 window.location.href = '/dashboard';
               }, 4000);
 
-              // Clear URL params
-              window.history.replaceState({}, '', window.location.pathname);
               return; // Skip general check if Flitt verification succeeded
             }
 
@@ -320,13 +378,14 @@ export const BalancePage = () => {
                 message: t('payment.paymentFailedMessage') + ' ' + t('common.redirectingToDashboard', 'Redirecting to dashboard...')
               });
 
+              // Clear URL params BEFORE redirect to clean up URL
+              window.history.replaceState({}, '', window.location.pathname);
+
               // Redirect to dashboard after 4 seconds
               setTimeout(() => {
                 window.location.href = '/dashboard';
               }, 4000);
 
-              // Clear URL params
-              window.history.replaceState({}, '', window.location.pathname);
               return; // Skip general check since we handled the failure
             }
           }
@@ -342,22 +401,32 @@ export const BalancePage = () => {
             await fetchBalance();
           }
         } catch (error) {
-          console.error('Error triggering verification:', error);
+          console.error('❌ Error triggering verification:', error);
+
+          // Enhanced error logging
+          if (error.response) {
+            console.error('❌ API Response Error:', error.response.status, error.response.data);
+          } else if (error.request) {
+            console.error('❌ Network Error:', error.message);
+          } else {
+            console.error('❌ Verification Error:', error.message);
+          }
+
           // Even if verification fails, show a processing dialog to prevent white screen
           setPaymentStatusDialog({
             show: true,
             type: 'processing',
             title: t('payment.paymentStarted'),
-            message: t('payment.paymentVerifying')
+            message: t('payment.paymentVerifying') + ' (Retrying...)'
           });
 
           // Fallback: redirect to dashboard after 6 seconds if verification fails
           setTimeout(() => {
+            console.log('⏰ Error fallback timeout - redirecting to dashboard');
             window.location.href = '/dashboard';
           }, 6000);
 
-          // Clear URL params
-          window.history.replaceState({}, '', window.location.pathname);
+          // DO NOT clear URL params here - let the redirect handle it
         }
       };
 
@@ -455,7 +524,7 @@ export const BalancePage = () => {
       });
       window.history.replaceState({}, '', window.location.pathname);
     }
-  }, []); // Remove balanceData dependency to prevent infinite loops
+  }, [window.location.search]); // Add URL search params as dependency to trigger on URL changes
 
   if (loading || providersLoading) {
     return (
