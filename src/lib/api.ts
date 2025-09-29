@@ -736,6 +736,18 @@ export const balanceApi = {
     });
     return response.data.data;
   },
+
+  // Verify recent payments (triggers backend verification)
+  verifyPayments: async () => {
+    const response = await apiClient.post('/balance/verify-payments');
+    return response.data;
+  },
+
+  // Check recent payment completions (for when user returns from payment)
+  checkRecentPayments: async () => {
+    const response = await apiClient.post('/balance/check-recent-payments');
+    return response.data;
+  },
   
   getTransactionHistory: async (params?: { page?: number; limit?: number; type?: string; status?: string }) => {
     const response = await apiClient.get('/balance/transactions', { params });
