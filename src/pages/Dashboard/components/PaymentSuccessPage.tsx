@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle } from "lucide-react";
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 
 interface PaymentSuccessPageProps {
   onComplete?: () => void;
@@ -9,13 +10,19 @@ interface PaymentSuccessPageProps {
 
 export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComplete }) => {
   const { t } = useTranslation('userDashboard');
+  const { lang } = useParams<{ lang: string }>();
   const [countdown, setCountdown] = useState(5);
+
+  // Get current language from URL or default to 'en'
+  const currentLang = lang || 'en';
+  const dashboardUrl = `/${currentLang}/dashboard`;
+  const balanceUrl = `/${currentLang}/dashboard/balance`;
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
-          window.location.href = '/dashboard';
+          window.location.href = dashboardUrl;
           return 0;
         }
         return prev - 1;
@@ -23,7 +30,7 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [dashboardUrl]);
 
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-[500px] p-6">
@@ -57,7 +64,7 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
         {/* Manual buttons */}
         <div className="space-y-3">
           <Button
-            onClick={() => window.location.href = '/dashboard'}
+            onClick={() => window.location.href = dashboardUrl}
             className="w-full"
             size="lg"
           >
@@ -65,7 +72,7 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
           </Button>
 
           <Button
-            onClick={() => window.location.href = '/dashboard/balance'}
+            onClick={() => window.location.href = balanceUrl}
             variant="outline"
             className="w-full"
             size="lg"
