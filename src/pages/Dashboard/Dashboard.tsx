@@ -7,6 +7,7 @@ import { Sidebar, SidebarRef } from "./components/Sidebar";
 import { PropertyFormProvider } from "./contexts/PropertyFormContext";
 import { MobileDashboardNav } from "./components/MobileDashboardNav";
 import { useTranslation } from "react-i18next";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Context for balance refresh function
 const BalanceRefreshContext = createContext<(() => void) | null>(null);
@@ -76,7 +77,9 @@ const DashboardContent = () => {
             console.log('🏦 Dashboard: refreshBalance called via context');
             sidebarRef.current?.refreshBalance();
           }}>
-            <Outlet />
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
           </BalanceRefreshContext.Provider>
 
         </div>
