@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
@@ -64,6 +64,14 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { LanguageRoute } from "./components/LanguageRoute";
 import { LanguageRedirect } from "./components/LanguageRedirect";
+
+// Dashboard redirect component to preserve URL parameters
+const DashboardRedirect = () => {
+  const location = useLocation();
+  const dashboardPath = location.pathname.replace('/dashboard', '');
+  const fullPath = `/en/dashboard${dashboardPath}${location.search}`;
+  return <Navigate to={fullPath} replace />;
+};
 
 const queryClient = new QueryClient();
 
@@ -144,7 +152,7 @@ const App = () => (
             <Route path="/" element={<LanguageRedirect />} />
             
             {/* Redirect dashboard routes without language prefix */}
-            <Route path="/dashboard/*" element={<Navigate to="/en/dashboard" replace />} />
+            <Route path="/dashboard/*" element={<DashboardRedirect />} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
