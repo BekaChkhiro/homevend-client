@@ -18,6 +18,15 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
   const dashboardUrl = `/${currentLang}/dashboard`;
   const balanceUrl = `/${currentLang}/dashboard/balance`;
 
+  // Debug logging
+  console.log('🎉 PaymentSuccessPage rendered with:', {
+    lang,
+    currentLang,
+    dashboardUrl,
+    balanceUrl,
+    countdown
+  });
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown(prev => {

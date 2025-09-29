@@ -527,7 +527,32 @@ export const BalancePage = () => {
     }
   }, [window.location.search]); // Add URL search params as dependency to trigger on URL changes
 
+  // Check for payment status FIRST (before any loading checks)
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentStatus = urlParams.get('payment');
+  const isPaymentSuccess = paymentStatus === 'success';
+
+  // Debug logging to see exactly what's happening
+  console.log('🔍 BalancePage Debug Info:', {
+    currentUrl: window.location.href,
+    pathname: window.location.pathname,
+    search: window.location.search,
+    paymentStatus,
+    isPaymentSuccess,
+    allParams: Object.fromEntries(urlParams.entries()),
+    loading,
+    providersLoading
+  });
+
+  // Render payment success page immediately if payment=success (bypass all loading checks)
+  if (isPaymentSuccess) {
+    console.log('🎉 Rendering PaymentSuccessPage because payment=success');
+    return <PaymentSuccessPage />;
+  }
+
+  // Loading check only applies to normal balance pages
   if (loading || providersLoading) {
+    console.log('🔄 Showing loading screen');
     return (
       <div className="w-full flex justify-center items-center min-h-[400px]">
         <div className="text-center">
@@ -536,17 +561,6 @@ export const BalancePage = () => {
         </div>
       </div>
     );
-  }
-
-
-  // Check for payment status first (before checking balanceData)
-  const urlParams = new URLSearchParams(window.location.search);
-  const paymentStatus = urlParams.get('payment');
-  const isPaymentSuccess = paymentStatus === 'success';
-
-  // Render payment success page immediately if payment=success
-  if (isPaymentSuccess) {
-    return <PaymentSuccessPage />;
   }
 
   // Error fallback if balanceData failed to load (only for normal pages)
