@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { CreditCard, Wallet, History, Loader2, ExternalLink, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
 import { balanceApi } from '@/lib/api';
 import { useTranslation } from 'react-i18next';
+import DebugInfo from '@/components/DebugInfo';
 
 interface PaymentProvider {
   id: string;
@@ -69,10 +70,18 @@ export const BalancePage = () => {
   const fetchBalance = async (showRefreshing = false) => {
     try {
       if (showRefreshing) setBalanceRefreshing(true);
+      console.log('🔄 Fetching balance data...');
       const data = await balanceApi.getBalance();
+      console.log('✅ Balance data received:', data);
       setBalanceData(data);
     } catch (error) {
-      console.error('Error fetching balance:', error);
+      console.error('❌ Error fetching balance:', error);
+      // Set a default balance structure to prevent white screen
+      setBalanceData({
+        balance: 0,
+        recentTransactions: [],
+        lastTopUp: null
+      });
     } finally {
       setLoading(false);
       if (showRefreshing) setBalanceRefreshing(false);
@@ -81,13 +90,17 @@ export const BalancePage = () => {
 
   const fetchPaymentProviders = async () => {
     try {
+      console.log('🔄 Fetching payment providers...');
       const providers = await balanceApi.getPaymentProviders();
+      console.log('✅ Payment providers received:', providers);
       setPaymentProviders(providers);
       if (providers.length > 0) {
         setSelectedProvider(providers[0].id);
       }
     } catch (error) {
-      console.error('Error fetching payment providers:', error);
+      console.error('❌ Error fetching payment providers:', error);
+      // Set default providers to prevent issues
+      setPaymentProviders([]);
     } finally {
       setProvidersLoading(false);
     }
@@ -223,7 +236,10 @@ export const BalancePage = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
-    
+
+    console.log('🔍 Payment status from URL:', paymentStatus);
+    console.log('🔍 Current URL:', window.location.href);
+
     if (paymentStatus === 'success') {
       // Show success dialog and refresh balance
       setPaymentStatusDialog({
@@ -236,10 +252,31 @@ export const BalancePage = () => {
       // Trigger immediate verification for recent payments (especially for Flitt)
       const triggerVerification = async () => {
         try {
-          console.log('🔄 Triggering payment verification for user...');
-          // Use checkRecentPayments which is designed for when user returns from payment
+          console.log('🔄 Triggering immediate Flitt payment verification...');
+
+          // First get current user to get their ID for Flitt immediate verification
+          const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+          const userId = currentUser.id;
+
+          if (userId) {
+            // Call immediate Flitt verification endpoint
+            console.log(`🎯 Calling immediate Flitt verification for user ${userId}...`);
+            const immediateResult = await balanceApi.verifyFlittImmediate(userId);
+            console.log('✅ Immediate Flitt verification result:', immediateResult);
+
+            // Check if any transactions were completed
+            const completedCount = immediateResult.results?.filter(r => r.status === 'completed').length || 0;
+            if (completedCount > 0) {
+              console.log(`🎉 ${completedCount} Flitt payments completed! Refreshing balance...`);
+              await fetchBalance();
+              return; // Skip general check if Flitt verification succeeded
+            }
+          }
+
+          // Fallback to general recent payments check
+          console.log('🔄 Running general payment verification...');
           const result = await balanceApi.checkRecentPayments();
-          console.log('✅ Payment verification result:', result);
+          console.log('✅ General payment verification result:', result);
 
           // If any payments were completed, refresh balance immediately
           if (result.balanceUpdated) {
@@ -257,13 +294,20 @@ export const BalancePage = () => {
       // Start polling for balance updates
       let pollCount = 0;
       const maxPolls = 15; // Poll for longer - 75 seconds (5 seconds * 15)
-      const originalBalance = balanceData?.balance || 0;
-      
+      let originalBalance = 0;
+
       const pollBalance = async () => {
         pollCount++;
         console.log(`🔄 Poll attempt ${pollCount}/${maxPolls} - checking balance...`);
         try {
           const data = await balanceApi.getBalance();
+
+          // Set original balance on first poll if not set
+          if (pollCount === 1) {
+            originalBalance = data.balance;
+            console.log(`💰 Setting original balance: ${originalBalance}`);
+          }
+
           console.log(`💰 Current balance: ${data.balance}, Original: ${originalBalance}`);
 
           // Check if balance has been updated
@@ -282,7 +326,7 @@ export const BalancePage = () => {
             window.history.replaceState({}, '', window.location.pathname);
             return;
           }
-          
+
           // Continue polling if balance hasn't updated yet and we haven't exceeded max polls
           if (pollCount < maxPolls) {
             setTimeout(pollBalance, 5000);
@@ -312,10 +356,10 @@ export const BalancePage = () => {
           }
         }
       };
-      
+
       // Start polling after a short delay
       setTimeout(pollBalance, 2000);
-      
+
     } else if (paymentStatus === 'failed') {
       // Show failure dialog
       setPaymentStatusDialog({
@@ -326,12 +370,36 @@ export const BalancePage = () => {
       });
       window.history.replaceState({}, '', window.location.pathname);
     }
-  }, [balanceData?.balance]);
+  }, []); // Remove balanceData dependency to prevent infinite loops
 
   if (loading || providersLoading) {
     return (
       <div className="w-full flex justify-center items-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading balance information...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error fallback if balanceData failed to load
+  if (!balanceData) {
+    return (
+      <div className="w-full p-6">
+        <div className="text-center py-12">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Unable to load balance information</h3>
+          <p className="text-gray-600 mb-4">There was an issue connecting to the server.</p>
+          <Button onClick={() => {
+            setLoading(true);
+            fetchBalance();
+            fetchPaymentProviders();
+          }}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Try Again
+          </Button>
+        </div>
       </div>
     );
   }
@@ -340,6 +408,9 @@ export const BalancePage = () => {
     <div className="w-full">
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-6">{t('payment.balancePageTitle')}</h2>
+
+        {/* Debug info - only show if URL has debug=true */}
+        <DebugInfo show={new URLSearchParams(window.location.search).get('debug') === 'true'} />
         
         <div className="grid gap-6 md:grid-cols-2">
           {/* Current Balance */}

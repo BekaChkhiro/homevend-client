@@ -748,6 +748,12 @@ export const balanceApi = {
     const response = await apiClient.post('/balance/check-recent-payments');
     return response.data;
   },
+
+  // Immediate verification for specific user's Flitt payments
+  verifyFlittImmediate: async (userId: number) => {
+    const response = await apiClient.post(`/balance/flitt/verify-immediate/${userId}`);
+    return response.data;
+  },
   
   getTransactionHistory: async (params?: { page?: number; limit?: number; type?: string; status?: string }) => {
     const response = await apiClient.get('/balance/transactions', { params });
