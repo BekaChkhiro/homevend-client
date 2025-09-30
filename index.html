@@ -140,10 +140,20 @@
             const reactMounted = document.querySelector('[data-reactroot], .react-app') ||
                                document.querySelector('#root > div:not(#initial-loader)');
             if (!reactMounted) {
-              console.log('🚨 Final fallback: reloading page');
-              window.location.reload();
+              console.log('🚨 Final fallback: trying dashboard redirect instead of reload');
+              // Instead of reload, try redirecting to dashboard (might be caching issue)
+              window.location.href = '/en/dashboard';
             }
           }, 8000);
+
+          // Additional: Listen for fetch errors that might indicate caching issues
+          window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('cache')) {
+              console.log('🚨 Cache error detected during payment success');
+              // Force cache bypass redirect
+              window.location.href = '/en/dashboard?cache_bust=' + Date.now();
+            }
+          });
         }
       } catch (error) {
         console.error('Payment success detection error:', error);
