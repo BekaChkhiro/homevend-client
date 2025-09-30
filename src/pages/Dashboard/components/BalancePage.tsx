@@ -596,7 +596,14 @@ export const BalancePage = () => {
   // Render payment success page immediately if any success indicator found
   if (isPaymentSuccess) {
     console.log('🎉 Rendering PaymentSuccessPage because payment success detected');
-    return <PaymentSuccessPage />;
+    try {
+      return <PaymentSuccessPage />;
+    } catch (error) {
+      console.error('❌ Error rendering PaymentSuccessPage:', error);
+      // Fallback: redirect to dashboard if PaymentSuccessPage fails
+      window.location.href = '/en/dashboard';
+      return null;
+    }
   }
 
   // Loading check only applies to normal balance pages

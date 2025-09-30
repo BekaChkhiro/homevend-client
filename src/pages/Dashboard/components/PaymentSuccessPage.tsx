@@ -9,11 +9,13 @@ interface PaymentSuccessPageProps {
 }
 
 export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComplete }) => {
-  const { t } = useTranslation('userDashboard');
-  const { lang } = useParams<{ lang: string }>();
-  const location = useLocation();
-  const [countdown, setCountdown] = useState(5);
-  const [isPopup, setIsPopup] = useState(false);
+  // Wrap everything in try-catch for safety
+  try {
+    const { t } = useTranslation('userDashboard');
+    const { lang } = useParams<{ lang: string }>();
+    const location = useLocation();
+    const [countdown, setCountdown] = useState(5);
+    const [isPopup, setIsPopup] = useState(false);
 
   // Extract language from URL path if not available in params
   const getCurrentLanguage = () => {
@@ -195,4 +197,20 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
       </div>
     </div>
   );
+  } catch (error) {
+    console.error('❌ Error in PaymentSuccessPage:', error);
+    // Fallback UI if there's an error
+    return (
+      <div className="w-full flex flex-col items-center justify-center min-h-[500px] p-6">
+        <div className="text-center">
+          <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold mb-2">Payment Successful!</h2>
+          <p className="text-gray-600 mb-4">Redirecting to dashboard...</p>
+          <Button onClick={() => window.location.href = '/en/dashboard'}>
+            Go to Dashboard
+          </Button>
+        </div>
+      </div>
+    );
+  }
 };
