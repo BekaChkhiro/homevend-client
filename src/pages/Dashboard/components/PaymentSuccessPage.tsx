@@ -13,6 +13,7 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
   const { lang } = useParams<{ lang: string }>();
   const location = useLocation();
   const [countdown, setCountdown] = useState(5);
+  const [isPopup, setIsPopup] = useState(false);
 
   // Extract language from URL path if not available in params
   const getCurrentLanguage = () => {
@@ -44,6 +45,24 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
   });
 
   useEffect(() => {
+    // Check if this was opened in a popup/new window
+    const checkIfPopup = () => {
+      // Check if window was opened by another window
+      const isNewWindow = window.opener !== null;
+      // Check if this is the only tab (popup scenario)
+      const isSingleTab = window.history.length <= 2;
+
+      setIsPopup(isNewWindow || isSingleTab);
+
+      console.log('🔍 Window detection:', {
+        hasOpener: window.opener !== null,
+        historyLength: window.history.length,
+        isPopup: isNewWindow || isSingleTab
+      });
+    };
+
+    checkIfPopup();
+
     // Clear URL parameters immediately to clean up the URL
     if (window.location.search.includes('payment=')) {
       const cleanUrl = window.location.pathname;
@@ -53,8 +72,30 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
-          // Use window.location.href for reliable navigation
-          window.location.href = dashboardUrl;
+          // If this is a popup window, close it
+          if (isPopup) {
+            console.log('🚪 Closing popup window after payment success');
+            // Try to notify parent window if exists
+            if (window.opener && !window.opener.closed) {
+              try {
+                // Send message to parent window
+                window.opener.postMessage({ type: 'payment-success', status: 'completed' }, '*');
+                // Focus parent window
+                window.opener.focus();
+              } catch (e) {
+                console.error('Could not communicate with parent window:', e);
+              }
+            }
+            // Close the popup window
+            window.close();
+            // Fallback: if window.close() doesn't work, redirect
+            setTimeout(() => {
+              window.location.href = dashboardUrl;
+            }, 100);
+          } else {
+            // Normal redirect for non-popup windows
+            window.location.href = dashboardUrl;
+          }
           return 0;
         }
         return prev - 1;
@@ -62,7 +103,7 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [dashboardUrl]);
+  }, [dashboardUrl, isPopup]);
 
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-[500px] p-6 bg-gray-50">
@@ -89,33 +130,67 @@ export const PaymentSuccessPage: React.FC<PaymentSuccessPageProps> = ({ onComple
             <span className="text-sm text-gray-600">{t('payment.paymentVerifying')}</span>
           </div>
           <p className="text-sm font-medium text-blue-700">
-            {t('payment.redirectingToDashboardIn', { seconds: countdown })}
+            {isPopup
+              ? t('payment.closingWindowIn', { seconds: countdown }) || `Closing window in ${countdown} seconds...`
+              : t('payment.redirectingToDashboardIn', { seconds: countdown })
+            }
           </p>
         </div>
 
         {/* Manual buttons */}
         <div className="space-y-3">
-          <Button
-            onClick={() => window.location.href = dashboardUrl}
-            className="w-full"
-            size="lg"
-          >
-            ✅ {t('payment.goToDashboardNow')}
-          </Button>
+          {isPopup ? (
+            <Button
+              onClick={() => {
+                // Try to notify parent window
+                if (window.opener && !window.opener.closed) {
+                  try {
+                    window.opener.postMessage({ type: 'payment-success', status: 'completed' }, '*');
+                    window.opener.focus();
+                  } catch (e) {
+                    console.error('Could not communicate with parent window:', e);
+                  }
+                }
+                // Close the window
+                window.close();
+                // Fallback redirect if close doesn't work
+                setTimeout(() => {
+                  window.location.href = dashboardUrl;
+                }, 100);
+              }}
+              className="w-full"
+              size="lg"
+            >
+              ✅ {t('payment.closeWindow') || 'Close Window'}
+            </Button>
+          ) : (
+            <>
+              <Button
+                onClick={() => window.location.href = dashboardUrl}
+                className="w-full"
+                size="lg"
+              >
+                ✅ {t('payment.goToDashboardNow')}
+              </Button>
 
-          <Button
-            onClick={() => window.location.href = balanceUrl}
-            variant="outline"
-            className="w-full"
-            size="lg"
-          >
-            💰 {t('payment.viewBalancePage')}
-          </Button>
+              <Button
+                onClick={() => window.location.href = balanceUrl}
+                variant="outline"
+                className="w-full"
+                size="lg"
+              >
+                💰 {t('payment.viewBalancePage')}
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Help text */}
         <p className="text-xs text-gray-500 mt-4">
-          {t('payment.clickButtonsToNavigate')}
+          {isPopup
+            ? t('payment.windowWillCloseAutomatically') || 'This window will close automatically'
+            : t('payment.clickButtonsToNavigate')
+          }
         </p>
       </div>
     </div>

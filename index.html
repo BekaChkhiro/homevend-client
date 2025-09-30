@@ -77,17 +77,65 @@
         }, 5000);
       });
 
-      // Force refresh if page seems stuck (payment success detection)
-      if (window.location.search.includes('payment=success')) {
-        console.log('🚨 Payment success detected - ensuring page loads properly');
-        // Give React 2 seconds to load, then force refresh if still white screen
-        setTimeout(() => {
-          const loader = document.getElementById('initial-loader');
-          if (loader && loader.style.display !== 'none') {
-            console.log('🚨 Forcing page refresh due to loading timeout');
-            window.location.reload();
-          }
-        }, 2000);
+      // Enhanced payment success detection and recovery
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPaymentSuccess = urlParams.get('payment') === 'success' ||
+                                urlParams.get('status') === 'success' ||
+                                urlParams.get('status') === 'approved' ||
+                                urlParams.get('result') === 'success' ||
+                                urlParams.get('order_status') === 'approved';
+
+        if (isPaymentSuccess) {
+          console.log('🚨 Payment success detected - ensuring page loads properly');
+          console.log('Current URL:', window.location.href);
+
+          // Show immediate feedback
+          document.title = '✅ Payment Successful - HomeVend';
+
+          // If React doesn't load within 3 seconds, show fallback content
+          setTimeout(function() {
+            const loader = document.getElementById('initial-loader');
+            const reactMounted = document.querySelector('[data-reactroot], .react-app') ||
+                               document.querySelector('#root > div:not(#initial-loader)');
+
+            if (loader && !reactMounted) {
+              console.log('🚨 React not mounted, showing fallback payment success page');
+
+              // Show fallback success page
+              loader.innerHTML =
+                '<div style="max-width: 400px; text-align: center; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">' +
+                  '<div style="width: 60px; height: 60px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">' +
+                    '<span style="color: white; font-size: 24px;">✓</span>' +
+                  '</div>' +
+                  '<h1 style="color: #065f46; margin-bottom: 10px; font-family: Arial, sans-serif;">Payment Successful!</h1>' +
+                  '<p style="color: #6b7280; margin-bottom: 30px; font-family: Arial, sans-serif;">Your balance has been updated. Thank you for your payment!</p>' +
+                  '<div style="margin-bottom: 20px;">' +
+                    '<button onclick="window.location.href=\'/en/dashboard\'" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; margin: 5px; font-family: Arial, sans-serif;">Go to Dashboard</button>' +
+                    '<button onclick="window.location.href=\'/en/dashboard/balance\'" style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; margin: 5px; font-family: Arial, sans-serif;">View Balance</button>' +
+                  '</div>' +
+                  '<p style="color: #9ca3af; font-size: 12px; font-family: Arial, sans-serif;">If this page doesn\'t redirect automatically, click the buttons above.</p>' +
+                '</div>';
+
+              // Auto-redirect after 5 seconds
+              setTimeout(function() {
+                window.location.href = '/en/dashboard';
+              }, 5000);
+            }
+          }, 3000);
+
+          // Backup: Force reload if still stuck after 8 seconds
+          setTimeout(function() {
+            const reactMounted = document.querySelector('[data-reactroot], .react-app') ||
+                               document.querySelector('#root > div:not(#initial-loader)');
+            if (!reactMounted) {
+              console.log('🚨 Final fallback: reloading page');
+              window.location.reload();
+            }
+          }, 8000);
+        }
+      } catch (error) {
+        console.error('Payment success detection error:', error);
       }
     </script>
   </body>

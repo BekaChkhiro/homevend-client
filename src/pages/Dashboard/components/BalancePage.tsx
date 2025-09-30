@@ -133,8 +133,43 @@ export const BalancePage = () => {
       } else if (result.provider === 'flitt') {
         // Redirect to Flitt payment page
         if (result.data.checkoutUrl) {
-          window.open(result.data.checkoutUrl, '_blank');
-          alert(t('payment.paymentPageOpened'));
+          // Open in new window and track it
+          const paymentWindow = window.open(result.data.checkoutUrl, '_blank');
+
+          // Listen for messages from the payment window
+          const handlePaymentMessage = (event: MessageEvent) => {
+            if (event.data && event.data.type === 'payment-success') {
+              console.log('💰 Payment success message received from popup');
+              // Refresh balance immediately
+              fetchBalance(true);
+              // Show success message
+              setPaymentStatusDialog({
+                show: true,
+                type: 'success',
+                title: t('payment.balanceSuccessfullyToppedUp'),
+                message: t('payment.paymentCompletedMessage')
+              });
+            }
+          };
+
+          window.addEventListener('message', handlePaymentMessage);
+
+          // Check if popup was closed periodically
+          const checkPopupClosed = setInterval(() => {
+            if (paymentWindow && paymentWindow.closed) {
+              clearInterval(checkPopupClosed);
+              window.removeEventListener('message', handlePaymentMessage);
+              console.log('🚪 Payment popup was closed');
+              // Refresh balance in case payment was completed
+              fetchBalance(true);
+            }
+          }, 1000);
+
+          // Clean up after 10 minutes
+          setTimeout(() => {
+            clearInterval(checkPopupClosed);
+            window.removeEventListener('message', handlePaymentMessage);
+          }, 600000);
         } else {
           alert(t('payment.paymentLinkError'));
         }
