@@ -17,6 +17,12 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: 'build',
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        flittSuccess: 'public/flitt-success.html'
+      }
+    }
   },
   plugins: [
     react(),
