@@ -10,6 +10,7 @@ import { balanceApi } from '@/lib/api';
 import { useTranslation } from 'react-i18next';
 import DebugInfo from '@/components/DebugInfo';
 import { PaymentSuccessPage } from './PaymentSuccessPage';
+import { usePaymentPolling } from '@/hooks/usePaymentPolling';
 
 interface PaymentProvider {
   id: string;
@@ -67,6 +68,29 @@ export const BalancePage = () => {
     message: ''
   });
   const [balanceRefreshing, setBalanceRefreshing] = useState(false);
+
+  // Initialize payment polling
+  const { isPolling, startPolling, stopPolling } = usePaymentPolling({
+    onPaymentSuccess: () => {
+      console.log('🎉 Payment success detected via polling!');
+      fetchBalance(true);
+      setPaymentStatusDialog({
+        show: true,
+        type: 'success',
+        title: t('payment.balanceSuccessfullyToppedUp'),
+        message: t('payment.paymentCompletedMessage')
+      });
+    },
+    onPaymentFailed: () => {
+      console.log('❌ Payment failed detected via polling');
+      setPaymentStatusDialog({
+        show: true,
+        type: 'failed',
+        title: t('payment.paymentFailed'),
+        message: t('payment.paymentFailedMessage')
+      });
+    }
+  });
 
   const fetchBalance = async (showRefreshing = false) => {
     try {
@@ -133,6 +157,10 @@ export const BalancePage = () => {
       } else if (result.provider === 'flitt') {
         // Redirect to Flitt payment page
         if (result.data.checkoutUrl) {
+          // Start polling for payment completion
+          console.log('🔄 Starting payment polling for Flitt transaction:', result.data.transactionId);
+          startPolling(result.data.transactionId);
+
           // Open in new window and track it
           const paymentWindow = window.open(result.data.checkoutUrl, '_blank');
 
@@ -681,6 +709,12 @@ export const BalancePage = () => {
             <p className="text-sm text-gray-500 mt-2">
               {t('payment.availableForAds')}
             </p>
+            {isPolling && (
+              <div className="flex items-center gap-2 mt-2 text-blue-600">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Verifying payment...</span>
+              </div>
+            )}
           </Card>
           
           {/* Last Transaction */}

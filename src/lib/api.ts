@@ -719,6 +719,11 @@ export const balanceApi = {
     const response = await apiClient.get('/balance/providers');
     return response.data.data;
   },
+
+  getPendingPayments: async () => {
+    const response = await apiClient.get('/balance/pending-payments');
+    return response.data;
+  },
   
   initiateTopUp: async (amount: number, provider: string = 'test') => {
     const response = await apiClient.post('/balance/initiate', {
