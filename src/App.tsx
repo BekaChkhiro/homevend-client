@@ -80,6 +80,16 @@ const DashboardRedirect = () => {
     timestamp: new Date().toISOString()
   });
 
+  // For payment callbacks, redirect immediately via window.location
+  // This ensures the redirect happens even if React has issues
+  if (location.search.includes('payment=') ||
+      location.search.includes('status=') ||
+      location.search.includes('order_status=')) {
+    console.log('🔀 Payment callback detected, using window.location redirect');
+    window.location.href = fullPath;
+    return <div>Redirecting to payment success page...</div>;
+  }
+
   return <Navigate to={fullPath} replace />;
 };
 

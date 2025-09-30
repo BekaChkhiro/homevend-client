@@ -571,12 +571,19 @@ export const BalancePage = () => {
   const resultParam = urlParams.get('result');
   const orderStatusParam = urlParams.get('order_status');
 
-  // Check multiple possible success indicators
+  // Check for Flitt-specific parameters
+  const flittOrderId = urlParams.get('order_id');
+  const flittResponseStatus = urlParams.get('response_status');
+  const flittSignature = urlParams.get('signature');
+
+  // Check multiple possible success indicators (including Flitt-specific ones)
   const isPaymentSuccess = paymentStatus === 'success' ||
                           statusParam === 'success' ||
                           statusParam === 'approved' ||
                           resultParam === 'success' ||
-                          orderStatusParam === 'approved';
+                          orderStatusParam === 'approved' ||
+                          flittResponseStatus === 'success' ||
+                          (flittOrderId && flittSignature); // Flitt might send these on success
 
   // Debug logging to see exactly what's happening
   console.log('🔍 BalancePage Debug Info:', {
@@ -587,10 +594,14 @@ export const BalancePage = () => {
     statusParam,
     resultParam,
     orderStatusParam,
+    flittOrderId,
+    flittResponseStatus,
+    flittSignature,
     isPaymentSuccess,
     allParams: Object.fromEntries(urlParams.entries()),
     loading,
-    providersLoading
+    providersLoading,
+    timestamp: new Date().toISOString()
   });
 
   // Render payment success page immediately if any success indicator found

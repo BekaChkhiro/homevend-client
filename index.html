@@ -86,6 +86,17 @@
                                 urlParams.get('result') === 'success' ||
                                 urlParams.get('order_status') === 'approved';
 
+        // Check if we're on a non-language prefixed dashboard route
+        const isNonPrefixedDashboard = window.location.pathname.startsWith('/dashboard');
+
+        // If on /dashboard/* without language prefix during payment callback, redirect immediately
+        if (isPaymentSuccess && isNonPrefixedDashboard) {
+          console.log('🚨 Payment success on non-prefixed dashboard - redirecting to /en/ version');
+          const newPath = '/en' + window.location.pathname + window.location.search;
+          window.location.href = newPath;
+          return; // Stop execution, we're redirecting
+        }
+
         if (isPaymentSuccess) {
           console.log('🚨 Payment success detected - ensuring page loads properly');
           console.log('Current URL:', window.location.href);
