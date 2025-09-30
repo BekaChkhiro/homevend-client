@@ -24,8 +24,19 @@ const DashboardContent = () => {
   const sidebarRef = useRef<SidebarRef>(null);
   const { t } = useTranslation('userDashboard');
 
+  // Check if we're handling a payment callback
+  const isPaymentCallback = location.search.includes('payment=') ||
+                            location.search.includes('status=') ||
+                            location.search.includes('order_status=');
+
   // If user is not authenticated, redirect to login page
   useEffect(() => {
+    // Skip authentication check if we're processing a payment callback
+    if (isPaymentCallback) {
+      console.log('🔍 Payment callback detected, delaying auth check');
+      return;
+    }
+
     // Only after authentication loading is complete
     if (!isLoading) {
       if (!user) {
@@ -38,10 +49,10 @@ const DashboardContent = () => {
         navigate("/dashboard/my-properties", { replace: true });
       }
     }
-  }, [user, isLoading, location.pathname, navigate]);
+  }, [user, isLoading, location.pathname, navigate, isPaymentCallback]);
 
   // During loading or when user is not authenticated, return loading indicator
-  if (isLoading) {
+  if (isLoading && !isPaymentCallback) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -51,8 +62,10 @@ const DashboardContent = () => {
       </div>
     );
   }
-  
-  if (!user) {
+
+  // If processing payment callback, allow rendering even without user
+  // (BalancePage will handle the payment success display)
+  if (!user && !isPaymentCallback) {
     return null;
   }
 
@@ -67,9 +80,11 @@ const DashboardContent = () => {
 
       <div className="flex-1 container mx-auto flex pt-20 md:pt-24 lg:pt-32 pb-6 lg:pb-6 px-3 sm:px-4">
         {/* Menu sidebar - fixed */}
-        <div className="flex-shrink-0">
-          <Sidebar ref={sidebarRef} user={user} />
-        </div>
+        {user && (
+          <div className="flex-shrink-0">
+            <Sidebar ref={sidebarRef} user={user} />
+          </div>
+        )}
 
         {/* Content section */}
         <div className="flex-1 bg-white rounded-lg border p-6 min-h-0">
