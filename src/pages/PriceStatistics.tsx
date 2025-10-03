@@ -71,16 +71,16 @@ const PriceStatistics = () => {
   };
 
   const getPriceLevel = (price: number) => {
-    if (price >= 2000) return { level: t('priceLevel.high'), color: 'text-green-600 bg-green-50 border-green-200' };
-    if (price >= 1500) return { level: t('priceLevel.medium'), color: 'text-green-600 bg-green-50 border-green-200' };
-    return { level: t('priceLevel.low'), color: 'text-green-600 bg-green-50 border-green-200' };
+    if (price >= 2000) return { level: t('priceLevel.high'), color: 'text-primary bg-primary/10 border-primary/20' };
+    if (price >= 1500) return { level: t('priceLevel.medium'), color: 'text-primary bg-primary/10 border-primary/20' };
+    return { level: t('priceLevel.low'), color: 'text-primary bg-primary/10 border-primary/20' };
   };
 
   if (loading) {
     return (
       <>
         <Header />
-        <div className="min-h-screen bg-gray-50 pt-44 pb-8">
+        <div className="min-h-screen bg-background pt-44 pb-8">
           <div className="container mx-auto px-4">
             <div className="mb-8">
               <Skeleton className="h-8 w-64 mb-4" />
@@ -104,13 +104,13 @@ const PriceStatistics = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gray-50 pt-44 pb-8">
+      <div className="min-h-screen bg-background pt-44 pb-8">
         <div className="container mx-auto px-4">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl font-bold text-foreground mb-4">
               {t('title')}
             </h1>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               {t('subtitle')}
             </p>
 
@@ -120,16 +120,16 @@ const PriceStatistics = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">{t('expensiveDistrict')}</p>
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className="text-sm text-muted-foreground">{t('expensiveDistrict')}</p>
+                      <p className="text-lg font-bold text-foreground">
                         {sortedDistricts[0] ? getDistrictName(sortedDistricts[0]) : '-'}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-green-600">
+                      <p className="text-2xl font-bold text-primary">
                         {sortedDistricts[0] ? formatPrice(sortedDistricts[0].pricePerSqm) : '-'}
                       </p>
-                      <p className="text-xs text-gray-500">{t('usdPerSqm').split(' / ')[1]}</p>
+                      <p className="text-xs text-muted-foreground">{t('usdPerSqm').split(' / ')[1]}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -139,16 +139,16 @@ const PriceStatistics = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">{t('averagePrice')}</p>
-                      <p className="text-lg font-bold text-gray-900">{t('allDistricts')}</p>
+                      <p className="text-sm text-muted-foreground">{t('averagePrice')}</p>
+                      <p className="text-lg font-bold text-foreground">{t('allDistricts')}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-green-600">
+                      <p className="text-2xl font-bold text-primary">
                         {districts.length > 0 
                           ? formatPrice(Math.round(districts.reduce((sum, d) => sum + d.pricePerSqm, 0) / districts.length))
                           : '-'}
                       </p>
-                      <p className="text-xs text-gray-500">{t('usdPerSqm').split(' / ')[1]}</p>
+                      <p className="text-xs text-muted-foreground">{t('usdPerSqm').split(' / ')[1]}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -158,18 +158,18 @@ const PriceStatistics = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">{t('cheapestDistrict')}</p>
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className="text-sm text-muted-foreground">{t('cheapestDistrict')}</p>
+                      <p className="text-lg font-bold text-foreground">
                         {sortedDistricts[sortedDistricts.length - 1] ? getDistrictName(sortedDistricts[sortedDistricts.length - 1]) : '-'}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-green-600">
+                      <p className="text-2xl font-bold text-primary">
                         {sortedDistricts[sortedDistricts.length - 1] 
                           ? formatPrice(sortedDistricts[sortedDistricts.length - 1].pricePerSqm) 
                           : '-'}
                       </p>
-                      <p className="text-xs text-gray-500">{t('usdPerSqm').split(' / ')[1]}</p>
+                      <p className="text-xs text-muted-foreground">{t('usdPerSqm').split(' / ')[1]}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -186,7 +186,7 @@ const PriceStatistics = () => {
                   <CardHeader className="pb-3">
                     <CardTitle className="flex items-center justify-between text-lg">
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-gray-500" />
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
                         <span>{getDistrictName(district)}</span>
                       </div>
                       <Badge variant="outline" className="text-xs">
@@ -214,13 +214,13 @@ const PriceStatistics = () => {
                     </div>
 
                     {district.description && (
-                      <p className="text-sm text-gray-600 mt-3">
+                      <p className="text-sm text-muted-foreground mt-3">
                         {district.description}
                       </p>
                     )}
 
                     <div className="mt-3 pt-3 border-t">
-                      <div className="flex items-center justify-between text-xs text-gray-500">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>{t('updated')}</span>
                         <span>{new Date(district.updatedAt).toLocaleDateString('ka-GE')}</span>
                       </div>
@@ -233,9 +233,9 @@ const PriceStatistics = () => {
 
           {districts.length === 0 && !loading && (
             <div className="text-center py-12">
-              <Search className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">{t('noData.title')}</h3>
-              <p className="text-gray-500">
+              <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-lg font-medium text-foreground mb-2">{t('noData.title')}</h3>
+              <p className="text-muted-foreground">
                 {t('noData.subtitle')}
               </p>
             </div>

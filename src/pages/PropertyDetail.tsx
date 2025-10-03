@@ -881,70 +881,70 @@ const PropertyDetail = () => {
                   {/* Required Fields Section */}
                   <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                     <CardContent className="p-4 md:p-6">
-                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                        <Info className="h-4 w-4" style={{ color: '#0f172a' }} />
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                        <Info className="h-4 w-4 text-foreground" />
                         {t('sections.mainInformation')}
                       </h3>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                           <div className="flex items-start gap-3">
-                            <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                            <div className="text-white rounded-lg p-2 bg-primary">
                               <Hash className="h-4 w-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.listingTitle')}</span>
-                              <p className="font-semibold text-sm leading-tight break-words" style={{ color: '#0f172a' }}>{property.title}</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.listingTitle')}</span>
+                              <p className="font-semibold text-sm leading-tight break-words text-foreground">{property.title}</p>
                             </div>
                           </div>
                         </div>
 
                         <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                           <div className="flex items-start gap-3">
-                            <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                            <div className="text-white rounded-lg p-2 bg-primary">
                               <Building className="h-4 w-4" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.propertyType')}</span>
-                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translatePropertyType(property.propertyType, t)}</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.propertyType')}</span>
+                              <p className="font-semibold text-sm text-foreground">{translatePropertyType(property.propertyType, t)}</p>
                             </div>
                           </div>
                         </div>
 
                         <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                           <div className="flex items-start gap-3">
-                            <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                            <div className="text-white rounded-lg p-2 bg-primary">
                               <Briefcase className="h-4 w-4" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.dealType')}</span>
-                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateDealType(property.dealType, t)}</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.dealType')}</span>
+                              <p className="font-semibold text-sm text-foreground">{translateDealType(property.dealType, t)}</p>
                             </div>
                           </div>
                         </div>
 
                         <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                           <div className="flex items-start gap-3">
-                            <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                            <div className="text-white rounded-lg p-2 bg-primary">
                               <MapPin className="h-4 w-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.location')}</span>
-                              <p className="font-semibold text-sm leading-tight break-words" style={{ color: '#0f172a' }}>{displayProperty.address}</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.location')}</span>
+                              <p className="font-semibold text-sm leading-tight break-words text-foreground">{displayProperty.address}</p>
                             </div>
                           </div>
                         </div>
 
 
                         {property.cadastralCode && (
-                          <div className="lg:col-span-2 bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2" style={{ borderLeftColor: '#0f172a' }}>
+                          <div className="lg:col-span-2 bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-foreground">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Hash className="h-4 w-4" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.cadastralCode')}</span>
-                                <p className="font-semibold text-sm font-mono tracking-wider break-all" style={{ color: '#0f172a' }}>{property.cadastralCode}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.cadastralCode')}</span>
+                                <p className="font-semibold text-sm font-mono tracking-wider break-all text-foreground">{property.cadastralCode}</p>
                               </div>
                             </div>
                           </div>
@@ -956,8 +956,8 @@ const PropertyDetail = () => {
                   {/* Property Structure */}
                   <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                     <CardContent className="p-4 md:p-6">
-                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                        <Home className="h-4 w-4" style={{ color: '#0f172a' }} />
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                        <Home className="h-4 w-4 text-foreground" />
                         {t('sections.propertyStructure')}
                       </h3>
                       
@@ -965,12 +965,12 @@ const PropertyDetail = () => {
                         {property.rooms && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Home className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.rooms')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.rooms}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.rooms')}</span>
+                                <p className="font-semibold text-sm text-foreground">{property.rooms}</p>
                               </div>
                             </div>
                           </div>
@@ -978,12 +978,12 @@ const PropertyDetail = () => {
                         {property.bedrooms && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Bed className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.bedrooms')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.bedrooms}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.bedrooms')}</span>
+                                <p className="font-semibold text-sm text-foreground">{property.bedrooms}</p>
                               </div>
                             </div>
                           </div>
@@ -991,12 +991,12 @@ const PropertyDetail = () => {
                         {property.bathrooms && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Bath className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.bathrooms')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.bathrooms}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.bathrooms')}</span>
+                                <p className="font-semibold text-sm text-foreground">{property.bathrooms}</p>
                               </div>
                             </div>
                           </div>
@@ -1004,12 +1004,12 @@ const PropertyDetail = () => {
                         {property.totalFloors && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Layers className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.totalFloors')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.totalFloors}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.totalFloors')}</span>
+                                <p className="font-semibold text-sm text-foreground">{property.totalFloors}</p>
                               </div>
                             </div>
                           </div>
@@ -1017,24 +1017,24 @@ const PropertyDetail = () => {
                         {property.propertyFloor && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Layers className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.propertyFloor')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.propertyFloor}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.propertyFloor')}</span>
+                                <p className="font-semibold text-sm text-foreground">{property.propertyFloor}</p>
                               </div>
                             </div>
                           </div>
                         )}
                         <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                           <div className="flex items-start gap-3">
-                            <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                            <div className="text-white rounded-lg p-2 bg-primary">
                               <Square className="h-4 w-4" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.usableArea')}</span>
-                              <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.area} {t('squareMeters')}</p>
+                              <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.usableArea')}</span>
+                              <p className="font-semibold text-sm text-foreground">{property.area} {t('squareMeters')}</p>
                             </div>
                           </div>
                         </div>
@@ -1045,8 +1045,8 @@ const PropertyDetail = () => {
                   {/* Building Information */}
                   <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                     <CardContent className="p-4 md:p-6">
-                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                        <Building className="h-4 w-4" style={{ color: '#0f172a' }} />
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                        <Building className="h-4 w-4 text-foreground" />
                         {t('sections.buildingInformation')}
                       </h3>
                       
@@ -1054,12 +1054,12 @@ const PropertyDetail = () => {
                         {property.buildingStatus && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Settings className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.status')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingStatus(property.buildingStatus, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.status')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateBuildingStatus(property.buildingStatus, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1067,12 +1067,12 @@ const PropertyDetail = () => {
                         {property.constructionYear && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <CalendarIcon className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.constructionYear')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateConstructionYear(property.constructionYear, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.constructionYear')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateConstructionYear(property.constructionYear, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1080,12 +1080,12 @@ const PropertyDetail = () => {
                         {property.condition && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Wrench className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.condition')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateCondition(property.condition, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.condition')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateCondition(property.condition, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1093,12 +1093,12 @@ const PropertyDetail = () => {
                         {property.projectType && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Building className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.projectType')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateProjectType(property.projectType, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.projectType')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateProjectType(property.projectType, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1106,12 +1106,12 @@ const PropertyDetail = () => {
                         {property.ceilingHeight && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Ruler className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.ceilingHeight')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{property.ceilingHeight} {t('meters')}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.ceilingHeight')}</span>
+                                <p className="font-semibold text-sm text-foreground">{property.ceilingHeight} {t('meters')}</p>
                               </div>
                             </div>
                           </div>
@@ -1119,12 +1119,12 @@ const PropertyDetail = () => {
                         {property.buildingMaterial && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Hammer className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.buildingMaterial')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateBuildingMaterial(property.buildingMaterial, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.buildingMaterial')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateBuildingMaterial(property.buildingMaterial, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1136,8 +1136,8 @@ const PropertyDetail = () => {
                   {/* Infrastructure */}
                   <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                     <CardContent className="p-4 md:p-6">
-                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                        <Settings className="h-4 w-4" style={{ color: '#0f172a' }} />
+                      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                        <Settings className="h-4 w-4 text-foreground" />
                         {t('sections.infrastructure')}
                       </h3>
                       
@@ -1145,12 +1145,12 @@ const PropertyDetail = () => {
                         {property.heating && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Thermometer className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.heating')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHeating(property.heating, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.heating')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateHeating(property.heating, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1158,12 +1158,12 @@ const PropertyDetail = () => {
                         {property.parking && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Car className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.parking')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateParking(property.parking, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.parking')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateParking(property.parking, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1171,12 +1171,12 @@ const PropertyDetail = () => {
                         {property.hotWater && (
                           <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                             <div className="flex items-start gap-3">
-                              <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                              <div className="text-white rounded-lg p-2 bg-primary">
                                 <Droplets className="h-4 w-4" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.hotWater')}</span>
-                                <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{translateHotWater(property.hotWater, t)}</p>
+                                <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.hotWater')}</span>
+                                <p className="font-semibold text-sm text-foreground">{translateHotWater(property.hotWater, t)}</p>
                               </div>
                             </div>
                           </div>
@@ -1189,8 +1189,8 @@ const PropertyDetail = () => {
                   {(property.hasBalcony || property.hasPool || property.hasLivingRoom || property.hasLoggia || property.hasVeranda || property.hasYard || property.hasStorage) && (
                     <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                       <CardContent className="p-4 md:p-6">
-                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                          <Home className="h-4 w-4" style={{ color: '#0f172a' }} />
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                          <Home className="h-4 w-4 text-foreground" />
                           {t('sections.additionalSpaces')}
                         </h3>
                         
@@ -1198,14 +1198,14 @@ const PropertyDetail = () => {
                           {property.hasBalcony && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
-                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <div className="text-white rounded-lg p-2 bg-primary">
                                   <Home className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.balcony')}</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.balcony')}</span>
+                                  <p className="font-semibold text-sm text-foreground">{t('yes')}</p>
                                   {(property.balconyCount || property.balconyArea) && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
+                                    <p className="text-xs mt-1 opacity-60 text-foreground">
                                       {property.balconyCount && `${property.balconyCount}${t('count')}`}
                                       {property.balconyCount && property.balconyArea && ' • '}
                                       {property.balconyArea && `${property.balconyArea}${t('squareMeters')}`}
@@ -1218,14 +1218,14 @@ const PropertyDetail = () => {
                           {property.hasPool && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
-                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <div className="text-white rounded-lg p-2 bg-primary">
                                   <Droplets className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.pool')}</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.pool')}</span>
+                                  <p className="font-semibold text-sm text-foreground">{t('yes')}</p>
                                   {property.poolType && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{translatePoolType(property.poolType, t)}</p>
+                                    <p className="text-xs mt-1 opacity-60 text-foreground">{translatePoolType(property.poolType, t)}</p>
                                   )}
                                 </div>
                               </div>
@@ -1234,14 +1234,14 @@ const PropertyDetail = () => {
                           {property.hasLivingRoom && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
-                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <div className="text-white rounded-lg p-2 bg-primary">
                                   <Sofa className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.livingRoom')}</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.livingRoom')}</span>
+                                  <p className="font-semibold text-sm text-foreground">{t('yes')}</p>
                                   {property.livingRoomArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
+                                    <p className="text-xs mt-1 opacity-60 text-foreground">
                                       {property.livingRoomArea}{t('squareMeters')}
                                     </p>
                                   )}
@@ -1252,14 +1252,14 @@ const PropertyDetail = () => {
                           {property.hasLoggia && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
-                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <div className="text-white rounded-lg p-2 bg-primary">
                                   <Square className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.loggia')}</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.loggia')}</span>
+                                  <p className="font-semibold text-sm text-foreground">{t('yes')}</p>
                                   {property.loggiaArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.loggiaArea}{t('squareMeters')}</p>
+                                    <p className="text-xs mt-1 opacity-60 text-foreground">{property.loggiaArea}{t('squareMeters')}</p>
                                   )}
                                 </div>
                               </div>
@@ -1268,14 +1268,14 @@ const PropertyDetail = () => {
                           {property.hasVeranda && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
-                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <div className="text-white rounded-lg p-2 bg-primary">
                                   <Home className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.veranda')}</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.veranda')}</span>
+                                  <p className="font-semibold text-sm text-foreground">{t('yes')}</p>
                                   {property.verandaArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.verandaArea}{t('squareMeters')}</p>
+                                    <p className="text-xs mt-1 opacity-60 text-foreground">{property.verandaArea}{t('squareMeters')}</p>
                                   )}
                                 </div>
                               </div>
@@ -1284,14 +1284,14 @@ const PropertyDetail = () => {
                           {property.hasYard && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
-                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <div className="text-white rounded-lg p-2 bg-primary">
                                   <Square className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.hasYard')}</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.hasYard')}</span>
+                                  <p className="font-semibold text-sm text-foreground">{t('yes')}</p>
                                   {property.yardArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>{property.yardArea}{t('squareMeters')}</p>
+                                    <p className="text-xs mt-1 opacity-60 text-foreground">{property.yardArea}{t('squareMeters')}</p>
                                   )}
                                 </div>
                               </div>
@@ -1300,14 +1300,14 @@ const PropertyDetail = () => {
                           {property.hasStorage && (
                             <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border-l-2 border-gray-300">
                               <div className="flex items-start gap-3">
-                                <div className="text-white rounded-lg p-2" style={{ backgroundColor: '#0f172a' }}>
+                                <div className="text-white rounded-lg p-2 bg-primary">
                                   <Square className="h-4 w-4" />
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-xs font-medium block mb-1 opacity-70" style={{ color: '#0f172a' }}>{t('fields.storage')}</span>
-                                  <p className="font-semibold text-sm" style={{ color: '#0f172a' }}>{t('yes')}</p>
+                                  <span className="text-xs font-medium block mb-1 opacity-70 text-foreground">{t('fields.storage')}</span>
+                                  <p className="font-semibold text-sm text-foreground">{t('yes')}</p>
                                   {property.storageArea && (
-                                    <p className="text-xs mt-1 opacity-60" style={{ color: '#0f172a' }}>
+                                    <p className="text-xs mt-1 opacity-60 text-foreground">
                                       {property.storageArea}{t('squareMeters')}
                                     </p>
                                   )}
@@ -1326,15 +1326,15 @@ const PropertyDetail = () => {
                   {displayProperty.features && displayProperty.features.length > 0 && (
                     <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                       <CardContent className="p-4 md:p-6">
-                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                          <Star className="h-4 w-4" style={{ color: '#0f172a' }} />
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                          <Star className="h-4 w-4 text-foreground" />
                           {t('sections.features')}
                         </h3>
                         
                         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.features.map((feature, index) => (
                             <div key={`feature-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
+                              <span className="text-sm font-medium text-foreground">
                                 {translateFeature(feature, t)}
                               </span>
                             </div>
@@ -1348,15 +1348,15 @@ const PropertyDetail = () => {
                   {displayProperty.advantages && displayProperty.advantages.length > 0 && (
                     <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                       <CardContent className="p-4 md:p-6">
-                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                          <Trophy className="h-4 w-4" style={{ color: '#0f172a' }} />
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                          <Trophy className="h-4 w-4 text-foreground" />
                           {t('sections.advantages')}
                         </h3>
                         
                         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.advantages.map((advantage, index) => (
                             <div key={`advantage-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
+                              <span className="text-sm font-medium text-foreground">
                                 {translateAdvantage(advantage, t)}
                               </span>
                             </div>
@@ -1370,15 +1370,15 @@ const PropertyDetail = () => {
                   {displayProperty.furnitureAppliances && displayProperty.furnitureAppliances.length > 0 && (
                     <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                       <CardContent className="p-4 md:p-6">
-                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                          <Sofa className="h-4 w-4" style={{ color: '#0f172a' }} />
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                          <Sofa className="h-4 w-4 text-foreground" />
                           {t('sections.furnitureAppliances')}
                         </h3>
                         
                         <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
                           {displayProperty.furnitureAppliances.map((item, index) => (
                             <div key={`furniture-${index}`} className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors text-center">
-                              <span className="text-sm font-medium" style={{ color: '#0f172a' }}>
+                              <span className="text-sm font-medium text-foreground">
                                 {translateFurnitureAppliance(item, t)}
                               </span>
                             </div>
@@ -1392,14 +1392,14 @@ const PropertyDetail = () => {
                   {displayProperty.tags && displayProperty.tags.length > 0 && (
                     <Card className="mb-4 md:mb-6 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-300">
                       <CardContent className="p-4 md:p-6">
-                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2" style={{ color: '#0f172a' }}>
-                          <Tag className="h-4 w-4" style={{ color: '#0f172a' }} />
+                        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2 text-foreground">
+                          <Tag className="h-4 w-4 text-foreground" />
                           {t('sections.tags')}
                         </h3>
                         
                         <div className="flex flex-wrap gap-2">
                           {displayProperty.tags.map((tag, index) => (
-                            <Badge key={`tag-${index}`} className="text-white px-3 py-1 text-sm font-semibold hover:opacity-90 transition-opacity" style={{ backgroundColor: '#0f172a' }}>
+                            <Badge key={`tag-${index}`} className="text-white px-3 py-1 text-sm font-semibold hover:opacity-90 transition-opacity bg-foreground">
                               #{translateTag(tag, t)}
                             </Badge>
                           ))}
@@ -1425,12 +1425,8 @@ const PropertyDetail = () => {
 
             {/* Sidebar */}
             <div className="xl:col-span-1">
-              <div 
+              <div
                 className="sticky top-20 lg:top-32 space-y-4 md:space-y-6 max-h-[calc(100vh-5rem)] lg:max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar"
-                style={{
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: '#d1d5db transparent'
-                }}
               >
               {/* Developer/Agent Info */}
               <Card className="mb-4 md:mb-6 overflow-hidden border border-gray-300 shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -1487,7 +1483,7 @@ const PropertyDetail = () => {
                       <Phone className="h-4 w-4 md:h-5 md:w-5 mr-2 md:mr-3" />
                       <span className="truncate">{displayProperty.agent.phone}</span>
                     </Button>
-                    <Button className="w-full border-gray-300 text-primary hover:bg-primary/5 transition-all duration-200 py-3 md:py-5 font-medium text-sm md:text-base" variant="outline">
+                    <Button className="w-full border-border text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-200 py-3 md:py-5 font-medium text-sm md:text-base" variant="outline">
                       <Mail className="h-4 w-4 md:h-5 md:w-5 mr-2 md:mr-3" />
                       {t('email')}
                     </Button>

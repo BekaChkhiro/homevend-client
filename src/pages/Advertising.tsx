@@ -218,7 +218,7 @@ const Advertising = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{totalViews.toLocaleString()}</div>
-                <p className="text-xs text-green-600">+15% {t('advertisements:advertisingPage.stats.growthThisMonth')}</p>
+                <p className="text-xs text-primary">+15% {t('advertisements:advertisingPage.stats.growthThisMonth')}</p>
               </CardContent>
             </Card>
 
@@ -240,7 +240,7 @@ const Advertising = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{averageCTR.toFixed(1)}%</div>
-                <p className="text-xs text-green-600">{t('advertisements:advertisingPage.stats.higherThanIndustry')}</p>
+                <p className="text-xs text-primary">{t('advertisements:advertisingPage.stats.higherThanIndustry')}</p>
               </CardContent>
             </Card>
 
@@ -315,7 +315,7 @@ const Advertising = () => {
                     </div>
                     
                     <div className="text-center p-3 bg-muted rounded-lg">
-                      <div className="text-lg font-bold text-green-600">{placement.ctr}%</div>
+                      <div className="text-lg font-bold text-primary">{placement.ctr}%</div>
                       <p className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.placements.averageCtr')}</p>
                     </div>
                   </div>
