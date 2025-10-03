@@ -270,12 +270,8 @@ export const PropertyDetailSkeleton = () => {
 
         {/* Sidebar */}
         <div className="xl:col-span-1">
-          <div 
+          <div
             className="sticky top-20 lg:top-32 space-y-4 md:space-y-6 max-h-[calc(100vh-5rem)] lg:max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar"
-            style={{
-              scrollbarWidth: 'thin',
-              scrollbarColor: '#d1d5db transparent'
-            }}
           >
             {/* Contact Card Skeleton */}
             <Card className="mb-4 md:mb-6 overflow-hidden border border-gray-300">

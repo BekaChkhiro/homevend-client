@@ -277,15 +277,15 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   };
 
   return (
-    <Link 
+    <Link
       to={getLanguageUrl(`/property/${property.id}`)}
-      className="block h-full transition-all hover:scale-[1.02] hover:shadow-lg rounded-lg overflow-hidden group"
+      className="block h-full transition-all hover:shadow-lg rounded-lg group"
       style={getColorSeparationStyle()}
     >
-      <Card className="h-full flex flex-col border-0 shadow-md overflow-hidden">
+      <Card className="h-full flex flex-col border border-border shadow-md overflow-hidden">
         <CardContent className="p-0 flex flex-col h-full">
           {/* Property Image Carousel */}
-          <div className="relative h-48 bg-gray-100 overflow-hidden">
+          <div className="relative h-48 bg-muted overflow-hidden">
             {images.length > 0 ? (
               <div className="relative w-full h-full">
                 {/* Main Image */}
@@ -301,14 +301,14 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                   <>
                     <button 
                       onClick={goToPrevImage}
-                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-md z-10 transition-all hover:scale-110"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-1.5 shadow-md z-10 transition-all hover:scale-110"
                       aria-label="Previous image"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
                     <button 
                       onClick={goToNextImage}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-md z-10 transition-all hover:scale-110"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-1.5 shadow-md z-10 transition-all hover:scale-110"
                       aria-label="Next image"
                     >
                       <ChevronRight className="h-4 w-4" />
@@ -338,8 +338,8 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                 )}
               </div>
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                <Home className="h-12 w-12 text-gray-400" />
+              <div className="w-full h-full flex items-center justify-center bg-muted">
+                <Home className="h-12 w-12 text-muted-foreground" />
               </div>
             )}
             
@@ -357,26 +357,26 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <div className="absolute top-2 right-2 z-10">
               <FavoriteButton propertyId={property.id} size="sm" variant="ghost" className="bg-white/90 hover:bg-white" />
             </div>
-            
-            {/* City Badge */}
-            {getCityName() && (
-              <Badge className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-black/70 text-white text-xs px-2 py-1 backdrop-blur-sm">
-                {getCityName()}
-              </Badge>
-            )}
-            
-            {/* Price Tag */}
-            <div className="absolute bottom-0 left-0 right-0 p-2 to-transparent">
-              <div className="text-white font-bold text-lg">{formatPrice(property.price)}</div>
+          </div>
+
+          <CardContent className="p-2 sm:p-3">
+            {/* Price and City Section */}
+            <div className="mb-2">
+              <div className="flex items-center justify-between mb-1">
+                <div className="text-primary font-bold text-lg">{formatPrice(property.price)}</div>
+                {getCityName() && (
+                  <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                    {getCityName()}
+                  </Badge>
+                )}
+              </div>
               {property.pricePerSqm && (
-                <div className="text-white/80 text-xs">
+                <div className="text-muted-foreground text-xs">
                   {property.pricePerSqm.toLocaleString()} {t('propertyCard.perSqm')}
                 </div>
               )}
             </div>
-          </div>
-          
-          <CardContent className="p-2 sm:p-3">
+
             <div className="mb-1 sm:mb-2">
               <h3 className="font-semibold text-sm sm:text-base line-clamp-2 group-hover:text-primary transition-colors h-8 sm:h-10 flex items-start">
                 <span className="line-clamp-2">
@@ -384,7 +384,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                 </span>
               </h3>
               <div className="flex items-start text-muted-foreground text-xs sm:text-sm mt-0.5">
-                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0 mt-0.5" />
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0 mt-0.5 text-primary" />
                 <span className="line-clamp-2">{getDistrictAndStreet()}</span>
               </div>
               {property.agentName && (
@@ -396,15 +396,15 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             
             <div className="flex items-center justify-between text-[10px] sm:text-xs text-muted-foreground">
               <div className="flex items-center space-x-0.5">
-                <Bed className="h-3 w-3 sm:h-4 sm:w-4" />
+                <Bed className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                 <span>{property.bedrooms || '0'}</span>
               </div>
               <div className="flex items-center space-x-0.5">
-                <Bath className="h-3 w-3 sm:h-4 sm:w-4" />
+                <Bath className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                 <span>{property.bathrooms || '0'}</span>
               </div>
               <div className="flex items-center space-x-0.5">
-                <Square className="h-3 w-3 sm:h-4 sm:w-4" />
+                <Square className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                 <span>{property.area} {t('propertyCard.sqMeter')}</span>
               </div>
             </div>
