@@ -62,7 +62,7 @@ export const Footer = () => {
 
         <div className="border-t border-border mt-6 sm:mt-8 pt-6 sm:pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-muted-foreground space-y-4 sm:space-y-0">
-            <p>&copy; 2024 HOMEVEND.ge. {t('footer.rights')}</p>
+            <p>&copy; 2025 HOMEVEND.ge. {t('footer.rights')}</p>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 text-center">
               <Link to={getLanguageUrl('terms', i18n.language)} className="hover:text-primary transition-colors">{t('footer.termsAndConditions')}</Link>
             </div>
