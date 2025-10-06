@@ -704,7 +704,7 @@ const PropertyDetail = () => {
 
         {/* Top Ad Banner */}
         <div className="container mx-auto px-4 pt-4">
-          <AdBanner type="horizontal" />
+          <AdBanner type="horizontal" placementId="7" />
         </div>
 
         <div className="container mx-auto px-4 py-8">
@@ -1426,7 +1426,7 @@ const PropertyDetail = () => {
               </Card>
 
               {/* Ad Banner */}
-              <AdBanner type="horizontal" />
+              <AdBanner type="horizontal" placementId="8" />
             </div>
 
             {/* Sidebar */}
@@ -1496,7 +1496,7 @@ const PropertyDetail = () => {
               </Card>
 
               {/* Ad Banner Vertical */}
-              <AdBanner type="vertical" />
+              <AdBanner type="vertical" placementId="9" />
               </div>
             </div>
           </div>

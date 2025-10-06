@@ -256,7 +256,7 @@ const Home = () => {
         {/* First Advertisement - After Hero Section */}
         <section className="py-4 md:py-6 lg:py-8">
           <div className="container mx-auto px-3 sm:px-4">
-            <AdBanner type="horizontal" />
+            <AdBanner type="horizontal" placementId="1" />
           </div>
         </section>
 
@@ -540,7 +540,7 @@ const Home = () => {
         {/* Third Advertisement - Before Footer */}
         <section className="py-4 md:py-6 lg:py-8">
           <div className="container mx-auto px-3 sm:px-4">
-            <AdBanner type="horizontal" />
+            <AdBanner type="horizontal" placementId="3" />
           </div>
         </section>
       </div>
