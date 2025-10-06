@@ -225,7 +225,7 @@ const ProjectDetail = () => {
           description: t('projectDetail.notFound'),
           variant: "destructive",
         });
-        navigate(`/${i18n.language}/projects`);
+        navigate(getLanguageUrl('projects', i18n.language));
         return;
       }
       
@@ -238,7 +238,7 @@ const ProjectDetail = () => {
           description: t('projectDetail.notFound'),
           variant: "destructive",
         });
-        navigate(`/${i18n.language}/projects`);
+        navigate(getLanguageUrl('projects', i18n.language));
       } else {
         toast({
           title: t('error.title'),
@@ -340,7 +340,7 @@ const ProjectDetail = () => {
             <h3 className="text-xl font-medium text-gray-900 mb-2">
               პროექტი ვერ მოიძებნა
             </h3>
-            <Button onClick={() => navigate('/projects')}>
+            <Button onClick={() => navigate(getLanguageUrl('projects', i18n.language))}>
               {t('projectDetail.backToProjects')}
             </Button>
           </div>
@@ -358,7 +358,7 @@ const ProjectDetail = () => {
           {/* Back Button */}
           <Button
             variant="ghost"
-            onClick={() => navigate('/projects')}
+            onClick={() => navigate(getLanguageUrl('projects', i18n.language))}
             className="mb-6"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -697,7 +697,7 @@ const ProjectDetail = () => {
 
             {/* Right Sidebar - Developer Info */}
             <div className="space-y-6">
-              <Card className="sticky top-24">
+              <Card className="sticky" style={{top:"8rem"}}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="h-5 w-5" />
@@ -790,7 +790,7 @@ const ProjectDetail = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {project.linkedProperties.map((property) => (
-                      <Card key={property.id} className="hover:shadow-md transition-all duration-300 cursor-pointer border-l-4 border-l-primary/30 hover:border-l-primary" onClick={() => navigate(getLanguageUrl(`/property/${property.id}`))}>
+                      <Card key={property.id} className="hover:shadow-md transition-all duration-300 cursor-pointer border-l-4 border-l-primary/30 hover:border-l-primary" onClick={() => navigate(getLanguageUrl(`property/${property.id}`, i18n.language))}>
                         <CardContent className="p-0">
                           <div className="flex min-h-[140px]">
                             {/* Property Photo */}

@@ -700,7 +700,7 @@ const PropertyDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-16 md:pt-32">
+      <div className="pt-16 md:pt-32 relative">
 
         {/* Top Ad Banner */}
         <div className="container mx-auto px-4 pt-4">
@@ -708,9 +708,9 @@ const PropertyDetail = () => {
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+          <div className="flex flex-col xl:flex-row gap-4 md:gap-6 lg:gap-8">
             {/* Main Content */}
-            <div className="xl:col-span-2">
+            <div className="flex-1 xl:w-2/3">
               {/* Property Images Slider */}
               <div className="mb-4 md:mb-6">
                 {/* Main Image Display */}
@@ -1430,12 +1430,10 @@ const PropertyDetail = () => {
             </div>
 
             {/* Sidebar */}
-            <div className="xl:col-span-1">
-              <div
-                className="sticky top-20 lg:top-32 space-y-4 md:space-y-6 max-h-[calc(100vh-5rem)] lg:max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar"
-              >
+            <div className="xl:w-1/3">
+              <div className="sticky space-y-4 md:space-y-6" style={{top:"8rem"}}>
               {/* Developer/Agent Info */}
-              <Card className="mb-4 md:mb-6 overflow-hidden border border-gray-300 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card className="overflow-hidden border border-gray-300 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="bg-gradient-to-r from-primary to-primary/80 p-3 md:p-4 text-white">
                   <h3 className="text-lg md:text-xl font-bold text-center">{getContactTitle(property.user.role)}</h3>
                 </div>
@@ -1496,7 +1494,6 @@ const PropertyDetail = () => {
                   </div>
                 </CardContent>
               </Card>
-
 
               {/* Ad Banner Vertical */}
               <AdBanner type="vertical" />

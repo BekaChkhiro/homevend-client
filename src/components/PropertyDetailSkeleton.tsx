@@ -3,9 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 export const PropertyDetailSkeleton = () => {
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+      <div className="flex flex-col xl:flex-row gap-4 md:gap-6 lg:gap-8">
         {/* Main Content */}
-        <div className="xl:col-span-2">
+        <div className="flex-1 xl:w-2/3">
           {/* Property Images Skeleton */}
           <div className="mb-4 md:mb-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4 animate-pulse">
@@ -269,10 +269,8 @@ export const PropertyDetailSkeleton = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="xl:col-span-1">
-          <div
-            className="sticky top-20 lg:top-32 space-y-4 md:space-y-6 max-h-[calc(100vh-5rem)] lg:max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar"
-          >
+        <div className="xl:w-1/3">
+          <div className="sticky space-y-4 md:space-y-6" style={{top:"8rem"}}>
             {/* Contact Card Skeleton */}
             <Card className="mb-4 md:mb-6 overflow-hidden border border-gray-300">
               <div className="bg-gray-300 p-3 md:p-4 animate-pulse">

@@ -209,17 +209,19 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const [imageError, setImageError] = useState(false);
   const [propertyImages, setPropertyImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imagesLoading, setImagesLoading] = useState(true);
   
   // Fetch property images when component mounts
   useEffect(() => {
     const fetchPropertyImages = async () => {
+      setImagesLoading(true);
       try {
         const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/upload/property/${property.id}/images`);
         if (response.ok) {
           const data = await response.json();
           if (data.images && data.images.length > 0) {
             // Map the image URLs to get the large version if available, otherwise use the original
-            const imageUrls = data.images.map((img: any) => 
+            const imageUrls = data.images.map((img: any) =>
               img.urls?.large || img.urls?.medium || img.urls?.original
             ).filter(Boolean);
             setPropertyImages(imageUrls);
@@ -231,6 +233,8 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         if (property.photos && property.photos.length > 0) {
           setPropertyImages(property.photos);
         }
+      } finally {
+        setImagesLoading(false);
       }
     };
 
@@ -254,7 +258,8 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const goToPrevImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prevIndex) => 
+    if (imagesLoading) return false;
+    setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
     return false;
@@ -263,7 +268,8 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const goToNextImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prevIndex) => 
+    if (imagesLoading) return false;
+    setCurrentImageIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
     return false;
@@ -272,6 +278,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const handleDotClick = (e: React.MouseEvent, index: number) => {
     e.preventDefault();
     e.stopPropagation();
+    if (imagesLoading) return false;
     setCurrentImageIndex(index);
     return false;
   };
@@ -297,16 +304,16 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                 />
                 
                 {/* Navigation Arrows */}
-                {hasMultipleImages && (
+                {hasMultipleImages && !imagesLoading && (
                   <>
-                    <button 
+                    <button
                       onClick={goToPrevImage}
                       className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-1.5 shadow-md z-10 transition-all hover:scale-110"
                       aria-label="Previous image"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
-                    <button 
+                    <button
                       onClick={goToNextImage}
                       className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-foreground rounded-full p-1.5 shadow-md z-10 transition-all hover:scale-110"
                       aria-label="Next image"
@@ -317,14 +324,14 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                 )}
                 
                 {/* Image Counter */}
-                {hasMultipleImages && (
+                {hasMultipleImages && !imagesLoading && (
                   <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
                     {currentImageIndex + 1} / {images.length}
                   </div>
                 )}
-                
+
                 {/* Image Dots */}
-                {hasMultipleImages && images.length > 1 && (
+                {hasMultipleImages && images.length > 1 && !imagesLoading && (
                   <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1.5 z-10">
                     {images.map((_, index) => (
                       <button
@@ -334,6 +341,13 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                         aria-label={`Go to image ${index + 1}`}
                       />
                     ))}
+                  </div>
+                )}
+
+                {/* Loading Indicator */}
+                {imagesLoading && (
+                  <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                   </div>
                 )}
               </div>
