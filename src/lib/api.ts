@@ -944,5 +944,67 @@ export const uploadApi = {
   }
 };
 
+// Advertisement API
+export const advertisementApi = {
+  getAdvertisements: async (params?: { placementId?: string; status?: string; page?: number; limit?: number }) => {
+    const response = await apiClient.get('/advertisements', { params });
+    return response.data.data;
+  },
+
+  getAdvertisementById: async (id: number) => {
+    const response = await apiClient.get(`/advertisements/${id}`);
+    return response.data.data;
+  },
+
+  getActiveAdByPlacement: async (placementId: string) => {
+    const response = await publicApiClient.get(`/advertisements/placement/${placementId}`);
+    return response.data.data;
+  },
+
+  createAdvertisement: async (adData: {
+    title: string;
+    description?: string;
+    advertiser: string;
+    placementId: string;
+    startDate: Date;
+    endDate: Date;
+    imageUrl: string;
+    targetUrl: string;
+  }) => {
+    const response = await apiClient.post('/advertisements', adData);
+    return response.data.data;
+  },
+
+  updateAdvertisement: async (id: number, adData: {
+    title?: string;
+    description?: string;
+    advertiser?: string;
+    placementId?: string;
+    startDate?: Date;
+    endDate?: Date;
+    imageUrl?: string;
+    targetUrl?: string;
+    status?: string;
+  }) => {
+    const response = await apiClient.put(`/advertisements/${id}`, adData);
+    return response.data.data;
+  },
+
+  deleteAdvertisement: async (id: number) => {
+    const response = await apiClient.delete(`/advertisements/${id}`);
+    return response.data;
+  },
+
+  trackClick: async (id: number) => {
+    const response = await publicApiClient.post(`/advertisements/${id}/click`);
+    return response.data;
+  },
+
+  trackView: async (id: number) => {
+    const response = await publicApiClient.post(`/advertisements/${id}/view`);
+    return response.data;
+  }
+};
+
 export default apiClient;
 export { publicApiClient };

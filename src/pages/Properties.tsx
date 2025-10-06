@@ -803,7 +803,7 @@ const Properties = () => {
 
         {/* Top Ad Banner */}
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
-          <AdBanner type="horizontal" />
+          <AdBanner type="horizontal" placementId="4" />
         </div>
 
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-20 sm:pb-8">
@@ -954,7 +954,7 @@ const Properties = () => {
                     {/* Middle Ad Banner - Show only if there are more than 8 properties */}
                     {paginatedProperties.length > 8 && (
                       <div className="mb-8">
-                        <AdBanner type="horizontal" />
+                        <AdBanner type="horizontal" placementId="5" />
                       </div>
                     )}
                     
@@ -1040,7 +1040,7 @@ const Properties = () => {
             {/* Bottom Ad Banner */}
             {!isLoading && filteredProperties.length > 0 && (
               <div className="mt-6 sm:mt-8 max-w-4xl mx-auto">
-                <AdBanner type="horizontal" />
+                <AdBanner type="horizontal" placementId="6" />
               </div>
             )}
           </div>

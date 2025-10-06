@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from 'react-i18next';
+import { uploadApi } from '@/lib/api';
 import {
   Dialog,
   DialogContent,
@@ -26,10 +27,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { CalendarIcon, Upload, X, Plus, AlertCircle } from 'lucide-react';
+import { CalendarIcon, Upload, X, Plus, AlertCircle, Image as ImageIcon, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ka } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { Progress } from '@/components/ui/progress';
 
 interface AdPlacement {
   id: string;
@@ -81,8 +83,44 @@ export const AddAdvertisementModal = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
 
   const selectedPlacement = availablePlacements.find(p => p.id === formData.placementId);
+
+  // Handle file selection
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, imageUrl: 'Image size must be less than 5MB' }));
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setErrors(prev => ({ ...prev, imageUrl: 'Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed' }));
+      return;
+    }
+
+    setUploadedImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+    if (errors.imageUrl) {
+      setErrors(prev => ({ ...prev, imageUrl: '' }));
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setUploadedImageFile(null);
+    setImagePreview('');
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+  };
 
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -99,9 +137,9 @@ export const AddAdvertisementModal = ({
     if (!formData.placementId) newErrors.placementId = t('addAdvertisementModal.validation.placementRequired');
     if (!formData.startDate) newErrors.startDate = t('addAdvertisementModal.validation.startDateRequired');
     if (!formData.endDate) newErrors.endDate = t('addAdvertisementModal.validation.endDateRequired');
-    if (!formData.imageUrl.trim()) newErrors.imageUrl = t('addAdvertisementModal.validation.imageRequired');
+    if (!uploadedImageFile && !imagePreview) newErrors.imageUrl = t('addAdvertisementModal.validation.imageRequired');
     if (!formData.targetUrl.trim()) newErrors.targetUrl = t('addAdvertisementModal.validation.targetUrlRequired');
-    
+
     if (formData.startDate && formData.endDate && formData.startDate >= formData.endDate) {
       newErrors.endDate = t('addAdvertisementModal.validation.endDateAfterStart');
     }
@@ -112,17 +150,39 @@ export const AddAdvertisementModal = ({
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
+    if (!uploadedImageFile) return;
 
     setIsSubmitting(true);
+    setUploading(true);
     try {
+      // Step 1: Create advertisement without imageUrl first (we'll add temporary URL)
       const adData = {
-        ...formData,
-        createdAt: new Date(),
-        status: 'pending' as const
+        title: formData.title,
+        description: formData.description,
+        advertiser: formData.advertiser,
+        placementId: formData.placementId,
+        startDate: formData.startDate!,
+        endDate: formData.endDate!,
+        imageUrl: 'temp', // Temporary value, will be updated after upload
+        targetUrl: formData.targetUrl,
       };
-      
-      await onSubmit(adData);
-      
+
+      // This will call the parent's onSubmit which creates the ad and returns it
+      const createdAd = await onSubmit(adData);
+
+      // Step 2: Upload image with the real advertisement ID
+      if (createdAd && createdAd.id) {
+        const uploadResult = await uploadApi.uploadImages(
+          'advertisement',
+          createdAd.id,
+          [uploadedImageFile],
+          'ad_banner'
+        );
+
+        // The image is now uploaded and linked to the advertisement
+        console.log('Image uploaded successfully:', uploadResult);
+      }
+
       // Reset form
       setFormData({
         title: '',
@@ -134,11 +194,14 @@ export const AddAdvertisementModal = ({
         imageUrl: '',
         targetUrl: ''
       });
+      handleRemoveImage();
       onClose();
     } catch (error) {
       console.error('Error submitting ad:', error);
+      setErrors(prev => ({ ...prev, imageUrl: 'Failed to upload image' }));
     } finally {
       setIsSubmitting(false);
+      setUploading(false);
     }
   };
 
@@ -154,6 +217,7 @@ export const AddAdvertisementModal = ({
       targetUrl: ''
     });
     setErrors({});
+    handleRemoveImage();
     onClose();
   };
 
@@ -327,46 +391,91 @@ export const AddAdvertisementModal = ({
             </div>
           </div>
 
-          {/* Media and Links */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="imageUrl">{t('addAdvertisementModal.fields.imageUrl')} *</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={(e) => handleInputChange('imageUrl', e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                  className={errors.imageUrl ? 'border-red-500' : ''}
+          {/* Image Upload */}
+          <div className="space-y-2">
+            <Label>{t('addAdvertisementModal.fields.imageUrl')} *</Label>
+
+            {/* Image Preview */}
+            {imagePreview && (
+              <div className="relative w-full h-48 border rounded-lg overflow-hidden">
+                <img
+                  src={imagePreview}
+                  alt="Advertisement Preview"
+                  className="w-full h-full object-contain"
                 />
-                <Button variant="outline" size="sm">
-                  <Upload className="h-4 w-4" />
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-2 right-2"
+                  onClick={handleRemoveImage}
+                  disabled={uploading || isSubmitting}
+                >
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
-              {errors.imageUrl && (
-                <p className="text-sm text-red-500 flex items-center gap-1">
-                  <AlertCircle className="h-3 w-3" />
-                  {errors.imageUrl}
-                </p>
-              )}
-            </div>
+            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="targetUrl">{t('addAdvertisementModal.fields.targetUrl')} *</Label>
-              <Input
+            {/* Upload Area */}
+            {!imagePreview && (
+              <div className={cn(
+                "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors",
+                errors.imageUrl && "border-red-500"
+              )}>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                  id="image-upload"
+                  disabled={uploading || isSubmitting}
+                />
+                <label htmlFor="image-upload" className="cursor-pointer">
+                  <ImageIcon className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                  <p className="text-sm font-medium mb-1">
+                    Click to upload image
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG, WEBP, GIF up to 5MB
+                  </p>
+                </label>
+              </div>
+            )}
+
+            {/* Upload Progress - shown during submission */}
+            {uploading && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <ImageIcon className="h-4 w-4 animate-pulse" />
+                  <span>Uploading image...</span>
+                </div>
+              </div>
+            )}
+
+            {/* Form Validation Error */}
+            {errors.imageUrl && !imagePreview && (
+              <p className="text-sm text-red-500 flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {errors.imageUrl}
+              </p>
+            )}
+          </div>
+
+          {/* Target URL */}
+          <div className="space-y-2">
+            <Label htmlFor="targetUrl">{t('addAdvertisementModal.fields.targetUrl')} *</Label>
+            <Input
                 id="targetUrl"
                 value={formData.targetUrl}
                 onChange={(e) => handleInputChange('targetUrl', e.target.value)}
                 placeholder="https://example.com"
                 className={errors.targetUrl ? 'border-red-500' : ''}
               />
-              {errors.targetUrl && (
-                <p className="text-sm text-red-500 flex items-center gap-1">
-                  <AlertCircle className="h-3 w-3" />
-                  {errors.targetUrl}
-                </p>
-              )}
-            </div>
+            {errors.targetUrl && (
+              <p className="text-sm text-red-500 flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {errors.targetUrl}
+              </p>
+            )}
           </div>
         </div>
 

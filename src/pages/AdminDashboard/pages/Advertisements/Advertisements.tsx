@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 import { AddAdvertisementModal } from './components/AddAdvertisementModal';
+import { advertisementApi } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
 import { 
   Monitor, 
   Smartphone, 
@@ -36,9 +38,12 @@ interface AdPlacement {
 
 const Advertisements = () => {
   const { t } = useTranslation('admin');
+  const { toast } = useToast();
   const [selectedPlacement, setSelectedPlacement] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedPlacementForAd, setSelectedPlacementForAd] = useState<string | undefined>();
+  const [advertisements, setAdvertisements] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const adPlacements: AdPlacement[] = [
     {
@@ -198,16 +203,107 @@ const Advertisements = () => {
     }
   };
 
+  // Fetch advertisements on mount
+  useEffect(() => {
+    fetchAdvertisements();
+  }, []);
+
+  const fetchAdvertisements = async () => {
+    try {
+      setLoading(true);
+      const data = await advertisementApi.getAdvertisements();
+      setAdvertisements(data.advertisements || []);
+    } catch (error) {
+      console.error('Error fetching advertisements:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load advertisements',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddAdvertisement = (placementId?: string) => {
     setSelectedPlacementForAd(placementId);
     setIsAddModalOpen(true);
   };
 
   const handleSubmitAdvertisement = async (adData: any) => {
-    console.log('New advertisement:', adData);
-    // Here you would typically make an API call to save the advertisement
-    // For now, we'll just log it and close the modal
-    alert(t('advertisements.messages.adAdded'));
+    try {
+      const createdAd = await advertisementApi.createAdvertisement({
+        title: adData.title,
+        description: adData.description,
+        advertiser: adData.advertiser,
+        placementId: adData.placementId,
+        startDate: adData.startDate,
+        endDate: adData.endDate,
+        imageUrl: adData.imageUrl,
+        targetUrl: adData.targetUrl,
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Advertisement created successfully',
+      });
+
+      // Refresh the list
+      fetchAdvertisements();
+
+      // Return the created advertisement so the modal can upload the image
+      return createdAd;
+    } catch (error) {
+      console.error('Error creating advertisement:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to create advertisement',
+        variant: 'destructive',
+      });
+      throw error;
+    }
+  };
+
+  const handleDeleteAdvertisement = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this advertisement?')) return;
+
+    try {
+      await advertisementApi.deleteAdvertisement(id);
+      toast({
+        title: 'Success',
+        description: 'Advertisement deleted successfully',
+      });
+      fetchAdvertisements();
+    } catch (error) {
+      console.error('Error deleting advertisement:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete advertisement',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  // Find active ad for each placement
+  const getActiveAdForPlacement = (placementId: string) => {
+    return advertisements.find(
+      ad => ad.placementId === placementId && ad.status === 'active'
+    );
+  };
+
+  // Update placement stats with real data
+  const getPlacementStats = (placementId: string) => {
+    const ad = getActiveAdForPlacement(placementId);
+    return {
+      views: ad?.views || 0,
+      clicks: ad?.clicks || 0,
+      currentAd: ad ? {
+        title: ad.title,
+        advertiser: ad.advertiser,
+        startDate: new Date(ad.startDate).toLocaleDateString(),
+        endDate: new Date(ad.endDate).toLocaleDateString(),
+      } : undefined,
+    };
   };
 
   return (
@@ -283,69 +379,80 @@ const Advertisements = () => {
       </div>
 
       <div className="grid gap-6">
-        {adPlacements.map((placement) => (
-          <Card key={placement.id} className={selectedPlacement === placement.id ? 'ring-2 ring-primary' : ''}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {getTypeIcon(placement.type)}
-                  <div>
-                    <CardTitle className="text-lg">{placement.name}</CardTitle>
-                    <CardDescription>{placement.location}</CardDescription>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant={placement.status === 'active' ? 'default' : 'secondary'}>
-                    {placement.status === 'active' ? t('advertisements.status.active') : t('advertisements.status.inactive')}
-                  </Badge>
-                  <Badge variant="outline">{getTypeLabel(placement.type)}</Badge>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">{t('advertisements.labels.dimensions')}</p>
-                  <p className="font-medium">{placement.dimensions}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">{t('advertisements.labels.performance')}</p>
-                  <p className="font-medium">{placement.views.toLocaleString()} {t('advertisements.labels.views')} • {placement.clicks} {t('advertisements.labels.clicks')}</p>
-                </div>
-              </div>
-
-              {placement.currentAd && (
-                <div className="border rounded-lg p-3 bg-green-50 mb-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-semibold text-green-800 text-sm">{placement.currentAd.title}</h4>
-                      <p className="text-xs text-green-600">{placement.currentAd.advertiser}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-green-600">{t('advertisements.labels.expires')} {placement.currentAd.endDate} {t('advertisements.labels.until')}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-2">
-                {placement.status === 'active' ? (
-                  <Button variant="outline" size="sm">
-                    {t('advertisements.buttons.deactivate')}
-                  </Button>
-                ) : (
-                  <Button variant="outline" size="sm" onClick={() => handleAddAdvertisement(placement.id)}>
-                    {t('advertisements.buttons.activate')}
-                  </Button>
-                )}
-                <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  {t('advertisements.buttons.delete')}
-                </Button>
-              </div>
+        {loading ? (
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-center text-muted-foreground">Loading advertisements...</p>
             </CardContent>
           </Card>
-        ))}
+        ) : (
+          adPlacements.map((placement) => {
+            const stats = getPlacementStats(placement.id);
+            const activeAd = getActiveAdForPlacement(placement.id);
+
+            return (
+              <Card key={placement.id} className={selectedPlacement === placement.id ? 'ring-2 ring-primary' : ''}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {getTypeIcon(placement.type)}
+                      <div>
+                        <CardTitle className="text-lg">{placement.name}</CardTitle>
+                        <CardDescription>{placement.location}</CardDescription>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={activeAd ? 'default' : 'secondary'}>
+                        {activeAd ? t('advertisements.status.active') : t('advertisements.status.inactive')}
+                      </Badge>
+                      <Badge variant="outline">{getTypeLabel(placement.type)}</Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">{t('advertisements.labels.dimensions')}</p>
+                      <p className="font-medium">{placement.dimensions}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">{t('advertisements.labels.performance')}</p>
+                      <p className="font-medium">{stats.views.toLocaleString()} {t('advertisements.labels.views')} • {stats.clicks} {t('advertisements.labels.clicks')}</p>
+                    </div>
+                  </div>
+
+                  {stats.currentAd && (
+                    <div className="border rounded-lg p-3 bg-green-50 mb-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold text-green-800 text-sm">{stats.currentAd.title}</h4>
+                          <p className="text-xs text-green-600">{stats.currentAd.advertiser}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-green-600">{t('advertisements.labels.expires')} {stats.currentAd.endDate} {t('advertisements.labels.until')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    {activeAd ? (
+                      <Button variant="outline" size="sm" onClick={() => handleDeleteAdvertisement(activeAd.id)}>
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        {t('advertisements.buttons.delete')}
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" onClick={() => handleAddAdvertisement(placement.id)}>
+                        <Plus className="h-4 w-4 mr-1" />
+                        {t('advertisements.buttons.activate')}
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })
+        )}
       </div>
 
       <AddAdvertisementModal

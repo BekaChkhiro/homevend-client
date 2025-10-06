@@ -39,3 +39,5 @@ yarn-error.log*
 .eslintcache
 
 CLAUDE.md
+.claude
+nul
