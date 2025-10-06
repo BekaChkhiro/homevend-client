@@ -14,6 +14,7 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { PropertyDetailSkeleton, SimilarPropertiesSkeleton } from "@/components/PropertyDetailSkeleton";
 import { getLanguageUrl } from "@/components/LanguageRoute";
 import { useTranslation } from "react-i18next";
+import { ImageLightbox } from "@/components/ImageLightbox";
 import {
   Carousel,
   CarouselContent,
@@ -358,6 +359,7 @@ const PropertyDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const { t, i18n } = useTranslation('propertyDetail');
 
@@ -716,7 +718,8 @@ const PropertyDetail = () => {
                   <img
                     src={displayProperty.images[currentImageIndex]}
                     alt={`${displayProperty.title} ${currentImageIndex + 1}`}
-                    className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover rounded-lg"
+                    className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover rounded-lg cursor-pointer hover:opacity-95 transition-opacity"
+                    onClick={() => setIsLightboxOpen(true)}
                   />
                   
                   {/* Image counter */}
@@ -762,11 +765,14 @@ const PropertyDetail = () => {
                         src={image}
                         alt={`Thumbnail ${index + 1}`}
                         className={`w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg cursor-pointer transition-all flex-shrink-0 border-2 ${
-                          index === currentImageIndex 
-                            ? 'border-primary opacity-100 ring-2 ring-primary/30' 
+                          index === currentImageIndex
+                            ? 'border-primary opacity-100 ring-2 ring-primary/30'
                             : 'border-transparent hover:border-primary/50 opacity-70 hover:opacity-100'
                         }`}
-                        onClick={() => setCurrentImageIndex(index)}
+                        onClick={() => {
+                          setCurrentImageIndex(index);
+                          setIsLightboxOpen(true);
+                        }}
                       />
                     ))}
                   </div>
@@ -1542,6 +1548,16 @@ const PropertyDetail = () => {
 
         <Footer />
       </div>
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        images={displayProperty.images}
+        currentIndex={currentImageIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        onIndexChange={setCurrentImageIndex}
+        title={displayProperty.title}
+      />
     </div>
   );
 };

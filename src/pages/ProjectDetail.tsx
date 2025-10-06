@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
 import { projectApi } from "@/lib/api";
 import { getLanguageUrl } from "@/components/LanguageRoute";
+import { ImageLightbox } from "@/components/ImageLightbox";
 import {
   MapPin,
   Calendar,
@@ -183,6 +184,7 @@ const ProjectDetail = () => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showPhone, setShowPhone] = useState(false);
   const [projectImages, setProjectImages] = useState<any[]>([]);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Reset photo index when images change
   useEffect(() => {
@@ -406,7 +408,9 @@ const ProjectDetail = () => {
               {/* Photo Slideshow */}
               {projectImages && projectImages.length > 0 ? (
                 <div className="relative">
-                  <div className="aspect-video rounded-xl overflow-hidden bg-gray-100 shadow-lg">
+                  <div className="aspect-video rounded-xl overflow-hidden bg-gray-100 shadow-lg cursor-pointer hover:opacity-95 transition-opacity"
+                    onClick={() => setIsLightboxOpen(true)}
+                  >
                     <img
                       src={projectImages[currentPhotoIndex].urls?.medium || projectImages[currentPhotoIndex].urls?.original}
                       alt={projectImages[currentPhotoIndex].originalName || projectImages[currentPhotoIndex].fileName}
@@ -443,10 +447,13 @@ const ProjectDetail = () => {
                       {projectImages.map((image, index) => (
                         <button
                           key={image.id}
-                          onClick={() => setCurrentPhotoIndex(index)}
+                          onClick={() => {
+                            setCurrentPhotoIndex(index);
+                            setIsLightboxOpen(true);
+                          }}
                           className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                            index === currentPhotoIndex 
-                              ? 'border-primary shadow-md' 
+                            index === currentPhotoIndex
+                              ? 'border-primary shadow-md'
                               : 'border-gray-200 hover:border-gray-300'
                           }`}
                         >
@@ -850,6 +857,18 @@ const ProjectDetail = () => {
           )}
         </div>
       </div>
+
+      {/* Image Lightbox */}
+      {projectImages && projectImages.length > 0 && (
+        <ImageLightbox
+          images={projectImages.map(img => img.urls?.large || img.urls?.medium || img.urls?.original)}
+          currentIndex={currentPhotoIndex}
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          onIndexChange={setCurrentPhotoIndex}
+          title={project?.projectName}
+        />
+      )}
     </div>
   );
 };
