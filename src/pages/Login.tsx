@@ -108,12 +108,6 @@ const Login = () => {
                 </Alert>
               )}
               
-              <div className="mb-4 p-3 bg-muted/50 rounded-lg">
-                <p className="text-sm font-medium mb-1">{t('login.testCredentials')}</p>
-                <p className="text-xs">{t('login.testUser')} <span className="font-mono">user1@example.com</span> / <span className="font-mono">password123</span></p>
-                <p className="text-xs">{t('login.testAdmin')} <span className="font-mono">admin@test.com</span> / <span className="font-mono">admin123456</span></p>
-              </div>
-              
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-sm font-medium">
