@@ -1,62 +1,66 @@
-
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+
+// Eager load critical pages
 import Home from "./pages/Home";
-import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import VerifyEmail from "./pages/VerifyEmail";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import ResendVerification from "./pages/ResendVerification";
-import AboutUs from "./pages/AboutUs";
-import Contact from "./pages/Contact";
-import Advertising from "./pages/Advertising";
-import TermsAndConditions from "./pages/TermsAndConditions";
-import Properties from "./pages/Properties";
-import PriceStatistics from "./pages/PriceStatistics";
-import Dashboard from "./pages/Dashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import Agencies from "./pages/Agencies";
-import AgencyDetail from "./pages/AgencyDetail";
-import UserProfile from "./pages/UserProfile";
-import { Services } from "./pages/Services";
-import Projects from "./pages/Projects";
-import ProjectDetail from "./pages/ProjectDetail";
-import Developers from "./pages/Developers";
-import DeveloperDetail from "./pages/DeveloperDetail";
-import AdminOverview from "./pages/AdminDashboard/pages/Overview";
-import AdminUsers from "./pages/AdminDashboard/pages/Users";
-import AdminListings from "./pages/AdminDashboard/pages/Listings";
-import AdminProjects from "./pages/AdminDashboard/pages/Projects";
-import AdminEditProject from "./pages/AdminDashboard/pages/EditProject";
-import AdminAgencies from "./pages/AdminDashboard/pages/Agencies";
-import AdminEditProperty from "./pages/AdminDashboard/pages/EditProperty";
-import AdminEditUser from "./pages/AdminDashboard/pages/EditUser";
-import AdminAdvertisements from "./pages/AdminDashboard/pages/Advertisements";
-import { AdminManageProjectProperties } from "./pages/AdminDashboard/components/AdminManageProjectProperties";
-import AdminDistricts from "./pages/AdminDashboard/pages/Districts";
-import AdminSettings from "./pages/AdminDashboard/pages/Settings";
-import AdminServicePricing from "./pages/AdminDashboard/pages/ServicePricing";
-import AdminTermsConditions from "./pages/AdminDashboard/pages/TermsConditions";
-import { AddProperty } from "./pages/Dashboard/pages/AddProperty";
-import { EditProperty } from "./pages/Dashboard/pages/EditProperty";
-import { AddProject } from "./pages/Dashboard/pages/AddProject";
-import { EditProject } from "./pages/Dashboard/pages/EditProject";
-import { MyProperties } from "./pages/Dashboard/components/MyProperties";
-import { MyProjects } from "./pages/Dashboard/components/MyProjects";
-import { ManageProjectProperties } from "./pages/Dashboard/components/ManageProjectProperties";
-import { Favorites } from "./pages/Dashboard/components/Favorites";
-import { ProfilePage } from "./pages/Dashboard/components/ProfilePage";
-import { BalancePage } from "./pages/Dashboard/components/BalancePage";
-import UsersPage from "./pages/Dashboard/pages/Users";
-import { TestComponent } from "./pages/Dashboard/components/TestComponent";
-import { SimpleAddProperty, SimpleMyProperties, SimpleFavorites, SimpleProfile, SimpleBalance } from "./pages/Dashboard/components/SimpleTest";
-import TestFilters from "./pages/TestFilters";
+
+// Lazy load all other pages
+const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const ResendVerification = lazy(() => import("./pages/ResendVerification"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Advertising = lazy(() => import("./pages/Advertising"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
+const Properties = lazy(() => import("./pages/Properties"));
+const PriceStatistics = lazy(() => import("./pages/PriceStatistics"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Agencies = lazy(() => import("./pages/Agencies"));
+const AgencyDetail = lazy(() => import("./pages/AgencyDetail"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
+const Services = lazy(() => import("./pages/Services").then(module => ({ default: module.Services })));
+const Projects = lazy(() => import("./pages/Projects"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+const Developers = lazy(() => import("./pages/Developers"));
+const DeveloperDetail = lazy(() => import("./pages/DeveloperDetail"));
+const AdminOverview = lazy(() => import("./pages/AdminDashboard/pages/Overview"));
+const AdminUsers = lazy(() => import("./pages/AdminDashboard/pages/Users"));
+const AdminListings = lazy(() => import("./pages/AdminDashboard/pages/Listings"));
+const AdminProjects = lazy(() => import("./pages/AdminDashboard/pages/Projects"));
+const AdminEditProject = lazy(() => import("./pages/AdminDashboard/pages/EditProject"));
+const AdminAgencies = lazy(() => import("./pages/AdminDashboard/pages/Agencies"));
+const AdminEditProperty = lazy(() => import("./pages/AdminDashboard/pages/EditProperty"));
+const AdminEditUser = lazy(() => import("./pages/AdminDashboard/pages/EditUser"));
+const AdminAdvertisements = lazy(() => import("./pages/AdminDashboard/pages/Advertisements"));
+const AdminManageProjectProperties = lazy(() => import("./pages/AdminDashboard/components/AdminManageProjectProperties").then(module => ({ default: module.AdminManageProjectProperties })));
+const AdminDistricts = lazy(() => import("./pages/AdminDashboard/pages/Districts"));
+const AdminSettings = lazy(() => import("./pages/AdminDashboard/pages/Settings"));
+const AdminServicePricing = lazy(() => import("./pages/AdminDashboard/pages/ServicePricing"));
+const AdminTermsConditions = lazy(() => import("./pages/AdminDashboard/pages/TermsConditions"));
+const AddProperty = lazy(() => import("./pages/Dashboard/pages/AddProperty").then(module => ({ default: module.AddProperty })));
+const EditProperty = lazy(() => import("./pages/Dashboard/pages/EditProperty").then(module => ({ default: module.EditProperty })));
+const AddProject = lazy(() => import("./pages/Dashboard/pages/AddProject").then(module => ({ default: module.AddProject })));
+const EditProject = lazy(() => import("./pages/Dashboard/pages/EditProject").then(module => ({ default: module.EditProject })));
+const MyProperties = lazy(() => import("./pages/Dashboard/components/MyProperties").then(module => ({ default: module.MyProperties })));
+const MyProjects = lazy(() => import("./pages/Dashboard/components/MyProjects").then(module => ({ default: module.MyProjects })));
+const ManageProjectProperties = lazy(() => import("./pages/Dashboard/components/ManageProjectProperties").then(module => ({ default: module.ManageProjectProperties })));
+const Favorites = lazy(() => import("./pages/Dashboard/components/Favorites").then(module => ({ default: module.Favorites })));
+const ProfilePage = lazy(() => import("./pages/Dashboard/components/ProfilePage").then(module => ({ default: module.ProfilePage })));
+const BalancePage = lazy(() => import("./pages/Dashboard/components/BalancePage").then(module => ({ default: module.BalancePage })));
+const UsersPage = lazy(() => import("./pages/Dashboard/pages/Users"));
+const TestComponent = lazy(() => import("./pages/Dashboard/components/TestComponent").then(module => ({ default: module.TestComponent })));
+const TestFilters = lazy(() => import("./pages/TestFilters"));
 import { AuthProvider } from "./contexts/AuthContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -95,6 +99,13 @@ const DashboardRedirect = () => {
 
 const queryClient = new QueryClient();
 
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  </div>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -104,6 +115,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <Suspense fallback={<LoadingFallback />}>
           <Routes>
             {/* Language-based routes */}
             <Route path="/:lang" element={<LanguageRoute />}>
@@ -177,6 +189,7 @@ const App = () => (
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
           <MobileBottomNav />
         </BrowserRouter>
         </FavoritesProvider>

@@ -57,7 +57,7 @@ export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
         <div>
           <Label className="text-sm font-medium mb-2 block">გარიგების ტიპი</Label>
           <Select value={filters.transactionType} onValueChange={(value) => updateFilter("transactionType", value)}>
-            <SelectTrigger>
+            <SelectTrigger aria-label="აირჩიეთ გარიგების ტიპი">
               <SelectValue placeholder="აირჩიეთ გარიგების ტიპი" />
             </SelectTrigger>
             <SelectContent>
@@ -75,7 +75,7 @@ export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
           <div>
             <Label className="text-sm font-medium mb-2 block">დღიური ქირაობის ტიპი</Label>
             <Select value={filters.dailyRentalSubcategory || ""} onValueChange={(value) => updateFilter("dailyRentalSubcategory", value)}>
-              <SelectTrigger>
+              <SelectTrigger aria-label="აირჩიეთ დღიური ქირაობის ტიპი">
                 <SelectValue placeholder="აირჩიეთ ტიპი" />
               </SelectTrigger>
               <SelectContent>
@@ -92,7 +92,7 @@ export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
         <div>
           <Label className="text-sm font-medium mb-2 block">ქონების ტიპი</Label>
           <Select value={filters.propertyType} onValueChange={(value) => updateFilter("propertyType", value)}>
-            <SelectTrigger>
+            <SelectTrigger aria-label="აირჩიეთ ქონების ტიპი">
               <SelectValue placeholder="აირჩიეთ ტიპი" />
             </SelectTrigger>
             <SelectContent>
@@ -136,7 +136,7 @@ export const FilterPanel = ({ filters, onFilterChange }: FilterPanelProps) => {
         <div>
           <Label className="text-sm font-medium mb-2 block">საძინებლები</Label>
           <Select value={filters.bedrooms} onValueChange={(value) => updateFilter("bedrooms", value)}>
-            <SelectTrigger>
+            <SelectTrigger aria-label="აირჩიეთ საძინებლების რაოდენობა">
               <SelectValue placeholder="რაოდენობა" />
             </SelectTrigger>
             <SelectContent>

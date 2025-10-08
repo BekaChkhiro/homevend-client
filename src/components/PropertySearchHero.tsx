@@ -503,6 +503,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                       variant="outline"
                       role="combobox"
                       aria-expanded={mobileTransactionTypePopoverOpen}
+                      aria-label={t('propertySearchHero.chooseType')}
                       className="h-10 w-full justify-between text-xs border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                     >
                     {filters.transactionType && filters.transactionType !== 'all' ? (
@@ -585,6 +586,7 @@ export const PropertySearchHero = forwardRef<PropertySearchHeroRef, PropertySear
                       variant="outline"
                       role="combobox"
                       aria-expanded={mobilePropertyTypePopoverOpen}
+                      aria-label={t('propertySearchHero.propertyType')}
                       className="h-10 w-full justify-between text-xs border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                     >
                       {Array.isArray(filters.propertyType) && filters.propertyType.length > 0 ? (
@@ -661,6 +663,7 @@ t('propertySearchHero.chooseType')
                     variant="outline"
                     role="combobox"
                     aria-expanded={transactionTypePopoverOpen}
+                    aria-label={t('propertySearchHero.transactionType')}
                     className="h-12 w-full justify-between text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                   >
                     {filters.transactionType && filters.transactionType !== 'all' ? (
@@ -743,6 +746,7 @@ t('propertySearchHero.chooseType')
                     variant="outline"
                     role="combobox"
                     aria-expanded={propertyTypePopoverOpen}
+                    aria-label={t('propertySearchHero.propertyType')}
                     className="h-10 sm:h-12 w-full justify-between text-xs sm:text-sm border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                   >
                     {Array.isArray(filters.propertyType) && filters.propertyType.length > 0 ? (
@@ -821,6 +825,7 @@ t('propertySearchHero.chooseType')
                         variant="outline"
                         role="combobox"
                         aria-expanded={cityPopoverOpen}
+                        aria-label={t('propertySearchHero.city')}
                         className="h-10 sm:h-12 w-full justify-between text-xs sm:text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                         disabled={isLoadingCities}
                       >
@@ -888,6 +893,7 @@ t('propertySearchHero.chooseType')
                           variant="outline"
                           role="combobox"
                           aria-expanded={areaPopoverOpen}
+                          aria-label={t('propertySearchHero.area')}
                           className="h-10 sm:h-12 w-full justify-between text-xs sm:text-base border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors font-normal"
                           disabled={isLoadingAreas}
                         >

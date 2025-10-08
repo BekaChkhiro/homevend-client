@@ -220,9 +220,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         if (response.ok) {
           const data = await response.json();
           if (data.images && data.images.length > 0) {
-            // Map the image URLs to get the large version if available, otherwise use the original
+            // Use small/medium images for cards instead of large to reduce bandwidth
             const imageUrls = data.images.map((img: any) =>
-              img.urls?.large || img.urls?.medium || img.urls?.original
+              img.urls?.small || img.urls?.medium || img.urls?.original
             ).filter(Boolean);
             setPropertyImages(imageUrls);
           }
@@ -296,11 +296,15 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             {images.length > 0 ? (
               <div className="relative w-full h-full">
                 {/* Main Image */}
-                <img 
+                <img
                   src={images[currentImageIndex]}
                   alt={`${property.title || 'Property image'} ${currentImageIndex + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   onError={() => setImageError(true)}
+                  loading="lazy"
+                  decoding="async"
+                  width="312"
+                  height="234"
                 />
                 
                 {/* Navigation Arrows */}

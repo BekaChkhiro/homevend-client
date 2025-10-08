@@ -149,12 +149,12 @@ export const LocationFilter = ({
       {/* City Selection */}
       <div>
         {!compact && <Label className="text-xs text-muted-foreground mb-1 block">ქალაქი</Label>}
-        <Select 
-          value={selectedCityId?.toString() || 'all'} 
+        <Select
+          value={selectedCityId?.toString() || 'all'}
           onValueChange={handleCityChange}
           disabled={isLoadingCities}
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label="აირჩიეთ ქალაქი">
             <SelectValue placeholder={isLoadingCities ? "იტვირთება..." : "აირჩიეთ ქალაქი"} />
           </SelectTrigger>
           <SelectContent>
@@ -172,12 +172,12 @@ export const LocationFilter = ({
       {selectedCityId && (
         <div>
           {!compact && <Label className="text-xs text-muted-foreground mb-1 block">უბანი/რაიონი</Label>}
-          <Select 
-            value={selectedAreaId?.toString() || 'all'} 
+          <Select
+            value={selectedAreaId?.toString() || 'all'}
             onValueChange={handleAreaChange}
             disabled={isLoadingAreas}
           >
-            <SelectTrigger>
+            <SelectTrigger aria-label="აირჩიეთ უბანი/რაიონი">
               <SelectValue placeholder={isLoadingAreas ? "იტვირთება..." : "აირჩიეთ უბანი"} />
             </SelectTrigger>
             <SelectContent>
