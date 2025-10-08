@@ -360,8 +360,13 @@ const PropertyDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const { t, i18n } = useTranslation('propertyDetail');
+
+  // Minimum swipe distance (in px) to trigger a slide change
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -379,16 +384,16 @@ const PropertyDetail = () => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!property) return;
-      
+
       const totalImages = getTotalImages();
       if (totalImages <= 1) return;
-      
+
       if (event.key === 'ArrowLeft') {
-        setCurrentImageIndex(prev => 
+        setCurrentImageIndex(prev =>
           prev === 0 ? totalImages - 1 : prev - 1
         );
       } else if (event.key === 'ArrowRight') {
-        setCurrentImageIndex(prev => 
+        setCurrentImageIndex(prev =>
           prev === totalImages - 1 ? 0 : prev + 1
         );
       }
@@ -397,6 +402,44 @@ const PropertyDetail = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [property, propertyImages]);
+
+  // Touch/Swipe handlers for mobile
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null); // Reset touch end
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    const totalImages = getTotalImages();
+
+    if (isLeftSwipe && totalImages > 1) {
+      // Swipe left - go to next image
+      setCurrentImageIndex(prev =>
+        prev === totalImages - 1 ? 0 : prev + 1
+      );
+    }
+
+    if (isRightSwipe && totalImages > 1) {
+      // Swipe right - go to previous image
+      setCurrentImageIndex(prev =>
+        prev === 0 ? totalImages - 1 : prev - 1
+      );
+    }
+
+    // Reset touch positions
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   const fetchProperty = async () => {
     if (!id) {
@@ -714,12 +757,18 @@ const PropertyDetail = () => {
               {/* Property Images Slider */}
               <div className="mb-4 md:mb-6">
                 {/* Main Image Display */}
-                <div className="relative mb-4">
+                <div
+                  className="relative mb-4"
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                >
                   <img
                     src={displayProperty.images[currentImageIndex]}
                     alt={`${displayProperty.title} ${currentImageIndex + 1}`}
-                    className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover rounded-lg cursor-pointer hover:opacity-95 transition-opacity"
+                    className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover rounded-lg cursor-pointer hover:opacity-95 transition-opacity select-none"
                     onClick={() => setIsLightboxOpen(true)}
+                    draggable={false}
                   />
                   
                   {/* Image counter */}
