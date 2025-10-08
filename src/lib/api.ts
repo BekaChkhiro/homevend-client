@@ -175,6 +175,16 @@ export const authApi = {
     return response.data.data;
   },
 
+  updateProfile: async (profileData: { fullName: string; phone?: string; address?: string }) => {
+    const response = await apiClient.put('/auth/profile', profileData);
+    return response.data.data;
+  },
+
+  changePassword: async (passwordData: { currentPassword: string; newPassword: string }) => {
+    const response = await apiClient.post('/auth/change-password', passwordData);
+    return response.data;
+  },
+
   // Email verification endpoints
   verifyEmail: async (token: string) => {
     const response = await apiClient.get(`/auth/verify-email/${token}`);
