@@ -491,10 +491,11 @@ export const AdvancedFiltersModal = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="lg"
           className="h-12 w-12 border-2 border-slate-200 hover:border-primary/50 focus:border-primary rounded-xl transition-colors relative flex items-center justify-center p-0"
+          aria-label={t('common.advancedFilters')}
         >
           <SlidersHorizontal className="h-5 w-5" />
           {activeFiltersCount > 0 && (

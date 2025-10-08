@@ -65,10 +65,10 @@ export const FeaturedPropertiesCarousel = ({ properties, isLoading = false }: Fe
         className="w-full max-w-full overflow-hidden"
       >
         <CarouselContent className="-ml-1 sm:-ml-2 md:-ml-4 overflow-visible">
-          {displayProperties.map((property) => (
+          {displayProperties.map((property, index) => (
             <CarouselItem key={property.id} className="pl-1 sm:pl-2 md:pl-4 basis-1/2 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 min-w-0 flex-shrink-0">
               <div className="w-full min-w-0 overflow-hidden">
-                <PropertyCard property={property} />
+                <PropertyCard property={property} isPriority={index === 0} />
               </div>
             </CarouselItem>
           ))}
