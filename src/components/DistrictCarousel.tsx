@@ -101,6 +101,7 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
             size="sm"
             className="hidden sm:flex absolute left-6 top-1/2 -translate-y-1/2 -translate-x-4 z-10 rounded-full w-8 h-8 p-0 shadow-lg bg-white/80 backdrop-blur-sm"
             onClick={prevSlide}
+            aria-label="Previous slide"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -109,6 +110,7 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
             size="sm"
             className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 translate-x-4 z-10 rounded-full w-8 h-8 p-0 shadow-lg bg-white/80 backdrop-blur-sm"
             onClick={nextSlide}
+            aria-label="Next slide"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -195,6 +197,7 @@ export const DistrictCarousel: React.FC<DistrictCarouselProps> = ({ className = 
                 index === currentIndex ? 'bg-primary' : 'bg-gray-300'
               }`}
               onClick={() => setCurrentIndex(index)}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
