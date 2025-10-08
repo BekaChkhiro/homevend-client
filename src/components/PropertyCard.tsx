@@ -285,7 +285,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
   return (
     <Link
-      to={getLanguageUrl(`/property/${property.id}`)}
+      to={getLanguageUrl(`/property/${property.id}`, i18n.language)}
       className="block h-full transition-all hover:shadow-lg rounded-lg group"
       style={getColorSeparationStyle()}
     >

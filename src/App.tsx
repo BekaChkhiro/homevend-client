@@ -69,7 +69,7 @@ import { LanguageRedirect } from "./components/LanguageRedirect";
 const DashboardRedirect = () => {
   const location = useLocation();
   const dashboardPath = location.pathname.replace('/dashboard', '');
-  const fullPath = `/en/dashboard${dashboardPath}${location.search}`;
+  const fullPath = `/ge/dashboard${dashboardPath}${location.search}`;
 
   // Debug logging to see if Flitt redirects reach here
   console.log('🚨 DashboardRedirect triggered:', {

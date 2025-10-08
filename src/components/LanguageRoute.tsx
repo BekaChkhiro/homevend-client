@@ -26,15 +26,15 @@ export const LanguageRoute = () => {
 
   useEffect(() => {
     const urlLang = lang as UrlLanguageCode;
-    
-    // If no language in URL or invalid language, redirect to default
+
+    // If no language in URL or invalid language, redirect to default (Georgian)
     if (!urlLang || !LANGUAGE_CODES[urlLang]) {
-      const defaultLang = 'en';
+      const defaultLang = 'ge'; // Default to Georgian
       const currentPath = window.location.pathname;
       const newPath = currentPath.startsWith('/en/') || currentPath.startsWith('/ge/') || currentPath.startsWith('/ru/')
         ? currentPath.replace(/^\/[a-z]{2}/, `/${defaultLang}`)
         : `/${defaultLang}${currentPath}`;
-      
+
       navigate(newPath, { replace: true });
       return;
     }
@@ -52,12 +52,12 @@ export const LanguageRoute = () => {
 
 // Helper function to generate language-aware URLs
 export const getLanguageUrl = (path: string, language?: string): string => {
-  const currentLang = language || 'en';
-  const urlLang = URL_LANGUAGE_CODES[currentLang as I18nLanguageCode] || 'en';
-  
+  const currentLang = language || 'ka'; // Default to Georgian
+  const urlLang = URL_LANGUAGE_CODES[currentLang as I18nLanguageCode] || 'ge';
+
   // Remove leading slash if present
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  
+
   // Return the language-prefixed URL
   return `/${urlLang}/${cleanPath}`;
 };

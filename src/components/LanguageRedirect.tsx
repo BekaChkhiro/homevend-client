@@ -5,14 +5,14 @@ import { Navigate } from 'react-router-dom';
 export const LanguageRedirect = () => {
   useEffect(() => {
     // If user accesses root without language, redirect to default language
-    const defaultLang = 'en';
+    const defaultLang = 'ge'; // Georgian as default
     const currentPath = window.location.pathname;
-    
+
     if (currentPath === '/') {
       window.location.replace(`/${defaultLang}`);
     }
   }, []);
 
-  // Navigate to English by default
-  return <Navigate to="/en" replace />;
+  // Navigate to Georgian by default
+  return <Navigate to="/ge" replace />;
 };

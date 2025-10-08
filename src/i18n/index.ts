@@ -17,9 +17,9 @@ const getLanguageFromUrl = (): string => {
       'ge': 'ka', // Georgian: ge in URL, ka in i18n
       'ru': 'ru'
     };
-    return langMap[urlLang] || 'en';
+    return langMap[urlLang] || 'ka';
   }
-  return 'en'; // fallback
+  return 'ka'; // fallback to Georgian
 };
 
 // Initialize with language from URL
@@ -31,7 +31,7 @@ i18n
   .init({
     resources,
     lng: initialLanguage,
-    fallbackLng: 'en',
+    fallbackLng: 'ka',
     debug: process.env.NODE_ENV === 'development',
     defaultNS: 'common',
     interpolation: {
