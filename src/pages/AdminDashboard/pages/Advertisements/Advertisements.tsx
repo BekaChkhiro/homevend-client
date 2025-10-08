@@ -54,14 +54,8 @@ const Advertisements = () => {
       dimensions: '728x90px (horizontal)',
       status: 'active',
       price: 450,
-      views: 18750,
-      clicks: 312,
-      currentAd: {
-        title: t('advertisements.sampleAds.vakeResidence.title'),
-        advertiser: t('advertisements.sampleAds.vakeResidence.advertiser'),
-        startDate: '2024-01-15',
-        endDate: '2024-02-15'
-      }
+      views: 0,
+      clicks: 0
     },
     {
       id: '3',
@@ -71,14 +65,8 @@ const Advertisements = () => {
       dimensions: '728x90px (horizontal)',
       status: 'active',
       price: 400,
-      views: 12890,
-      clicks: 156,
-      currentAd: {
-        title: t('advertisements.sampleAds.propertyInsurance.title'),
-        advertiser: t('advertisements.sampleAds.propertyInsurance.advertiser'),
-        startDate: '2024-01-10',
-        endDate: '2024-02-10'
-      }
+      views: 0,
+      clicks: 0
     },
     {
       id: '4',
@@ -88,14 +76,8 @@ const Advertisements = () => {
       dimensions: '728x90px (horizontal)',
       status: 'active',
       price: 380,
-      views: 16450,
-      clicks: 234,
-      currentAd: {
-        title: t('advertisements.sampleAds.propertyValuation.title'),
-        advertiser: t('advertisements.sampleAds.propertyValuation.advertiser'),
-        startDate: '2024-01-25',
-        endDate: '2024-02-25'
-      }
+      views: 0,
+      clicks: 0
     },
     {
       id: '5',
@@ -127,14 +109,8 @@ const Advertisements = () => {
       dimensions: '728x90px (horizontal)',
       status: 'active',
       price: 280,
-      views: 8950,
-      clicks: 95,
-      currentAd: {
-        title: t('advertisements.sampleAds.mortgageLoan.title'),
-        advertiser: t('advertisements.sampleAds.mortgageLoan.advertiser'),
-        startDate: '2024-01-18',
-        endDate: '2024-03-18'
-      }
+      views: 0,
+      clicks: 0
     },
     {
       id: '8',
@@ -155,14 +131,8 @@ const Advertisements = () => {
       dimensions: '300x250px (vertical)',
       status: 'active',
       price: 220,
-      views: 7340,
-      clicks: 78,
-      currentAd: {
-        title: t('advertisements.sampleAds.renovationMaterials.title'),
-        advertiser: t('advertisements.sampleAds.renovationMaterials.advertiser'),
-        startDate: '2024-01-22',
-        endDate: '2024-02-22'
-      }
+      views: 0,
+      clicks: 0
     }
   ];
 
@@ -289,6 +259,12 @@ const Advertisements = () => {
     };
   };
 
+  // Calculate real statistics from advertisements
+  const totalViews = advertisements.reduce((sum, ad) => sum + (ad.views || 0), 0);
+  const totalClicks = advertisements.reduce((sum, ad) => sum + (ad.clicks || 0), 0);
+  const averageCTR = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(2) : '0.00';
+  const activeAdsCount = advertisements.filter(ad => ad.status === 'active').length;
+
   return (
     <div>
       <div className="mb-8">
@@ -305,7 +281,7 @@ const Advertisements = () => {
           <CardContent>
             <div className="text-2xl font-bold">{adPlacements.length}</div>
             <p className="text-xs text-muted-foreground">
-              {adPlacements.filter(p => p.status === 'active').length} {t('advertisements.stats.activeCount')}
+              {activeAdsCount} {t('advertisements.stats.activeCount')}
             </p>
           </CardContent>
         </Card>
@@ -317,7 +293,7 @@ const Advertisements = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {adPlacements.reduce((sum, p) => sum + p.views, 0).toLocaleString()}
+              {totalViews.toLocaleString()}
             </div>
             <p className="text-xs text-green-600">{t('advertisements.stats.thisMonth')}</p>
           </CardContent>
@@ -330,11 +306,10 @@ const Advertisements = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {adPlacements.reduce((sum, p) => sum + p.clicks, 0)}
+              {totalClicks.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              CTR: {((adPlacements.reduce((sum, p) => sum + p.clicks, 0) / 
-                      adPlacements.reduce((sum, p) => sum + p.views, 0)) * 100).toFixed(2)}%
+              CTR: {averageCTR}%
             </p>
           </CardContent>
         </Card>
@@ -346,8 +321,7 @@ const Advertisements = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {((adPlacements.reduce((sum, p) => sum + p.clicks, 0) / 
-                adPlacements.reduce((sum, p) => sum + p.views, 0)) * 100).toFixed(2)}%
+              {averageCTR}%
             </div>
             <p className="text-xs text-green-600">{t('advertisements.stats.averageCtr')}</p>
           </CardContent>
