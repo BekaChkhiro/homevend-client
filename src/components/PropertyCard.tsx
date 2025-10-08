@@ -309,7 +309,12 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
                 {/* Main Image */}
                 <img
                   src={images[currentImageIndex]}
-                  srcSet={imageData[currentImageIndex] ? `${imageData[currentImageIndex].small} 400w, ${imageData[currentImageIndex].medium} 800w` : undefined}
+                  srcSet={imageData[currentImageIndex] && (imageData[currentImageIndex].small || imageData[currentImageIndex].medium)
+                    ? [
+                        imageData[currentImageIndex].small && `${imageData[currentImageIndex].small} 400w`,
+                        imageData[currentImageIndex].medium && `${imageData[currentImageIndex].medium} 800w`
+                      ].filter(Boolean).join(', ')
+                    : undefined}
                   sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 312px"
                   alt={`${property.title || 'Property image'} ${currentImageIndex + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
