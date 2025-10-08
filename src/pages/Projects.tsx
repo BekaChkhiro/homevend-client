@@ -75,6 +75,16 @@ interface ProjectFilters {
   deliveryStatus: string;
 }
 
+// Helper function to map i18n language code to URL language code
+const getUrlLanguage = (i18nLanguage: string): string => {
+  const langMap: Record<string, string> = {
+    'en': 'en',
+    'ka': 'ge', // i18n uses 'ka', URL uses 'ge'
+    'ru': 'ru'
+  };
+  return langMap[i18nLanguage] || 'ge';
+};
+
 // Helper functions to get translated city and area names
 const getCityName = (city: Project['city'], i18nLanguage: string) => {
   if (city) {
@@ -335,10 +345,10 @@ const Projects = () => {
               {projects.map((project) => {
                 const minPrice = getMinPrice(project.pricing);
                 return (
-                  <Card 
-                    key={project.id} 
+                  <Card
+                    key={project.id}
                     className="group cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden"
-                    onClick={() => navigate(`/${i18n.language}/projects/${project.id}`)}
+                    onClick={() => navigate(`/${getUrlLanguage(i18n.language)}/projects/${project.id}`)}
                   >
                     {/* Project Photo */}
                     <div className="aspect-video w-full overflow-hidden bg-gray-100">
