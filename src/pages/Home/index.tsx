@@ -429,7 +429,7 @@ const Home = () => {
 
                       <div className="flex gap-2">
                         <Button asChild className="flex-1 text-xs sm:text-sm" size="sm">
-                          <Link to={getLanguageUrl(`/agencies/${agency.id}`)}>
+                          <Link to={getLanguageUrl(`/agencies/${agency.id}`, i18n.language)}>
                             {t('home.sections.agencies.details')}
                           </Link>
                         </Button>
