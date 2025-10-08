@@ -17,12 +17,12 @@ export const AdBanner = ({ type, placementId, className }: AdBannerProps) => {
 
   const banners = {
     horizontal: {
-      width: "w-full",
+      width: "w-full md:max-w-[720px]",
       height: "h-24",
       text: t('adBanner.horizontalBanner')
     },
     vertical: {
-      width: "w-full",
+      width: "w-full md:max-w-[720px]",
       height: "h-64",
       text: t('adBanner.verticalBanner')
     }
@@ -72,31 +72,35 @@ export const AdBanner = ({ type, placementId, className }: AdBannerProps) => {
   // Show placeholder if loading or no ad
   if (loading || !ad) {
     return (
-      <Card className={`${banner.width} ${banner.height} ${className}`}>
-        <div className="w-full h-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
-          <div className="text-center">
-            <div className="text-sm font-medium text-gray-600 mb-1">{t('adBanner.advertisement')}</div>
-            <div className="text-xs text-gray-500">{loading ? 'Loading...' : banner.text}</div>
+      <div className={`w-full flex items-center justify-center ${className}`}>
+        <Card className={`${banner.width} ${banner.height}`}>
+          <div className="w-full h-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
+            <div className="text-center">
+              <div className="text-sm font-medium text-gray-600 mb-1">{t('adBanner.advertisement')}</div>
+              <div className="text-xs text-gray-500">{loading ? 'Loading...' : banner.text}</div>
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     );
   }
 
   // Show real advertisement
   return (
-    <Card className={`${banner.width} ${banner.height} ${className} overflow-hidden cursor-pointer hover:shadow-lg transition-shadow`} onClick={handleClick}>
-      <div className="w-full h-full relative">
-        <img
-          src={ad.imageUrl}
-          alt={ad.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute top-1 right-1 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded">
-          Ad
+    <div className={`w-full flex items-center justify-center ${className}`}>
+      <Card className={`${banner.width} ${banner.height} overflow-hidden cursor-pointer hover:shadow-lg transition-shadow`} onClick={handleClick}>
+        <div className="w-full h-full relative">
+          <img
+            src={ad.imageUrl}
+            alt={ad.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute top-1 right-1 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded">
+            Ad
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 };
 
