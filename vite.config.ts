@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { criticalCssPlugin } from "./vite-plugin-critical-css";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -20,6 +21,7 @@ export default defineConfig(({ mode }) => ({
     target: 'es2015',
     minify: 'terser',
     cssMinify: true,
+    cssCodeSplit: true, // Enable CSS code splitting
     terserOptions: {
       compress: {
         drop_console: true,
@@ -34,25 +36,36 @@ export default defineConfig(({ mode }) => ({
       },
       output: {
         manualChunks: {
-          // Vendor chunks
+          // Vendor chunks - split for better caching
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ui-vendor': ['lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
           'form-vendor': ['react-hook-form', 'zod'],
           'i18n-vendor': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          'query-vendor': ['@tanstack/react-query']
         },
-        // Optimize chunk size
+        // Optimize chunk size and naming
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        assetFileNames: (assetInfo) => {
+          // Optimize CSS naming
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'assets/[name]-[hash][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
       }
     },
     // Increase chunk size warning limit
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    // Enable module preloading
+    modulePreload: {
+      polyfill: true
+    }
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
+    mode === 'production' && criticalCssPlugin(),
   ].filter(Boolean),
   resolve: {
     alias: {
