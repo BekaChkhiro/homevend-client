@@ -64,23 +64,6 @@ const Advertisements = () => {
       }
     },
     {
-      id: '2',
-      name: t('advertisements.placements.homeSidebar.name'),
-      location: t('advertisements.placements.homeSidebar.location'),
-      type: 'sidebar',
-      dimensions: '300x250px (vertical)',
-      status: 'active',
-      price: 350,
-      views: 14200,
-      clicks: 189,
-      currentAd: {
-        title: t('advertisements.sampleAds.familyLoan.title'),
-        advertiser: t('advertisements.sampleAds.familyLoan.advertiser'),
-        startDate: '2024-01-20',
-        endDate: '2024-03-20'
-      }
-    },
-    {
       id: '3',
       name: t('advertisements.placements.homeBottomBanner.name'),
       location: t('advertisements.placements.homeBottomBanner.location'),
@@ -116,10 +99,10 @@ const Advertisements = () => {
     },
     {
       id: '5',
-      name: t('advertisements.placements.listingsSidebar.name'),
-      location: t('advertisements.placements.listingsSidebar.location'),
-      type: 'sidebar',
-      dimensions: '300x250px (vertical)',
+      name: t('advertisements.placements.listingsMiddleBanner.name'),
+      location: t('advertisements.placements.listingsMiddleBanner.location'),
+      type: 'banner',
+      dimensions: '728x90px (horizontal)',
       status: 'inactive',
       price: 320,
       views: 0,
@@ -369,13 +352,6 @@ const Advertisements = () => {
             <p className="text-xs text-green-600">{t('advertisements.stats.averageCtr')}</p>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="mb-6">
-        <Button onClick={() => handleAddAdvertisement()} className="mb-4">
-          <Plus className="h-4 w-4 mr-2" />
-          {t('advertisements.buttons.addNew')}
-        </Button>
       </div>
 
       <div className="grid gap-6">

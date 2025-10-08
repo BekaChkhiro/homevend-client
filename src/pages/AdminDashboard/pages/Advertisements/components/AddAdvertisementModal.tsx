@@ -27,7 +27,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { CalendarIcon, Upload, X, Plus, AlertCircle, Image as ImageIcon, Trash2 } from 'lucide-react';
+import { CalendarIcon, Upload, X, Plus, AlertCircle, Image as ImageIcon, Trash2, Settings } from 'lucide-react';
 import { format } from 'date-fns';
 import { ka } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -80,6 +80,13 @@ export const AddAdvertisementModal = ({
     imageUrl: '',
     targetUrl: ''
   });
+
+  // Update placementId when selectedPlacementId changes
+  useEffect(() => {
+    if (selectedPlacementId) {
+      setFormData(prev => ({ ...prev, placementId: selectedPlacementId }));
+    }
+  }, [selectedPlacementId]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -281,46 +288,70 @@ export const AddAdvertisementModal = ({
             />
           </div>
 
-          {/* Placement Selection */}
-          <div className="space-y-2">
-            <Label>{t('addAdvertisementModal.fields.placement')} *</Label>
-            <Select
-              value={formData.placementId}
-              onValueChange={(value) => handleInputChange('placementId', value)}
-            >
-              <SelectTrigger className={errors.placementId ? 'border-red-500' : ''}>
-                <SelectValue placeholder={t('addAdvertisementModal.placeholders.placement')} />
-              </SelectTrigger>
-              <SelectContent>
-                {availablePlacements.map((placement) => (
-                  <SelectItem key={placement.id} value={placement.id}>
-                    <div className="flex items-center w-full">
-                      <span className="font-medium">{placement.name}</span>
-                      <span className="text-sm text-muted-foreground ml-2">
-                        ({placement.dimensions})
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.placementId && (
-              <p className="text-sm text-red-500 flex items-center gap-1">
-                <AlertCircle className="h-3 w-3" />
-                {errors.placementId}
-              </p>
-            )}
-            {selectedPlacement && (
-              <div className="p-3 bg-blue-50 rounded-md">
-                <p className="text-sm text-blue-800">
-                  <strong>{t('addAdvertisementModal.labels.selectedPlacement')}:</strong> {selectedPlacement.location}
-                </p>
-                <p className="text-sm text-blue-600">
-                  {t('addAdvertisementModal.labels.dimensions')}: {selectedPlacement.dimensions}
-                </p>
+          {/* Placement Information - Read-only display when pre-selected */}
+          {selectedPlacementId ? (
+            <div className="space-y-2">
+              <Label>{t('addAdvertisementModal.fields.placement')} *</Label>
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                <div className="flex items-start gap-3">
+                  <div className="text-white rounded-lg p-2 bg-blue-600">
+                    <Settings className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-blue-900">
+                      {selectedPlacement?.name}
+                    </p>
+                    <p className="text-sm text-blue-700 mt-1">
+                      {selectedPlacement?.location}
+                    </p>
+                    <p className="text-sm text-blue-600 mt-1">
+                      {t('addAdvertisementModal.labels.dimensions')}: {selectedPlacement?.dimensions}
+                    </p>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label>{t('addAdvertisementModal.fields.placement')} *</Label>
+              <Select
+                value={formData.placementId}
+                onValueChange={(value) => handleInputChange('placementId', value)}
+              >
+                <SelectTrigger className={errors.placementId ? 'border-red-500' : ''}>
+                  <SelectValue placeholder={t('addAdvertisementModal.placeholders.placement')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {availablePlacements.map((placement) => (
+                    <SelectItem key={placement.id} value={placement.id}>
+                      <div className="flex items-center w-full">
+                        <span className="font-medium">{placement.name}</span>
+                        <span className="text-sm text-muted-foreground ml-2">
+                          ({placement.dimensions})
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.placementId && (
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {errors.placementId}
+                </p>
+              )}
+              {selectedPlacement && (
+                <div className="p-3 bg-blue-50 rounded-md">
+                  <p className="text-sm text-blue-800">
+                    <strong>{t('addAdvertisementModal.labels.selectedPlacement')}:</strong> {selectedPlacement.location}
+                  </p>
+                  <p className="text-sm text-blue-600">
+                    {t('addAdvertisementModal.labels.dimensions')}: {selectedPlacement.dimensions}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Date Range */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
