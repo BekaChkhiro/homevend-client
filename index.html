@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Preconnect to critical origins for faster resource loading -->
-    <link rel="preconnect" href="https://homevend-server.onrender.com" crossorigin />
-    <link rel="preconnect" href="https://homevend-assets-production.s3.eu-central-1.amazonaws.com" crossorigin />
+    <!-- Preconnect to critical origins for faster resource loading - Must be early for effectiveness -->
+    <link rel="preconnect" href="https://homevend-server.onrender.com" />
+    <link rel="preconnect" href="https://homevend-assets-production.s3.eu-central-1.amazonaws.com" />
     <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
     <!-- Preload critical assets -->
-    <link rel="preload" href="/homevend-logo.jpeg" as="image" fetchpriority="high" />
+    <link rel="preload" href="/homevend-logo.jpeg" as="image" fetchpriority="high" type="image/jpeg" />
 
     <link rel="icon" type="image/jpeg" href="/homevend-logo.jpeg" />
     <title>Homevend</title>

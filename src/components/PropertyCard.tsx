@@ -209,6 +209,7 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
 
   const [imageError, setImageError] = useState(false);
   const [propertyImages, setPropertyImages] = useState<string[]>([]);
+  const [imageData, setImageData] = useState<Array<{small?: string, medium?: string, original?: string}>>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imagesLoading, setImagesLoading] = useState(true);
   
@@ -222,14 +223,16 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
           const data = await response.json();
           if (data.images && data.images.length > 0) {
             // Store image objects with multiple sizes for responsive loading
-            const imageData = data.images.map((img: any) => ({
+            const imgs = data.images.map((img: any) => ({
               small: img.urls?.small,
               medium: img.urls?.medium,
               original: img.urls?.original
             })).filter((img: any) => img.small || img.medium || img.original);
 
-            // Use small for mobile, medium for desktop
-            const imageUrls = imageData.map((img: any) =>
+            setImageData(imgs);
+
+            // Use small for mobile by default
+            const imageUrls = imgs.map((img: any) =>
               img.small || img.medium || img.original
             );
             setPropertyImages(imageUrls);
@@ -306,6 +309,8 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
                 {/* Main Image */}
                 <img
                   src={images[currentImageIndex]}
+                  srcSet={imageData[currentImageIndex] ? `${imageData[currentImageIndex].small} 400w, ${imageData[currentImageIndex].medium} 800w` : undefined}
+                  sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 312px"
                   alt={`${property.title || 'Property image'} ${currentImageIndex + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   onError={() => setImageError(true)}
