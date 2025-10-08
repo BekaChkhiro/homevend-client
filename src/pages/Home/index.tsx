@@ -275,7 +275,7 @@ const Home = () => {
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('properties', i18n.language)}>
                   <span className="hidden sm:inline">{t('home.sections.latestProperties.viewAll')}</span>
-                  <span className="sm:hidden">{t('common.common.view')}</span>
+                  <span className="sm:hidden">{t('common:common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -317,7 +317,7 @@ const Home = () => {
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('agencies', i18n.language)}>
                   <span className="hidden sm:inline">{t('home.sections.agencies.viewAll')}</span>
-                  <span className="sm:hidden">{t('common.common.view')}</span>
+                  <span className="sm:hidden">{t('common:common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -464,7 +464,7 @@ const Home = () => {
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to="/services">
                   <span className="hidden sm:inline">{t('home.sections.services.viewAll')}</span>
-                  <span className="sm:hidden">{t('common.common.view')}</span>
+                  <span className="sm:hidden">{t('common:common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>
@@ -527,7 +527,7 @@ const Home = () => {
               <Button asChild variant="outline" className="text-sm sm:text-base">
                 <Link to={getLanguageUrl('price-statistics', i18n.language)}>
                   <span className="hidden sm:inline">{t('home.sections.priceStatistics.viewAll')}</span>
-                  <span className="sm:hidden">{t('common.common.view')}</span>
+                  <span className="sm:hidden">{t('common:common.view')}</span>
                   <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                 </Link>
               </Button>

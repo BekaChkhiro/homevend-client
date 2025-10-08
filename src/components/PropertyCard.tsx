@@ -47,17 +47,18 @@ import { useState, useEffect } from "react";
 
 interface PropertyCardProps {
   property: Property;
+  isPriority?: boolean; // First image should load with high priority for LCP
 }
 
 const VIP_BG_COLORS = {
   vip: 'bg-blue-500 text-white border-blue-600',
-  vip_plus: 'bg-purple-500 text-white border-purple-600', 
+  vip_plus: 'bg-purple-500 text-white border-purple-600',
   super_vip: 'bg-yellow-500 text-black border-yellow-600'
 };
 
 // VIP labels are now handled with translations inside the component
 
-export const PropertyCard = ({ property }: PropertyCardProps) => {
+export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps) => {
   const { t, i18n } = useTranslation('propertyCard');
   
   const formatPrice = (price: number) => {
@@ -220,10 +221,17 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         if (response.ok) {
           const data = await response.json();
           if (data.images && data.images.length > 0) {
-            // Use small/medium images for cards instead of large to reduce bandwidth
-            const imageUrls = data.images.map((img: any) =>
-              img.urls?.small || img.urls?.medium || img.urls?.original
-            ).filter(Boolean);
+            // Store image objects with multiple sizes for responsive loading
+            const imageData = data.images.map((img: any) => ({
+              small: img.urls?.small,
+              medium: img.urls?.medium,
+              original: img.urls?.original
+            })).filter((img: any) => img.small || img.medium || img.original);
+
+            // Use small for mobile, medium for desktop
+            const imageUrls = imageData.map((img: any) =>
+              img.small || img.medium || img.original
+            );
             setPropertyImages(imageUrls);
           }
         }
@@ -301,8 +309,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                   alt={`${property.title || 'Property image'} ${currentImageIndex + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   onError={() => setImageError(true)}
-                  loading="lazy"
+                  loading={isPriority ? "eager" : "lazy"}
                   decoding="async"
+                  fetchPriority={isPriority ? "high" : "auto"}
                   width="312"
                   height="234"
                 />
