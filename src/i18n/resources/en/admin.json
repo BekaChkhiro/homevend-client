@@ -311,10 +311,6 @@
         "name": "Main Page Top Banner",
         "location": "Main page - below hero section"
       },
-      "homeSidebar": {
-        "name": "Main Page Sidebar",
-        "location": "Main page - below filter panel"
-      },
       "homeBottomBanner": {
         "name": "Main Page Bottom Banner",
         "location": "Main page - below property grid"
@@ -323,9 +319,9 @@
         "name": "Listings Page Top Banner",
         "location": "Listings page - below search header"
       },
-      "listingsSidebar": {
-        "name": "Listings Page Sidebar",
-        "location": "Listings page - below filter panel"
+      "listingsMiddleBanner": {
+        "name": "Listings Page Middle Banner",
+        "location": "Listings page - between property grid (after first 8 properties)"
       },
       "listingsBottomBanner": {
         "name": "Listings Page Bottom Banner",
