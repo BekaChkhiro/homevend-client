@@ -28,7 +28,47 @@
       "viewsPerMonth": "Views per Month",
       "averageCtr": "Average CTR",
       "banner": "Banner",
-      "sidebar": "Sidebar"
+      "sidebar": "Sidebar",
+      "homeTopBanner": {
+        "name": "Home Page Top Banner",
+        "location": "Home page - below hero section",
+        "description": "The most visible position on the site, seen by all visitors"
+      },
+      "homeBottomBanner": {
+        "name": "Home Page Bottom Banner",
+        "location": "Home page - below property grid",
+        "description": "Perfect spot for deeply engaged users"
+      },
+      "listingsTopBanner": {
+        "name": "Listings Page Top Banner",
+        "location": "Listings page - below search header",
+        "description": "High conversion zone during active search"
+      },
+      "listingsMiddleBanner": {
+        "name": "Listings Page Middle Banner",
+        "location": "Listings page - between property grid (after first 8 properties)",
+        "description": "Targeted audience with specific search interests"
+      },
+      "listingsBottomBanner": {
+        "name": "Listings Page Bottom Banner",
+        "location": "Listings page - below property grid",
+        "description": "Captures attention of users who scrolled through all listings"
+      },
+      "detailTopBanner": {
+        "name": "Property Detail Top Banner",
+        "location": "Property Detail page - below header",
+        "description": "High intent users viewing specific property details"
+      },
+      "detailMiddleBanner": {
+        "name": "Property Detail Middle Banner",
+        "location": "Property Detail page - below property info card",
+        "description": "Engaged users reading full property information"
+      },
+      "detailSidebar": {
+        "name": "Property Detail Sidebar",
+        "location": "Property Detail page - below agent info card",
+        "description": "Highly visible position for users interested in contacting"
+      }
     },
     "contactForm": {
       "title": "Advertising Placement Request",

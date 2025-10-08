@@ -53,69 +53,91 @@ const Advertising = () => {
   const adPlacements: AdPlacement[] = [
     {
       id: '1',
-      name: 'მთავარი გვერდის ზედა ბანერი',
-      location: 'მთავარი გვერდი - hero section-ის ქვეშ',
+      name: t('advertisements:advertisingPage.placements.homeTopBanner.name'),
+      location: t('advertisements:advertisingPage.placements.homeTopBanner.location'),
       type: 'banner',
       dimensions: '728x90px',
       price: 450,
       monthlyViews: 18750,
       ctr: 1.67,
-      description: 'ყველაზე ხილვადი ადგილი საიტზე, რომელიც ყველა ვიზიტორს ხედავს'
-    },
-    {
-      id: '2',
-      name: 'მთავარი გვერდის გვერდითი ბარი',
-      location: 'მთავარი გვერდი - ფილტრის პანელის ქვეშ',
-      type: 'sidebar',
-      dimensions: '300x250px',
-      price: 350,
-      monthlyViews: 14200,
-      ctr: 1.33,
-      description: 'მაღალი ენგეიჯმენტის მქონე ზონა ფილტრების გამოყენების დროს'
+      description: t('advertisements:advertisingPage.placements.homeTopBanner.description')
     },
     {
       id: '3',
-      name: 'მთავარი გვერდის ქვედა ბანერი',
-      location: 'მთავარი გვერდი - property grid-ის ქვეშ',
+      name: t('advertisements:advertisingPage.placements.homeBottomBanner.name'),
+      location: t('advertisements:advertisingPage.placements.homeBottomBanner.location'),
       type: 'banner',
       dimensions: '728x90px',
       price: 400,
       monthlyViews: 12890,
       ctr: 1.21,
-      description: 'იდეალური ადგილი ღრმად დაინტერესებული მომხმარებლებისთვის'
+      description: t('advertisements:advertisingPage.placements.homeBottomBanner.description')
     },
     {
       id: '4',
-      name: 'განცხადებების გვერდის ზედა ბანერი',
-      location: 'განცხადებების გვერდი - search header-ის ქვეშ',
+      name: t('advertisements:advertisingPage.placements.listingsTopBanner.name'),
+      location: t('advertisements:advertisingPage.placements.listingsTopBanner.location'),
       type: 'banner',
       dimensions: '728x90px',
       price: 380,
       monthlyViews: 16450,
       ctr: 1.42,
-      description: 'მაღალი კონვერტაციის ზონა აქტიური ძიების დროს'
+      description: t('advertisements:advertisingPage.placements.listingsTopBanner.description')
     },
     {
       id: '5',
-      name: 'განცხადებების გვერდის გვერდითი ბარი',
-      location: 'განცხადებების გვერდი - ფილტრის პანელის ქვეშ',
-      type: 'sidebar',
-      dimensions: '300x250px',
+      name: t('advertisements:advertisingPage.placements.listingsMiddleBanner.name'),
+      location: t('advertisements:advertisingPage.placements.listingsMiddleBanner.location'),
+      type: 'banner',
+      dimensions: '728x90px',
       price: 320,
       monthlyViews: 13200,
       ctr: 1.18,
-      description: 'ტარგეტირებული აუდიტორია კონკრეტული ძიების ინტერესებით'
+      description: t('advertisements:advertisingPage.placements.listingsMiddleBanner.description')
     },
     {
       id: '6',
-      name: 'განცხადების დეტალების ზედა ბანერი',
-      location: 'PropertyDetail გვერდი - header-ის ქვეშ',
+      name: t('advertisements:advertisingPage.placements.listingsBottomBanner.name'),
+      location: t('advertisements:advertisingPage.placements.listingsBottomBanner.location'),
+      type: 'banner',
+      dimensions: '728x90px',
+      price: 300,
+      monthlyViews: 11500,
+      ctr: 1.05,
+      description: t('advertisements:advertisingPage.placements.listingsBottomBanner.description')
+    },
+    {
+      id: '7',
+      name: t('advertisements:advertisingPage.placements.detailTopBanner.name'),
+      location: t('advertisements:advertisingPage.placements.detailTopBanner.location'),
       type: 'banner',
       dimensions: '728x90px',
       price: 280,
       monthlyViews: 8950,
       ctr: 1.06,
-      description: 'მაღალი ინტენტის მომხმარებლები კონკრეტული ქონების შესახებ'
+      description: t('advertisements:advertisingPage.placements.detailTopBanner.description')
+    },
+    {
+      id: '8',
+      name: t('advertisements:advertisingPage.placements.detailMiddleBanner.name'),
+      location: t('advertisements:advertisingPage.placements.detailMiddleBanner.location'),
+      type: 'banner',
+      dimensions: '728x90px',
+      price: 250,
+      monthlyViews: 7800,
+      ctr: 0.98,
+      description: t('advertisements:advertisingPage.placements.detailMiddleBanner.description')
+    },
+    {
+      id: '9',
+      name: t('advertisements:advertisingPage.placements.detailSidebar.name'),
+      location: t('advertisements:advertisingPage.placements.detailSidebar.location'),
+      type: 'sidebar',
+      dimensions: '300x250px',
+      price: 220,
+      monthlyViews: 7340,
+      ctr: 1.12,
+      description: t('advertisements:advertisingPage.placements.detailSidebar.description')
     }
   ];
 
