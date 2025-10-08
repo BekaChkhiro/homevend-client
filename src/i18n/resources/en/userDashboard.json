@@ -40,7 +40,8 @@
     "topUp": "Top Up",
     "error": "Error",
     "tooManyRequests": "Too many requests",
-    "loadError": "Error loading balance"
+    "loadError": "Error loading balance",
+    "loading": "Loading balance information..."
   },
   "properties": {
     "title": "My Properties",
