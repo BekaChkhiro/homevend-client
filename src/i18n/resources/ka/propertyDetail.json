@@ -219,7 +219,16 @@
     "buttonLabel": "გაზიარება",
     "successTitle": "გაზიარებულია!",
     "successDescription": "ბმული დაკოპირდა",
+    "copySuccess": "ბმული დაკოპირდა",
     "errorTitle": "გაზიარება ვერ მოხერხდა",
-    "errorDescription": "ამ ქონების გაზიარება ვერ მოხერხდა"
+    "errorDescription": "ამ ქონების გაზიარება ვერ მოხერხდა",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "facebook": "Facebook",
+    "email": "ელფოსტა",
+    "qrCode": "QR კოდი",
+    "copyLink": "ბმულის კოპირება",
+    "more": "მეტი",
+    "qrCodeTitle": "დაასკანერეთ ქონების სანახავად"
   }
 }

@@ -219,7 +219,16 @@
     "buttonLabel": "Поделиться",
     "successTitle": "Поделились!",
     "successDescription": "Ссылка скопирована в буфер обмена",
+    "copySuccess": "Ссылка скопирована в буфер обмена",
     "errorTitle": "Не удалось поделиться",
-    "errorDescription": "Не удалось поделиться этой недвижимостью"
+    "errorDescription": "Не удалось поделиться этой недвижимостью",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "facebook": "Facebook",
+    "email": "Электронная почта",
+    "qrCode": "QR код",
+    "copyLink": "Копировать ссылку",
+    "more": "Больше",
+    "qrCodeTitle": "Отсканируйте, чтобы просмотреть недвижимость"
   }
 }

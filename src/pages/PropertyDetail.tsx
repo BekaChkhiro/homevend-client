@@ -11,6 +11,7 @@ import { AdBanner } from "@/components/AdBanner";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { ShareButtons } from "@/components/ShareButtons";
 import { PropertyDetailSkeleton, SimilarPropertiesSkeleton } from "@/components/PropertyDetailSkeleton";
 import { getLanguageUrl } from "@/components/LanguageRoute";
 import { useTranslation } from "react-i18next";
@@ -589,55 +590,6 @@ const PropertyDetail = () => {
     }).format(numPrice || 0);
   };
 
-  // Share functionality
-  const handleShare = async () => {
-    const shareUrl = window.location.href;
-    const shareTitle = property?.title || 'Property on HomeVend';
-    const shareText = `${shareTitle} - ${formatPrice(property?.totalPrice || 0)}`;
-
-    // Check if Web Share API is supported
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: shareTitle,
-          text: shareText,
-          url: shareUrl,
-        });
-        toast({
-          title: t('share.successTitle'),
-          description: t('share.successDescription'),
-        });
-      } catch (error: any) {
-        // User cancelled the share dialog or share failed
-        if (error.name !== 'AbortError') {
-          console.error('Share failed:', error);
-          // Fallback to clipboard
-          copyToClipboard(shareUrl);
-        }
-      }
-    } else {
-      // Fallback to clipboard for browsers that don't support Web Share API
-      copyToClipboard(shareUrl);
-    }
-  };
-
-  // Fallback clipboard copy function
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast({
-        title: t('share.successTitle'),
-        description: t('share.successDescription'),
-      });
-    } catch (error) {
-      console.error('Copy to clipboard failed:', error);
-      toast({
-        title: t('share.errorTitle'),
-        description: t('share.errorDescription'),
-        variant: "destructive",
-      });
-    }
-  };
 
 
   const getContactTitle = (userRole?: string) => {
@@ -950,15 +902,11 @@ const PropertyDetail = () => {
                         size="sm"
                         className="h-8 w-8 p-0"
                       />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleShare}
-                        className="h-8 w-8 p-0"
-                        aria-label={t('share.buttonLabel')}
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </Button>
+                      <ShareButtons
+                        url={window.location.href}
+                        title={property.title}
+                        description={formatPrice(property.totalPrice || 0)}
+                      />
                     </div>
                   </div>
 

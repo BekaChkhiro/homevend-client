@@ -219,7 +219,16 @@
     "buttonLabel": "Share",
     "successTitle": "Shared!",
     "successDescription": "Link copied to clipboard",
+    "copySuccess": "Link copied to clipboard",
     "errorTitle": "Share Failed",
-    "errorDescription": "Could not share this property"
+    "errorDescription": "Could not share this property",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "facebook": "Facebook",
+    "email": "Email",
+    "qrCode": "QR Code",
+    "copyLink": "Copy Link",
+    "more": "More Options",
+    "qrCodeTitle": "Scan to View Property"
   }
 }
