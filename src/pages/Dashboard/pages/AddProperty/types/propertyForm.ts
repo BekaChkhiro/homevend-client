@@ -11,7 +11,9 @@ export const propertyFormSchema = z.object({
   city: z.string().min(1, "City is required"),
   street: z.string().min(1, "Street is required"),
   streetNumber: z.string().optional(),
-  cadastralCode: z.string().optional(),
+  cadastralCode: z.string()
+    .regex(/^[0-9.]*$/, "validation.cadastralCode.invalidFormat")
+    .optional(),
 
   // Property Details
   rooms: z.string().optional(),

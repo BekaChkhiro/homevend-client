@@ -88,6 +88,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
                       />
                     </div>
                     <button
+                      type="button"
                       onClick={() => removePendingImage(index)}
                       className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                     >

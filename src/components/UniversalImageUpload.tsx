@@ -112,6 +112,7 @@ const SortableImageItem: React.FC<{
       <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
         {showPrimary && (
           <Button
+            type="button"
             size="sm"
             variant="secondary"
             onClick={onSetPrimary}
@@ -120,7 +121,7 @@ const SortableImageItem: React.FC<{
             <Star className={cn('h-4 w-4', image.isPrimary && 'fill-current')} />
           </Button>
         )}
-        <Button size="sm" variant="destructive" onClick={onDelete}>
+        <Button type="button" size="sm" variant="destructive" onClick={onDelete}>
           <X className="h-4 w-4" />
         </Button>
       </div>
