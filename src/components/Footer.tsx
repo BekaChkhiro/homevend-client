@@ -46,7 +46,9 @@ export const Footer = () => {
             <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-                <span className="text-muted-foreground">{t('footer.contact.phoneNumber')}</span>
+                <a href="tel:+995595365555" className="text-muted-foreground hover:text-primary transition-colors">
+                  {t('footer.contact.phoneNumber')}
+                </a>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />

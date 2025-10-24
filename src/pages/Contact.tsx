@@ -194,8 +194,9 @@ const Contact = () => {
                     </div>
                     <div>
                       <div className="font-semibold">ტელეფონი</div>
-                      <div className="text-muted-foreground">+995 555 123 456</div>
-                      <div className="text-muted-foreground">+995 555 789 012</div>
+                      <a href="tel:+995595365555" className="text-muted-foreground hover:text-primary transition-colors block">
+                        +995 595 36 55 55
+                      </a>
                     </div>
                   </div>
 
@@ -279,7 +280,9 @@ const Contact = () => {
                   <p className="text-sm text-orange-700 mb-2">
                     საგანგებო შემთხვევებისთვის ან სასწრაფო დახმარებისთვის:
                   </p>
-                  <div className="font-bold text-orange-800">+995 555 911 911</div>
+                  <a href="tel:+995595365555" className="font-bold text-orange-800 hover:text-orange-900 transition-colors block">
+                    +995 595 36 55 55
+                  </a>
                   <div className="text-xs text-orange-600 mt-1">24/7 ხელმისაწვდომი</div>
                 </CardContent>
               </Card>
