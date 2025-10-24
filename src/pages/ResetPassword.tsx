@@ -63,8 +63,13 @@ const ResetPassword: React.FC = () => {
       return;
     }
 
-    if (password.length < 6) {
-      setError('პაროლი უნდა შეიცავდეს მინიმუმ 6 სიმბოლოს');
+    if (password.length < 8) {
+      setError('პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს');
+      return;
+    }
+
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+      setError('პაროლი უნდა შეიცავდეს მინიმუმ ერთ დიდ და ერთ პატარა ასოს');
       return;
     }
 
@@ -196,7 +201,7 @@ const ResetPassword: React.FC = () => {
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="მინიმუმ 6 სიმბოლო"
+                  placeholder="მინიმუმ 8 სიმბოლო"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -216,6 +221,9 @@ const ResetPassword: React.FC = () => {
                   )}
                 </Button>
               </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                მინიმუმ 8 სიმბოლო, უნდა შეიცავდეს დიდ და პატარა ასოებს
+              </p>
             </div>
 
             <div>

@@ -112,10 +112,21 @@ const Register = () => {
     }
 
     // Password length validation
-    if (formData.password.length < 6) {
+    if (formData.password.length < 8) {
       toast({
         title: "შეცდომა",
-        description: "პაროლი უნდა შედგებოდეს მინიმუმ 6 სიმბოლოსგან",
+        description: "პაროლი უნდა შედგებოდეს მინიმუმ 8 სიმბოლოსგან",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Password complexity validation
+    if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password)) {
+      toast({
+        title: "შეცდომა",
+        description: "პაროლი უნდა შეიცავდეს მინიმუმ ერთ დიდ და ერთ პატარა ასოს",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -350,11 +361,14 @@ const Register = () => {
                           type="password"
                           placeholder="შეიყვანეთ პაროლი"
                           required
-                          minLength={6}
+                          minLength={8}
                           value={formData.password}
                           onChange={handleChange}
                           disabled={isLoading}
                         />
+                        <p className="text-xs text-muted-foreground">
+                          მინიმუმ 8 სიმბოლო, უნდა შეიცავდეს დიდ და პატარა ასოებს
+                        </p>
                       </div>
                       
                       <div className="space-y-2">
@@ -510,11 +524,14 @@ const Register = () => {
                           type="password"
                           placeholder="შეიყვანეთ პაროლი"
                           required
-                          minLength={6}
+                          minLength={8}
                           value={formData.password}
                           onChange={handleChange}
                           disabled={isLoading}
                         />
+                        <p className="text-xs text-muted-foreground">
+                          მინიმუმ 8 სიმბოლო, უნდა შეიცავდეს დიდ და პატარა ასოებს
+                        </p>
                       </div>
                       
                       <div className="space-y-2">
@@ -670,11 +687,14 @@ const Register = () => {
                           type="password"
                           placeholder="შეიყვანეთ პაროლი"
                           required
-                          minLength={6}
+                          minLength={8}
                           value={formData.password}
                           onChange={handleChange}
                           disabled={isLoading}
                         />
+                        <p className="text-xs text-muted-foreground">
+                          მინიმუმ 8 სიმბოლო, უნდა შეიცავდეს დიდ და პატარა ასოებს
+                        </p>
                       </div>
                       
                       <div className="space-y-2">
