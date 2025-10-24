@@ -75,9 +75,9 @@ export const propertyFormSchema = z.object({
   contactPhone: z.string().min(1, "Phone number is required"),
 
   // Descriptions
-  descriptionGeorgian: z.string().optional(),
-  descriptionEnglish: z.string().optional(),
-  descriptionRussian: z.string().optional(),
+  descriptionGeorgian: z.string().min(1, "Georgian description is required"),
+  descriptionEnglish: z.string().min(1, "English description is required"),
+  descriptionRussian: z.string().min(1, "Russian description is required"),
 
   // Photos
   photos: z.array(z.instanceof(File)).default([]),

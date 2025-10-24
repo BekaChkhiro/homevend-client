@@ -212,7 +212,14 @@
   },
   "vipStatus": {
     "vip": "VIP",
-    "vip_plus": "VIP+", 
+    "vip_plus": "VIP+",
     "super_vip": "SUPER VIP"
+  },
+  "share": {
+    "buttonLabel": "Share",
+    "successTitle": "Shared!",
+    "successDescription": "Link copied to clipboard",
+    "errorTitle": "Share Failed",
+    "errorDescription": "Could not share this property"
   }
 }

@@ -589,6 +589,56 @@ const PropertyDetail = () => {
     }).format(numPrice || 0);
   };
 
+  // Share functionality
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareTitle = property?.title || 'Property on HomeVend';
+    const shareText = `${shareTitle} - ${formatPrice(property?.totalPrice || 0)}`;
+
+    // Check if Web Share API is supported
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+        toast({
+          title: t('share.successTitle'),
+          description: t('share.successDescription'),
+        });
+      } catch (error: any) {
+        // User cancelled the share dialog or share failed
+        if (error.name !== 'AbortError') {
+          console.error('Share failed:', error);
+          // Fallback to clipboard
+          copyToClipboard(shareUrl);
+        }
+      }
+    } else {
+      // Fallback to clipboard for browsers that don't support Web Share API
+      copyToClipboard(shareUrl);
+    }
+  };
+
+  // Fallback clipboard copy function
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: t('share.successTitle'),
+        description: t('share.successDescription'),
+      });
+    } catch (error) {
+      console.error('Copy to clipboard failed:', error);
+      toast({
+        title: t('share.errorTitle'),
+        description: t('share.errorDescription'),
+        variant: "destructive",
+      });
+    }
+  };
+
 
   const getContactTitle = (userRole?: string) => {
     switch (userRole) {
@@ -894,13 +944,19 @@ const PropertyDetail = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <FavoriteButton 
+                      <FavoriteButton
                         propertyId={property.id}
                         variant="outline"
                         size="sm"
                         className="h-8 w-8 p-0"
                       />
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleShare}
+                        className="h-8 w-8 p-0"
+                        aria-label={t('share.buttonLabel')}
+                      >
                         <Share2 className="h-4 w-4" />
                       </Button>
                     </div>

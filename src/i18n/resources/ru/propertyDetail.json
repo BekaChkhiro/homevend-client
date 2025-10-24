@@ -214,5 +214,12 @@
     "vip": "VIP",
     "vip_plus": "VIP+",
     "super_vip": "SUPER VIP"
+  },
+  "share": {
+    "buttonLabel": "Поделиться",
+    "successTitle": "Поделились!",
+    "successDescription": "Ссылка скопирована в буфер обмена",
+    "errorTitle": "Не удалось поделиться",
+    "errorDescription": "Не удалось поделиться этой недвижимостью"
   }
 }

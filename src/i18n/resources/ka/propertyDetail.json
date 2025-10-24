@@ -214,5 +214,12 @@
     "vip": "VIP",
     "vip_plus": "VIP+",
     "super_vip": "SUPER VIP"
+  },
+  "share": {
+    "buttonLabel": "გაზიარება",
+    "successTitle": "გაზიარებულია!",
+    "successDescription": "ბმული დაკოპირდა",
+    "errorTitle": "გაზიარება ვერ მოხერხდა",
+    "errorDescription": "ამ ქონების გაზიარება ვერ მოხერხდა"
   }
 }
