@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form";
 import { User, Phone } from "lucide-react";
 import type { PropertyFormData } from "../types/propertyForm";
 import { useTranslation } from "react-i18next";
+import { sanitizePhoneInput } from "@/lib/validation";
 
 export const ContactInfoSection = () => {
   const { t } = useTranslation(['userDashboard', 'admin']);
@@ -56,12 +57,19 @@ export const ContactInfoSection = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input 
-                    id="contact-phone" 
-                    type="tel" 
-                    placeholder="+995 XXX XXX XXX" 
+                  <Input
+                    id="contact-phone"
+                    type="tel"
+                    placeholder="+995 XXX XXX XXX"
+                    minLength={9}
+                    maxLength={20}
+                    pattern="[+0-9]*"
                     className="border-input focus:ring-ring focus:ring-1"
                     {...field}
+                    onChange={(e) => {
+                      const sanitized = sanitizePhoneInput(e.target.value);
+                      field.onChange(sanitized);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

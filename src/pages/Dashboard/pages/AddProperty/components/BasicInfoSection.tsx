@@ -589,11 +589,18 @@ export const BasicInfoSection = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input 
-                    id="cadastral-code" 
-                    placeholder={t('addPropertyForm.basicInfo.cadastralCodePlaceholder')} 
+                  <Input
+                    id="cadastral-code"
+                    placeholder={t('addPropertyForm.basicInfo.cadastralCodePlaceholder')}
                     className="h-11 sm:h-12 text-sm sm:text-base border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                     {...field}
+                    onChange={(e) => {
+                      // Filter out any characters that are not numbers or dots
+                      const filteredValue = e.target.value.replace(/[^0-9.]/g, '');
+                      field.onChange(filteredValue);
+                    }}
+                    pattern="[0-9.]*"
+                    inputMode="decimal"
                   />
                 </FormControl>
                 <FormMessage />

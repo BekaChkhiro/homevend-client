@@ -11,6 +11,7 @@ import { useAuth, type AuthContextType } from "@/contexts/AuthContext";
 import { User, Building, Upload, X, Wrench } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { getLanguageUrl } from "@/components/LanguageRoute";
+import { sanitizePhoneInput, isValidPhoneNumber } from "@/lib/validation";
 
 const Register = () => {
   const { toast } = useToast();
@@ -40,9 +41,16 @@ const Register = () => {
   const [logoPreview, setLogoPreview] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+
+    // Sanitize phone number fields (remove non-allowed characters)
+    const sanitizedValue = (name === 'agencyPhone' || name === 'developerPhone')
+      ? sanitizePhoneInput(value)
+      : value;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: sanitizedValue,
     });
   };
 
@@ -131,6 +139,32 @@ const Register = () => {
       });
       setIsLoading(false);
       return;
+    }
+
+    // Phone number validation for agency
+    if (formData.role === "agency") {
+      if (!isValidPhoneNumber(formData.agencyPhone)) {
+        toast({
+          title: "შეცდომა",
+          description: "ტელეფონის ნომერი უნდა შეიცავდეს მხოლოდ + და ციფრებს, მინიმუმ 9 სიმბოლო",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // Phone number validation for developer
+    if (formData.role === "developer") {
+      if (!isValidPhoneNumber(formData.developerPhone)) {
+        toast({
+          title: "შეცდომა",
+          description: "ტელეფონის ნომერი უნდა შეიცავდეს მხოლოდ + და ციფრებს, მინიმუმ 9 სიმბოლო",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
     }
 
     try {
@@ -478,12 +512,19 @@ const Register = () => {
                         <Input
                           id="agencyPhone"
                           name="agencyPhone"
-                          placeholder="ტელეფონის ნომერი"
+                          type="tel"
+                          placeholder="+995 XXX XXX XXX"
                           required
+                          minLength={9}
+                          maxLength={20}
+                          pattern="[+0-9]*"
                           value={formData.agencyPhone}
                           onChange={handleChange}
                           disabled={isLoading}
                         />
+                        <p className="text-xs text-muted-foreground">
+                          მხოლოდ + და ციფრები, მინიმუმ 9 სიმბოლო
+                        </p>
                       </div>
 
                       <div className="space-y-2">
@@ -641,12 +682,19 @@ const Register = () => {
                         <Input
                           id="developerPhone"
                           name="developerPhone"
-                          placeholder="ტელეფონის ნომერი"
+                          type="tel"
+                          placeholder="+995 XXX XXX XXX"
                           required
+                          minLength={9}
+                          maxLength={20}
+                          pattern="[+0-9]*"
                           value={formData.developerPhone}
                           onChange={handleChange}
                           disabled={isLoading}
                         />
+                        <p className="text-xs text-muted-foreground">
+                          მხოლოდ + და ციფრები, მინიმუმ 9 სიმბოლო
+                        </p>
                       </div>
 
                       <div className="space-y-2">

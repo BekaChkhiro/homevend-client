@@ -538,5 +538,12 @@
     "errors": {
       "loadingError": "An error occurred while loading projects"
     }
+  },
+  "validation": {
+    "phoneInvalid": "Phone number must contain only + and digits",
+    "phoneTooShort": "Phone number must be at least 9 characters",
+    "phoneTooLong": "Phone number cannot exceed 20 characters",
+    "phoneExample": "Example: +995555123456",
+    "phoneRequired": "Phone number is required"
   }
 }

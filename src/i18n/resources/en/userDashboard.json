@@ -228,7 +228,10 @@
     "minLength": "Minimum {{min}} characters",
     "maxLength": "Maximum {{max}} characters",
     "numeric": "Must be a number",
-    "positive": "Must be a positive number"
+    "positive": "Must be a positive number",
+    "cadastralCode": {
+      "invalidFormat": "Cadastral code must contain only numbers and dots"
+    }
   },
   "passwordValidation": {
     "requirements": "Min. 8 characters, one uppercase and lowercase letter"
@@ -574,7 +577,7 @@
       "cadastralCodePlaceholder": "e.g: 01.10.14.009.088",
       "optional": "optional",
       "cadastralCodeDesc": "Property cadastral code if known",
-      "cadastralCodeHelp": "💡 Cadastral code is a unique identifier used to determine the legal status of the property",
+      "cadastralCodeHelp": "Format: Numbers and dots only (e.g: 01.10.14.009.088)",
       "yourName": "Your name"
     },
     "propertyDetails": {

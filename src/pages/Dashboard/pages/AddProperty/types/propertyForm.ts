@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { phoneNumberSchema } from "@/lib/validation";
 
 export const propertyFormSchema = z.object({
   // Basic Info
@@ -74,7 +75,7 @@ export const propertyFormSchema = z.object({
 
   // Contact Info
   contactName: z.string().min(1, "Name is required"),
-  contactPhone: z.string().min(1, "Phone number is required"),
+  contactPhone: phoneNumberSchema,
 
   // Descriptions
   descriptionGeorgian: z.string().min(1, "Georgian description is required"),

@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { Upload, X } from "lucide-react";
 import { developerApi } from "@/lib/api";
+import { sanitizePhoneInput, isValidPhoneNumber } from "@/lib/validation";
 
 interface DeveloperPersonalInfoProps {
   user: User;
@@ -134,9 +135,11 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
   };
 
   const handleInputChange = (field: keyof DeveloperData, value: string) => {
+    // Sanitize phone number input
+    const sanitizedValue = field === 'phone' ? sanitizePhoneInput(value) : value;
     setDeveloperData(prev => ({
       ...prev,
-      [field]: value
+      [field]: sanitizedValue
     }));
   };
 
@@ -237,6 +240,17 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
           description: t('validation.required'),
           variant: "destructive",
         });
+        return;
+      }
+
+      // Validate phone number if provided
+      if (developerData.phone && !isValidPhoneNumber(developerData.phone)) {
+        toast({
+          title: t('developerProfile.errors.title'),
+          description: "ტელეფონის ნომერი უნდა შეიცავდეს მხოლოდ + და ციფრებს, მინიმუმ 9 სიმბოლო",
+          variant: "destructive",
+        });
+        setIsSaving(false);
         return;
       }
 
@@ -402,12 +416,19 @@ export const DeveloperPersonalInfo: React.FC<DeveloperPersonalInfoProps> = ({ us
           </Label>
           <Input
             id="developerPhone"
+            type="tel"
             value={developerData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
             placeholder={t('developerProfile.phonePlaceholder')}
+            minLength={9}
+            maxLength={20}
+            pattern="[+0-9]*"
             className="mt-1"
             disabled={isSaving}
           />
+          <p className="text-xs text-muted-foreground mt-1">
+            მხოლოდ + და ციფრები, მინიმუმ 9 სიმბოლო
+          </p>
         </div>
 
         {/* Social Media */}

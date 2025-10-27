@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { Upload, X } from "lucide-react";
 import { agencyApi } from "@/lib/api";
+import { sanitizePhoneInput, isValidPhoneNumber } from "@/lib/validation";
 
 interface AgencyPersonalInfoProps {
   user: User;
@@ -120,9 +121,11 @@ export const AgencyPersonalInfo: React.FC<AgencyPersonalInfoProps> = ({ user }) 
   };
 
   const handleInputChange = (field: keyof AgencyData, value: string) => {
+    // Sanitize phone number input
+    const sanitizedValue = field === 'phone' ? sanitizePhoneInput(value) : value;
     setAgencyData(prev => ({
       ...prev,
-      [field]: value
+      [field]: sanitizedValue
     }));
   };
 
@@ -201,9 +204,19 @@ export const AgencyPersonalInfo: React.FC<AgencyPersonalInfoProps> = ({ user }) 
   };
 
   const handleSave = async () => {
+    // Validate phone number if provided
+    if (agencyData.phone && !isValidPhoneNumber(agencyData.phone)) {
+      toast({
+        title: t('agencyProfile.errors.title'),
+        description: "ტელეფონის ნომერი უნდა შეიცავდეს მხოლოდ + და ციფრებს, მინიმუმ 9 სიმბოლო",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsSaving(true);
-      
+
       const updateData = {
         name: agencyData.name,
         phone: agencyData.phone,
@@ -332,14 +345,21 @@ export const AgencyPersonalInfo: React.FC<AgencyPersonalInfoProps> = ({ user }) 
           <Label htmlFor="agencyPhone" className="text-sm font-medium">
             {t('agencyProfile.phone')}
           </Label>
-          <Input 
-            id="agencyPhone" 
+          <Input
+            id="agencyPhone"
+            type="tel"
             value={agencyData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
             placeholder={t('agencyProfile.phonePlaceholder')}
+            minLength={9}
+            maxLength={20}
+            pattern="[+0-9]*"
             className="mt-1"
             disabled={isSaving}
           />
+          <p className="text-xs text-muted-foreground mt-1">
+            მხოლოდ + და ციფრები, მინიმუმ 9 სიმბოლო
+          </p>
         </div>
 
         {/* Social Media */}

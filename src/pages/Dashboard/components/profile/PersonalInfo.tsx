@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { authApi } from "@/lib/api";
+import { sanitizePhoneInput, isValidPhoneNumber } from "@/lib/validation";
 
 interface PersonalInfoProps {
   user: User;
@@ -48,11 +49,23 @@ export const PersonalInfo: React.FC<PersonalInfoProps> = ({ user, onProfileUpdat
   }, [user]);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    // Sanitize phone number input
+    const sanitizedValue = field === 'phone' ? sanitizePhoneInput(value) : value;
+    setFormData(prev => ({ ...prev, [field]: sanitizedValue }));
     setHasChanges(true);
   };
 
   const handleSave = async () => {
+    // Validate phone number if provided
+    if (formData.phone && !isValidPhoneNumber(formData.phone)) {
+      toast({
+        title: t('common.error'),
+        description: "ტელეფონის ნომერი უნდა შეიცავდეს მხოლოდ + და ციფრებს, მინიმუმ 9 სიმბოლო",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       // Combine firstName and lastName into fullName
@@ -150,10 +163,17 @@ export const PersonalInfo: React.FC<PersonalInfoProps> = ({ user, onProfileUpdat
           <Label htmlFor="phone">{t('profile.phone')}</Label>
           <Input
             id="phone"
+            type="tel"
             placeholder="+995 5XX XX XX XX"
+            minLength={9}
+            maxLength={20}
+            pattern="[+0-9]*"
             value={formData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
           />
+          <p className="text-xs text-muted-foreground mt-1">
+            მხოლოდ + და ციფრები, მინიმუმ 9 სიმბოლო
+          </p>
         </div>
 
         <div className="flex gap-3">
