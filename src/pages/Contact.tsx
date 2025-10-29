@@ -84,7 +84,7 @@ const Contact = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Send className="h-5 w-5" />
-                    შეტყობინება გამოგზავნა
+                    დაგვიკავშირდით
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
