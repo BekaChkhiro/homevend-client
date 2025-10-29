@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { Calculator, DollarSign, Square, TrendingUp } from "lucide-react";
+import { Calculator, DollarSign, Square, TrendingUp, Info } from "lucide-react";
 import type { PropertyFormData } from "../types/propertyForm";
 import { useTranslation } from "react-i18next";
 
@@ -13,10 +13,14 @@ export const PriceAreaSection = () => {
   const area = form.watch("area");
   const totalPrice = form.watch("totalPrice");
 
+  // All prices are now stored in USD only
+  const currency = "USD";
+  const currencySymbol = "$";
+
   useEffect(() => {
     const areaNum = parseFloat(area || "0");
     const totalPriceNum = parseFloat(totalPrice || "0");
-    
+
     if (areaNum > 0 && totalPriceNum > 0) {
       const pricePerSqmValue = (totalPriceNum / areaNum).toFixed(2);
       form.setValue("pricePerSqm", pricePerSqmValue);
@@ -38,6 +42,21 @@ export const PriceAreaSection = () => {
       </div>
 
       <div className="bg-card rounded-xl border border-border/50 p-3 sm:p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        {/* Currency Info Banner */}
+        <div className="mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-start gap-3">
+            <Info className="h-4 sm:h-5 w-4 sm:w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <div>
+              <h4 className="font-medium text-blue-900 text-xs sm:text-sm mb-1">
+                {t('addPropertyForm.pricing.currencyInfo', 'ფასები USD დოლარში')}
+              </h4>
+              <p className="text-xs text-blue-700 leading-relaxed">
+                {t('addPropertyForm.pricing.currencyInfoDesc', 'ყველა ფასი ინახება აშშ დოლარში. მომხმარებლები შეძლებენ ფასის ნახვას როგორც დოლარში, ასევე ლარში მიმდინარე კურსით.')}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {/* Area */}
           <div className="space-y-4">
@@ -100,15 +119,15 @@ export const PriceAreaSection = () => {
                 <FormItem>
                   <FormControl>
                     <div className="relative">
-                      <Input 
-                        id="total-price" 
-                        type="number" 
-                        placeholder={t('addPropertyForm.pricing.pricePlaceholder')} 
+                      <Input
+                        id="total-price"
+                        type="number"
+                        placeholder={t('addPropertyForm.pricing.pricePlaceholder')}
                         className="h-12 sm:h-14 text-base sm:text-lg pl-12 pr-4 border-border/50 bg-background hover:border-primary/30 focus:border-primary transition-colors"
                         {...field}
                       />
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-base sm:text-lg">
-                        $
+                        {currencySymbol}
                       </div>
                     </div>
                   </FormControl>
@@ -140,17 +159,17 @@ export const PriceAreaSection = () => {
               <FormItem>
                 <FormControl>
                   <div className="relative">
-                    <Input 
-                      id="price-per-sqm" 
-                      type="number" 
+                    <Input
+                      id="price-per-sqm"
+                      type="number"
                       step="0.01"
-                      placeholder={t('addPropertyForm.pricing.pricePerSqmPlaceholder')} 
-                      className="h-12 sm:h-14 text-base sm:text-lg pl-4 pr-16 bg-green-50/50 border-green-200 text-green-800 font-semibold cursor-not-allowed" 
+                      placeholder={t('addPropertyForm.pricing.pricePerSqmPlaceholder')}
+                      className="h-12 sm:h-14 text-base sm:text-lg pl-4 pr-16 bg-green-50/50 border-green-200 text-green-800 font-semibold cursor-not-allowed"
                       readOnly
                       {...field}
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-600 font-medium">
-                      $/m²
+                      {currencySymbol}/m²
                     </div>
                   </div>
                 </FormControl>

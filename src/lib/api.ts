@@ -967,8 +967,17 @@ export const advertisementApi = {
   },
 
   getActiveAdByPlacement: async (placementId: string) => {
-    const response = await publicApiClient.get(`/advertisements/placement/${placementId}`);
-    return response.data.data;
+    try {
+      const response = await publicApiClient.get(`/advertisements/placement/${placementId}`);
+      return response.data.data;
+    } catch (error: any) {
+      // If 404, no ad found - return null instead of throwing
+      if (error.response?.status === 404) {
+        return null;
+      }
+      // For other errors, throw
+      throw error;
+    }
   },
 
   createAdvertisement: async (adData: {

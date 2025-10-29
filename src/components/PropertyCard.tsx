@@ -38,12 +38,14 @@ interface Property {
     name?: string;
   };
   district?: string;
+  currency?: string;
 }
 import { Link } from "react-router-dom";
 import { FavoriteButton } from "./FavoriteButton";
 import { useTranslation } from "react-i18next";
 import { getLanguageUrl } from "@/components/LanguageRoute";
 import { useState, useEffect } from "react";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 interface PropertyCardProps {
   property: Property;
@@ -60,30 +62,7 @@ const VIP_BG_COLORS = {
 
 export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps) => {
   const { t, i18n } = useTranslation('propertyCard');
-  
-  const formatPrice = (price: number) => {
-    // Use appropriate locale for number formatting based on current language
-    let locale = 'ka-GE';
-    switch (i18n.language) {
-      case 'ka':
-        locale = 'ka-GE';
-        break;
-      case 'en':
-        locale = 'en-US';
-        break;
-      case 'ru':
-        locale = 'ru-RU';
-        break;
-      default:
-        locale = 'ka-GE';
-    }
-    
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: 'GEL',
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
+  const { formatPrice, getCurrencySymbol } = useCurrency();
 
   const isVipActive = () => {
     if (!property.vipStatus || property.vipStatus === 'none') return false;
@@ -400,7 +379,9 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
             {/* Price and City Section */}
             <div className="mb-2">
               <div className="flex items-center justify-between mb-1">
-                <div className="text-primary font-bold text-lg">{formatPrice(property.price)}</div>
+                <div className="text-primary font-bold text-lg">
+                  {formatPrice(property.price, { showCurrency: false })}
+                </div>
                 {getCityName() && (
                   <Badge variant="secondary" className="text-xs px-2 py-0.5">
                     {getCityName()}
@@ -409,7 +390,7 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
               </div>
               {property.pricePerSqm && (
                 <div className="text-muted-foreground text-xs">
-                  {property.pricePerSqm.toLocaleString()} {t('propertyCard.perSqm')}
+                  {getCurrencySymbol()}{property.pricePerSqm.toLocaleString()} {t('propertyCard.perSqm')}
                 </div>
               )}
             </div>

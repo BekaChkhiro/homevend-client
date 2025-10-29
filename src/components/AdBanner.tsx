@@ -36,10 +36,11 @@ export const AdBanner = ({ type, placementId, className }: AdBannerProps) => {
       try {
         setLoading(true);
         const data = await advertisementApi.getActiveAdByPlacement(placementId);
+        // data will be null if no active ad found (404)
         setAd(data);
       } catch (error) {
-        // No active ad found, that's okay
-        console.debug(`No active ad for placement ${placementId}`);
+        // Unexpected error (not 404)
+        console.error(`Error fetching ad for placement ${placementId}:`, error);
         setAd(null);
       } finally {
         setLoading(false);

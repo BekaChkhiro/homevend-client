@@ -524,7 +524,6 @@ const Properties = () => {
           photos: prop.photos || [],
           contactName: prop.contactName,
           contactPhone: prop.contactPhone,
-          contactEmail: prop.contactEmail,
           descriptionGeorgian: prop.descriptionGeorgian,
           descriptionEnglish: prop.descriptionEnglish,
           descriptionRussian: prop.descriptionRussian,

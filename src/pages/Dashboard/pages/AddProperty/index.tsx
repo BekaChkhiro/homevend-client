@@ -63,6 +63,7 @@ export const AddProperty = () => {
       hasVeranda: false,
       hasYard: false,
       hasStorage: false,
+      currency: "USD", // All prices stored in USD
     },
   });
 
@@ -296,6 +297,7 @@ export const AddProperty = () => {
         area: toRequiredNumber(data.area),
         totalPrice: toRequiredNumber(data.totalPrice),
         pricePerSqm: toNumber(data.pricePerSqm),
+        currency: "USD", // All prices stored in USD only
         contactName: data.contactName,
         contactPhone: data.contactPhone,
         descriptionGeorgian: cleanData(data.descriptionGeorgian),

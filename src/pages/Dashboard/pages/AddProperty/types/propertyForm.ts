@@ -72,6 +72,7 @@ export const propertyFormSchema = z.object({
   area: z.string().min(1, "Area is required"),
   totalPrice: z.string().min(1, "Total price is required"),
   pricePerSqm: z.string().optional(),
+  currency: z.enum(["USD"]).default("USD"), // All prices stored in USD only
 
   // Contact Info
   contactName: z.string().min(1, "Name is required"),

@@ -189,7 +189,6 @@ export interface Property {
   photos?: string[];
   contactName?: string;
   contactPhone?: string;
-  contactEmail?: string;
   descriptionGeorgian?: string;
   descriptionEnglish?: string;
   descriptionRussian?: string;

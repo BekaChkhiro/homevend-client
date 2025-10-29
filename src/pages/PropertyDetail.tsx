@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Bed, Bath, Square, Phone, Mail, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag, Crown, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Phone, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag, Crown, ChevronLeft, ChevronRight } from "lucide-react";
 import { AdBanner } from "@/components/AdBanner";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,6 +16,7 @@ import { PropertyDetailSkeleton, SimilarPropertiesSkeleton } from "@/components/
 import { getLanguageUrl } from "@/components/LanguageRoute";
 import { useTranslation } from "react-i18next";
 import { ImageLightbox } from "@/components/ImageLightbox";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import {
   Carousel,
   CarouselContent,
@@ -123,7 +124,6 @@ interface Property {
   user: {
     id: number;
     fullName: string;
-    email: string;
     role?: string;
   };
   
@@ -365,6 +365,7 @@ const PropertyDetail = () => {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const { t, i18n } = useTranslation('propertyDetail');
+  const { formatPrice: currencyFormatPrice } = useCurrency();
 
   // Minimum swipe distance (in px) to trigger a slide change
   const minSwipeDistance = 50;
@@ -581,13 +582,10 @@ const PropertyDetail = () => {
     }
   };
 
+  // Wrapper for formatPrice to handle string/number conversion
   const formatPrice = (price: string | number) => {
-    const numPrice = typeof price === 'string' ? parseInt(price) : price;
-    return new Intl.NumberFormat('ka-GE', {
-      style: 'currency',
-      currency: 'GEL',
-      minimumFractionDigits: 0,
-    }).format(numPrice || 0);
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    return currencyFormatPrice(numPrice || 0, { showCurrency: false });
   };
 
 
@@ -734,8 +732,7 @@ const PropertyDetail = () => {
     tags: property.tags,
     agent: {
       name: property.user.fullName,
-      phone: property.contactPhone,
-      email: property.user.email
+      phone: property.contactPhone
     },
     dateAdded: property.createdAt,
     status: property.status,
@@ -1539,10 +1536,6 @@ const PropertyDetail = () => {
                     <Button className="w-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 py-3 md:py-5 font-medium text-sm md:text-base" variant="default">
                       <Phone className="h-4 w-4 md:h-5 md:w-5 mr-2 md:mr-3" />
                       <span className="truncate">{displayProperty.agent.phone}</span>
-                    </Button>
-                    <Button className="w-full border-border text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-200 py-3 md:py-5 font-medium text-sm md:text-base" variant="outline">
-                      <Mail className="h-4 w-4 md:h-5 md:w-5 mr-2 md:mr-3" />
-                      {t('email')}
                     </Button>
                   </div>
                 </CardContent>

@@ -2,6 +2,7 @@
 import { Logo, UserMenu, FavoritesButton, AddPropertyButton, Navigation } from "./Header/index";
 import { TabbedMobileMenu } from "./Header/TabbedMobileMenu";
 import LanguageSelector from "./LanguageSelector";
+import CurrencySelector from "./CurrencySelector";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu, X } from "lucide-react";
@@ -23,6 +24,7 @@ export const Header = () => {
           {/* Desktop controls */}
           <div className="hidden md:flex items-center space-x-2 lg:space-x-4 flex-shrink-0">
             <LanguageSelector />
+            <CurrencySelector />
             <FavoritesButton />
             <AddPropertyButton />
             <UserMenu />

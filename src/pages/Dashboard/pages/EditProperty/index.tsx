@@ -50,6 +50,7 @@ export const EditProperty = () => {
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertyFormSchema),
     defaultValues: {
+      currency: "USD", // All prices stored in USD
       features: [],
       advantages: [],
       furnitureAppliances: [],
@@ -225,6 +226,7 @@ export const EditProperty = () => {
           area: property.area?.toString() || "",
           totalPrice: property.totalPrice?.toString() || "",
           pricePerSqm: property.pricePerSqm?.toString() || "",
+          currency: "USD", // All prices stored in USD
           contactName: property.contactName || "",
           contactPhone: property.contactPhone || "",
           descriptionGeorgian: property.descriptionGeorgian || "",
@@ -402,6 +404,7 @@ export const EditProperty = () => {
         area: toRequiredNumber(data.area),
         totalPrice: toRequiredNumber(data.totalPrice),
         pricePerSqm: toNumber(data.pricePerSqm),
+        currency: "USD", // All prices stored in USD only
         contactName: data.contactName,
         contactPhone: data.contactPhone,
         descriptionGeorgian: cleanData(data.descriptionGeorgian),
