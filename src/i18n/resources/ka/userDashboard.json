@@ -851,10 +851,10 @@
       "title": "ბეჯები",
       "luxury": "ლუქსი",
       "new": "ახალი",
-      "codeEntry": "კარი კოდით",
-      "airbnb": "Airbnb/Booking ექაუნთი",
+      "codeDoor": "კარი კოდით",
+      "airbnbBooking": "Airbnb/Booking ექაუნთი",
       "investment": "საინვესტიციო",
-      "disabled": "სსმპ"
+      "disabilityFriendly": "სსმპ"
     },
     "vipServices": {
       "title": "VIP სტატუსი და დამატებითი სერვისების შერჩევა",
