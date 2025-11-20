@@ -164,19 +164,23 @@ const Advertisements = () => {
   const fetchAdvertisements = async (forceRefresh = false) => {
     try {
       setLoading(true);
-      console.log(`[Frontend] Fetching advertisements... (forceRefresh: ${forceRefresh})`);
+      console.log(`🟡 [FETCH ADS 1] Starting fetch... (forceRefresh: ${forceRefresh})`);
 
       // Add cache-busting parameter to force fresh data
       const params = forceRefresh ? { _t: Date.now() } : {};
+      console.log('🟡 [FETCH ADS 2] Fetch params:', params);
+
       const data = await advertisementApi.getAdvertisements(params as any);
 
-      console.log('[Frontend] Received advertisements data:', data);
-      console.log('[Frontend] Number of advertisements:', data.advertisements?.length || 0);
-      console.log('[Frontend] Advertisement IDs:', data.advertisements?.map((ad: any) => ad.id).join(', '));
+      console.log('🟡 [FETCH ADS 3] Received data:', data);
+      console.log('🟡 [FETCH ADS 4] Number of ads:', data.advertisements?.length || 0);
+      console.log('🟡 [FETCH ADS 5] Ad IDs:', data.advertisements?.map((ad: any) => ad.id).join(', '));
+      console.log('🟡 [FETCH ADS 6] Full ad list:', data.advertisements);
 
       setAdvertisements(data.advertisements || []);
+      console.log('🟡 [FETCH ADS 7] State updated with advertisements');
     } catch (error) {
-      console.error('[Frontend] Error fetching advertisements:', error);
+      console.error('🟡 [FETCH ADS 8] Error fetching advertisements:', error);
       toast({
         title: 'Error',
         description: 'Failed to load advertisements',
@@ -184,6 +188,7 @@ const Advertisements = () => {
       });
     } finally {
       setLoading(false);
+      console.log('🟡 [FETCH ADS 9] Fetch completed, loading set to false');
     }
   };
 
@@ -227,23 +232,42 @@ const Advertisements = () => {
   };
 
   const handleDeleteAdvertisement = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this advertisement?')) return;
+    console.log('🔴 [DELETE DEBUG 1] handleDeleteAdvertisement called with ID:', id);
+    console.log('🔴 [DELETE DEBUG 2] typeof id:', typeof id, 'value:', id);
+
+    const confirmed = confirm('Are you sure you want to delete this advertisement?');
+    console.log('🔴 [DELETE DEBUG 3] User confirmed:', confirmed);
+
+    if (!confirmed) {
+      console.log('🔴 [DELETE DEBUG 4] User cancelled delete');
+      return;
+    }
 
     try {
-      console.log('[Frontend] Deleting advertisement with ID:', id);
+      console.log('🔴 [DELETE DEBUG 5] Starting delete API call for ID:', id);
+      console.log('🔴 [DELETE DEBUG 6] advertisementApi object:', advertisementApi);
+
       const response = await advertisementApi.deleteAdvertisement(id);
-      console.log('[Frontend] Delete response:', response);
+
+      console.log('🔴 [DELETE DEBUG 7] API response received:', response);
+      console.log('🔴 [DELETE DEBUG 8] response.success:', response.success);
 
       if (!response.success) {
+        console.log('🔴 [DELETE DEBUG 9] Response indicates failure:', response.error);
         throw new Error(response.error || 'Failed to delete advertisement');
       }
+
+      console.log('🔴 [DELETE DEBUG 10] Delete successful, updating local state');
 
       // Immediately remove from local state for instant UI feedback
       setAdvertisements((prev) => {
         const updated = prev.filter(ad => ad.id !== id);
-        console.log(`[Frontend] Removed ad ${id} from local state. Remaining: ${updated.length}`);
+        console.log(`🔴 [DELETE DEBUG 11] Updated local state. Before: ${prev.length}, After: ${updated.length}`);
+        console.log(`🔴 [DELETE DEBUG 12] Removed ad IDs:`, prev.filter(ad => ad.id === id).map(a => a.id));
         return updated;
       });
+
+      console.log('🔴 [DELETE DEBUG 13] Showing success toast');
 
       toast({
         title: 'Success',
@@ -251,14 +275,23 @@ const Advertisements = () => {
       });
 
       // Force refresh from server to ensure sync
+      console.log('🔴 [DELETE DEBUG 14] Scheduling refresh in 500ms');
       setTimeout(() => {
-        console.log('[Frontend] Force refreshing advertisements list after delete');
+        console.log('🔴 [DELETE DEBUG 15] Executing scheduled refresh');
         fetchAdvertisements(true); // Force refresh with cache-busting
       }, 500);
 
+      console.log('🔴 [DELETE DEBUG 16] handleDeleteAdvertisement completed successfully');
+
     } catch (error: any) {
-      console.error('[Frontend] Error deleting advertisement:', error);
+      console.error('🔴 [DELETE DEBUG 17] Error caught:', error);
+      console.error('🔴 [DELETE DEBUG 18] Error type:', error?.constructor?.name);
+      console.error('🔴 [DELETE DEBUG 19] Error message:', error?.message);
+      console.error('🔴 [DELETE DEBUG 20] Error response:', error?.response?.data);
+      console.error('🔴 [DELETE DEBUG 21] Error response status:', error?.response?.status);
+
       const errorMessage = error?.response?.data?.error || error?.message || 'Failed to delete advertisement';
+      console.error('🔴 [DELETE DEBUG 22] Final error message:', errorMessage);
 
       toast({
         title: 'Error',
@@ -266,9 +299,15 @@ const Advertisements = () => {
         variant: 'destructive',
       });
 
+      console.log('🔴 [DELETE DEBUG 23] Refreshing after error');
       // Refresh on error to ensure state is correct
       fetchAdvertisements(true);
     }
+  };
+
+  // Find ALL ads for each placement (not just active)
+  const getAllAdsForPlacement = (placementId: string) => {
+    return advertisements.filter(ad => ad.placementId === placementId);
   };
 
   // Find active ad for each placement
@@ -280,15 +319,20 @@ const Advertisements = () => {
 
   // Update placement stats with real data
   const getPlacementStats = (placementId: string) => {
-    const ad = getActiveAdForPlacement(placementId);
+    const allAds = getAllAdsForPlacement(placementId);
+    const totalViews = allAds.reduce((sum, ad) => sum + (ad.views || 0), 0);
+    const totalClicks = allAds.reduce((sum, ad) => sum + (ad.clicks || 0), 0);
+
+    const activeAd = getActiveAdForPlacement(placementId);
+
     return {
-      views: ad?.views || 0,
-      clicks: ad?.clicks || 0,
-      currentAd: ad ? {
-        title: ad.title,
-        advertiser: ad.advertiser,
-        startDate: new Date(ad.startDate).toLocaleDateString(),
-        endDate: new Date(ad.endDate).toLocaleDateString(),
+      views: totalViews,
+      clicks: totalClicks,
+      currentAd: activeAd ? {
+        title: activeAd.title,
+        advertiser: activeAd.advertiser,
+        startDate: new Date(activeAd.startDate).toLocaleDateString(),
+        endDate: new Date(activeAd.endDate).toLocaleDateString(),
       } : undefined,
     };
   };
@@ -373,6 +417,7 @@ const Advertisements = () => {
           adPlacements.map((placement) => {
             const stats = getPlacementStats(placement.id);
             const activeAd = getActiveAdForPlacement(placement.id);
+            const allAds = getAllAdsForPlacement(placement.id);
 
             return (
               <Card key={placement.id} className={selectedPlacement === placement.id ? 'ring-2 ring-primary' : ''}>
@@ -405,32 +450,60 @@ const Advertisements = () => {
                     </div>
                   </div>
 
-                  {stats.currentAd && (
-                    <div className="border rounded-lg p-3 bg-green-50 mb-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold text-green-800 text-sm">{stats.currentAd.title}</h4>
-                          <p className="text-xs text-green-600">{stats.currentAd.advertiser}</p>
+                  {/* Show all advertisements for this placement */}
+                  {allAds.length > 0 && (
+                    <div className="space-y-2 mb-4">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        {allAds.length === 1 ? 'Advertisement:' : `${allAds.length} Advertisements:`}
+                      </p>
+                      {allAds.map(ad => (
+                        <div
+                          key={ad.id}
+                          className={`border rounded-lg p-3 ${
+                            ad.status === 'active' ? 'bg-green-50 border-green-200' :
+                            ad.status === 'expired' ? 'bg-gray-50 border-gray-200' :
+                            'bg-blue-50 border-blue-200'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-semibold text-sm">
+                                  ID: {ad.id} - {ad.title}
+                                </h4>
+                                <Badge
+                                  variant={ad.status === 'active' ? 'default' : 'secondary'}
+                                  className="text-xs"
+                                >
+                                  {ad.status}
+                                </Badge>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {ad.advertiser} • {new Date(ad.startDate).toLocaleDateString()} - {new Date(ad.endDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => {
+                                console.log('🔵 [BUTTON CLICK] Delete button clicked for ad ID:', ad.id);
+                                handleDeleteAdvertisement(ad.id);
+                              }}
+                              className="ml-2"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs text-green-600">{t('advertisements.labels.expires')} {stats.currentAd.endDate} {t('advertisements.labels.until')}</p>
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   )}
 
                   <div className="flex gap-2">
-                    {activeAd ? (
-                      <Button variant="outline" size="sm" onClick={() => handleDeleteAdvertisement(activeAd.id)}>
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        {t('advertisements.buttons.delete')}
-                      </Button>
-                    ) : (
-                      <Button variant="outline" size="sm" onClick={() => handleAddAdvertisement(placement.id)}>
-                        <Plus className="h-4 w-4 mr-1" />
-                        {t('advertisements.buttons.activate')}
-                      </Button>
-                    )}
+                    <Button variant="outline" size="sm" onClick={() => handleAddAdvertisement(placement.id)}>
+                      <Plus className="h-4 w-4 mr-1" />
+                      {allAds.length > 0 ? t('advertisements.buttons.addAnother') || 'Add Another' : t('advertisements.buttons.activate')}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

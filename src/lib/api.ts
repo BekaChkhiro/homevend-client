@@ -359,8 +359,20 @@ export const propertyApi = {
   },
   
   deleteProperty: async (id: string) => {
-    const response = await apiClient.delete(`/properties/${id}`);
-    return response.data;
+    console.log('🟢 [API DELETE PROPERTY 1] deleteProperty called with ID:', id);
+    console.log('🟢 [API DELETE PROPERTY 2] Request URL:', `/properties/${id}`);
+
+    try {
+      const response = await apiClient.delete(`/properties/${id}`);
+      console.log('🟢 [API DELETE PROPERTY 3] Response received:', response);
+      console.log('🟢 [API DELETE PROPERTY 4] Response status:', response.status);
+      console.log('🟢 [API DELETE PROPERTY 5] Response data:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('🟢 [API DELETE PROPERTY 6] Error:', error);
+      console.error('🟢 [API DELETE PROPERTY 7] Error response:', error?.response?.data);
+      throw error;
+    }
   }
 };
 
@@ -1013,8 +1025,23 @@ export const advertisementApi = {
   },
 
   deleteAdvertisement: async (id: number) => {
-    const response = await apiClient.delete(`/advertisements/${id}`);
-    return response.data;
+    console.log('🟢 [API CLIENT 1] deleteAdvertisement called with ID:', id);
+    console.log('🟢 [API CLIENT 2] Request URL:', `/advertisements/${id}`);
+    console.log('🟢 [API CLIENT 3] apiClient base URL:', apiClient.defaults.baseURL);
+
+    try {
+      console.log('🟢 [API CLIENT 4] Sending DELETE request...');
+      const response = await apiClient.delete(`/advertisements/${id}`);
+      console.log('🟢 [API CLIENT 5] Response received:', response);
+      console.log('🟢 [API CLIENT 6] Response status:', response.status);
+      console.log('🟢 [API CLIENT 7] Response data:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('🟢 [API CLIENT 8] Error in deleteAdvertisement:', error);
+      console.error('🟢 [API CLIENT 9] Error response:', error?.response);
+      console.error('🟢 [API CLIENT 10] Error response data:', error?.response?.data);
+      throw error;
+    }
   },
 
   trackClick: async (id: number) => {

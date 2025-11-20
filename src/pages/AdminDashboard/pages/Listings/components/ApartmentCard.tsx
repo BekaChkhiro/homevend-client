@@ -49,9 +49,11 @@ interface Property {
 interface ApartmentCardProps {
   property: Property;
   onDelete: (propertyId: string) => void;
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
 }
 
-export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
+export const ApartmentCard = ({ property, onDelete, isSelected = false, onToggleSelect }: ApartmentCardProps) => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation('admin');
   const [propertyImages, setPropertyImages] = useState<string[]>([]);
@@ -164,9 +166,19 @@ export const ApartmentCard = ({ property, onDelete }: ApartmentCardProps) => {
   };
 
   return (
-    <Card className="border hover:shadow-sm transition-shadow">
+    <Card className={`border hover:shadow-sm transition-shadow ${isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}>
       <CardContent className="p-0">
         <div className="flex items-center gap-4 p-4">
+          {/* Checkbox */}
+          {onToggleSelect && (
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={onToggleSelect}
+              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+            />
+          )}
+
           {/* Image */}
           <div className="relative flex-shrink-0">
             {getMainImage() ? (

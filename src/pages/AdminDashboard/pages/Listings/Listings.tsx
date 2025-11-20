@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Filter, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { adminApi } from '@/lib/api';
+import { adminApi, propertyApi } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 
 interface Property {
@@ -42,6 +42,7 @@ interface Property {
 const Listings = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const { t, i18n } = useTranslation('admin');
 
@@ -84,23 +85,128 @@ const Listings = () => {
   };
 
   const handleDelete = async (propertyId: string) => {
+    console.log('🔴 [PROPERTY DELETE 1] handleDelete called with ID:', propertyId);
+
     try {
-      // Add delete API call here when backend is ready
-      console.log('Deleting property:', propertyId);
-      
-      // For now, just remove from local state
+      console.log('🔴 [PROPERTY DELETE 2] Calling API to delete property...');
+
+      // Call backend API to delete property
+      const response = await propertyApi.deleteProperty(propertyId);
+      console.log('🔴 [PROPERTY DELETE 3] API Response:', response);
+
+      if (!response.success) {
+        console.log('🔴 [PROPERTY DELETE 4] API returned error:', response.message);
+        throw new Error(response.message || 'Failed to delete property');
+      }
+
+      console.log('🔴 [PROPERTY DELETE 5] Delete successful, updating local state');
+
+      // Remove from local state
       setProperties(properties.filter(p => p.id.toString() !== propertyId));
-      
+
+      console.log('🔴 [PROPERTY DELETE 6] Showing success toast');
       toast({
         title: t('common.success'),
         description: t('listings.messages.listingDeleted'),
       });
+
+      // Refresh data from server
+      console.log('🔴 [PROPERTY DELETE 7] Refreshing properties list...');
+      setTimeout(() => {
+        fetchAllProperties();
+      }, 500);
+
+      console.log('🔴 [PROPERTY DELETE 8] Delete completed successfully');
+
     } catch (error: any) {
+      console.error('🔴 [PROPERTY DELETE 9] Error deleting property:', error);
+      console.error('🔴 [PROPERTY DELETE 10] Error message:', error?.message);
+      console.error('🔴 [PROPERTY DELETE 11] Error response:', error?.response?.data);
+
       toast({
         title: t('common.error'),
-        description: t('listings.messages.errorDeletingListing'),
+        description: error?.response?.data?.message || error?.message || t('listings.messages.errorDeletingListing'),
         variant: "destructive",
       });
+
+      // Refresh to ensure state is correct
+      fetchAllProperties();
+    }
+  };
+
+  // Toggle selection of a property
+  const toggleSelection = (propertyId: string) => {
+    setSelectedIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(propertyId)) {
+        newSet.delete(propertyId);
+      } else {
+        newSet.add(propertyId);
+      }
+      return newSet;
+    });
+  };
+
+  // Select all properties
+  const selectAll = () => {
+    setSelectedIds(new Set(properties.map(p => p.id.toString())));
+  };
+
+  // Deselect all properties
+  const deselectAll = () => {
+    setSelectedIds(new Set());
+  };
+
+  // Bulk delete selected properties
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) {
+      toast({
+        title: t('common.error'),
+        description: 'გთხოვთ აირჩიოთ ქონება წასაშლელად',
+        variant: "destructive",
+      });
+      return;
+    }
+
+    console.log('🔴 [BULK DELETE 1] Starting bulk delete for IDs:', Array.from(selectedIds));
+
+    try {
+      const deletePromises = Array.from(selectedIds).map(id =>
+        propertyApi.deleteProperty(id)
+      );
+
+      console.log('🔴 [BULK DELETE 2] Deleting', selectedIds.size, 'properties...');
+      await Promise.all(deletePromises);
+
+      console.log('🔴 [BULK DELETE 3] All properties deleted successfully');
+
+      // Clear selection
+      setSelectedIds(new Set());
+
+      // Remove from local state
+      setProperties(properties.filter(p => !selectedIds.has(p.id.toString())));
+
+      toast({
+        title: t('common.success'),
+        description: `წაიშალა ${selectedIds.size} ქონება`,
+      });
+
+      // Refresh data
+      console.log('🔴 [BULK DELETE 4] Refreshing properties list...');
+      setTimeout(() => {
+        fetchAllProperties();
+      }, 500);
+
+    } catch (error: any) {
+      console.error('🔴 [BULK DELETE 5] Error during bulk delete:', error);
+
+      toast({
+        title: t('common.error'),
+        description: 'შეცდომა ქონების წაშლისას',
+        variant: "destructive",
+      });
+
+      fetchAllProperties();
     }
   };
 
@@ -353,12 +459,60 @@ const Listings = () => {
           </div>
         </CardHeader>
         <CardContent>
+          {/* Bulk Actions Bar */}
+          {selectedIds.size > 0 && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="font-medium text-blue-900">
+                  არჩეულია: {selectedIds.size} ქონება
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={deselectAll}
+                >
+                  გასუფთავება
+                </Button>
+              </div>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleBulkDelete}
+              >
+                წაშლა ({selectedIds.size})
+              </Button>
+            </div>
+          )}
+
+          {/* Select All Button */}
+          <div className="mb-3 flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={selectAll}
+              disabled={properties.length === 0}
+            >
+              ყველას არჩევა
+            </Button>
+            {selectedIds.size > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={deselectAll}
+              >
+                არჩევანის გაუქმება
+              </Button>
+            )}
+          </div>
+
           <div className="space-y-4">
             {transformedProperties.map((property) => (
               <ApartmentCard
                 key={property.id}
                 property={property}
                 onDelete={handleDelete}
+                isSelected={selectedIds.has(property.id.toString())}
+                onToggleSelect={() => toggleSelection(property.id.toString())}
               />
             ))}
           </div>
