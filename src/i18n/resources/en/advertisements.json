@@ -7,6 +7,24 @@
   "advertisingPage": {
     "title": "Advertising Placement",
     "subtitle": "Reach thousands of potential buyers and sellers on Georgia's most popular real estate platform",
+    "intro": {
+      "title": "Advertising Spaces",
+      "description": "Place your advertisement on our platform and get maximum visibility. We offer various advertising spaces at different prices."
+    },
+    "legalRestrictions": {
+      "title": "Legal Restrictions",
+      "description": "In accordance with the restrictions provided by the Georgian Law on Advertising, the following will not be placed on the platform:",
+      "restrictions": [
+        "Alcoholic beverages",
+        "Sexual content products",
+        "Tobacco products, tobacco accessories and/or devices intended for tobacco consumption",
+        "Gambling, totalizator, lottery, bingo, and their organizers",
+        "Combat weapons",
+        "Pharmaceutical products subject to special control (first group), second group, and those without permission to be placed on the Georgian market",
+        "Any type of advertising for artificial infant feeding products (except supplementary food), feeding bottles and pacifiers"
+      ],
+      "contactInfo": "Contact us to place an advertisement or for additional information."
+    },
     "stats": {
       "users": "Users",
       "viewsPerMonth": "Views per Month",
@@ -80,7 +98,7 @@
       "emailLabel": "Email Address",
       "emailPlaceholder": "example@company.com",
       "phoneLabel": "Phone Number",
-      "phonePlaceholder": "+995 555 123 456",
+      "phonePlaceholder": "+995 595 36 55 55",
       "selectedPlacements": "Selected Ad Placements",
       "additionalInfo": "Additional Information",
       "additionalInfoPlaceholder": "Please specify your advertising goals, budget and other important details...",

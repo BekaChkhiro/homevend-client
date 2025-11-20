@@ -84,6 +84,20 @@ const Advertising = () => {
           </div>
         </div>
 
+        {/* Intro Section */}
+        <div className="container mx-auto px-4 mb-16">
+          <div className="max-w-4xl mx-auto">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl">{t('advertisements:advertisingPage.intro.title')}</CardTitle>
+                <CardDescription className="text-base">
+                  {t('advertisements:advertisingPage.intro.description')}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+
         {/* Advertising Placements */}
         <div className="container mx-auto px-4 mb-16 mt-12">
           <div className="text-center mb-12">
@@ -113,6 +127,35 @@ const Advertising = () => {
           </div>
         </div>
 
+        {/* Legal Restrictions */}
+        <div className="container mx-auto px-4 mb-16">
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-amber-200 bg-amber-50/50">
+              <CardHeader>
+                <CardTitle className="text-2xl text-amber-900">
+                  {t('advertisements:advertisingPage.legalRestrictions.title')}
+                </CardTitle>
+                <CardDescription className="text-amber-800">
+                  {t('advertisements:advertisingPage.legalRestrictions.description')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 mb-6">
+                  {(t('advertisements:advertisingPage.legalRestrictions.restrictions', { returnObjects: true }) as string[]).map((restriction, index) => (
+                    <li key={index} className="flex items-start gap-2 text-amber-900">
+                      <span className="text-amber-600 mt-1">•</span>
+                      <span>{restriction}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-amber-800 font-medium">
+                  {t('advertisements:advertisingPage.legalRestrictions.contactInfo')}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
         {/* Contact Information */}
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
@@ -130,7 +173,7 @@ const Advertising = () => {
                   </div>
                   <div>
                     <div className="font-semibold text-lg">{t('advertisements:advertisingPage.contact.advertisingDepartment')}</div>
-                    <div className="text-muted-foreground text-lg">+995 555 123 456</div>
+                    <div className="text-muted-foreground text-lg">+995 595 36 55 55</div>
                   </div>
                 </div>
 

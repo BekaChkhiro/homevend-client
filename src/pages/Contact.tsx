@@ -126,7 +126,7 @@ const Contact = () => {
                           type="tel"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          placeholder="+995 555 123 456"
+                          placeholder="+995 595 36 55 55"
                           className="mt-1"
                         />
                       </div>

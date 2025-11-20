@@ -36,7 +36,7 @@ export const Services = () => {
       icon: <Gavel className="h-6 w-6" />,
       status: "available",
       statusColor: "bg-green-100 text-green-800",
-      phone: "+995 555 123 456"
+      phone: "+995 595 36 55 55"
     },
     {
       id: 4,

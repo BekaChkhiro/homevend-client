@@ -754,14 +754,14 @@
       "russian": "Русский", 
       "descriptionInGeorgian": "Описание на грузинском",
       "descriptionHelp": "Подробное описание поможет привлечь больше внимания потенциальных покупателей",
-      "phoneExample": "Пример: +995 555 123 456"
+      "phoneExample": "Пример: +995 595 36 55 55"
     },
     "contact": {
       "title": "Контактная информация",
       "name": "Имя",
       "namePlaceholder": "Ваше имя",
       "phone": "Номер телефона",
-      "phoneExample": "Пример: +995 555 123 456"
+      "phoneExample": "Пример: +995 595 36 55 55"
     },
     "description": {
       "title": "Описание",
