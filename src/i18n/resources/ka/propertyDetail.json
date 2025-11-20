@@ -93,7 +93,10 @@
   "projectType": {
     "standard": "სტანდარტული",
     "non_standard": "არასტანდარტული",
-    "elite": "ელიტური"
+    "non-standard": "არასტანდარტული",
+    "elite": "ელიტური",
+    "villa": "ვილა",
+    "townhouse": "თაუნჰაუსი"
   },
   "buildingMaterial": {
     "brick": "აგური",
@@ -174,7 +177,7 @@
   "advantages": {
     "spa": "სპა",
     "fireplace": "ბუხარი",
-    "bbq": "შაშლიკის ადგილი",
+    "bbq": "BBQ",
     "bar": "ბარი",
     "gym": "სპორტული დარბაზი",
     "jacuzzi": "ჯაკუზი",

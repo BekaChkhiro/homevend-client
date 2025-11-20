@@ -629,7 +629,7 @@
       "heatingType": "გათბობის ტიპი",
       "heatingTypes": {
         "central-heating": "ცენტრალური გათბობა",
-        "gas-heater": "გაზური გამათბობელი",
+        "gas-heater": "გაზის გამათბობებლი",
         "electric-heater": "ელექტრო გამათბობელი",
         "central-floor": "ცენტრალური + იატაკის გათბობა",
         "no-heating": "გათბობის გარეშე",
@@ -647,7 +647,7 @@
       },
       "hotWaterType": "ცხელი წყლის ტიპი",
       "hotWaterTypes": {
-        "gas-water-heater": "გაზური წყლის გამათბობელი",
+        "gas-water-heater": "გაზის წყლის გამათბობელი",
         "boiler": "ბოილერი",
         "electric-water-heater": "ელექტრო წყლის გამათბობელი",
         "solar-heater": "მზის გამათბობელი",
@@ -694,11 +694,8 @@
       "storageTypeLabel": "საწყობის ტიპი",
       "storageTypes": {
         "basement": "სარდაფი",
-        "attic": "რიღი",
-        "pantry": "სპაჯი",
         "external-storage": "გარე საწყობი",
-        "shared-storage": "საერთო საწყობი",
-        "basement-attic": "სარდაფი + რიღი"
+        "shared-storage": "საერთო საწყობი"
       },
       "amenities": {
         "title": "დამატებითი ინფორმაცია",
@@ -730,7 +727,6 @@
         },
         "storageTypes": {
           "basement": "სარდაფი",
-          "attic": "რიღი",
           "separate": "ცალკე"
         }
       }

@@ -607,11 +607,8 @@
       "storageTypeLabel": "Тип хранилища",
       "storageTypes": {
         "basement": "Подвал",
-        "attic": "Чердак", 
-        "pantry": "Кладовая",
         "external-storage": "Внешнее хранилище",
-        "shared-storage": "Общее хранилище",
-        "basement-attic": "Подвал + Чердак"
+        "shared-storage": "Общее хранилище"
       },
       "constructionYear": "Год строительства",
       "condition": "Состояние",

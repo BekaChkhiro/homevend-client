@@ -93,7 +93,10 @@
   "projectType": {
     "standard": "Standard",
     "non_standard": "Non-Standard",
-    "elite": "Elite"
+    "non-standard": "Non-Standard",
+    "elite": "Elite",
+    "villa": "Villa",
+    "townhouse": "Townhouse"
   },
   "buildingMaterial": {
     "brick": "Brick",

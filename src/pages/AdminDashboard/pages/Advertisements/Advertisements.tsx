@@ -161,13 +161,22 @@ const Advertisements = () => {
     fetchAdvertisements();
   }, []);
 
-  const fetchAdvertisements = async () => {
+  const fetchAdvertisements = async (forceRefresh = false) => {
     try {
       setLoading(true);
-      const data = await advertisementApi.getAdvertisements();
+      console.log(`[Frontend] Fetching advertisements... (forceRefresh: ${forceRefresh})`);
+
+      // Add cache-busting parameter to force fresh data
+      const params = forceRefresh ? { _t: Date.now() } : {};
+      const data = await advertisementApi.getAdvertisements(params as any);
+
+      console.log('[Frontend] Received advertisements data:', data);
+      console.log('[Frontend] Number of advertisements:', data.advertisements?.length || 0);
+      console.log('[Frontend] Advertisement IDs:', data.advertisements?.map((ad: any) => ad.id).join(', '));
+
       setAdvertisements(data.advertisements || []);
     } catch (error) {
-      console.error('Error fetching advertisements:', error);
+      console.error('[Frontend] Error fetching advertisements:', error);
       toast({
         title: 'Error',
         description: 'Failed to load advertisements',
@@ -221,19 +230,44 @@ const Advertisements = () => {
     if (!confirm('Are you sure you want to delete this advertisement?')) return;
 
     try {
-      await advertisementApi.deleteAdvertisement(id);
+      console.log('[Frontend] Deleting advertisement with ID:', id);
+      const response = await advertisementApi.deleteAdvertisement(id);
+      console.log('[Frontend] Delete response:', response);
+
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to delete advertisement');
+      }
+
+      // Immediately remove from local state for instant UI feedback
+      setAdvertisements((prev) => {
+        const updated = prev.filter(ad => ad.id !== id);
+        console.log(`[Frontend] Removed ad ${id} from local state. Remaining: ${updated.length}`);
+        return updated;
+      });
+
       toast({
         title: 'Success',
         description: 'Advertisement deleted successfully',
       });
-      fetchAdvertisements();
-    } catch (error) {
-      console.error('Error deleting advertisement:', error);
+
+      // Force refresh from server to ensure sync
+      setTimeout(() => {
+        console.log('[Frontend] Force refreshing advertisements list after delete');
+        fetchAdvertisements(true); // Force refresh with cache-busting
+      }, 500);
+
+    } catch (error: any) {
+      console.error('[Frontend] Error deleting advertisement:', error);
+      const errorMessage = error?.response?.data?.error || error?.message || 'Failed to delete advertisement';
+
       toast({
         title: 'Error',
-        description: 'Failed to delete advertisement',
+        description: errorMessage,
         variant: 'destructive',
       });
+
+      // Refresh on error to ensure state is correct
+      fetchAdvertisements(true);
     }
   };
 

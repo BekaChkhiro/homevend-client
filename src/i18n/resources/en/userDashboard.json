@@ -709,11 +709,8 @@
       "storageTypeLabel": "Storage Type",
       "storageTypes": {
         "basement": "Basement",
-        "attic": "Attic",
-        "pantry": "Pantry",
         "external-storage": "External Storage",
-        "shared-storage": "Shared Storage",
-        "basement-attic": "Basement + Attic"
+        "shared-storage": "Shared Storage"
       },
       "constructionYear": "Construction Year",
       "condition": "Condition",

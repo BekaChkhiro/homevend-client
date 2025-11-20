@@ -149,7 +149,8 @@ const translateCondition = (condition: string, t: any) => {
 };
 
 const translateProjectType = (type: string, t: any) => {
-  const translationKey = `projectType.${type.replace('-', '_')}`;
+  // Try with the original key first (handles both hyphen and underscore versions)
+  const translationKey = `projectType.${type}`;
   return t(translationKey, { defaultValue: type });
 };
 

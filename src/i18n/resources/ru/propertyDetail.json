@@ -93,7 +93,10 @@
   "projectType": {
     "standard": "Стандартный",
     "non_standard": "Нестандартный",
-    "elite": "Элитный"
+    "non-standard": "Нестандартный",
+    "elite": "Элитный",
+    "villa": "Вилла",
+    "townhouse": "Таунхаус"
   },
   "buildingMaterial": {
     "brick": "Кирпич",

@@ -850,11 +850,8 @@ export const PropertyDetailsSection = () => {
                     >
                       {[
                         { value: "basement", label: t('addPropertyForm.propertyDetails.storageTypes.basement') },
-                        { value: "attic", label: t('addPropertyForm.propertyDetails.storageTypes.attic') },
-                        { value: "pantry", label: t('addPropertyForm.propertyDetails.storageTypes.pantry') },
                         { value: "external-storage", label: t('addPropertyForm.propertyDetails.storageTypes.external-storage') },
-                        { value: "shared-storage", label: t('addPropertyForm.propertyDetails.storageTypes.shared-storage') },
-                        { value: "basement-attic", label: t('addPropertyForm.propertyDetails.storageTypes.basement-attic') }
+                        { value: "shared-storage", label: t('addPropertyForm.propertyDetails.storageTypes.shared-storage') }
                       ].map((option) => (
                         <label
                           key={option.value}
