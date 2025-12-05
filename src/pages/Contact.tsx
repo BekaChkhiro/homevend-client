@@ -218,9 +218,8 @@ const Contact = () => {
                     <div>
                       <div className="font-semibold">მისამართი</div>
                       <div className="text-muted-foreground">
-                        თბილისი, ვაშლიჯვარი<br />
-                        ვაჟა-ფშაველას გამზ. 77<br />
-                        0177, საქართველო
+                        ქ. თბილისი, ბერბუკის ქ. N7<br />
+                        მე-2 სადარბაზო; სართული 11, ბინა N54
                       </div>
                     </div>
                   </div>
@@ -302,7 +301,7 @@ const Contact = () => {
                   <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
                   <p className="text-muted-foreground">ინტერაქტიული რუკა</p>
                   <p className="text-sm text-muted-foreground">
-                    თბილისი, ვაშლიჯვარი, ვაჟა-ფშაველას გამზ. 77
+                    ქ. თბილისი, ბერბუკის ქ. N7, მე-2 სადარბაზო; სართული 11, ბინა N54
                   </p>
                 </div>
               </div>
