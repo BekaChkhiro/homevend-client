@@ -240,74 +240,10 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              {/* FAQ Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>ხშირად დასმული კითხვები</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="font-medium text-sm mb-1">როგორ დავამატო განცხადება?</div>
-                    <div className="text-xs text-muted-foreground">
-                      დარეგისტრირდით და შედით თქვენს პროფილში, სადაც შეძლებთ ახალი განცხადების დამატებას.
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="font-medium text-sm mb-1">რამდენია სერვისის ღირებულება?</div>
-                    <div className="text-xs text-muted-foreground">
-                      ძირითადი ფუნქციები უფასოა. პრემიუმ სერვისებისთვის იხილეთ ჩვენი ფასები.
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="font-medium text-sm mb-1">როგორ დავუკავშირდე აგენტს?</div>
-                    <div className="text-xs text-muted-foreground">
-                      განცხადების გვერდზე იხილავთ აგენტის საკონტაქტო ინფორმაციას და შეტყობინების ღილაკს.
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Emergency Contact */}
-              <Card className="border-orange-200 bg-orange-50">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Phone className="h-4 w-4 text-orange-600" />
-                    <span className="font-semibold text-orange-800">საგანგებო კონტაქტი</span>
-                  </div>
-                  <p className="text-sm text-orange-700 mb-2">
-                    საგანგებო შემთხვევებისთვის ან სასწრაფო დახმარებისთვის:
-                  </p>
-                  <a href="tel:+995595365555" className="font-bold text-orange-800 hover:text-orange-900 transition-colors block">
-                    +995 595 36 55 55
-                  </a>
-                  <div className="text-xs text-orange-600 mt-1">24/7 ხელმისაწვდომი</div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
 
-        {/* Map Section */}
-        <div className="container mx-auto px-4 mt-16">
-          <Card>
-            <CardHeader>
-              <CardTitle>ჩვენი მდებარეობა</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="w-full h-96 bg-muted rounded-b-lg flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-muted-foreground">ინტერაქტიული რუკა</p>
-                  <p className="text-sm text-muted-foreground">
-                    ქ. თბილისი, ბერბუკის ქ. N7, მე-2 სადარბაზო; სართული 11, ბინა N54
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
       <Footer />
     </div>
