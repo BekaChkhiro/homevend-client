@@ -11,6 +11,7 @@
   "bedrooms": "bedrooms",
   "bathrooms": "bathrooms", 
   "squareMeters": "m²",
+  "priceNegotiable": "Price Negotiable",
   "meters": "m",
   "yes": "Yes",
   "count": "pcs",

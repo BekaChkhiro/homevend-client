@@ -10,6 +10,7 @@ interface Property {
   price: number;
   totalPrice?: string;
   pricePerSqm?: number;
+  isPriceNegotiable?: boolean;
   bedrooms?: string | number;
   bathrooms?: string | number;
   area: string | number;
@@ -380,7 +381,10 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
             <div className="mb-2">
               <div className="flex items-center justify-between mb-1">
                 <div className="text-primary font-bold text-lg">
-                  {formatPrice(property.price, { showCurrency: false })}
+                  {property.isPriceNegotiable
+                  ? t('propertyCard.priceNegotiable', 'ფასი შეთანხმებით')
+                  : formatPrice(property.price, { showCurrency: false })
+                  }
                 </div>
                 {getCityName() && (
                   <Badge variant="secondary" className="text-xs px-2 py-0.5">
@@ -388,7 +392,7 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
                   </Badge>
                 )}
               </div>
-              {property.pricePerSqm && (
+              {!property.isPriceNegotiable && property.pricePerSqm && (
                 <div className="text-muted-foreground text-xs">
                   {getCurrencySymbol()}{property.pricePerSqm.toLocaleString()} {t('propertyCard.perSqm')}
                 </div>

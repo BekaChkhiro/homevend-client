@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/carousel";
 
 interface Property {
+  isPriceNegotiable: any;
   id: number;
   title: string;
   propertyType: string;
@@ -909,9 +910,12 @@ const PropertyDetail = () => {
                   </div>
 
                   <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-2">
-                    {formatPrice(displayProperty.price)}
+                    {property.isPriceNegotiable
+                    ? t('priceNegotiable', 'ფასი შეთანხმებით')
+                    : formatPrice(displayProperty.price)
+                    }
                   </div>
-                  {property.pricePerSqm && (
+                  {!property.isPriceNegotiable && property.pricePerSqm && (
                     <div className="text-lg font-semibold text-muted-foreground mb-6">
                       {formatPrice(property.pricePerSqm)}/{t('perSquareMeter')}
                     </div>

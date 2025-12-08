@@ -13,6 +13,7 @@
     "bedrooms": "Bedrooms",
     "bathrooms": "Bathrooms",
     "area": "Area",
-    "price": "Price"
+    "price": "Price",
+    "priceNegotiable": "Price negotiable"
   }
 }

@@ -799,6 +799,7 @@
       "totalAreaPlaceholder": "Area in square meters",
       "price": "Price",
       "pricePlaceholder": "Total price in dollars",
+      "negotiable": "Price Negotiable",
       "pricePerSqm": "Price per m²",
       "pricePerSqmPlaceholder": "Calculated automatically",
       "currency": "Currency",

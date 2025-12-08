@@ -13,6 +13,7 @@
     "bedrooms": "Спальни",
     "bathrooms": "Ванные",
     "area": "Площадь",
-    "price": "Цена"
+    "price": "Цена",
+    "priceNegotiable": "Цена договорная"
   }
 }

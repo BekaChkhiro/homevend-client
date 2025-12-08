@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { Calculator, DollarSign, Square, TrendingUp, Info } from "lucide-react";
@@ -11,6 +12,7 @@ export const PriceAreaSection = () => {
   const { t } = useTranslation(['userDashboard', 'admin']);
   const form = useFormContext<PropertyFormData>();
   const area = form.watch("area");
+  const isPriceNegotiable =  form.watch("isPriceNegotiable");
   const totalPrice = form.watch("totalPrice");
 
   // All prices are now stored in USD only
@@ -97,8 +99,37 @@ export const PriceAreaSection = () => {
               )}
             />
           </div>
+          
+          {/* Price Negotiable Checkbox */}
+            <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="isPriceNegotiable"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        if (checked) {
+                          form.setValue("totalPrice", "");
+                          form.setValue("pricePerSqm", "");
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <label className="font-medium cursor-pointer text-amber-800">
+                    {t('addPropertyForm.pricing.negotiable', 'ფასი შეთანხმებით')}
+                  </label>
+                </FormItem>
+              )}
+            />
+          </div>
+
 
           {/* Total Price */}
+          {!isPriceNegotiable && (
           <div className="space-y-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex items-center justify-center w-6 sm:w-8 h-6 sm:h-8 bg-primary/10 rounded-lg">
@@ -136,10 +167,12 @@ export const PriceAreaSection = () => {
               )}
             />
           </div>
+          )}
         </div>
 
         {/* Price per Square Meter - Full Width */}
-        <div className="mt-4 sm:mt-6 md:mt-8 pt-3 sm:pt-4 md:pt-6 border-t border-border/30">
+        {!isPriceNegotiable && (
+          <div className="mt-4 sm:mt-6 md:mt-8 pt-3 sm:pt-4 md:pt-6 border-t border-border/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="flex items-center justify-center w-6 sm:w-8 h-6 sm:h-8 bg-green-100 rounded-lg">
               <Calculator className="h-3 sm:h-4 w-3 sm:w-4 text-green-600" />
@@ -190,6 +223,7 @@ export const PriceAreaSection = () => {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

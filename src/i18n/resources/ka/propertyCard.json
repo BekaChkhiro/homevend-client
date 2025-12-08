@@ -13,6 +13,7 @@
     "bedrooms": "საძინებელი",
     "bathrooms": "სააბაზანო",
     "area": "ფართობი",
-    "price": "ფასი"
+    "price": "ფასი",
+    "priceNegotiable": "ფასი შეთანხმებით"
   }
 }

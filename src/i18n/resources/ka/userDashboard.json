@@ -803,6 +803,7 @@
       "area": "ფართი (მ²)",
       "areaDesc": "ქონების საერთო ფართი",
       "areaPlaceholder": "ფართი კვადრატულ მეტრში",
+      "negotiable": "ფასი შეთანხმებით",
       "totalPrice": "სრული ფასი ($)",
       "totalPricePlaceholder": "სრული ფასი დოლარში",
       "pricePerSqm": "კვ. ფასი ($/მ²)",

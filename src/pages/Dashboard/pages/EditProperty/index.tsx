@@ -225,6 +225,7 @@ export const EditProperty = () => {
           tags: property.tags || [],
           area: property.area?.toString() || "",
           totalPrice: property.totalPrice?.toString() || "",
+          isPriceNegotiable: property.isPriceNegotiable || false,
           pricePerSqm: property.pricePerSqm?.toString() || "",
           currency: "USD", // All prices stored in USD
           contactName: property.contactName || "",
@@ -402,8 +403,9 @@ export const EditProperty = () => {
         furnitureAppliances: data.furnitureAppliances,
         tags: data.tags,
         area: toRequiredNumber(data.area),
-        totalPrice: toRequiredNumber(data.totalPrice),
-        pricePerSqm: toNumber(data.pricePerSqm),
+        isPriceNegotiable: data.isPriceNegotiable,
+        totalPrice: data.isPriceNegotiable ? null : toRequiredNumber(data.totalPrice),
+        pricePerSqm: data.isPriceNegotiable ? null : toNumber(data.pricePerSqm),
         currency: "USD", // All prices stored in USD only
         contactName: data.contactName,
         contactPhone: data.contactPhone,

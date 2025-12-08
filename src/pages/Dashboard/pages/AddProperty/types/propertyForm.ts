@@ -70,7 +70,8 @@ export const propertyFormSchema = z.object({
 
   // Price & Area
   area: z.string().min(1, "Area is required"),
-  totalPrice: z.string().min(1, "Total price is required"),
+  isPriceNegotiable: z.boolean().default(false),
+  totalPrice: z.string().optional(),
   pricePerSqm: z.string().optional(),
   currency: z.enum(["USD"]).default("USD"), // All prices stored in USD only
 
@@ -85,6 +86,15 @@ export const propertyFormSchema = z.object({
 
   // Photos
   photos: z.array(z.instanceof(File)).default([]),
+}).refine((data) => {
+  
+  if (!data.isPriceNegotiable && (!data.totalPrice || data.totalPrice === "")) {
+    return false;
+  } 
+  return true;
+}, {
+  message: "Total price is required when price is not negotiable",
+  path: ["totalPrice"],
 });
 
 export type PropertyFormData = z.infer<typeof propertyFormSchema>;

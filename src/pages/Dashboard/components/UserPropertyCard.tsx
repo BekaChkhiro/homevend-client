@@ -33,6 +33,7 @@ interface Property {
   street: string;
   area: string;
   totalPrice: string;
+  isPriceNegotiable?: boolean;
   bedrooms?: string;
   bathrooms?: string;
   viewCount: number;
@@ -436,7 +437,10 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                   )}
                 </div>
                 <span className="text-lg font-bold text-primary whitespace-nowrap">
-                  {formatPrice(property.totalPrice)} ₾
+                  {property.isPriceNegotiable
+                  ? t('priceNegotiable', 'ფასი შეთანხმებით')
+                  : `${formatPrice(property.totalPrice)} ₾`
+                  }
                 </span>
               </div>
               <div className="flex items-center text-gray-600 mt-1.5">

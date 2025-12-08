@@ -42,6 +42,7 @@ interface Property {
   street: string;
   area: string;
   totalPrice: string;
+  isPriceNegotiable?: boolean;
   bedrooms?: string;
   bathrooms?: string;
   viewCount: number;
