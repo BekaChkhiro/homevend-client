@@ -209,6 +209,9 @@ export interface Property {
   // Additional services
   colorSeparationEnabled?: boolean;
   colorSeparationExpiresAt?: string;
+
+  // Price negotiable
+  isPriceNegotiable?: boolean;
 }
 
 export interface FilterState {

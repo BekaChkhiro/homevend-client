@@ -381,7 +381,7 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
             <div className="mb-2">
               <div className="flex items-center justify-between mb-1">
                 <div className="text-primary font-bold text-lg">
-                  {property.isPriceNegotiable
+                  {property.isPriceNegotiable || !property.price
                   ? t('propertyCard.priceNegotiable', 'ფასი შეთანხმებით')
                   : formatPrice(property.price, { showCurrency: false })
                   }
@@ -392,7 +392,7 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
                   </Badge>
                 )}
               </div>
-              {!property.isPriceNegotiable && property.pricePerSqm && (
+              {!property.isPriceNegotiable && property.price && property.pricePerSqm && (
                 <div className="text-muted-foreground text-xs">
                   {getCurrencySymbol()}{property.pricePerSqm.toLocaleString()} {t('propertyCard.perSqm')}
                 </div>

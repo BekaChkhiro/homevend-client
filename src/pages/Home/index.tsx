@@ -186,7 +186,9 @@ const Home = () => {
             vipExpiresAt: prop.vipExpiresAt,
             // Color separation service fields
             colorSeparationEnabled: prop.colorSeparationEnabled || false,
-            colorSeparationExpiresAt: prop.colorSeparationExpiresAt
+            colorSeparationExpiresAt: prop.colorSeparationExpiresAt,
+            // Price negotiable
+            isPriceNegotiable: prop.isPriceNegotiable || false
           };
         });
         

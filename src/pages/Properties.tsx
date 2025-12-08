@@ -540,10 +540,13 @@ const Properties = () => {
           // VIP status fields
           vipStatus: prop.vipStatus || 'none',
           vipExpiresAt: prop.vipExpiresAt,
-          
+
           // Additional services
           colorSeparationEnabled: prop.colorSeparationEnabled || false,
-          colorSeparationExpiresAt: prop.colorSeparationExpiresAt
+          colorSeparationExpiresAt: prop.colorSeparationExpiresAt,
+
+          // Price negotiable
+          isPriceNegotiable: prop.isPriceNegotiable || false
         };
       });
       
