@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Bed, Bath, Square, Phone, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag, Crown, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Phone, Share2, Calendar, Loader2, Building, Building2, Home, Thermometer, Car, Droplets, Hammer, Hash, Ruler, Layers, Info, DollarSign, Banknote, Briefcase, Settings, Calendar as CalendarIcon, Wrench, Star, Trophy, Sofa, Tag, Crown, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { AdBanner } from "@/components/AdBanner";
 import { propertyApi } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
@@ -892,6 +892,12 @@ const PropertyDetail = () => {
                             </Badge>
                           );
                         })()}
+                      </div>
+                      {/* View Count Display */}
+                      <div className="inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium mt-2">
+                        <Eye className="h-4 w-4" />
+                        <span>{property.viewCount || 0}</span>
+                        <span className="text-gray-500">{t('views', 'ნახვა')}</span>
                       </div>
                     </div>
                     <div className="flex gap-2">
