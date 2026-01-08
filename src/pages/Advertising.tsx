@@ -4,8 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   Clock,
   Phone,
-  Mail,
-  MapPin
+  Mail
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -14,7 +13,183 @@ interface AdPlacement {
   name: string;
   location: string;
   description: string;
+  price: number;
+  pageType: 'home' | 'listings' | 'detail';
+  position: 'top' | 'middle' | 'bottom' | 'sidebar';
+  bannerType: 'horizontal' | 'vertical';
 }
+
+// SVG Preview component for ad placement visualization
+const PlacementPreview = ({
+  pageType,
+  position,
+  bannerType
+}: {
+  pageType: 'home' | 'listings' | 'detail';
+  position: 'top' | 'middle' | 'bottom' | 'sidebar';
+  bannerType: 'horizontal' | 'vertical';
+}) => {
+  const { t } = useTranslation();
+
+  // Common SVG elements
+  const Header = () => (
+    <rect x="10" y="10" width="180" height="20" rx="2" fill="#e5e7eb" />
+  );
+
+  const ContentBlock = ({ y, height = 25 }: { y: number; height?: number }) => (
+    <rect x="10" y={y} width="180" height={height} rx="2" fill="#f3f4f6" />
+  );
+
+  const PropertyGrid = ({ y }: { y: number }) => (
+    <g>
+      <rect x="10" y={y} width="55" height="35" rx="2" fill="#f3f4f6" />
+      <rect x="72" y={y} width="55" height="35" rx="2" fill="#f3f4f6" />
+      <rect x="134" y={y} width="55" height="35" rx="2" fill="#f3f4f6" />
+    </g>
+  );
+
+  const AdBanner = ({ x, y, width, height }: { x: number; y: number; width: number; height: number }) => (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rx="3"
+        fill="#22872d"
+        className="animate-pulse"
+      />
+      <text
+        x={x + width / 2}
+        y={y + height / 2 + 4}
+        textAnchor="middle"
+        fill="white"
+        fontSize="8"
+        fontWeight="bold"
+      >
+        AD
+      </text>
+    </g>
+  );
+
+  const Sidebar = ({ y, hasAd }: { y: number; hasAd?: boolean }) => (
+    <g>
+      <rect x="145" y={y} width="45" height="60" rx="2" fill="#f3f4f6" />
+      {hasAd && <AdBanner x={145} y={y + 65} width={45} height={50} />}
+    </g>
+  );
+
+  // Page layouts based on type
+  const renderHomePage = () => {
+    if (position === 'top') {
+      return (
+        <svg viewBox="0 0 200 160" className="w-full h-full">
+          <rect width="200" height="160" fill="#fafafa" rx="4" />
+          <Header />
+          <ContentBlock y={35} height={30} />
+          <AdBanner x={10} y={70} width={180} height={20} />
+          <PropertyGrid y={95} />
+          <ContentBlock y={135} height={15} />
+        </svg>
+      );
+    }
+    // bottom
+    return (
+      <svg viewBox="0 0 200 160" className="w-full h-full">
+        <rect width="200" height="160" fill="#fafafa" rx="4" />
+        <Header />
+        <ContentBlock y={35} height={30} />
+        <PropertyGrid y={70} />
+        <PropertyGrid y={110} />
+        <AdBanner x={10} y={150} width={180} height={20} />
+      </svg>
+    );
+  };
+
+  const renderListingsPage = () => {
+    if (position === 'top') {
+      return (
+        <svg viewBox="0 0 200 160" className="w-full h-full">
+          <rect width="200" height="160" fill="#fafafa" rx="4" />
+          <Header />
+          <ContentBlock y={35} height={20} />
+          <AdBanner x={10} y={60} width={180} height={20} />
+          <PropertyGrid y={85} />
+          <PropertyGrid y={125} />
+        </svg>
+      );
+    }
+    if (position === 'middle') {
+      return (
+        <svg viewBox="0 0 200 160" className="w-full h-full">
+          <rect width="200" height="160" fill="#fafafa" rx="4" />
+          <Header />
+          <ContentBlock y={35} height={15} />
+          <PropertyGrid y={55} />
+          <AdBanner x={10} y={95} width={180} height={20} />
+          <PropertyGrid y={120} />
+        </svg>
+      );
+    }
+    // bottom
+    return (
+      <svg viewBox="0 0 200 160" className="w-full h-full">
+        <rect width="200" height="160" fill="#fafafa" rx="4" />
+        <Header />
+        <ContentBlock y={35} height={15} />
+        <PropertyGrid y={55} />
+        <PropertyGrid y={95} />
+        <AdBanner x={10} y={135} width={180} height={20} />
+      </svg>
+    );
+  };
+
+  const renderDetailPage = () => {
+    if (position === 'top') {
+      return (
+        <svg viewBox="0 0 200 160" className="w-full h-full">
+          <rect width="200" height="160" fill="#fafafa" rx="4" />
+          <Header />
+          <AdBanner x={10} y={35} width={180} height={20} />
+          <rect x="10" y="60" width="125" height="50" rx="2" fill="#f3f4f6" />
+          <Sidebar y={60} />
+          <ContentBlock y={115} height={35} />
+        </svg>
+      );
+    }
+    if (position === 'middle') {
+      return (
+        <svg viewBox="0 0 200 160" className="w-full h-full">
+          <rect width="200" height="160" fill="#fafafa" rx="4" />
+          <Header />
+          <rect x="10" y="35" width="125" height="45" rx="2" fill="#f3f4f6" />
+          <Sidebar y={35} />
+          <AdBanner x={10} y={85} width={125} height={20} />
+          <ContentBlock y={110} height={40} />
+        </svg>
+      );
+    }
+    // sidebar
+    return (
+      <svg viewBox="0 0 200 160" className="w-full h-full">
+        <rect width="200" height="160" fill="#fafafa" rx="4" />
+        <Header />
+        <rect x="10" y="35" width="125" height="50" rx="2" fill="#f3f4f6" />
+        <rect x="145" y="35" width="45" height="40" rx="2" fill="#f3f4f6" />
+        <AdBanner x={145} y={80} width={45} height={50} />
+        <ContentBlock y={115} height={35} />
+      </svg>
+    );
+  };
+
+  return (
+    <div className="w-full aspect-[5/4] bg-gray-50 rounded-lg p-2 border border-gray-200">
+      {pageType === 'home' && renderHomePage()}
+      {pageType === 'listings' && renderListingsPage()}
+      {pageType === 'detail' && renderDetailPage()}
+    </div>
+  );
+};
 
 const Advertising = () => {
   const { t } = useTranslation();
@@ -24,49 +199,81 @@ const Advertising = () => {
       id: '1',
       name: t('advertisements:advertisingPage.placements.homeTopBanner.name'),
       location: t('advertisements:advertisingPage.placements.homeTopBanner.location'),
-      description: t('advertisements:advertisingPage.placements.homeTopBanner.description')
+      description: t('advertisements:advertisingPage.placements.homeTopBanner.description'),
+      price: 400,
+      pageType: 'home',
+      position: 'top',
+      bannerType: 'horizontal'
     },
     {
       id: '3',
       name: t('advertisements:advertisingPage.placements.homeBottomBanner.name'),
       location: t('advertisements:advertisingPage.placements.homeBottomBanner.location'),
-      description: t('advertisements:advertisingPage.placements.homeBottomBanner.description')
+      description: t('advertisements:advertisingPage.placements.homeBottomBanner.description'),
+      price: 400,
+      pageType: 'home',
+      position: 'bottom',
+      bannerType: 'horizontal'
     },
     {
       id: '4',
       name: t('advertisements:advertisingPage.placements.listingsTopBanner.name'),
       location: t('advertisements:advertisingPage.placements.listingsTopBanner.location'),
-      description: t('advertisements:advertisingPage.placements.listingsTopBanner.description')
+      description: t('advertisements:advertisingPage.placements.listingsTopBanner.description'),
+      price: 400,
+      pageType: 'listings',
+      position: 'top',
+      bannerType: 'horizontal'
     },
     {
       id: '5',
       name: t('advertisements:advertisingPage.placements.listingsMiddleBanner.name'),
       location: t('advertisements:advertisingPage.placements.listingsMiddleBanner.location'),
-      description: t('advertisements:advertisingPage.placements.listingsMiddleBanner.description')
+      description: t('advertisements:advertisingPage.placements.listingsMiddleBanner.description'),
+      price: 400,
+      pageType: 'listings',
+      position: 'middle',
+      bannerType: 'horizontal'
     },
     {
       id: '6',
       name: t('advertisements:advertisingPage.placements.listingsBottomBanner.name'),
       location: t('advertisements:advertisingPage.placements.listingsBottomBanner.location'),
-      description: t('advertisements:advertisingPage.placements.listingsBottomBanner.description')
+      description: t('advertisements:advertisingPage.placements.listingsBottomBanner.description'),
+      price: 400,
+      pageType: 'listings',
+      position: 'bottom',
+      bannerType: 'horizontal'
     },
     {
       id: '7',
       name: t('advertisements:advertisingPage.placements.detailTopBanner.name'),
       location: t('advertisements:advertisingPage.placements.detailTopBanner.location'),
-      description: t('advertisements:advertisingPage.placements.detailTopBanner.description')
+      description: t('advertisements:advertisingPage.placements.detailTopBanner.description'),
+      price: 400,
+      pageType: 'detail',
+      position: 'top',
+      bannerType: 'horizontal'
     },
     {
       id: '8',
       name: t('advertisements:advertisingPage.placements.detailMiddleBanner.name'),
       location: t('advertisements:advertisingPage.placements.detailMiddleBanner.location'),
-      description: t('advertisements:advertisingPage.placements.detailMiddleBanner.description')
+      description: t('advertisements:advertisingPage.placements.detailMiddleBanner.description'),
+      price: 400,
+      pageType: 'detail',
+      position: 'middle',
+      bannerType: 'horizontal'
     },
     {
       id: '9',
       name: t('advertisements:advertisingPage.placements.detailSidebar.name'),
       location: t('advertisements:advertisingPage.placements.detailSidebar.location'),
-      description: t('advertisements:advertisingPage.placements.detailSidebar.description')
+      description: t('advertisements:advertisingPage.placements.detailSidebar.description'),
+      price: 400,
+      pageType: 'detail',
+      position: 'sidebar',
+      bannerType: 'vertical'
     }
   ];
 
@@ -107,20 +314,33 @@ const Advertising = () => {
             </p>
           </div>
 
-          <div className="grid gap-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {adPlacements.map((placement) => (
-              <Card key={placement.id} className="hover:shadow-lg transition-all">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <div>
-                      <CardTitle className="text-lg">{placement.name}</CardTitle>
-                      <CardDescription>{placement.location}</CardDescription>
+              <Card key={placement.id} className="hover:shadow-lg transition-all overflow-hidden">
+                {/* Preview SVG on top */}
+                <div className="p-4 pb-0">
+                  <PlacementPreview
+                    pageType={placement.pageType}
+                    position={placement.position}
+                    bannerType={placement.bannerType}
+                  />
+                </div>
+
+                {/* Info section below */}
+                <CardHeader className="pb-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <CardTitle className="text-base leading-tight">{placement.name}</CardTitle>
+                      <CardDescription className="text-xs mt-1">{placement.location}</CardDescription>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-lg font-bold text-primary">{placement.price}₾</div>
+                      <div className="text-xs text-muted-foreground">{t('advertisements:advertisingPage.placements.perMonth')}</div>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{placement.description}</p>
+                <CardContent className="pt-0">
+                  <p className="text-xs text-muted-foreground line-clamp-2">{placement.description}</p>
                 </CardContent>
               </Card>
             ))}
