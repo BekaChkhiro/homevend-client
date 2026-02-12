@@ -261,6 +261,7 @@ export const propertyApi = {
     advantages?: string[];
     furnitureAppliances?: string[];
     isFeatured?: boolean;
+    vipStatus?: 'vip' | 'vip_plus' | 'super_vip';
     sort?: string;
   }) => {
     // Clean up params - convert arrays to comma-separated strings for query params

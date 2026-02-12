@@ -6,6 +6,21 @@
         "subtitle": "See the newest real estate listings",
         "viewAll": "View All"
       },
+      "superVipProperties": {
+        "title": "Super VIP Properties",
+        "subtitle": "Premium class real estate",
+        "viewAll": "View All"
+      },
+      "vipPlusProperties": {
+        "title": "VIP+ Properties",
+        "subtitle": "Featured real estate",
+        "viewAll": "View All"
+      },
+      "vipProperties": {
+        "title": "VIP Properties",
+        "subtitle": "Selected real estate",
+        "viewAll": "View All"
+      },
       "agencies": {
         "title": "Agencies",
         "subtitle": "Find the best real estate agencies",

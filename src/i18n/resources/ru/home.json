@@ -6,6 +6,21 @@
         "subtitle": "Смотрите новейшие объявления недвижимости",
         "viewAll": "Смотреть все"
       },
+      "superVipProperties": {
+        "title": "Супер VIP объявления",
+        "subtitle": "Недвижимость премиум-класса",
+        "viewAll": "Смотреть все"
+      },
+      "vipPlusProperties": {
+        "title": "VIP+ объявления",
+        "subtitle": "Избранная недвижимость",
+        "viewAll": "Смотреть все"
+      },
+      "vipProperties": {
+        "title": "VIP объявления",
+        "subtitle": "Выбранная недвижимость",
+        "viewAll": "Смотреть все"
+      },
       "agencies": {
         "title": "Агентства",
         "subtitle": "Найдите лучшие агентства недвижимости",
