@@ -9,17 +9,20 @@
       "superVipProperties": {
         "title": "სუპერ VIP განცხადებები",
         "subtitle": "პრემიუმ კლასის უძრავი ქონება",
-        "viewAll": "ყველას ნახვა"
+        "viewAll": "ყველას ნახვა",
+        "noProperties": "ამჟამად სუპერ VIP განცხადებები არ არის"
       },
       "vipPlusProperties": {
         "title": "VIP+ განცხადებები",
         "subtitle": "გამორჩეული უძრავი ქონება",
-        "viewAll": "ყველას ნახვა"
+        "viewAll": "ყველას ნახვა",
+        "noProperties": "ამჟამად VIP+ განცხადებები არ არის"
       },
       "vipProperties": {
         "title": "VIP განცხადებები",
         "subtitle": "რჩეული უძრავი ქონება",
-        "viewAll": "ყველას ნახვა"
+        "viewAll": "ყველას ნახვა",
+        "noProperties": "ამჟამად VIP განცხადებები არ არის"
       },
       "agencies": {
         "title": "სააგენტოები",

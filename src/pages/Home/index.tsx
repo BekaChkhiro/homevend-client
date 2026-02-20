@@ -377,91 +377,76 @@ const Home = () => {
         </section>
 
         {/* Super VIP Properties Carousel */}
-        {superVipProperties.length > 0 && (
-          <section className="py-8 md:py-12 bg-gradient-to-b from-yellow-50 to-white">
-            <div className="container mx-auto px-3 sm:px-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">👑</span>
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                      {t('home.sections.superVipProperties.title')}
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-600">
-                      {t('home.sections.superVipProperties.subtitle')}
-                    </p>
-                  </div>
-                </div>
-                <Button asChild variant="outline" className="text-sm sm:text-base border-yellow-400 hover:bg-yellow-50">
-                  <Link to={getLanguageUrl('properties?vipStatus=super_vip', i18n.language)}>
-                    <span className="hidden sm:inline">{t('home.sections.superVipProperties.viewAll')}</span>
-                    <span className="sm:hidden">{t('common:common.view')}</span>
-                    <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
-                  </Link>
-                </Button>
+        <section className="py-8 md:py-12 bg-gradient-to-b from-yellow-50 to-white">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  {t('home.sections.superVipProperties.title')}
+                </h2>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {t('home.sections.superVipProperties.subtitle')}
+                </p>
               </div>
-              <FeaturedPropertiesCarousel properties={superVipProperties} />
+              <Button asChild variant="outline" className="text-sm sm:text-base border-yellow-400 hover:bg-yellow-50">
+                <Link to={getLanguageUrl('properties?vipStatus=super_vip', i18n.language)}>
+                  <span className="hidden sm:inline">{t('home.sections.superVipProperties.viewAll')}</span>
+                  <span className="sm:hidden">{t('common:common.view')}</span>
+                  <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+                </Link>
+              </Button>
             </div>
-          </section>
-        )}
+            <FeaturedPropertiesCarousel properties={superVipProperties} emptyMessage={t('home.sections.superVipProperties.noProperties')} />
+          </div>
+        </section>
 
         {/* VIP+ Properties Carousel */}
-        {vipPlusProperties.length > 0 && (
-          <section className="py-8 md:py-12 bg-gradient-to-b from-purple-50 to-white">
-            <div className="container mx-auto px-3 sm:px-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">⭐</span>
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                      {t('home.sections.vipPlusProperties.title')}
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-600">
-                      {t('home.sections.vipPlusProperties.subtitle')}
-                    </p>
-                  </div>
-                </div>
-                <Button asChild variant="outline" className="text-sm sm:text-base border-purple-400 hover:bg-purple-50">
-                  <Link to={getLanguageUrl('properties?vipStatus=vip_plus', i18n.language)}>
-                    <span className="hidden sm:inline">{t('home.sections.vipPlusProperties.viewAll')}</span>
-                    <span className="sm:hidden">{t('common:common.view')}</span>
-                    <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
-                  </Link>
-                </Button>
+        <section className="py-8 md:py-12 bg-gradient-to-b from-purple-50 to-white">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  {t('home.sections.vipPlusProperties.title')}
+                </h2>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {t('home.sections.vipPlusProperties.subtitle')}
+                </p>
               </div>
-              <FeaturedPropertiesCarousel properties={vipPlusProperties} />
+              <Button asChild variant="outline" className="text-sm sm:text-base border-purple-400 hover:bg-purple-50">
+                <Link to={getLanguageUrl('properties?vipStatus=vip_plus', i18n.language)}>
+                  <span className="hidden sm:inline">{t('home.sections.vipPlusProperties.viewAll')}</span>
+                  <span className="sm:hidden">{t('common:common.view')}</span>
+                  <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+                </Link>
+              </Button>
             </div>
-          </section>
-        )}
+            <FeaturedPropertiesCarousel properties={vipPlusProperties} emptyMessage={t('home.sections.vipPlusProperties.noProperties')} />
+          </div>
+        </section>
 
         {/* VIP Properties Carousel */}
-        {vipProperties.length > 0 && (
-          <section className="py-8 md:py-12 bg-gradient-to-b from-blue-50 to-white">
-            <div className="container mx-auto px-3 sm:px-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">💎</span>
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                      {t('home.sections.vipProperties.title')}
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-600">
-                      {t('home.sections.vipProperties.subtitle')}
-                    </p>
-                  </div>
-                </div>
-                <Button asChild variant="outline" className="text-sm sm:text-base border-blue-400 hover:bg-blue-50">
-                  <Link to={getLanguageUrl('properties?vipStatus=vip', i18n.language)}>
-                    <span className="hidden sm:inline">{t('home.sections.vipProperties.viewAll')}</span>
-                    <span className="sm:hidden">{t('common:common.view')}</span>
-                    <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
-                  </Link>
-                </Button>
+        <section className="py-8 md:py-12 bg-gradient-to-b from-blue-50 to-white">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  {t('home.sections.vipProperties.title')}
+                </h2>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {t('home.sections.vipProperties.subtitle')}
+                </p>
               </div>
-              <FeaturedPropertiesCarousel properties={vipProperties} />
+              <Button asChild variant="outline" className="text-sm sm:text-base border-blue-400 hover:bg-blue-50">
+                <Link to={getLanguageUrl('properties?vipStatus=vip', i18n.language)}>
+                  <span className="hidden sm:inline">{t('home.sections.vipProperties.viewAll')}</span>
+                  <span className="sm:hidden">{t('common:common.view')}</span>
+                  <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+                </Link>
+              </Button>
             </div>
-          </section>
-        )}
+            <FeaturedPropertiesCarousel properties={vipProperties} emptyMessage={t('home.sections.vipProperties.noProperties')} />
+          </div>
+        </section>
 
         {/* Agencies Section */}
         <section className="py-8 md:py-12 lg:py-16">

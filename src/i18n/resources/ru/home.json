@@ -9,17 +9,20 @@
       "superVipProperties": {
         "title": "Супер VIP объявления",
         "subtitle": "Недвижимость премиум-класса",
-        "viewAll": "Смотреть все"
+        "viewAll": "Смотреть все",
+        "noProperties": "На данный момент нет Супер VIP объявлений"
       },
       "vipPlusProperties": {
         "title": "VIP+ объявления",
         "subtitle": "Избранная недвижимость",
-        "viewAll": "Смотреть все"
+        "viewAll": "Смотреть все",
+        "noProperties": "На данный момент нет VIP+ объявлений"
       },
       "vipProperties": {
         "title": "VIP объявления",
         "subtitle": "Выбранная недвижимость",
-        "viewAll": "Смотреть все"
+        "viewAll": "Смотреть все",
+        "noProperties": "На данный момент нет VIP объявлений"
       },
       "agencies": {
         "title": "Агентства",

@@ -15,9 +15,10 @@ import type { CarouselApi } from "@/components/ui/carousel";
 interface FeaturedPropertiesCarouselProps {
   properties: Property[];
   isLoading?: boolean;
+  emptyMessage?: string;
 }
 
-export const FeaturedPropertiesCarousel = ({ properties, isLoading = false }: FeaturedPropertiesCarouselProps) => {
+export const FeaturedPropertiesCarousel = ({ properties, isLoading = false, emptyMessage }: FeaturedPropertiesCarouselProps) => {
   // Use all properties instead of filtering for featured only
   const displayProperties = properties;
   const [api, setApi] = useState<CarouselApi>();
@@ -49,6 +50,13 @@ export const FeaturedPropertiesCarousel = ({ properties, isLoading = false }: Fe
   }
 
   if (displayProperties.length === 0) {
+    if (emptyMessage) {
+      return (
+        <div className="flex items-center justify-center py-12 border border-dashed border-gray-300 rounded-lg bg-gray-50/50">
+          <p className="text-gray-500 text-sm sm:text-base">{emptyMessage}</p>
+        </div>
+      );
+    }
     return null;
   }
 

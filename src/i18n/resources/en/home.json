@@ -9,17 +9,20 @@
       "superVipProperties": {
         "title": "Super VIP Properties",
         "subtitle": "Premium class real estate",
-        "viewAll": "View All"
+        "viewAll": "View All",
+        "noProperties": "No Super VIP properties available at the moment"
       },
       "vipPlusProperties": {
         "title": "VIP+ Properties",
         "subtitle": "Featured real estate",
-        "viewAll": "View All"
+        "viewAll": "View All",
+        "noProperties": "No VIP+ properties available at the moment"
       },
       "vipProperties": {
         "title": "VIP Properties",
         "subtitle": "Selected real estate",
-        "viewAll": "View All"
+        "viewAll": "View All",
+        "noProperties": "No VIP properties available at the moment"
       },
       "agencies": {
         "title": "Agencies",
