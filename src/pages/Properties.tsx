@@ -112,6 +112,7 @@ const Properties = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [areas, setAreas] = useState<Array<{id: number, nameKa: string, nameEn: string, cityId: number}>>([]);
   const PROPERTIES_PER_PAGE = 16;
 
@@ -555,6 +556,7 @@ const Properties = () => {
       setProperties(transformedProperties);
       setFilteredProperties(transformedProperties);
       setTotalPages(pagination.pages || 1);
+      setTotalCount(pagination.total || transformedProperties.length);
     } catch (error: any) {
       console.error('❌ Error fetching properties:', error);
       console.error('Error details:', error.response?.data || error.message);
@@ -563,6 +565,7 @@ const Properties = () => {
       setProperties([]);
       setFilteredProperties([]);
       setTotalPages(1);
+      setTotalCount(0);
 
       // Enhanced error handling for rate limits
       if (error.response?.status === 429) {
@@ -619,7 +622,7 @@ const Properties = () => {
   };
 
   const stats = getPropertyTypeStats();
-  const totalProperties = properties.length;
+  const totalProperties = totalCount;
   const featuredProperties = properties.filter(p => p.featured).length;
   const averagePrice = properties.length > 0 
     ? Math.round(properties.reduce((sum, p) => sum + p.price, 0) / properties.length)
@@ -824,7 +827,7 @@ const Properties = () => {
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{t('properties.title')}</h2>
                 <p className="text-sm sm:text-base text-muted-foreground">
-                  <span className="hidden sm:inline">{t('properties.showing')} {startIndex + 1}-{Math.min(endIndex, filteredProperties.length)} ({filteredProperties.length} {t('properties.of')} {totalProperties} {t('properties.totalProperties')})</span>
+                  <span className="hidden sm:inline">{t('properties.showing')} {(currentPage - 1) * PROPERTIES_PER_PAGE + 1}-{Math.min(currentPage * PROPERTIES_PER_PAGE, totalProperties)} ({filteredProperties.length} {t('properties.of')} {totalProperties} {t('properties.totalProperties')})</span>
                   <span className="sm:hidden">{filteredProperties.length} {t('properties.propertiesFound')}</span>
                 </p>
               </div>
