@@ -111,6 +111,7 @@ const Properties = () => {
   const [sortBy, setSortBy] = useState<string>("newest");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [areas, setAreas] = useState<Array<{id: number, nameKa: string, nameEn: string, cityId: number}>>([]);
   const PROPERTIES_PER_PAGE = 16;
 
@@ -553,6 +554,7 @@ const Properties = () => {
       // No need for separate properties and filteredProperties since filtering is server-side
       setProperties(transformedProperties);
       setFilteredProperties(transformedProperties);
+      setTotalPages(pagination.pages || 1);
     } catch (error: any) {
       console.error('❌ Error fetching properties:', error);
       console.error('Error details:', error.response?.data || error.message);
@@ -560,6 +562,7 @@ const Properties = () => {
       // Fallback to empty array on error
       setProperties([]);
       setFilteredProperties([]);
+      setTotalPages(1);
 
       // Enhanced error handling for rate limits
       if (error.response?.status === 429) {
@@ -622,11 +625,8 @@ const Properties = () => {
     ? Math.round(properties.reduce((sum, p) => sum + p.price, 0) / properties.length)
     : 0;
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredProperties.length / PROPERTIES_PER_PAGE);
-  const startIndex = (currentPage - 1) * PROPERTIES_PER_PAGE;
-  const endIndex = startIndex + PROPERTIES_PER_PAGE;
-  const paginatedProperties = filteredProperties.slice(startIndex, endIndex);
+  // Pagination - server already returns the correct page of results
+  const paginatedProperties = filteredProperties;
 
   const handlePageChange = (page: number) => {
     console.log('🔄 handlePageChange called with page:', page);
