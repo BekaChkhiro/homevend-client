@@ -28,7 +28,7 @@ export const transactionTypes = [
   { value: 'mortgage', label: 'გირავდება' },
   { value: 'lease', label: 'გაიცემა იჯარით' },
   { value: 'daily', label: 'ქირავდება დღიურად' },
-  { value: 'rent-to-buy', label: 'ნასყიდობა გამოსყიდვის' }
+  { value: 'rent-to-buy', label: 'ნასყიდობა გამოსყიდვის უფლებით' }
 ];
 
 export const getPropertyTypes = (t: (key: string) => string) => [
