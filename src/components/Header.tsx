@@ -30,8 +30,9 @@ export const Header = () => {
             <UserMenu />
           </div>
           
-          {/* Mobile menu button */}
-          <div className="flex items-center md:hidden flex-shrink-0">
+          {/* Mobile controls */}
+          <div className="flex items-center gap-2 md:hidden flex-shrink-0">
+            <CurrencySelector />
             <Button
               variant="outline"
               size="sm"

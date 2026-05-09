@@ -112,7 +112,12 @@ const AboutUs = () => {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-purple-900 dark:text-purple-300 mb-2">საკონტაქტო ნომერი</p>
-                      <p className="text-gray-700 dark:text-gray-300">-</p>
+                      <a
+                        href="tel:+995595365555"
+                        className="text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-100 font-medium hover:underline inline-flex items-center gap-1 transition-colors"
+                      >
+                        +995 595 36 55 55
+                      </a>
                     </div>
                   </div>
                 </motion.div>

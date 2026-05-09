@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useBalanceRefresh } from "../Dashboard";
 import { useTranslation } from "react-i18next";
 import { getLanguageUrl } from "@/components/LanguageRoute";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 interface Property {
   id: string;
@@ -98,6 +99,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
   const navigate = useNavigate();
   const refreshBalance = useBalanceRefresh();
   const { t, i18n } = useTranslation('userDashboard');
+  const { formatPrice: formatCurrencyPrice } = useCurrency();
 
   useEffect(() => {
     const fetchPropertyImages = async () => {
@@ -161,8 +163,11 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
     return false;
   };
 
-  const formatPrice = (price: string) => {
-    return parseInt(price).toLocaleString();
+  const formatPropertyPrice = (price: string) => {
+    const numericPrice = Number(price);
+    if (!Number.isFinite(numericPrice)) return price;
+
+    return formatCurrencyPrice(numericPrice, { showCurrency: false });
   };
 
   const formatDate = (dateString: string) => {
@@ -439,7 +444,7 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                 <span className="text-lg font-bold text-primary whitespace-nowrap">
                   {property.isPriceNegotiable
                   ? t('priceNegotiable', 'ფასი შეთანხმებით')
-                  : `${formatPrice(property.totalPrice)} ₾`
+                  : formatPropertyPrice(property.totalPrice)
                   }
                 </span>
               </div>
@@ -616,7 +621,10 @@ export const UserPropertyCard = ({ property, onDelete, onVipPurchased, services 
                 )}
               </div>
               <span className="text-base lg:text-lg font-bold text-primary whitespace-nowrap">
-                {formatPrice(property.totalPrice)} ₾
+                {property.isPriceNegotiable
+                  ? t('priceNegotiable', 'ფასი შეთანხმებით')
+                  : formatPropertyPrice(property.totalPrice)
+                }
               </span>
             </div>
 
