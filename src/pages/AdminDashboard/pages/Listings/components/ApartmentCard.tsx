@@ -211,6 +211,7 @@ export const ApartmentCard = ({ property, onDelete, isSelected = false, onToggle
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
               <h3 className="font-semibold text-lg truncate pr-4">
+                <span className="font-mono text-sm text-gray-500 mr-2">#{property.id}</span>
                 {property.title || `${property.propertyType} ${property.city}-ში`}
               </h3>
               <span className="text-lg font-bold text-primary whitespace-nowrap">

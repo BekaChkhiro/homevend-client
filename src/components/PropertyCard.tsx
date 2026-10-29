@@ -405,6 +405,9 @@ export const PropertyCard = ({ property, isPriority = false }: PropertyCardProps
                   {property.title || t('propertyCard.titleNotSpecified')}
                 </span>
               </h3>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                ID: <span className="font-mono">{property.id}</span>
+              </div>
               <div className="flex items-start text-muted-foreground text-xs sm:text-sm mt-0.5">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0 mt-0.5 text-primary" />
                 <span className="line-clamp-2">{getDistrictAndStreet()}</span>

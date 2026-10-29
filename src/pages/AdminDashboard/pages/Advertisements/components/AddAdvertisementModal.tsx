@@ -357,7 +357,10 @@ export const AddAdvertisementModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>{t('addAdvertisementModal.fields.startDate')} *</Label>
-              <Popover>
+              {/* modal: without it the surrounding Dialog keeps the focus trap and
+                  swallows clicks on the calendar, so no date can ever be picked --
+                  and the form cannot be submitted, since both dates are required. */}
+              <Popover modal>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
@@ -390,7 +393,7 @@ export const AddAdvertisementModal = ({
 
             <div className="space-y-2">
               <Label>{t('addAdvertisementModal.fields.endDate')} *</Label>
-              <Popover>
+              <Popover modal>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"

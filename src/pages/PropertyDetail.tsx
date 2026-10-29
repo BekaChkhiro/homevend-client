@@ -853,6 +853,10 @@ const PropertyDetail = () => {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">{displayProperty.title}</h1>
+                      {/* ID-ს მომხმარებელი ოპერატორს უკარნახებს, ამიტომ ადვილად დასანახი უნდა იყოს. */}
+                      <div className="text-sm text-muted-foreground mb-2">
+                        ID: <span className="font-mono font-medium">{displayProperty.id}</span>
+                      </div>
                       <div className="flex items-center text-muted-foreground mb-2">
                         <MapPin className="h-4 w-4 mr-1" />
                         {displayProperty.address}

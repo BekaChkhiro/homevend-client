@@ -828,7 +828,7 @@ const Properties = () => {
                 <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">{t('properties.title')}</h2>
                 <p className="text-sm sm:text-base text-muted-foreground">
                   <span className="hidden sm:inline">{t('properties.showing')} {(currentPage - 1) * PROPERTIES_PER_PAGE + 1}-{Math.min(currentPage * PROPERTIES_PER_PAGE, totalProperties)} ({filteredProperties.length} {t('properties.of')} {totalProperties} {t('properties.totalProperties')})</span>
-                  <span className="sm:hidden">{filteredProperties.length} {t('properties.propertiesFound')}</span>
+                  <span className="sm:hidden">{totalProperties} {t('properties.propertiesFound')}</span>
                 </p>
               </div>
 
